@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="space_1">4dp</dimen>
+    <dimen name="space_2">8dp</dimen>
+    <dimen name="space_3">16dp</dimen>
+    <dimen name="divider_height">1px</dimen>
+    <dimen name="item_corner_radius">6dp</dimen>
+    <dimen name="thumbnail_width">72dp</dimen>
+    <dimen name="thumbnail_height">72dp</dimen>
+    <dimen name="thumbnail_cozy">200dp</dimen>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.support.v7.preference.PreferenceCategory android:title="@string/pref_general">
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:key="PREF_COMPACT_LAYOUT"
+            android:title="@string/pref_compact_layout"
+            android:defaultValue="true" />
+        <android.support.v14.preference.MultiSelectListPreference
+            android:key="PREF_CATEGORIES"
+            android:title="@string/pref_categories"
+            android:entries="@array/pref_category_entries"
+            android:entryValues="@array/pref_category_values"
+            android:defaultValue="@array/pref_category_values" />
+    </android.support.v7.preference.PreferenceCategory>
+</android.support.v7.preference.PreferenceScreen>
