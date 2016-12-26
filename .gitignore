@@ -57,6 +57,7 @@ findbugs-android-exclude.xml
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/qaplug_profiles.xml
+.idea/markdown-navigator.xml
 .idea/misc.xml
 .idea/externalDependencies.xml
 .idea/*/*.xml
