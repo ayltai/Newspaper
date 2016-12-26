@@ -19,6 +19,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
@@ -346,11 +348,11 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         if (this.subscriptions == null) {
             this.subscriptions = new CompositeSubscription();
 
-            this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(null)));
+            this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(null), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
 
             this.subscriptions.add(RxView.clicks(this.share).subscribe(dummy -> {
                 if (!TextUtils.isEmpty(this.link)) this.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(this.link)), this.getContext().getText(R.string.share_to)));
-            }));
+            }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
 
             this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(dummy -> {
                 this.isBookmarked = !this.isBookmarked;
@@ -360,7 +362,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                 if (this.smallBang != null && this.isBookmarked) this.smallBang.bang(this.bookmark);
 
                 this.bookmarks.onNext(this.isBookmarked);
-            }));
+            }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
         }
     }
 }

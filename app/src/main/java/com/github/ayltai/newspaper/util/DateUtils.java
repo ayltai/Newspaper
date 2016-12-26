@@ -2,6 +2,7 @@ package com.github.ayltai.newspaper.util;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.R;
 
@@ -14,13 +15,12 @@ public final class DateUtils {
     private DateUtils() {
     }
 
-    @NonNull
+    @Nullable
     public static String getTimeAgo(@NonNull final Context context, final long time) {
         final long now = System.currentTimeMillis();
 
         if (time > now || time <= 0) return null;
 
-        // TODO: localize
         final long diff = now - time;
 
         if (diff < DateUtils.MINUTE_MILLIS) {

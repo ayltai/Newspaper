@@ -9,8 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import com.google.firebase.crash.FirebaseCrash;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -56,7 +59,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
         this.publishDate = (TextView)itemView.findViewById(R.id.publishDate);
         this.thumbnail   = (SimpleDraweeView)itemView.findViewById(R.id.thumbnail);
 
-        this.subscriptions.add(RxView.clicks(this.itemView).subscribe(view -> this.clicks.onNext(null)));
+        this.subscriptions.add(RxView.clicks(this.itemView).subscribe(view -> this.clicks.onNext(null), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
 
         final DisplayMetrics metrics = new DisplayMetrics();
         ((Activity)this.itemView.getContext()).getWindowManager().getDefaultDisplay().getMetrics(metrics);

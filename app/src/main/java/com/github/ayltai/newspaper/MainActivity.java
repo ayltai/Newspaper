@@ -173,14 +173,14 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
         if (Intent.ACTION_VIEW.equals(intent.getAction()) && intent.getDataString() != null) {
             // TODO: Parse the data URL
 
-            // TODO: Handle the deep link. For example, open the linked content
+            // TODO: Handle the deep link
 
             AppInvite.AppInviteApi.getInvitation(this.client, this, true)
                 .setResultCallback(result -> {
                     if (result.getStatus().isSuccess()) {
                         String deepLink = AppInviteReferral.getDeepLink(result.getInvitationIntent());
 
-                        // TODO: Handle the deep link. For example, open the linked content
+                        // TODO: Handle the deep link
                     }
                 });
         }

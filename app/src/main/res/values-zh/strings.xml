@@ -9,9 +9,9 @@
     <string name="share_to">分享給…</string>
     <string name="rate_app">給5星</string>
     <string name="time_ago_now">現在</string>
-    <string name="time_ago_minute">一分鐘前</string>
+    <string name="time_ago_minute">1分鐘前</string>
     <string name="time_ago_minutes">%s分鐘前</string>
-    <string name="time_ago_hour">一小時前</string>
+    <string name="time_ago_hour">1小時前</string>
     <string name="time_ago_hours">%s小時前</string>
     <string name="time_ago_day">昨天</string>
     <string name="time_ago_days">%s天前</string>

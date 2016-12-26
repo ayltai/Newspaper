@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import com.github.ayltai.newspaper.data.Favorite;
 import com.github.ayltai.newspaper.data.FavoriteManager;
 import com.github.ayltai.newspaper.list.ListPresenter;
@@ -39,7 +41,7 @@ final class MainAdapter extends PagerAdapter implements Closeable {
                 this.favorite = favorite;
 
                 this.notifyDataSetChanged();
-            });
+            }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage()));
     }
 
     @Override
@@ -63,9 +65,9 @@ final class MainAdapter extends PagerAdapter implements Closeable {
         this.subscriptions.add(view.attachments().subscribe(dummy -> {
             presenter.onViewAttached(view);
             presenter.bind(this.realm, new ListScreen.Key(this.favorite.getSources().get(position).getUrl()));
-        }, error -> Log.e(this.getClass().getName(), error.getMessage(), error)));
+        }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
 
-        this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> Log.e(this.getClass().getName(), error.getMessage(), error)));
+        this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
 
         this.views.put(position, view);
         container.addView(view);
@@ -103,7 +105,7 @@ final class MainAdapter extends PagerAdapter implements Closeable {
             try {
                 ((Closeable)view).close();
             } catch (final IOException e) {
-                Log.e(this.getClass().getName(), e.getMessage(), e);
+                FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), e.getMessage());
             }
         }
     }

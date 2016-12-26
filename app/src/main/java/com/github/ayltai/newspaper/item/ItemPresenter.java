@@ -6,6 +6,9 @@ import java.util.Date;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
+
+import com.google.firebase.crash.FirebaseCrash;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
@@ -77,7 +80,7 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
 
             if (this.getView().bookmarks() != null) {
                 this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK)
-                    .subscribe(feed -> this.getView().setIsBookmarked(feed.contains(this.item)));
+                    .subscribe(feed -> this.getView().setIsBookmarked(feed.contains(this.item)), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage()));
             }
 
             final Date publishDate = this.item.getPublishDate();
@@ -137,12 +140,12 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
 
         if (this.getView().clicks() != null) this.subscriptions.add(this.getView().clicks().subscribe(dummy -> {
             if (this.parentKey != null) this.getView().showItem(this.parentKey, this.item);
-        }));
+        }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
 
         if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(dummy -> {
             if (this.item != null && this.item.getMediaUrl() != null) this.getView().showOriginalMedia(ItemUtils.getOriginalMediaUrl(this.item.getMediaUrl()));
-        }));
+        }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
 
-        if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks().subscribe(bookmark -> this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK).subscribe(feed -> this.updateFeed(feed, bookmark))));
+        if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks().subscribe(bookmark -> this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK).subscribe(feed -> this.updateFeed(feed, bookmark), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
     }
 }

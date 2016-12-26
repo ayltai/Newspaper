@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.data.Feed;
@@ -62,7 +64,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                     }
 
                     this.isBound = true;
-                }, error -> Log.e(this.getClass().getName(), error.getMessage(), error));
+                }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage()));
         }
     }
 
@@ -71,7 +73,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
             .doOnNext(this::copyToRealmOrUpdate)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(data -> this.getView().setItems(this.key, data), error -> Log.e(this.getClass().getName(), error.getMessage(), error));
+            .subscribe(data -> this.getView().setItems(this.key, data), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage()));
     }
 
     private void bindFromRemote(final int timeout) {
@@ -80,7 +82,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
             .timeout(timeout, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(data -> this.getView().setItems(this.key, data), error -> Log.w(this.getClass().getName(), error.getMessage(), error));
+            .subscribe(data -> this.getView().setItems(this.key, data), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage()));
     }
 
     private void copyToRealmOrUpdate(@NonNull final Feed feed) {
@@ -137,6 +139,6 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                     this.bindFromRemote();
                 }
             }
-        }));
+        }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
     }
 }
