@@ -1,6 +1,8 @@
 package com.github.ayltai.newspaper.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,25 +74,55 @@ public final class FavoriteManager {
 
     @NonNull
     private Favorite syncWithSettings(@NonNull final Favorite favorite) {
-        final List<Source> sources    = new ArrayList<>();
+        final List<Source> oldSources = new ArrayList<>();
+        final List<Source> newSources = new ArrayList<>();
         final Set<String>  categories = Settings.getCategories(this.context);
 
         for (final Source source : favorite.getSources()) {
             if (Constants.SOURCE_BOOKMARK.equals(source.getUrl())) continue;
 
-            if (!categories.contains(source.getUrl())) sources.add(source);
+            if (!categories.contains(source.getUrl())) oldSources.add(source);
+        }
+
+        final String[]     names = this.context.getResources().getStringArray(R.array.pref_category_entries);
+        final List<String> urls  = Arrays.asList(this.context.getResources().getStringArray(R.array.pref_category_values));
+
+        for (final String category : categories) {
+            if (!favorite.contains(category)) {
+                final int index = urls.indexOf(category);
+                newSources.add(new Source(urls.get(index), names[index]));
+            }
         }
 
         final Realm realm = Realm.getDefaultInstance();
 
         realm.beginTransaction();
 
-        favorite.getSources().removeAll(sources);
-        realm.copyToRealmOrUpdate(favorite);
+        favorite.getSources().removeAll(oldSources);
+        favorite.getSources().addAll(newSources);
 
+        FavoriteManager.sort(urls, favorite);
+
+        realm.copyToRealmOrUpdate(favorite);
         realm.commitTransaction();
         realm.close();
 
         return favorite;
+    }
+
+    private static void sort(@NonNull final List<String> urls, @NonNull final Favorite favorite) {
+        Collections.sort(favorite.getSources(), (s1, s2) -> {
+            if (Constants.SOURCE_BOOKMARK.equals(s1.getUrl())) return 1;
+            if (Constants.SOURCE_BOOKMARK.equals(s2.getUrl())) return 1;
+
+            return urls.indexOf(s1.getUrl()) - urls.indexOf(s2.getUrl());
+        });
+
+        for (int i = 0; i < favorite.getSources().size(); i++) {
+            if (favorite.getSources().get(i).getUrl().equals(Constants.SOURCE_BOOKMARK)) {
+                favorite.getSources().add(favorite.getSources().remove(i));
+                break;
+            }
+        }
     }
 }

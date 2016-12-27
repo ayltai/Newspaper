@@ -21,4 +21,12 @@ public class Favorite extends RealmObject {
     public final RealmList<Source> getSources() {
         return this.sources;
     }
+
+    public final boolean contains(@NonNull final String url) {
+        for (final Source source : this.sources) {
+            if (url.equals(source.getUrl())) return true;
+        }
+
+        return false;
+    }
 }
