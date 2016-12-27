@@ -168,8 +168,12 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                 this.title.setVisibility(View.GONE);
                 this.toolbarTitle.setText(this.getResources().getText(R.string.app_name));
             } else {
+                if (BuildConfig.DEBUG) Log.d(this.getClass().getName(), "title 1 = " + title);
+                final CharSequence value = ItemUtils.removeHtml(title);
+                if (BuildConfig.DEBUG) Log.d(this.getClass().getName(), "title 2 = " + value);
+
                 this.title.setVisibility(View.VISIBLE);
-                this.title.setText(ItemUtils.removeHtml(title));
+                this.title.setText(value);
                 this.toolbarTitle.setText(this.title.getText());
             }
         }
@@ -181,8 +185,12 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             if (TextUtils.isEmpty(description)) {
                 this.description.setVisibility(View.GONE);
             } else {
+                if (BuildConfig.DEBUG) Log.d(this.getClass().getName(), "description 1 = " + description);
+                final CharSequence value = ItemUtils.removeHtml(description);
+                if (BuildConfig.DEBUG) Log.d(this.getClass().getName(), "description 2 = " + value);
+
                 this.description.setVisibility(View.VISIBLE);
-                this.description.setText(ItemUtils.removeHtml(description));
+                this.description.setText(value);
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper.util;
 
+import java.util.regex.Pattern;
+
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.TextUtils;
@@ -8,6 +10,9 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.rss.Item;
 
 public final class ItemUtils {
+    private static final String IDEOGRAPHIC_SPACE = new String(new byte[] { (byte)227, (byte)128, (byte)128 }); // E3 80 80
+    private static final String ELLIPSIS          = Pattern.quote(" ...");
+
     private ItemUtils() {
     }
 
@@ -22,8 +27,8 @@ public final class ItemUtils {
     public static CharSequence removeHtml(@NonNull final String value) {
         //noinspection deprecation
         return Html.fromHtml(value.replaceAll("(<(/)img>)|(<img.+?>)", Constants.EMPTY)
-            .replaceAll("　", "<br />")
-            .replaceAll(" ...", Constants.EMPTY));
+            .replaceAll(ItemUtils.IDEOGRAPHIC_SPACE, "<br />")
+            .replaceAll(ItemUtils.ELLIPSIS, Constants.EMPTY));
     }
 
     @NonNull
