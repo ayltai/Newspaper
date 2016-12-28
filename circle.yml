@@ -8,15 +8,6 @@ dependencies:
   cache_directories:
     - "/usr/local/android-sdk-linux/build-tools"
     - "/usr/local/android-sdk-linux/extras"
-    - ".gradle"
-    - "/home/ubuntu/.gradle"
-    - "/home/ubuntu/Newspaper/.gradle"
-    - "/home/ubuntu/.gradle/caches/3.2.1"
-    - "/home/ubuntu/.gradle/caches/jars-1"
-    - "/home/ubuntu/.gradle/caches/jars-2"
-    - "/home/ubuntu/.gradle/daemon"
-    - "/home/ubuntu/.gradle/native"
-    - "/home/ubuntu/.gradle/wrapper"
   pre:
     - chmod +x gradlew
     - openssl aes-256-cbc -d -in app/google-services.json.cipher -out app/google-services.json -k $ANDROID_KEY
