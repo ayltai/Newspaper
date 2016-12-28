@@ -20,6 +20,30 @@
     <string name="action_share">分享</string>
     <string name="action_about">關於</string>
     <string name="pref_general">一般</string>
-    <string name="pref_categories">分類</string>
     <string name="pref_compact_layout">密集設計</string>
+    <string name="pref_categories">分類</string>
+    <string-array name="pref_category_entries">
+        <item>焦點</item>
+        <item>港聞</item>
+        <item>國際</item>
+        <item>環球</item>
+        <item>兩岸</item>
+        <item>財經</item>
+        <item>金融</item>
+        <item>地產</item>
+        <item>娛樂</item>
+        <item>本地娛樂</item>
+        <item>環球娛樂</item>
+        <item>體育</item>
+        <item>足球</item>
+        <item>籃球</item>
+        <item>其他體育</item>
+        <item>副刊</item>
+        <item>新知</item>
+        <item>旅遊</item>
+        <item>飲食</item>
+        <item>生活</item>
+        <item>健康</item>
+        <item>其他副刊</item>
+    </string-array>
 </resources>

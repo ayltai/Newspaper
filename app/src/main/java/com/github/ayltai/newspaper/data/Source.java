@@ -36,5 +36,9 @@ public class Source extends RealmObject {
         return this.name;
     }
 
+    public final void setName(@NonNull final String name) {
+        this.name = name;
+    }
+
     //endregion
 }

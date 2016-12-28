@@ -102,12 +102,25 @@ public final class FavoriteManager {
         favorite.getSources().addAll(newSources);
 
         FavoriteManager.sort(urls, favorite);
+        this.localizeNames(urls, names, favorite);
 
         realm.copyToRealmOrUpdate(favorite);
         realm.commitTransaction();
         realm.close();
 
         return favorite;
+    }
+
+    private void localizeNames(@NonNull final List<String> urls, @NonNull final String[] names, @NonNull final Favorite favorite) {
+        for (int i = 0; i < favorite.getSources().size(); i++) {
+            if (Constants.SOURCE_BOOKMARK.equals(favorite.getSources().get(i).getName())) {
+                favorite.getSources().get(i).setName(this.context.getString(R.string.action_bookmark));
+            } else {
+                final int index = urls.indexOf(favorite.getSources().get(i).getUrl());
+
+                if (index > -1) favorite.getSources().get(i).setName(names[index]);
+            }
+        }
     }
 
     private static void sort(@NonNull final List<String> urls, @NonNull final Favorite favorite) {

@@ -23,28 +23,28 @@
     <string name="pref_compact_layout">Compact layout</string>
     <string name="pref_categories">Categories</string>
     <string-array name="pref_category_entries">
-        <item>焦點</item>
-        <item>港聞</item>
-        <item>國際</item>
-        <item>環球</item>
-        <item>兩岸</item>
-        <item>財經</item>
-        <item>金融</item>
-        <item>地產</item>
-        <item>娛樂</item>
-        <item>本地娛樂</item>
-        <item>環球娛樂</item>
-        <item>體育</item>
-        <item>足球</item>
-        <item>籃球</item>
-        <item>其他體育</item>
-        <item>副刊</item>
-        <item>新知</item>
-        <item>旅遊</item>
-        <item>飲食</item>
-        <item>生活</item>
-        <item>健康</item>
-        <item>其他副刊</item>
+        <item>Top</item>
+        <item>HK</item>
+        <item>World</item>
+        <item>Int\'l</item>
+        <item>Bilateral</item>
+        <item>Econ</item>
+        <item>Finc</item>
+        <item>Real Est</item>
+        <item>Ent</item>
+        <item>HK Ent</item>
+        <item>Int\'l Ent</item>
+        <item>Sports</item>
+        <item>Soccer</item>
+        <item>Basketball</item>
+        <item>Other Sports</item>
+        <item>Supplement</item>
+        <item>Tech</item>
+        <item>Travel</item>
+        <item>Food</item>
+        <item>Lifestyle</item>
+        <item>Health</item>
+        <item>Others</item>
     </string-array>
     <string-array name="pref_category_values">
         <item>https://hk.news.yahoo.com/rss/</item>
