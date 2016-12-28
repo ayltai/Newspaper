@@ -8,13 +8,13 @@ dependencies:
   cache_directories:
     - "/usr/local/android-sdk-linux/build-tools"
     - "/usr/local/android-sdk-linux/extras"
-    - "$CIRCLE_PROJECT_REPONAME/.gradle"
-    - "$HOME/.gradle/caches/3.2.1"
-    - "$HOME/.gradle/caches/jars-1"
-    - "$HOME/.gradle/caches/jars-2"
-    - "$HOME/.gradle/daemon"
-    - "$HOME/.gradle/native"
-    - "$HOME/.gradle/wrapper"
+    - ".gradle"
+    - "~/.gradle/caches/3.2.1"
+    - "~/.gradle/caches/jars-1"
+    - "~/.gradle/caches/jars-2"
+    - "~/.gradle/daemon"
+    - "~/.gradle/native"
+    - "~/.gradle/wrapper"
   pre:
     - chmod +x gradlew
     - openssl aes-256-cbc -d -in app/google-services.json.cipher -out app/google-services.json -k $ANDROID_KEY
@@ -25,5 +25,5 @@ dependencies:
 test:
   override:
     - ./gradlew -i testDebugUnitTest
-    - cp -r $HOME/$CIRCLE_PROJECT_REPONAME/app/build/outputs/test-results/* $CIRCLE_TEST_REPORTS
-    - ./gradlew assembleRelease && cp -r $HOME/$CIRCLE_PROJECT_REPONAME/app/build/outputs/apk/app-release.apk $CIRCLE_ARTIFACTS
+    - cp -r app/build/test-results/testDebugUnitTest/*.xml $CIRCLE_TEST_REPORTS
+    - ./gradlew assembleRelease && cp -r app/build/outputs/apk/app-release.apk $CIRCLE_ARTIFACTS
