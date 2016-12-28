@@ -54,6 +54,7 @@ Temporary Items
 
 # User-specific stuff:
 findbugs-android-exclude.xml
+.idea/findbugs-idea.xml
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/qaplug_profiles.xml

@@ -69,10 +69,7 @@ dependencies {
 
     // Image processing
     compile 'com.facebook.fresco:fresco:+'
-    //compile ('com.github.stfalcon:frescoimageviewer:+') {
-    //    exclude group: 'com.facebook.fresco', module: 'fresco'
-    //}
-    compile ('com.github.ayltai:FrescoImageViewer:master-SNAPSHOT') {
+    compile ('com.github.stfalcon:frescoimageviewer:+') {
         exclude group: 'com.facebook.fresco', module: 'fresco'
     }
     compile ('com.github.aryarohit07:fresco-facedetection-processor:+') {
