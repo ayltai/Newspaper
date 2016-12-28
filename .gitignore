@@ -150,3 +150,6 @@ hs_err_pid*
 
 ### Google SDKs
 google-services.json
+
+### Android Key Store
+key-store.jks

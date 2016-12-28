@@ -1,0 +1,19 @@
+machine:
+  java:
+    version: oraclejdk8
+  environment:
+    ANDROID_HOME: /usr/local/android-sdk-linux
+
+dependencies:
+  pre:
+    - chmod +x gradlew
+    - openssl aes-256-cbc -d -in key-store.jks.cipher -out key-store.jks -k $ANDROID_KEY
+  override:
+    - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-25.0.2,android-25,extra-android-m2repository,extra-android-support,extra-google-m2repository,extra-google-google_play_services
+
+test:
+  override:
+    - ./gradlew testDebugUnitTest
+    - cp -r Newspaper/app/build/outputs/test-results/* $CIRCLE_TEST_REPORTS
+    - ./gradlew assembleRelease
+    - cp -r Newspaper/app/build/outputs/apk/app-release.apk $CIRCLE_ARTIFACTS
