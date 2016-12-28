@@ -46,7 +46,9 @@
         <item>Health</item>
         <item>Others</item>
     </string-array>
-    <string-array name="pref_category_values">
+    <string-array
+        name="pref_category_values"
+        translatable="false">
         <item>https://hk.news.yahoo.com/rss/</item>
         <item>https://hk.news.yahoo.com/rss/hong-kong</item>
         <item>https://hk.news.yahoo.com/rss/world</item>
