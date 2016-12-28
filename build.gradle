@@ -10,6 +10,7 @@ buildscript {
         classpath 'io.realm:realm-gradle-plugin:+'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath 'com.google.firebase:firebase-plugins:+'
+        classpath 'org.standardout:gradle-versioneye-plugin:+'
     }
 }
 
