@@ -11,7 +11,9 @@ import android.support.v7.preference.PreferenceManager;
 import com.facebook.common.internal.Sets;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
+@SuppressFBWarnings("PMB_POSSIBLE_MEMORY_BLOAT")
 public final class Settings {
     //region Constants
 

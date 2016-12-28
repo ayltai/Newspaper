@@ -28,4 +28,6 @@ test:
   override:
     - ./gradlew -i testDebugUnitTest
     - cp -r app/build/test-results/testDebugUnitTest/*.xml $CIRCLE_TEST_REPORTS
+    - cp -r app/build/outputs/findbugs/findbugs-output.html $CIRCLE_TEST_REPORTS
+    - cp -r app/build/outputs/lint-results.html $CIRCLE_TEST_REPORTS
     - ./gradlew assembleRelease && cp -r app/build/outputs/apk/app-release.apk $CIRCLE_ARTIFACTS

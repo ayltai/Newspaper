@@ -76,6 +76,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
         }
 
+        @SuppressWarnings("checkstyle:magicnumber")
         @Override
         public int hashCode() {
             final int hashCode = super.hashCode();

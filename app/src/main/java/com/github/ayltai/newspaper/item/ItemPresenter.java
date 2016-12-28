@@ -22,8 +22,6 @@ import io.realm.Realm;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.github.ayltai.newspaper.R.id.bookmark;
-
 public class ItemPresenter extends Presenter<ItemPresenter.View> {
     public interface View extends Presenter.View {
         void setTitle(@Nullable String title);

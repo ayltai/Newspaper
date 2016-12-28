@@ -49,7 +49,7 @@ public final class Client implements Closeable {
                 Collections.sort(items);
 
                 subscriber.onNext(new Feed(url, items));
-            } catch (final XmlPullParserException|IOException e) {
+            } catch (final XmlPullParserException | IOException e) {
                 subscriber.onError(e);
             } finally {
                 Client.closeQuietly(inputStream);

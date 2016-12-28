@@ -24,6 +24,7 @@ import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.setting.SettingsActivity;
+import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Duration;
 import com.github.javiersantos.materialstyleddialogs.enums.Style;
@@ -32,8 +33,6 @@ import flow.ClassKey;
 import io.realm.Realm;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
-
-import static com.github.ayltai.newspaper.R.id.collapsingToolbarLayout;
 
 @SuppressLint("ViewConstructor")
 public final class MainScreen extends FrameLayout implements MainPresenter.View {
@@ -130,7 +129,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
             this.drawerLayout = (DrawerLayout)view.findViewById(R.id.drawerLayout);
 
-            ((CollapsingToolbarLayout)view.findViewById(collapsingToolbarLayout)).setTitleEnabled(false);
+            ((CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout)).setTitleEnabled(false);
 
             toolbar.setNavigationIcon(R.drawable.ic_menu_white_24px);
             toolbar.setNavigationOnClickListener(v -> this.drawerLayout.openDrawer(GravityCompat.START));
@@ -186,6 +185,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
         ((Activity)this.getContext()).startActivityForResult(new Intent(this.getContext(), SettingsActivity.class), Constants.REQUEST_SETTINGS);
     }
 
+    @SuppressFBWarnings({"NAB_NEEDLESS_BOOLEAN_CONSTANT_CONVERSION", "PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS"})
     private void showAbout() {
         new MaterialStyledDialog.Builder(this.getContext())
             .setStyle(Style.HEADER_WITH_ICON)

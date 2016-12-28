@@ -178,7 +178,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
             AppInvite.AppInviteApi.getInvitation(this.client, this, true)
                 .setResultCallback(result -> {
                     if (result.getStatus().isSuccess()) {
-                        String deepLink = AppInviteReferral.getDeepLink(result.getInvitationIntent());
+                        final String deepLink = AppInviteReferral.getDeepLink(result.getInvitationIntent());
 
                         // TODO: Handle the deep link
                     }

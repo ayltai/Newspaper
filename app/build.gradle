@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-crash'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
 
 android {
     compileSdkVersion 25
@@ -38,6 +40,10 @@ android {
         }
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     dexOptions {
         preDexLibraries false
     }
@@ -46,6 +52,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+checkstyle {
+    configFile rootProject.file('checkstyle.xml')
+    showViolations true
 }
 
 dependencies {
@@ -119,5 +130,28 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
+
+task customFindbugs(type: FindBugs) {
+    ignoreFailures = false
+    effort = "max"
+    reportLevel = "medium"
+    classes = files("$project.buildDir/intermediates/classes")
+
+    // Use this only if you want exclude some errors
+    excludeFilter = file("$rootProject.rootDir/findbugs-android-exclude.xml")
+
+    source = fileTree('src/main/java/')
+    classpath = files()
+
+    reports {
+        xml.enabled = false
+        xml.withMessages = true
+        html.enabled = true
+        xml.destination "$project.buildDir/outputs/findbugs/findbugs-output.xml"
+        html.destination "$project.buildDir/outputs/findbugs/findbugs-output.html"
+    }
+}
+
+build.dependsOn customFindbugs
 
 apply plugin: 'com.google.gms.google-services'

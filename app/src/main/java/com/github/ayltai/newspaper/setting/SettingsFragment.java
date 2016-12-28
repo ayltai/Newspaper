@@ -9,7 +9,9 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
+@SuppressFBWarnings("PDP_POORLY_DEFINED_PARAMETER")
 public final class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(@NonNull final Bundle savedInstanceState, final String rootKey) {

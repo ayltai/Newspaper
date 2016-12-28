@@ -132,7 +132,7 @@ public final class FavoriteManager {
         });
 
         for (int i = 0; i < favorite.getSources().size(); i++) {
-            if (favorite.getSources().get(i).getUrl().equals(Constants.SOURCE_BOOKMARK)) {
+            if (Constants.SOURCE_BOOKMARK.equals(favorite.getSources().get(i).getUrl())) {
                 favorite.getSources().add(favorite.getSources().remove(i));
                 break;
             }
