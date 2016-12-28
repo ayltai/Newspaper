@@ -5,6 +5,16 @@ machine:
     ANDROID_HOME: /usr/local/android-sdk-linux
 
 dependencies:
+  cache-directories:
+    - /usr/local/android-sdk-linux/build-tools
+    - /usr/local/android-sdk-linux/extras
+    - $CIRCLE_PROJECT_REPONAME/.gradle
+    - ~/.gradle/caches/3.2.1
+    - ~/.gradle/caches/jars-1
+    - ~/.gradle/caches/jars-2
+    - ~/.gradle/daemon
+    - ~/.gradle/native
+    - ~/.gradle/wrapper
   pre:
     - chmod +x gradlew
     - openssl aes-256-cbc -d -in app/google-services.json.cipher -out app/google-services.json -k $ANDROID_KEY
@@ -14,7 +24,6 @@ dependencies:
 
 test:
   override:
-    - ./gradlew testDebugUnitTest
-    - cp -r Newspaper/app/build/outputs/test-results/* $CIRCLE_TEST_REPORTS
-    - ./gradlew assembleRelease
-    - cp -r Newspaper/app/build/outputs/apk/app-release.apk $CIRCLE_ARTIFACTS
+    - ./gradlew -i testDebugUnitTest
+    - cp -r app/build/outputs/test-results/* $CIRCLE_TEST_REPORTS
+    - ./gradlew assembleRelease && cp -r app/build/outputs/apk/app-release.apk $CIRCLE_ARTIFACTS
