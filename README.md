@@ -1,6 +1,8 @@
 Newspaper
 =========
 
+[![CircleCI](https://circleci.com/gh/ayltai/Newspaper/tree/master.svg?style=svg)](https://circleci.com/gh/ayltai/Newspaper/tree/master)
+
 A Yahoo news app clone that is better than the original. Made with ❤
 
 ![Screenshot](screenshot.jpg "Screenshot")
