@@ -30,6 +30,9 @@ before_install:
   - openssl aes-256-cbc -d -in app/google-services.json.cipher -out app/google-services.json -k $ANDROID_KEY
   - openssl aes-256-cbc -d -in key-store.jks.cipher -out key-store.jks -k $ANDROID_KEY
 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
 script:
   - ./gradlew -i testDebugUnitTest
   - ./gradlew assembleRelease

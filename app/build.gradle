@@ -4,6 +4,11 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion '0.7.4.201502262128'
+}
 
 android {
     compileSdkVersion 25
@@ -152,6 +157,41 @@ task customFindbugs(type: FindBugs) {
     }
 }
 
-build.dependsOn customFindbugs
+assemble.dependsOn customFindbugs
+
+task jacocoReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+    group = 'Reporting'
+    description = 'Generate Jacoco coverage reports after running tests.'
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    classDirectories = fileTree(
+        dir: 'build/intermediates/classes/test/debug',
+        excludes: [
+            '**/R.class',
+            '**/R$*.class',
+            '**/*$ViewInjector*.*',
+            '**/*$ViewBinder*.*',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*$Lambda$*.*',
+            '**/*$RealmProxy.*'
+        ]
+    )
+
+    sourceDirectories = files('src/main/java')
+    executionData = files('build/jacoco/testDebugUnitTest.exec')
+
+    doFirst {
+        files('build/intermediates/classes/test/debug').getFiles().each { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
+    }
+}
 
 apply plugin: 'com.google.gms.google-services'
