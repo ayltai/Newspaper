@@ -21,19 +21,20 @@ android {
         }
     }
 
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
     signingConfigs {
         release {
             storeFile file('../key-store.jks')
             keyAlias System.getenv('ANDROID_KEY_ALIAS')
             storePassword System.getenv('ANDROID_STORE_PASSWORD')
             keyPassword System.getenv('ANDROID_KEY_PASSWORD')
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 

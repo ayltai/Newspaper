@@ -1,7 +1,7 @@
 Newspaper
 =========
 
-[![Build Status](https://travis-ci.org/ayltai/Newspaper.svg?branch=master)](https://travis-ci.org/ayltai/Newspaper) [![CircleCI](https://circleci.com/gh/ayltai/Newspaper/tree/master.svg?style=svg)](https://circleci.com/gh/ayltai/Newspaper/tree/master) [![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=5863604d862cca0100fcdba2&branch=master&build=latest)](https://dashboard.buddybuild.com/apps/5863604d862cca0100fcdba2/build/latest?branch=master)
+[![Build Status](https://travis-ci.org/ayltai/Newspaper.svg?branch=master)](https://travis-ci.org/ayltai/Newspaper) [![CircleCI](https://circleci.com/gh/ayltai/Newspaper/tree/master.svg?style=svg)](https://circleci.com/gh/ayltai/Newspaper/tree/master)
 
 A Yahoo news app clone that is better than the original. Made with ❤
 
