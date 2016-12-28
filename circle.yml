@@ -5,16 +5,16 @@ machine:
     ANDROID_HOME: /usr/local/android-sdk-linux
 
 dependencies:
-  cache-directories:
-    - /usr/local/android-sdk-linux/build-tools
-    - /usr/local/android-sdk-linux/extras
-    - $CIRCLE_PROJECT_REPONAME/.gradle
-    - ~/.gradle/caches/3.2.1
-    - ~/.gradle/caches/jars-1
-    - ~/.gradle/caches/jars-2
-    - ~/.gradle/daemon
-    - ~/.gradle/native
-    - ~/.gradle/wrapper
+  cache_directories:
+    - "/usr/local/android-sdk-linux/build-tools"
+    - "/usr/local/android-sdk-linux/extras"
+    - "$CIRCLE_PROJECT_REPONAME/.gradle"
+    - "~/.gradle/caches/3.2.1"
+    - "~/.gradle/caches/jars-1"
+    - "~/.gradle/caches/jars-2"
+    - "~/.gradle/daemon"
+    - "~/.gradle/native"
+    - "~/.gradle/wrapper"
   pre:
     - chmod +x gradlew
     - openssl aes-256-cbc -d -in app/google-services.json.cipher -out app/google-services.json -k $ANDROID_KEY
