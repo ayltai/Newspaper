@@ -8,4 +8,5 @@
     <dimen name="thumbnail_width">72dp</dimen>
     <dimen name="thumbnail_height">72dp</dimen>
     <dimen name="thumbnail_cozy">200dp</dimen>
+    <dimen name="swipe_menu_item_width">36dp</dimen>
 </resources>

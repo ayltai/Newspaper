@@ -3,6 +3,7 @@ package com.github.ayltai.newspaper.item;
 import java.io.Closeable;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.crash.FirebaseCrash;
@@ -26,6 +28,7 @@ import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import com.rohitarya.fresco.facedetection.processor.FaceCenterCrop;
+import com.tubb.smrv.SwipeHorizontalMenuLayout;
 
 import flow.Flow;
 import rx.Observable;
@@ -33,7 +36,16 @@ import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
 public final class ItemViewHolder extends RecyclerView.ViewHolder implements ItemPresenter.View, Closeable {
-    private final PublishSubject<Void> clicks = PublishSubject.create();
+    //region Events
+
+    private final PublishSubject<Void>    clicks    = PublishSubject.create();
+    private final PublishSubject<Boolean> bookmarks = PublishSubject.create();
+    private final PublishSubject<Void>    shares    = PublishSubject.create();
+
+    //endregion
+
+    private final CompositeSubscription subscriptions = new CompositeSubscription();
+    private final int                   screenWidth;
 
     //region Components
 
@@ -43,11 +55,11 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
     private final TextView         source;
     private final TextView         publishDate;
     private final SimpleDraweeView thumbnail;
+    private final ImageView        bookmark;
 
     //endregion
 
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
-    private final int                   screenWidth;
+    private boolean isBookmarked;
 
     public ItemViewHolder(@NonNull final View itemView) {
         super(itemView);
@@ -58,8 +70,27 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
         this.source      = (TextView)itemView.findViewById(R.id.source);
         this.publishDate = (TextView)itemView.findViewById(R.id.publishDate);
         this.thumbnail   = (SimpleDraweeView)itemView.findViewById(R.id.thumbnail);
+        this.bookmark    = (ImageView)itemView.findViewById(R.id.bookmark);
+
+        final SwipeHorizontalMenuLayout swipeHorizontalMenuLayout = (SwipeHorizontalMenuLayout)this.itemView;
 
         this.subscriptions.add(RxView.clicks(this.itemView).subscribe(view -> this.clicks.onNext(null), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+
+        if (this.bookmark != null) this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(view -> {
+            this.setIsBookmarked(!this.isBookmarked);
+
+            swipeHorizontalMenuLayout.smoothCloseMenu();
+
+            this.bookmarks.onNext(this.isBookmarked);
+        }));
+
+        final View share = itemView.findViewById(R.id.share);
+
+        if (share != null) this.subscriptions.add(RxView.clicks(share).subscribe(view -> {
+            swipeHorizontalMenuLayout.smoothCloseMenu();
+
+            this.shares.onNext(null);
+        }));
 
         final DisplayMetrics metrics = new DisplayMetrics();
         ((Activity)this.itemView.getContext()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -100,6 +131,9 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Override
     public void setIsBookmarked(final boolean isBookmarked) {
+        this.isBookmarked = isBookmarked;
+
+        this.bookmark.setImageResource(this.isBookmarked ? R.drawable.ic_bookmark_white_24px : R.drawable.ic_bookmark_border_white_24px);
     }
 
     //endregion
@@ -121,7 +155,13 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
     @Nullable
     @Override
     public Observable<Boolean> bookmarks() {
-        return null;
+        return this.bookmarks;
+    }
+
+    @Nullable
+    @Override
+    public Observable<Void> shares() {
+        return this.shares;
     }
 
     @Override
@@ -131,6 +171,11 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Override
     public void showOriginalMedia(@NonNull final String url) {
+    }
+
+    @Override
+    public void share(@NonNull final String url) {
+        this.itemView.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(url)), this.itemView.getContext().getText(R.string.share_to)));
     }
 
     //endregion

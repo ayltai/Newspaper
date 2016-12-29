@@ -44,9 +44,13 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
 
         @Nullable Observable<Boolean> bookmarks();
 
+        @Nullable Observable<Void> shares();
+
         void showItem(@NonNull ListScreen.Key parentKey, @NonNull Item item);
 
         void showOriginalMedia(@NonNull String url);
+
+        void share(@NonNull String url);
     }
 
     //region Variables
@@ -133,17 +137,38 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
         this.realm.commitTransaction();
     }
 
+    //region Event handlers
+
     private void attachEvents() {
         if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
+        this.attachClicks();
+        this.attachZooms();
+        this.attachBookmarks();
+        this.attachShares();
+    }
+
+    private void attachClicks() {
         if (this.getView().clicks() != null) this.subscriptions.add(this.getView().clicks().subscribe(dummy -> {
             if (this.parentKey != null) this.getView().showItem(this.parentKey, this.item);
         }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+    }
 
+    private void attachZooms() {
         if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(dummy -> {
             if (this.item != null && this.item.getMediaUrl() != null) this.getView().showOriginalMedia(ItemUtils.getOriginalMediaUrl(this.item.getMediaUrl()));
         }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+    }
 
+    private void attachBookmarks() {
         if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks().subscribe(bookmark -> this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK).subscribe(feed -> this.updateFeed(feed, bookmark), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
     }
+
+    private void attachShares() {
+        if (this.getView().shares() != null) this.subscriptions.add(this.getView().shares().subscribe(dummy -> {
+            if (this.item != null && this.item.getLink() != null) this.getView().share(this.item.getLink());
+        }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+    }
+
+    //endregion
 }

@@ -7,6 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -165,6 +166,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
             this.recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            this.recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), LinearLayoutManager.VERTICAL));
             this.recyclerView.setAdapter(new ListScreen.DummyAdapter());
 
             this.swipeRefreshLayout = (WaveSwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);

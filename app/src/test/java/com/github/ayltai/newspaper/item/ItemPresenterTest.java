@@ -40,6 +40,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     private final PublishSubject<Void>    clicks    = PublishSubject.create();
     private final PublishSubject<Void>    zooms     = PublishSubject.create();
     private final PublishSubject<Boolean> bookmarks = PublishSubject.create();
+    private final PublishSubject<Void>    shares    = PublishSubject.create();
 
     //endregion
 
@@ -72,6 +73,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         Mockito.when(view.clicks()).thenReturn(this.clicks);
         Mockito.when(view.zooms()).thenReturn(this.zooms);
         Mockito.when(view.bookmarks()).thenReturn(this.bookmarks);
+        Mockito.when(view.shares()).thenReturn(this.shares);
 
         return view;
     }
@@ -101,7 +103,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         Mockito.verify(this.getView(), Mockito.times(1)).setLink(this.item.getLink());
         Mockito.verify(this.getView(), Mockito.times(1)).setThumbnail(this.item.getMediaUrl(), Constants.LIST_VIEW_TYPE_DEFAULT);
         Mockito.verify(this.getView(), Mockito.times(1)).setIsBookmarked(false);
-        Mockito.verify(this.getView(), Mockito.times(1)).setPublishDate(this.item.getPublishDate() == null ? 0 : this.item.getPublishDate().getTime());
+        Mockito.verify(this.getView(), Mockito.times(1)).setPublishDate(this.item.getPublishDate().getTime());
     }
 
     @Test
@@ -129,6 +131,15 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         this.bookmarks.onNext(true);
 
         Mockito.verify(this.getPresenter(), Mockito.times(1)).updateFeed(this.feed, true);
+    }
+
+    @Test
+    public void testWhenSharedThenShare() throws Exception {
+        this.bind();
+
+        this.shares.onNext(null);
+
+        Mockito.verify(this.getView(), Mockito.times(1)).share(this.item.getLink());
     }
 
     //endregion

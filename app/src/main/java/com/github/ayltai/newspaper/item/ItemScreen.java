@@ -128,13 +128,13 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     private final PublishSubject<Void>    zooms     = PublishSubject.create();
     private final PublishSubject<Boolean> bookmarks = PublishSubject.create();
+    private final PublishSubject<Void>    shares    = PublishSubject.create();
 
     //endregion
 
     //region Variables
 
     private CompositeSubscription subscriptions;
-    private String                link;
     private boolean               isBookmarked;
     private boolean               hasAttached;
     private int                   screenWidth;
@@ -145,7 +145,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     private AppBarLayout     appBarLayout;
     private TextView         toolbarTitle;
-    private ImageView bookmark;
+    private ImageView        bookmark;
     private View             share;
     private TextView         title;
     private TextView         description;
@@ -210,9 +210,6 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     @Override
     public void setLink(@Nullable final String link) {
-        if (BuildConfig.DEBUG) Log.d(this.getClass().getName(), "link = " + link);
-
-        this.link = link;
     }
 
     @Override
@@ -274,6 +271,12 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         return this.bookmarks;
     }
 
+    @Nullable
+    @Override
+    public Observable<Void> shares() {
+        return this.shares;
+    }
+
     @Override
     public void showItem(@NonNull final ListScreen.Key parentKey, @NonNull final Item item) {
     }
@@ -281,6 +284,11 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     @Override
     public void showOriginalMedia(@NonNull final String url) {
         new ImageViewer.Builder(this.getContext(), new String[] { url }).show();
+    }
+
+    @Override
+    public void share(@NonNull final String url) {
+        this.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(url)), this.getContext().getText(R.string.share_to)));
     }
 
     //endregion
@@ -359,14 +367,10 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
             this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(null), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
 
-            this.subscriptions.add(RxView.clicks(this.share).subscribe(dummy -> {
-                if (!TextUtils.isEmpty(this.link)) this.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(this.link)), this.getContext().getText(R.string.share_to)));
-            }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+            this.subscriptions.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(null), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
 
             this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(dummy -> {
-                this.isBookmarked = !this.isBookmarked;
-
-                this.bookmark.setImageResource(this.isBookmarked ? R.drawable.ic_bookmark_white_24px : R.drawable.ic_bookmark_border_white_24px);
+                this.setIsBookmarked(!this.isBookmarked);
 
                 if (this.smallBang != null && this.isBookmarked) this.smallBang.bang(this.bookmark);
 
