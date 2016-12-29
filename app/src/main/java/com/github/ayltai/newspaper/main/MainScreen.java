@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -15,6 +16,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,9 +84,15 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
     private final Realm realm;
 
-    private DrawerLayout drawerLayout;
-    private MainAdapter  adapter;
-    private boolean      hasAttached;
+    private MainAdapter adapter;
+    private boolean     hasAttached;
+
+    //endregion
+
+    //region Components
+
+    private DrawerLayout          drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
 
     //endregion
 
@@ -128,6 +136,9 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
             final ViewPager viewPager = (ViewPager)view.findViewById(R.id.viewPager);
 
             this.drawerLayout = (DrawerLayout)view.findViewById(R.id.drawerLayout);
+            this.drawerToggle = new ActionBarDrawerToggle((Activity)this.getContext(), this.drawerLayout, toolbar, R.string.app_name, R.string.app_name);
+
+            this.drawerLayout.addDrawerListener(this.drawerToggle);
 
             ((CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout)).setTitleEnabled(false);
 
@@ -145,6 +156,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
             this.hasAttached = true;
         }
 
+        this.drawerToggle.syncState();
+
         this.attachedToWindow.onNext(null);
     }
 
@@ -153,6 +166,13 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
         super.onDetachedFromWindow();
 
         this.detachedFromWindow.onNext(null);
+    }
+
+    @Override
+    protected void onConfigurationChanged(final Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        this.drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override

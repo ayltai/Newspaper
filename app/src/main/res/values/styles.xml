@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="android:textColorHint">@color/textColorHint</item>
+        <item name="android:windowTranslucentStatus">true</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="alertDialogTheme">@style/Theme.AppCompat.DayNight.Dialog.Alert</item>
     </style>
