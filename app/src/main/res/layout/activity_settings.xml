@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="24dp"
     android:orientation="vertical">
+    <include layout="@layout/view_statusbar_padding" />
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,11 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:elevation="4dp"
-            android:title="@string/action_settings"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:elevation="4dp" />
+            android:title="@string/action_settings" />
     </android.support.design.widget.AppBarLayout>
     <fragment
         android:name="com.github.ayltai.newspaper.setting.SettingsFragment"

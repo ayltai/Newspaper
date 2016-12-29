@@ -185,6 +185,9 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
     private void setUpDrawerMenu(@NonNull final View view) {
         final View drawerMenu = LayoutInflater.from(this.getContext()).inflate(R.layout.view_drawer_menu, this, false);
+        drawerMenu.setOnClickListener(v -> {
+            // Prevent click-through
+        });
 
         drawerMenu.findViewById(R.id.action_settings).setOnClickListener(v -> {
             this.animation.close();

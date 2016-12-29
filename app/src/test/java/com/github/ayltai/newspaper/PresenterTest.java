@@ -18,7 +18,7 @@ public abstract class PresenterTest<P extends Presenter, V extends Presenter.Vie
     private final PublishSubject<Void> attachments = PublishSubject.create();
     private final PublishSubject<Void> detachments = PublishSubject.create();
 
-    private CompositeSubscription subscriptions;
+    private final CompositeSubscription subscriptions = new CompositeSubscription();
 
     private P presenter;
     private V view;
@@ -50,8 +50,6 @@ public abstract class PresenterTest<P extends Presenter, V extends Presenter.Vie
         Mockito.when(this.view.attachments()).thenReturn(this.attachments);
         Mockito.when(this.view.detachments()).thenReturn(this.detachments);
 
-        if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
-
         this.subscriptions.add(this.view.attachments().subscribe(dummy -> this.presenter.onViewAttached(this.view)));
         this.subscriptions.add(this.view.detachments().subscribe(dummy -> this.presenter.onViewDetached()));
 
@@ -63,9 +61,6 @@ public abstract class PresenterTest<P extends Presenter, V extends Presenter.Vie
     public void tearDown() throws Exception {
         this.detachments.onNext(null);
 
-        if (this.subscriptions != null && this.subscriptions.hasSubscriptions()) {
-            this.subscriptions.unsubscribe();
-            this.subscriptions = null;
-        }
+        this.subscriptions.unsubscribe();
     }
 }

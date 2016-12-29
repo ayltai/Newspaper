@@ -5,8 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/windowBackground"
     android:fitsSystemWindows="true">
+    <include layout="@layout/view_statusbar_padding" />
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -29,10 +29,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-                android:elevation="4dp"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:elevation="4dp">
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
@@ -45,24 +43,22 @@
                         android:layout_weight="1"
                         android:lines="1"
                         android:ellipsize="end"
-                        android:textSize="20sp"
-                        android:textColor="@color/indicator" />
+                        android:textSize="@dimen/text_title"
+                        android:textColor="@color/textColorInverse" />
                     <ImageView
                         android:id="@+id/bookmark"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_margin="@dimen/space_2"
+                        android:layout_height="@dimen/swipe_menu_item_width"
                         android:contentDescription="@string/action_bookmark"
                         android:scaleType="center"
-                        app:srcCompat="@drawable/ic_bookmark_border_white_24px" />
+                        app:srcCompat="@drawable/ic_bookmark_border_white_24px"
+                        style="@style/ImageButton" />
                     <ImageView
                         android:id="@+id/share"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_margin="@dimen/space_2"
+                        android:layout_height="@dimen/swipe_menu_item_width"
                         android:contentDescription="@string/action_share"
                         android:scaleType="center"
-                        app:srcCompat="@drawable/ic_share_white_24px" />
+                        app:srcCompat="@drawable/ic_share_white_24px"
+                        style="@style/ImageButton" />
                 </LinearLayout>
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -79,25 +75,20 @@
                 android:id="@+id/title"
                 android:layout_marginTop="@dimen/space_3"
                 android:gravity="center_horizontal"
-                tools:text="明年1月1日香港標準時間將撥慢1秒"
                 style="@style/Item.Title" />
             <TextView
                 android:id="@+id/source"
                 android:layout_marginTop="@dimen/space_3"
                 android:gravity="center_horizontal"
-                tools:text="香港電台-港聞"
                 style="@style/Item.Source" />
             <TextView
                 android:id="@+id/publishDate"
                 android:gravity="center_horizontal"
-                tools:text="3 hours ago"
                 style="@style/Item.PublishDate" />
             <TextView
                 android:id="@+id/description"
                 android:layout_marginTop="@dimen/space_3"
                 android:layout_marginBottom="@dimen/space_3"
-                android:textIsSelectable="true"
-                tools:text="馮志才表示對方頭髮比自己長、圓面、不記得對方面部有否暗瘡等。辯方大律師李柱銘質疑他望着李峰琦一段時間，但不留意對方的面部。"
                 style="@style/Item.Description" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

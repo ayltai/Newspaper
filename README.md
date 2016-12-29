@@ -28,6 +28,7 @@ This app is made with the support of open source software:
 * [FrescoImageViewer](https://github.com/stfalcon-studio/FrescoImageViewer)
 * [SwipeMenu](https://github.com/TUBB/SwipeMenu)
 * [MaterialStyledDialogs](https://github.com/javiersantos/MaterialStyledDialogs)
+* [Guillotine Animation](https://github.com/Yalantis/GuillotineMenu-Android)
 * [SmallBang](https://github.com/hanks-zyh/SmallBang)
 * [WaveSwipeRefreshLayout](https://github.com/recruit-lifestyle/WaveSwipeRefreshLayout)
 * [OkHttp](https://github.com/square/okhttp)
