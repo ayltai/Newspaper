@@ -123,6 +123,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
     compile 'com.tubb.smrv:swipemenu-recyclerview:5.4.0'
+    compile 'com.github.Yalantis:GuillotineMenu-Android:1.2'
 
     // LeakCanary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'

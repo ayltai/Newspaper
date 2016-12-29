@@ -16,6 +16,8 @@ public final class Constants {
     public static final int REQUEST_SETTINGS = 1;
     public static final int REQUEST_FIREBASE = 2;
 
+    public static final int DRAWER_MENU_ANIMATION_DELAY = 250;
+
     public static final String ENCODING_UTF8 = "UTF-8";
 
     public static final String EMPTY = "";

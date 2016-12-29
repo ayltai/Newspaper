@@ -5,7 +5,10 @@ import java.util.Set;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.view.View;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
@@ -33,5 +36,12 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
 
             return true;
         });
+    }
+
+    @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        view.setBackgroundColor(ContextCompat.getColor(this.getContext(), R.color.windowBackground));
     }
 }

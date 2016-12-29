@@ -5,19 +5,13 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -30,6 +24,8 @@ import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Duration;
 import com.github.javiersantos.materialstyleddialogs.enums.Style;
+import com.yalantis.guillotine.animation.GuillotineAnimation;
+import com.yalantis.guillotine.interfaces.GuillotineListener;
 
 import flow.ClassKey;
 import io.realm.Realm;
@@ -84,15 +80,10 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
     private final Realm realm;
 
-    private MainAdapter adapter;
-    private boolean     hasAttached;
-
-    //endregion
-
-    //region Components
-
-    private DrawerLayout          drawerLayout;
-    private ActionBarDrawerToggle drawerToggle;
+    private MainAdapter         adapter;
+    private boolean             hasAttached;
+    private boolean             isDrawerOpened;
+    private GuillotineAnimation animation;
 
     //endregion
 
@@ -103,8 +94,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
     }
 
     public boolean goBack() {
-        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            this.drawerLayout.closeDrawer(GravityCompat.START);
+        if (this.isDrawerOpened) {
+            this.animation.close();
 
             return true;
         }
@@ -132,31 +123,19 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
         if (!this.hasAttached) {
             final View      view      = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, false);
-            final Toolbar   toolbar   = (Toolbar)view.findViewById(R.id.toolbar);
             final ViewPager viewPager = (ViewPager)view.findViewById(R.id.viewPager);
 
-            this.drawerLayout = (DrawerLayout)view.findViewById(R.id.drawerLayout);
-            this.drawerToggle = new ActionBarDrawerToggle((Activity)this.getContext(), this.drawerLayout, toolbar, R.string.app_name, R.string.app_name);
-
-            this.drawerLayout.addDrawerListener(this.drawerToggle);
-
             ((CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout)).setTitleEnabled(false);
-
-            toolbar.setNavigationIcon(R.drawable.ic_menu_white_24px);
-            toolbar.setNavigationOnClickListener(v -> this.drawerLayout.openDrawer(GravityCompat.START));
-            toolbar.setTitle(R.string.app_name);
-
-            this.setupNavigationView((NavigationView)view.findViewById(R.id.navigationView));
 
             ((TabLayout)view.findViewById(R.id.tabLayout)).setupWithViewPager(viewPager);
             viewPager.setAdapter(this.adapter = new MainAdapter(this.getContext(), this.realm));
 
             this.addView(view);
 
+            this.setUpDrawerMenu(view);
+
             this.hasAttached = true;
         }
-
-        this.drawerToggle.syncState();
 
         this.attachedToWindow.onNext(null);
     }
@@ -169,37 +148,11 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
     }
 
     @Override
-    protected void onConfigurationChanged(final Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        this.drawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
     public void close() {
         if (this.adapter != null) this.adapter.close();
     }
 
     //endregion
-
-    private void setupNavigationView(@NonNull final NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(item -> {
-            this.drawerLayout.closeDrawer(GravityCompat.START);
-
-            switch (item.getItemId()) {
-                case R.id.action_settings:
-                    this.showSettings();
-                    return true;
-
-                case R.id.action_about:
-                    this.showAbout();
-                    return true;
-
-                default:
-                    return false;
-            }
-        });
-    }
 
     private void showSettings() {
         ((Activity)this.getContext()).startActivityForResult(new Intent(this.getContext(), SettingsActivity.class), Constants.REQUEST_SETTINGS);
@@ -228,5 +181,38 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
             .withDialogAnimation(true, Duration.NORMAL)
             .withDivider(true)
             .show();
+    }
+
+    private void setUpDrawerMenu(@NonNull final View view) {
+        final View drawerMenu = LayoutInflater.from(this.getContext()).inflate(R.layout.view_drawer_menu, this, false);
+
+        drawerMenu.findViewById(R.id.action_settings).setOnClickListener(v -> {
+            this.animation.close();
+            this.showSettings();
+        });
+
+        drawerMenu.findViewById(R.id.action_about).setOnClickListener(v -> {
+            this.animation.close();
+            this.showAbout();
+        });
+
+        this.addView(drawerMenu);
+
+        this.animation = new GuillotineAnimation.GuillotineBuilder(drawerMenu, drawerMenu.findViewById(R.id.drawer_close), this.findViewById(R.id.drawer_open))
+            .setStartDelay(Constants.DRAWER_MENU_ANIMATION_DELAY)
+            .setActionBarViewForAnimation(view.findViewById(R.id.toolbar))
+            .setClosedOnStart(true)
+            .setGuillotineListener(new GuillotineListener() {
+                @Override
+                public void onGuillotineOpened() {
+                    MainScreen.this.isDrawerOpened = true;
+                }
+
+                @Override
+                public void onGuillotineClosed() {
+                    MainScreen.this.isDrawerOpened = false;
+                }
+            })
+            .build();
     }
 }

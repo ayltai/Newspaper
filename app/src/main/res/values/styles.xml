@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="android:textColorHint">@color/textColorHint</item>
-        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:windowBackground">@color/colorPrimaryDark</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="alertDialogTheme">@style/Theme.AppCompat.DayNight.Dialog.Alert</item>
@@ -82,5 +82,10 @@
     </style>
     <style name="Item.PublishDate">
         <item name="android:textSize">14sp</item>
+    </style>
+    <style name="DrawerMenuItem">
+        <item name="android:textSize">@dimen/text_large</item>
+        <item name="android:textColor">@color/indicator</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>
