@@ -7,7 +7,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +22,7 @@ import com.github.ayltai.newspaper.setting.Settings;
 
 import flow.ClassKey;
 import io.realm.Realm;
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
@@ -94,10 +94,10 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     //region Components
 
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView       recyclerView;
-    private ViewGroup          empty;
-    private ListAdapter        adapter;
+    private WaveSwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView           recyclerView;
+    private ViewGroup              empty;
+    private ListAdapter            adapter;
 
     //endregion
 
@@ -161,7 +161,9 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
             this.recyclerView.setAdapter(new ListScreen.DummyAdapter());
 
-            this.swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
+            this.swipeRefreshLayout = (WaveSwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
+            this.swipeRefreshLayout.setWaveColor(ContextCompat.getColor(this.getContext(), R.color.colorPrimary));
+            this.swipeRefreshLayout.setColorSchemeResources(R.color.indicator);
             this.swipeRefreshLayout.setOnRefreshListener(() -> this.refreshes.onNext(null));
 
             this.empty = (ViewGroup)view.findViewById(R.id.empty);

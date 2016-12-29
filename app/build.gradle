@@ -88,7 +88,9 @@ dependencies {
 
     // ReactiveX
     compile 'io.reactivex:rxjava:1.2.3'
-    compile 'io.reactivex:rxandroid:1.2.1'
+    compile ('io.reactivex:rxandroid:1.2.1') {
+        exclude group: 'io.reactivex', module: 'rxjava'
+    }
     compile 'com.jakewharton.rxbinding:rxbinding:1.0.0'
 
     // Flow by Square
@@ -112,8 +114,14 @@ dependencies {
     compile 'com.google.android.gms:play-services-vision:10.0.1'
 
     // Eye candies
-    compile 'hanks.xyz:smallbang-library:0.1.2'
+    compile ('hanks.xyz:smallbang-library:0.1.2') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
     compile 'com.github.javiersantos:MaterialStyledDialogs:2.0'
+    compile ('com.github.ayltai:WaveSwipeRefreshLayout:master-SNAPSHOT') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
 
     // LeakCanary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
