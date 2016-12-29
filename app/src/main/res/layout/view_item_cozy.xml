@@ -23,23 +23,19 @@
                 android:id="@+id/title"
                 android:layout_marginTop="@dimen/space_3"
                 android:layout_marginBottom="@dimen/space_2"
-                tools:text="明年1月1日香港標準時間將撥慢1秒"
                 style="@style/Cozy.Title" />
             <TextView
                 android:id="@+id/description"
                 android:layout_marginTop="@dimen/space_2"
                 android:layout_marginBottom="@dimen/space_2"
-                tools:text="馮志才表示對方頭髮比自己長、圓面、不記得對方面部有否暗瘡等。辯方大律師李柱銘質疑他望着李峰琦一段時間，但不留意對方的面部。"
                 style="@style/Cozy.Description" />
             <TextView
                 android:id="@+id/source"
                 android:layout_marginTop="@dimen/space_2"
-                tools:text="香港電台-港聞"
                 style="@style/Cozy.Source" />
             <TextView
                 android:id="@+id/publishDate"
                 android:layout_marginBottom="@dimen/space_3"
-                tools:text="3 hours ago"
                 style="@style/Cozy.PublishDate" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
