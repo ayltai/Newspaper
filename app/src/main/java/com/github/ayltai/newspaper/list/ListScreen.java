@@ -117,8 +117,14 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
         if (this.feed.getItems().isEmpty()) {
             LayoutInflater.from(this.getContext()).inflate(Constants.SOURCE_BOOKMARK.equals(this.parentKey.url) ? R.layout.view_empty_bookmark : R.layout.view_empty_news, this.empty, true);
+
+            this.recyclerView.setVisibility(View.GONE);
+            this.empty.setVisibility(View.VISIBLE);
         } else {
             this.recyclerView.scrollToPosition(Settings.getPosition(this.parentKey.url));
+
+            this.recyclerView.setVisibility(View.VISIBLE);
+            this.empty.setVisibility(View.GONE);
         }
 
         if (this.swipeRefreshLayout.isRefreshing()) this.swipeRefreshLayout.setRefreshing(false);
