@@ -95,6 +95,7 @@
                 android:id="@+id/description"
                 android:layout_marginTop="@dimen/space_3"
                 android:layout_marginBottom="@dimen/space_3"
+                android:textIsSelectable="true"
                 tools:text="馮志才表示對方頭髮比自己長、圓面、不記得對方面部有否暗瘡等。辯方大律師李柱銘質疑他望着李峰琦一段時間，但不留意對方的面部。"
                 style="@style/Item.Description" />
         </LinearLayout>
