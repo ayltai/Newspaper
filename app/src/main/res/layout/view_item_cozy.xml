@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <com.github.piasy.biv.view.BigImageView
+            <com.github.ayltai.newspaper.widget.FaceCenteredImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/thumbnail_cozy"

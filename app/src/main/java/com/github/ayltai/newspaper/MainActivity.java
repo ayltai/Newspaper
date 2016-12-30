@@ -27,13 +27,13 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
+import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.item.ItemPresenter;
 import com.github.ayltai.newspaper.item.ItemScreen;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.main.MainPresenter;
 import com.github.ayltai.newspaper.main.MainScreen;
 import com.github.ayltai.newspaper.setting.Settings;
-import com.rohitarya.fresco.facedetection.processor.core.FrescoFaceDetector;
 
 import flow.Flow;
 import flow.KeyDispatcher;
@@ -66,7 +66,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
 
         this.setUpRemoteConfig();
 
-        FrescoFaceDetector.initialize(this);
+        FaceDetectorFactory.initialize(this);
 
         this.realm     = Realm.getDefaultInstance();
         this.analytics = FirebaseAnalytics.getInstance(this);
@@ -95,7 +95,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
             }
         }
 
-        FrescoFaceDetector.releaseDetector();
+        FaceDetectorFactory.release();
 
         if (!this.realm.isClosed()) this.realm.close();
     }
@@ -190,8 +190,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Constants.REQUEST_SETTINGS && resultCode == Activity.RESULT_OK)
-            this.startActivity(this.getBaseContext().getPackageManager().getLaunchIntentForPackage(this.getBaseContext().getPackageName()).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        if (requestCode == Constants.REQUEST_SETTINGS && resultCode == Activity.RESULT_OK) this.startActivity(this.getBaseContext().getPackageManager().getLaunchIntentForPackage(this.getBaseContext().getPackageName()).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
     @Override

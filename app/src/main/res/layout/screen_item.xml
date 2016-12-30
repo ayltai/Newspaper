@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:contentScrim="?attr/colorPrimary">
-            <com.github.piasy.biv.view.BigImageView
+            <com.github.ayltai.newspaper.widget.FaceCenteredImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/thumbnail_cozy"

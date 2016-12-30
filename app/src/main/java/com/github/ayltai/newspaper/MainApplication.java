@@ -2,7 +2,6 @@ package com.github.ayltai.newspaper;
 
 import android.app.Application;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.github.piasy.biv.BigImageViewer;
@@ -24,10 +23,8 @@ public final class MainApplication extends Application {
             .schemaVersion(BuildConfig.VERSION_CODE)
             .build());
 
-        Fresco.initialize(this, ImagePipelineConfig.newBuilder(this)
+        BigImageViewer.initialize(FrescoImageLoader.with(this, ImagePipelineConfig.newBuilder(this)
             .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
-            .build());
-
-        BigImageViewer.initialize(FrescoImageLoader.with(this));
+            .build()));
     }
 }

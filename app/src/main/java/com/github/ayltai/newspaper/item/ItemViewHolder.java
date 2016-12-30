@@ -18,18 +18,18 @@ import android.widget.TextView;
 import com.google.firebase.crash.FirebaseCrash;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
+import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
+import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.piasy.biv.view.BigImageView;
 import com.jakewharton.rxbinding.view.RxView;
-import com.rohitarya.fresco.facedetection.processor.FaceCenterCrop;
 import com.tubb.smrv.SwipeHorizontalMenuLayout;
 
 import flow.Flow;
@@ -80,10 +80,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
             this.thumbnail  = (BigImageView)view;
             this.draweeView = null;
 
-            final SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)this.thumbnail.getChildAt(0);
-            imageView.setPanEnabled(false);
-            imageView.setZoomEnabled(false);
-            imageView.setQuickScaleEnabled(false);
+            ImageUtils.configure((SubsamplingScaleImageView)this.thumbnail.getChildAt(0));
         } else if (view instanceof SimpleDraweeView) {
             this.thumbnail  = null;
             this.draweeView = (SimpleDraweeView)view;
@@ -112,10 +109,16 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
             this.shares.onNext(null);
         }));
 
-        final DisplayMetrics metrics = new DisplayMetrics();
-        ((Activity)this.itemView.getContext()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        final Activity activity = ContextUtils.getActivity(this.itemView.getContext());
 
-        this.screenWidth = metrics.widthPixels;
+        if (activity != null) {
+            final DisplayMetrics metrics = new DisplayMetrics();
+            activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+            this.screenWidth = metrics.widthPixels;
+        } else {
+            this.screenWidth = 0;
+        }
     }
 
     //region Properties
@@ -229,6 +232,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
             imageView.setVisibility(View.VISIBLE);
 
             if (type == Constants.LIST_VIEW_TYPE_COZY) {
+                FaceDetectorFactory.initialize(imageView.getContext());
                 imageView.showImage(Uri.parse(url), Uri.parse(ItemUtils.getOriginalMediaUrl(url)));
             } else {
                 imageView.showImage(Uri.parse(url));
@@ -241,17 +245,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
             draweeView.setVisibility(View.GONE);
         } else {
             draweeView.setVisibility(View.VISIBLE);
-
-            if (type == Constants.LIST_VIEW_TYPE_COZY) {
-                draweeView.setController(Fresco.newDraweeControllerBuilder()
-                    .setImageRequest(ImageRequestBuilder.newBuilderWithSource(Uri.parse(ItemUtils.getOriginalMediaUrl(url)))
-                        .setPostprocessor(new FaceCenterCrop(screenWidth, draweeView.getResources().getDimensionPixelSize(R.dimen.thumbnail_cozy)))
-                        .build())
-                    .setOldController(draweeView.getController())
-                    .build());
-            } else {
-                draweeView.setImageURI(url);
-            }
+            draweeView.setImageURI(url);
         }
     }
 

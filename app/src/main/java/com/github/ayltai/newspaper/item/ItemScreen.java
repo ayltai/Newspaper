@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,9 +25,12 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
+import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
+import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.piasy.biv.indicator.progresspie.ProgressPieIndicator;
 import com.github.piasy.biv.view.BigImageView;
@@ -137,7 +139,6 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     private CompositeSubscription subscriptions;
     private boolean               isBookmarked;
     private boolean               hasAttached;
-    private int                   screenWidth;
 
     //endregion
 
@@ -232,6 +233,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             } else {
                 this.appBarLayout.setExpanded(true, false);
 
+                FaceDetectorFactory.initialize(this.thumbnail.getContext());
                 this.thumbnail.showImage(Uri.parse(thumbnail), Uri.parse(ItemUtils.getOriginalMediaUrl(thumbnail)));
             }
         }
@@ -306,12 +308,8 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        this.smallBang = SmallBang.attach2Window((Activity)this.getContext());
-
-        final DisplayMetrics metrics = new DisplayMetrics();
-        ((Activity)this.getContext()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        this.screenWidth = metrics.widthPixels;
+        final Activity activity = ContextUtils.getActivity(this.getContext());
+        if (activity != null) this.smallBang = SmallBang.attach2Window(activity);
 
         if (this.hasAttached) {
             ((SubsamplingScaleImageView)this.thumbnail.getChildAt(0)).setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
@@ -334,10 +332,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
             toolbar.setNavigationOnClickListener(v -> Flow.get(v).goBack());
 
-            final SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)this.thumbnail.getChildAt(0);
-            imageView.setPanEnabled(false);
-            imageView.setZoomEnabled(false);
-            imageView.setQuickScaleEnabled(false);
+            ImageUtils.configure((SubsamplingScaleImageView)this.thumbnail.getChildAt(0));
 
             this.addView(view);
 
