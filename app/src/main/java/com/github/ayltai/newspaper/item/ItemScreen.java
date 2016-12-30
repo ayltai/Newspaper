@@ -233,7 +233,6 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             } else {
                 this.appBarLayout.setExpanded(true, false);
 
-                FaceDetectorFactory.initialize(this.thumbnail.getContext());
                 this.thumbnail.showImage(Uri.parse(thumbnail), Uri.parse(ItemUtils.getOriginalMediaUrl(thumbnail)));
             }
         }
