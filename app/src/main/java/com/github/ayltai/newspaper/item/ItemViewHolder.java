@@ -19,7 +19,6 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
 import com.github.ayltai.newspaper.util.DateUtils;
@@ -88,7 +87,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
         final SwipeHorizontalMenuLayout swipeHorizontalMenuLayout = (SwipeHorizontalMenuLayout)this.itemView;
 
         this.subscriptions.add(RxView.clicks(this.itemView).subscribe(v -> this.clicks.onNext(null), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
-        this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(v -> this.clicks.onNext(null), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+        if (this.thumbnail != null) this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(v -> this.clicks.onNext(null), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
 
         if (this.bookmark != null) this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(v -> {
             this.setIsBookmarked(!this.isBookmarked);
@@ -218,7 +217,6 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
             imageView.setVisibility(View.VISIBLE);
 
             if (type == Constants.LIST_VIEW_TYPE_COZY) {
-                FaceDetectorFactory.initialize(imageView.getContext());
                 imageView.showImage(Uri.parse(url), Uri.parse(ItemUtils.getOriginalMediaUrl(url)));
             } else {
                 imageView.showImage(Uri.parse(url));
