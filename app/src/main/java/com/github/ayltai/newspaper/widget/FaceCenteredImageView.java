@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 
@@ -15,8 +17,18 @@ import com.github.ayltai.newspaper.graphics.FaceCenterCrop;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.piasy.biv.view.BigImageView;
 
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public final class FaceCenteredImageView extends BigImageView {
-    private int screenWidth;
+    //region Variables
+
+    private Subscription subscription;
+    private int          screenWidth;
+
+    //endregion
 
     //region Constructors
 
@@ -34,18 +46,24 @@ public final class FaceCenteredImageView extends BigImageView {
 
     //endregion
 
+    @UiThread
     @Override
     public void onCacheHit(final File image) {
         super.onCacheHit(image);
 
-        this.translate(image);
+        if (this.subscription != null) this.subscription.unsubscribe();
+
+        this.subscription = this.translate(image);
     }
 
+    @WorkerThread
     @Override
     public void onCacheMiss(final File image) {
         super.onCacheMiss(image);
 
-        this.post(() -> this.translate(image));
+        if (this.subscription != null) this.subscription.unsubscribe();
+
+        this.subscription = this.translate(image);
     }
 
     @Override
@@ -62,10 +80,27 @@ public final class FaceCenteredImageView extends BigImageView {
         }
     }
 
-    private void translate(@NonNull final File image) {
-        final PointF center = new FaceCenterCrop(this.screenWidth, this.getContext().getResources().getDimensionPixelSize(R.dimen.thumbnail_cozy)).findCroppedCenter(image);
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
 
-        final SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)this.getChildAt(0);
-        imageView.setScaleAndCenter(imageView.getScale(), center);
+        if (this.subscription != null) this.subscription.unsubscribe();
+        this.subscription = null;
+    }
+
+    private Subscription translate(@NonNull final File image) {
+        return this.translate(image, this.screenWidth, this.getContext().getResources().getDimensionPixelSize(R.dimen.thumbnail_cozy))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(center -> {
+                final SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)this.getChildAt(0);
+                imageView.setScaleAndCenter(imageView.getScale(), center);
+            });
+    }
+
+    private Observable<PointF> translate(@NonNull final File image, final int width, final int height) {
+        return Observable.create(subscriber -> {
+            subscriber.onNext(new FaceCenterCrop(width, height).findCroppedCenter(image));
+        });
     }
 }

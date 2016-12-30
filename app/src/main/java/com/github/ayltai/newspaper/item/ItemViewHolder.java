@@ -2,14 +2,12 @@ package com.github.ayltai.newspaper.item;
 
 import java.io.Closeable;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,7 +22,6 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
-import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
@@ -47,7 +44,6 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
     //endregion
 
     private final CompositeSubscription subscriptions = new CompositeSubscription();
-    private final int                   screenWidth;
 
     //region Components
 
@@ -108,17 +104,6 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
             this.shares.onNext(null);
         }));
-
-        final Activity activity = ContextUtils.getActivity(this.itemView.getContext());
-
-        if (activity != null) {
-            final DisplayMetrics metrics = new DisplayMetrics();
-            activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-            this.screenWidth = metrics.widthPixels;
-        } else {
-            this.screenWidth = 0;
-        }
     }
 
     //region Properties
@@ -149,8 +134,8 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Override
     public void setThumbnail(@Nullable final String thumbnail, @Constants.ListViewType final int type) {
-        if (this.thumbnail != null) ItemViewHolder.setImage(this.thumbnail, thumbnail, type, this.screenWidth);
-        if (this.draweeView != null) ItemViewHolder.setImage(this.draweeView, thumbnail, type, this.screenWidth);
+        if (this.thumbnail != null) ItemViewHolder.setImage(this.thumbnail, thumbnail, type);
+        if (this.draweeView != null) ItemViewHolder.setImage(this.draweeView, thumbnail);
     }
 
     @Override
@@ -225,7 +210,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     //endregion
 
-    private static void setImage(@NonNull final BigImageView imageView, @Nullable final String url, @Constants.ListViewType final int type, final int screenWidth) {
+    private static void setImage(@NonNull final BigImageView imageView, @Nullable final String url, @Constants.ListViewType final int type) {
         if (TextUtils.isEmpty(url)) {
             imageView.setVisibility(View.GONE);
         } else {
@@ -240,7 +225,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
         }
     }
 
-    private static void setImage(@NonNull final SimpleDraweeView draweeView, @Nullable final String url, @Constants.ListViewType final int type, final int screenWidth) {
+    private static void setImage(@NonNull final SimpleDraweeView draweeView, @Nullable final String url) {
         if (TextUtils.isEmpty(url)) {
             draweeView.setVisibility(View.GONE);
         } else {
