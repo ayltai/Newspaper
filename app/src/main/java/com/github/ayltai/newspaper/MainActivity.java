@@ -27,13 +27,18 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
+import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.item.ItemPresenter;
 import com.github.ayltai.newspaper.item.ItemScreen;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.main.MainPresenter;
 import com.github.ayltai.newspaper.main.MainScreen;
 import com.github.ayltai.newspaper.setting.Settings;
-import com.rohitarya.fresco.facedetection.processor.core.FrescoFaceDetector;
+import com.github.piasy.biv.BigImageViewer;
+import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
 
 import flow.Flow;
 import flow.KeyDispatcher;
@@ -66,12 +71,14 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
 
         this.setUpRemoteConfig();
 
-        FrescoFaceDetector.initialize(this);
+        BigImageViewer.initialize(FrescoImageLoader.with(this.getApplicationContext(), ImagePipelineConfig.newBuilder(this.getApplicationContext())
+            .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
+            .build()));
 
         this.realm     = Realm.getDefaultInstance();
-        this.analytics = FirebaseAnalytics.getInstance(this);
+        this.analytics = FirebaseAnalytics.getInstance(this.getApplicationContext());
 
-        this.client = new GoogleApiClient.Builder(this)
+        this.client = new GoogleApiClient.Builder(this.getApplicationContext())
             .enableAutoManage(this, this)
             .addApiIfAvailable(AppInvite.API)
             .build();
@@ -95,7 +102,8 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
             }
         }
 
-        FrescoFaceDetector.releaseDetector();
+        FaceDetectorFactory.release();
+        Fresco.shutDown();
 
         if (!this.realm.isClosed()) this.realm.close();
     }
@@ -190,8 +198,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Constants.REQUEST_SETTINGS && resultCode == Activity.RESULT_OK)
-            this.startActivity(this.getBaseContext().getPackageManager().getLaunchIntentForPackage(this.getBaseContext().getPackageName()).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        if (requestCode == Constants.REQUEST_SETTINGS && resultCode == Activity.RESULT_OK) this.startActivity(this.getBaseContext().getPackageManager().getLaunchIntentForPackage(this.getBaseContext().getPackageName()).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
     @Override
