@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.google.firebase.crash.FirebaseCrash;
 
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
@@ -26,6 +27,7 @@ import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
+import com.github.piasy.biv.view.BigImageView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.rohitarya.fresco.facedetection.processor.FaceCenterCrop;
 import com.tubb.smrv.SwipeHorizontalMenuLayout;
@@ -54,7 +56,8 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
     private final TextView         description;
     private final TextView         source;
     private final TextView         publishDate;
-    private final SimpleDraweeView thumbnail;
+    private final BigImageView     thumbnail;
+    private final SimpleDraweeView draweeView;
     private final ImageView        bookmark;
 
     //endregion
@@ -69,14 +72,31 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
         this.description = (TextView)itemView.findViewById(R.id.description);
         this.source      = (TextView)itemView.findViewById(R.id.source);
         this.publishDate = (TextView)itemView.findViewById(R.id.publishDate);
-        this.thumbnail   = (SimpleDraweeView)itemView.findViewById(R.id.thumbnail);
         this.bookmark    = (ImageView)itemView.findViewById(R.id.bookmark);
+
+        final View view = itemView.findViewById(R.id.thumbnail);
+
+        if (view instanceof BigImageView) {
+            this.thumbnail  = (BigImageView)view;
+            this.draweeView = null;
+
+            final SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)this.thumbnail.getChildAt(0);
+            imageView.setPanEnabled(false);
+            imageView.setZoomEnabled(false);
+            imageView.setQuickScaleEnabled(false);
+        } else if (view instanceof SimpleDraweeView) {
+            this.thumbnail  = null;
+            this.draweeView = (SimpleDraweeView)view;
+        } else {
+            this.thumbnail  = null;
+            this.draweeView = null;
+        }
 
         final SwipeHorizontalMenuLayout swipeHorizontalMenuLayout = (SwipeHorizontalMenuLayout)this.itemView;
 
-        this.subscriptions.add(RxView.clicks(this.itemView).subscribe(view -> this.clicks.onNext(null), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+        this.subscriptions.add(RxView.clicks(this.itemView).subscribe(v -> this.clicks.onNext(null), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
 
-        if (this.bookmark != null) this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(view -> {
+        if (this.bookmark != null) this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(v -> {
             this.setIsBookmarked(!this.isBookmarked);
 
             swipeHorizontalMenuLayout.smoothCloseMenu();
@@ -86,7 +106,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
         final View share = itemView.findViewById(R.id.share);
 
-        if (share != null) this.subscriptions.add(RxView.clicks(share).subscribe(view -> {
+        if (share != null) this.subscriptions.add(RxView.clicks(share).subscribe(v -> {
             swipeHorizontalMenuLayout.smoothCloseMenu();
 
             this.shares.onNext(null);
@@ -126,7 +146,8 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Override
     public void setThumbnail(@Nullable final String thumbnail, @Constants.ListViewType final int type) {
-        ItemViewHolder.setImage(this.thumbnail, thumbnail, type, this.screenWidth);
+        if (this.thumbnail != null) ItemViewHolder.setImage(this.thumbnail, thumbnail, type, this.screenWidth);
+        if (this.draweeView != null) ItemViewHolder.setImage(this.draweeView, thumbnail, type, this.screenWidth);
     }
 
     @Override
@@ -200,6 +221,20 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
     }
 
     //endregion
+
+    private static void setImage(@NonNull final BigImageView imageView, @Nullable final String url, @Constants.ListViewType final int type, final int screenWidth) {
+        if (TextUtils.isEmpty(url)) {
+            imageView.setVisibility(View.GONE);
+        } else {
+            imageView.setVisibility(View.VISIBLE);
+
+            if (type == Constants.LIST_VIEW_TYPE_COZY) {
+                imageView.showImage(Uri.parse(url), Uri.parse(ItemUtils.getOriginalMediaUrl(url)));
+            } else {
+                imageView.showImage(Uri.parse(url));
+            }
+        }
+    }
 
     private static void setImage(@NonNull final SimpleDraweeView draweeView, @Nullable final String url, @Constants.ListViewType final int type, final int screenWidth) {
         if (TextUtils.isEmpty(url)) {

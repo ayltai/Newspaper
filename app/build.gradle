@@ -58,6 +58,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 checkstyle {
@@ -87,11 +91,14 @@ dependencies {
     compile 'com.google.firebase:firebase-invites:10.0.1'
 
     // ReactiveX
-    compile 'io.reactivex:rxjava:1.2.3'
+    compile 'io.reactivex:rxjava:1.2.4'
     compile ('io.reactivex:rxandroid:1.2.1') {
         exclude group: 'io.reactivex', module: 'rxjava'
     }
-    compile 'com.jakewharton.rxbinding:rxbinding:1.0.0'
+    compile ('com.jakewharton.rxbinding:rxbinding:1.0.0') {
+        exclude group: 'io.reactivex', module: 'rxjava'
+        exclude group: 'io.reactivex', module: 'rxandroid'
+    }
 
     // Flow by Square
     compile 'com.squareup.flow:flow:1.0.0-alpha2'
@@ -112,6 +119,15 @@ dependencies {
         exclude group: 'com.facebook.fresco', module: 'fresco'
     }
     compile 'com.google.android.gms:play-services-vision:10.0.1'
+    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
+    compile ('com.github.piasy:BigImageViewer:1.2.4') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.davemorrissey.labs', module: 'subsampling-scale-image-view'
+    }
+    compile ('com.github.piasy:FrescoImageLoader:1.2.4') {
+        exclude group: 'com.facebook.fresco', module: 'fresco'
+    }
+    compile 'com.github.piasy:ProgressPieIndicator:1.2.4'
 
     // Eye candies
     compile ('hanks.xyz:smallbang-library:0.1.2') {

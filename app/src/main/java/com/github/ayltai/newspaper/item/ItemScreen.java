@@ -21,9 +21,8 @@ import android.widget.TextView;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
@@ -31,8 +30,9 @@ import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
+import com.github.piasy.biv.indicator.progresspie.ProgressPieIndicator;
+import com.github.piasy.biv.view.BigImageView;
 import com.jakewharton.rxbinding.view.RxView;
-import com.rohitarya.fresco.facedetection.processor.FaceCenterCrop;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import flow.ClassKey;
@@ -143,16 +143,16 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     //region Components
 
-    private AppBarLayout     appBarLayout;
-    private TextView         toolbarTitle;
-    private ImageView        bookmark;
-    private View             share;
-    private TextView         title;
-    private TextView         description;
-    private TextView         source;
-    private TextView         publishDate;
-    private SimpleDraweeView thumbnail;
-    private SmallBang        smallBang;
+    private AppBarLayout appBarLayout;
+    private TextView     toolbarTitle;
+    private ImageView    bookmark;
+    private View         share;
+    private TextView     title;
+    private TextView     description;
+    private TextView     source;
+    private TextView     publishDate;
+    private BigImageView thumbnail;
+    private SmallBang    smallBang;
 
     //endregion
 
@@ -232,12 +232,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             } else {
                 this.appBarLayout.setExpanded(true, false);
 
-                this.thumbnail.setController(Fresco.newDraweeControllerBuilder()
-                    .setImageRequest(ImageRequestBuilder.newBuilderWithSource(Uri.parse(ItemUtils.getOriginalMediaUrl(thumbnail)))
-                        .setPostprocessor(new FaceCenterCrop(this.screenWidth, this.getResources().getDimensionPixelSize(R.dimen.thumbnail_cozy)))
-                        .build())
-                    .setOldController(this.thumbnail.getController())
-                    .build());
+                this.thumbnail.showImage(Uri.parse(thumbnail), Uri.parse(ItemUtils.getOriginalMediaUrl(thumbnail)));
             }
         }
     }
@@ -318,7 +313,9 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
         this.screenWidth = metrics.widthPixels;
 
-        if (!this.hasAttached) {
+        if (this.hasAttached) {
+            ((SubsamplingScaleImageView)this.thumbnail.getChildAt(0)).setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
+        } else {
             final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_item, this, false);
 
             this.appBarLayout = (AppBarLayout)view.findViewById(R.id.appBarLayout);
@@ -329,11 +326,18 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             this.description  = (TextView)view.findViewById(R.id.description);
             this.source       = (TextView)view.findViewById(R.id.source);
             this.publishDate  = (TextView)view.findViewById(R.id.publishDate);
-            this.thumbnail    = (SimpleDraweeView)view.findViewById(R.id.thumbnail);
+            this.thumbnail    = (BigImageView)view.findViewById(R.id.thumbnail);
+
+            this.thumbnail.setProgressIndicator(new ProgressPieIndicator());
 
             final Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
             toolbar.setNavigationOnClickListener(v -> Flow.get(v).goBack());
+
+            final SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)this.thumbnail.getChildAt(0);
+            imageView.setPanEnabled(false);
+            imageView.setZoomEnabled(false);
+            imageView.setQuickScaleEnabled(false);
 
             this.addView(view);
 

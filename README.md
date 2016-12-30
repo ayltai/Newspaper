@@ -26,6 +26,8 @@ This app is made with the support of open source software:
 * [Facebook Fresco](https://github.com/facebook/fresco)
 * [Fresco Face Detection Processor](https://github.com/aryarohit07/FrescoFaceDetectionProcessor)
 * [FrescoImageViewer](https://github.com/stfalcon-studio/FrescoImageViewer)
+* [Subsampling Scale Image View](https://github.com/davemorrissey/subsampling-scale-image-view)
+* [BigImageViewer](https://github.com/Piasy/BigImageViewer)
 * [SwipeMenu](https://github.com/TUBB/SwipeMenu)
 * [MaterialStyledDialogs](https://github.com/javiersantos/MaterialStyledDialogs)
 * [Guillotine Animation](https://github.com/Yalantis/GuillotineMenu-Android)

@@ -5,6 +5,8 @@ import android.app.Application;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
+import com.github.piasy.biv.BigImageViewer;
+import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
 import com.squareup.leakcanary.LeakCanary;
 
 import io.realm.Realm;
@@ -25,5 +27,7 @@ public final class MainApplication extends Application {
         Fresco.initialize(this, ImagePipelineConfig.newBuilder(this)
             .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
             .build());
+
+        BigImageViewer.initialize(FrescoImageLoader.with(this));
     }
 }
