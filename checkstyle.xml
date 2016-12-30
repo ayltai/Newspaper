@@ -237,7 +237,7 @@
         <module name="IllegalCatch"/>
         <module name="IllegalImport"/>
         <module name="MagicNumber">
-            <property name="ignoreNumbers" value="-1,0,1"/>
+            <property name="ignoreNumbers" value="-1,0,1,2"/>
         </module>
         <module name="MissingDeprecated"/>
         <module name="MissingOverride"/>
