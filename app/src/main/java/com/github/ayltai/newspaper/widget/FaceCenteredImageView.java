@@ -1,19 +1,29 @@
 package com.github.ayltai.newspaper.widget;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PointF;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
+
+import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.graphics.FaceCenterCrop;
+import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.piasy.biv.view.BigImageView;
 
@@ -27,6 +37,8 @@ public final class FaceCenteredImageView extends BigImageView {
 
     private Subscription subscription;
     private int          screenWidth;
+    private Field        mCurrentImageFile;
+    private Field        mTempImages;
 
     //endregion
 
@@ -49,7 +61,7 @@ public final class FaceCenteredImageView extends BigImageView {
     @UiThread
     @Override
     public void onCacheHit(final File image) {
-        super.onCacheHit(image);
+        this.setCurrentImageFile(image);
 
         if (this.subscription != null) this.subscription.unsubscribe();
 
@@ -59,7 +71,8 @@ public final class FaceCenteredImageView extends BigImageView {
     @WorkerThread
     @Override
     public void onCacheMiss(final File image) {
-        super.onCacheMiss(image);
+        this.setCurrentImageFile(image);
+        this.getTempImages().add(image);
 
         if (this.subscription != null) this.subscription.unsubscribe();
 
@@ -69,6 +82,8 @@ public final class FaceCenteredImageView extends BigImageView {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+
+        ((SubsamplingScaleImageView)this.getChildAt(0)).recycle();
 
         final Activity activity = ContextUtils.getActivity(this.getContext());
 
@@ -89,16 +104,60 @@ public final class FaceCenteredImageView extends BigImageView {
     }
 
     private Subscription translate(@NonNull final File image) {
-        return this.translate(image, this.screenWidth, this.getContext().getResources().getDimensionPixelSize(R.dimen.thumbnail_cozy))
+        FaceDetectorFactory.initialize(this.getContext());
+
+        return FaceCenteredImageView.translate(image, this.screenWidth, this.getContext().getResources().getDimensionPixelSize(R.dimen.thumbnail_cozy))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(center -> {
+                this.doShowImage(image);
+
                 final SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)this.getChildAt(0);
-                imageView.setScaleAndCenter(imageView.getScale(), center);
+                final float                     scale     = imageView.getScale();
+
+                imageView.resetScaleAndCenter();
+                imageView.setScaleAndCenter(scale, center);
             });
     }
 
-    private Observable<PointF> translate(@NonNull final File image, final int width, final int height) {
+    //region Reflected methods
+
+    private void setCurrentImageFile(@NonNull final File file) {
+        try {
+            if (this.mCurrentImageFile == null) this.mCurrentImageFile = BigImageView.class.getDeclaredField("mCurrentImageFile");
+            this.mCurrentImageFile.setAccessible(true);
+
+            this.mCurrentImageFile.set(this, file);
+        } catch (final NoSuchFieldException e) {
+            FirebaseCrash.logcat(Log.WARN, this.getClass().getName(), e.getMessage());
+        } catch (final IllegalAccessException e) {
+            FirebaseCrash.logcat(Log.WARN, this.getClass().getName(), e.getMessage());
+        }
+    }
+
+    private List<File> getTempImages() {
+        try {
+            if (this.mTempImages == null) this.mTempImages = BigImageView.class.getDeclaredField("mTempImages");
+            this.mTempImages.setAccessible(true);
+
+            return (List<File>)this.mTempImages.get(this);
+        } catch (final NoSuchFieldException e) {
+            FirebaseCrash.logcat(Log.WARN, this.getClass().getName(), e.getMessage());
+        } catch (final IllegalAccessException e) {
+            FirebaseCrash.logcat(Log.WARN, this.getClass().getName(), e.getMessage());
+        }
+
+        return null;
+    }
+
+    private void doShowImage(@NonNull final File image) {
+        ((SubsamplingScaleImageView)this.getChildAt(0)).setImage(ImageSource.uri(Uri.fromFile(image)));
+    }
+
+    //endregion
+
+    @NonNull
+    private static Observable<PointF> translate(@NonNull final File image, final int width, final int height) {
         return Observable.create(subscriber -> {
             subscriber.onNext(new FaceCenterCrop(width, height).findCroppedCenter(image));
         });
