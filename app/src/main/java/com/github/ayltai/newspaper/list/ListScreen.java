@@ -166,8 +166,9 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
             this.recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
             this.recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-            this.recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), LinearLayoutManager.VERTICAL));
             this.recyclerView.setAdapter(new ListScreen.DummyAdapter());
+
+            if (Settings.getListViewType(this.getContext()) == Constants.LIST_VIEW_TYPE_COMPACT) this.recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), LinearLayoutManager.VERTICAL));
 
             this.swipeRefreshLayout = (WaveSwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
             this.swipeRefreshLayout.setWaveColor(ContextCompat.getColor(this.getContext(), R.color.colorPrimary));
