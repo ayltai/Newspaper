@@ -13,11 +13,14 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteReferral;
@@ -32,6 +35,7 @@ import com.github.ayltai.newspaper.item.ItemScreen;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.main.MainPresenter;
 import com.github.ayltai.newspaper.main.MainScreen;
+import com.github.ayltai.newspaper.net.ConnectivityChangeReceiver;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.LogUtils;
 
@@ -53,10 +57,12 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
 
     //region Variables
 
-    private FirebaseRemoteConfig config;
-    private GoogleApiClient      client;
-    private FirebaseAnalytics    analytics;
-    private Realm                realm;
+    private FirebaseRemoteConfig       config;
+    private GoogleApiClient            client;
+    private FirebaseAnalytics          analytics;
+    private Realm                      realm;
+    private ConnectivityChangeReceiver receiver;
+    private Snackbar                   snackbar;
 
     //endregion
 
@@ -73,6 +79,8 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
             .enableAutoManage(this, this)
             .addApiIfAvailable(AppInvite.API)
             .build();
+
+        this.setUpConnectivityChangeReceiver();
 
         this.onNewIntent(this.getIntent());
     }
@@ -153,6 +161,20 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        this.receiver.register();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        this.receiver.unregister();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -213,6 +235,22 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
         } else {
             MainActivity.logConnectionError(connectionResult);
         }
+    }
+
+    private void setUpConnectivityChangeReceiver() {
+        this.snackbar = Snackbar.make(this.findViewById(android.R.id.content), R.string.error_no_connection, Snackbar.LENGTH_INDEFINITE);
+        ((TextView)this.snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setTextColor(ContextCompat.getColor(this, R.color.textColorInverse));
+
+        this.receiver = new ConnectivityChangeReceiver(this) {
+            @Override
+            protected void onConnectivityChange(final boolean isConnected) {
+                if (isConnected) {
+                    if (MainActivity.this.snackbar.isShown()) MainActivity.this.snackbar.dismiss();
+                } else {
+                    if (!MainActivity.this.snackbar.isShown()) MainActivity.this.snackbar.show();
+                }
+            }
+        };
     }
 
     private void setUpRemoteConfig() {

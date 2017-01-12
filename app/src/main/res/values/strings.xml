@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Newspaper</string>
     <string name="app_version">Version %s</string>
+    <string name="error_no_connection">No internet connection</string>
     <string name="empty_news_title">We couldn\'t find any news for you</string>
     <string name="empty_news_description">Please try again later</string>
     <string name="empty_bookmark_title">You don\'t have any favorite news yet</string>

@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">報紙</string>
     <string name="app_version">版本 %s</string>
+    <string name="error_no_connection">沒有網絡連接</string>
     <string name="empty_news_title">我們找不到任何新聞</string>
     <string name="empty_news_description">請稍後再試</string>
     <string name="empty_bookmark_title">你還沒有任何喜歡的新聞</string>
