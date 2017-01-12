@@ -59,9 +59,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                     } else {
                         this.getView().setItems(this.key, feed);
 
-                        if (!Constants.SOURCE_BOOKMARK.equals(this.key.getUrl())) {
-                            this.bindFromRemote(Constants.INIT_LOAD_TIMEOUT);
-                        }
+                        if (!Constants.SOURCE_BOOKMARK.equals(this.key.getUrl())) this.bindFromRemote(Constants.INIT_LOAD_TIMEOUT);
                     }
 
                     this.isBound = true;
@@ -72,6 +70,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
     private void bindFromRemote() {
         this.client.get(this.key.getUrl())
             .doOnNext(this::copyToRealmOrUpdate)
+            .timeout(Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(data -> this.getView().setItems(this.key, data), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error));

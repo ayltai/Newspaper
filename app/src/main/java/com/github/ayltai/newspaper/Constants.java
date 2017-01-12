@@ -10,6 +10,7 @@ import com.github.ayltai.newspaper.main.MainScreen;
 public final class Constants {
     public static final int REMOTE_CONFIG_CACHE_EXPIRATION = 1000 * 60 * 60;
 
+    public static final int REFRESH_LOAD_TIMEOUT = 30;
     public static final int INIT_LOAD_TIMEOUT    = 3;
     public static final int INIT_LOAD_ITEM_COUNT = 10;
 
