@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-crash'
+apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
 apply plugin: 'checkstyle'
@@ -90,6 +91,20 @@ dependencies {
     compile 'com.google.firebase:firebase-config:10.0.1'
     compile 'com.google.firebase:firebase-invites:10.0.1'
 
+    // Fabric
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
+    compile('io.fabric.sdk.android:fabric:1.3.14@aar') {
+        transitive = true;
+    }
+    compile('com.optimizely:optimizely:1.7.0@aar') {
+        transitive = true;
+    }
+    compile('com.appsee:appsee-android:2.3@aar') {
+        transitive = true;
+    }
+
     // ReactiveX
     compile 'io.reactivex:rxjava:1.2.4'
     compile ('io.reactivex:rxandroid:1.2.1') {
@@ -155,7 +170,7 @@ dependencies {
     })
 }
 
-task customFindbugs(type: FindBugs) {
+task customFindBugs(type: FindBugs) {
     ignoreFailures = false
     effort = "max"
     reportLevel = "medium"
@@ -176,7 +191,7 @@ task customFindbugs(type: FindBugs) {
     }
 }
 
-assemble.dependsOn customFindbugs
+assemble.dependsOn customFindBugs
 
 task jacocoReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     group = 'Reporting'

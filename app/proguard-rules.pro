@@ -16,6 +16,12 @@
 #   public *;
 #}
 
+-keepattributes SourceFile,LineNumberTable,InnerClasses,EnclosingMethod,Signature,*Annotation*
+
+### Android Support Library
+-keep class android.support.** { *; }
+-keep interface android.support.** { *; }
+
 ### Android Design Support Library
 -dontwarn android.support.design.**
 -keep class android.support.design.** { *; }
@@ -36,8 +42,6 @@
 -keep class android.support.v7.widget.RoundRectDrawable { *; }
 
 ### OkHttp3
--keepattributes Signature
--keepattributes *Annotation*
 -keep class okhttp3.** { *; }
 -keep interface okhttp3.** { *; }
 -dontwarn okhttp3.**
@@ -50,8 +54,6 @@
 -keep class com.firebase.** { *; }
 -keep class com.google.firebase.** { *; }
 -keep class com.google.android.** { *; }
--keepattributes EnclosingMethod
--keepattributes InnerClasses
 
 ### Google Play Services
 -keep class com.google.android.gms.common.api.GoogleApiClient {
@@ -73,6 +75,10 @@
 -keep class io.fabric.**
 -keep interface io.fabric.**
 -dontwarn io.fabric.**
+
+### Appsee
+-keep class com.appsee.** { *; }
+-dontwarn com.appsee.**
 
 ### Yahoo Flurry
 -keep class com.flurry.** { *; }
