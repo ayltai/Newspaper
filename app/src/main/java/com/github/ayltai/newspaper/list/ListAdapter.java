@@ -75,5 +75,9 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
     @Override
     public void close() {
         if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
+
+        for (final ItemViewHolder holder : this.map.keySet()) holder.close();
+
+        this.map.clear();
     }
 }

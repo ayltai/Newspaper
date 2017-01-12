@@ -96,6 +96,8 @@ final class MainAdapter extends PagerAdapter implements Closeable {
         }
 
         for (int i = 0; i < this.views.size(); i++) this.closeView(this.views.get(this.views.keyAt(i)));
+
+        this.views.clear();
     }
 
     private void closeView(final View view) {
