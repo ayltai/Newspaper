@@ -6,9 +6,6 @@ import java.util.Date;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
-
-import com.google.firebase.crash.FirebaseCrash;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;

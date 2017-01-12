@@ -2,8 +2,6 @@ package com.github.ayltai.newspaper.widget;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import android.app.Activity;
@@ -15,9 +13,6 @@ import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
-
-import com.google.firebase.crash.FirebaseCrash;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -26,6 +21,7 @@ import com.github.ayltai.newspaper.graphics.FaceCenterCrop;
 import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
+import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.piasy.biv.view.BigImageView;
 
 import rx.Observable;
@@ -121,6 +117,12 @@ public final class FaceCenteredImageView extends BigImageView {
             });
     }
 
+    @SuppressFBWarnings("MOM_MISLEADING_OVERLOAD_MODEL")
+    @NonNull
+    private static Observable<PointF> translate(@NonNull final File image, final int width, final int height) {
+        return Observable.create(subscriber -> subscriber.onNext(new FaceCenterCrop(width, height).findCroppedCenter(image)));
+    }
+
     //region Reflected methods
 
     private void setCurrentImageFile(@NonNull final File file) {
@@ -156,11 +158,4 @@ public final class FaceCenteredImageView extends BigImageView {
     }
 
     //endregion
-
-    @NonNull
-    private static Observable<PointF> translate(@NonNull final File image, final int width, final int height) {
-        return Observable.create(subscriber -> {
-            subscriber.onNext(new FaceCenterCrop(width, height).findCroppedCenter(image));
-        });
-    }
 }

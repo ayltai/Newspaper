@@ -11,8 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.github.ayltai.newspaper.rss.Client;
-
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -53,7 +51,7 @@ public final class HttpClient implements Closeable {
         try {
             if (inputStream != null) inputStream.close();
         } catch (final IOException e) {
-            Log.e(Client.class.getName(), e.getMessage(), e);
+            Log.e(HttpClient.class.getName(), e.getMessage(), e);
         }
     }
 

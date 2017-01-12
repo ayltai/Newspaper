@@ -12,6 +12,8 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
+import com.github.ayltai.newspaper.util.SuppressFBWarnings;
+
 public final class FaceCenterCrop {
     //region Constants
 
@@ -57,6 +59,7 @@ public final class FaceCenterCrop {
         return center;
     }
 
+    @SuppressFBWarnings("MOM_MISLEADING_OVERLOAD_MODEL")
     private static PointF findCroppedCenter(@NonNull final Bitmap bitmap, final int width, final int height, final float scale, final float scaleX, final float scaleY) {
         final float halfWidth  = scale * bitmap.getWidth() / 2f;
         final float halfHeight = scale * bitmap.getHeight() / 2f;
@@ -94,38 +97,28 @@ public final class FaceCenterCrop {
 
                 centerOfAllFaces.set(sumX / totalFaces, sumY / totalFaces);
             } else {
-                centerOfAllFaces.set(bitmap.getWidth() / 2, bitmap.getHeight() / 2);
+                centerOfAllFaces.set(bitmap.getWidth() / 2f, bitmap.getHeight() / 2f);
             }
         } else {
-            centerOfAllFaces.set(bitmap.getWidth() / 2, bitmap.getHeight() / 2);
+            centerOfAllFaces.set(bitmap.getWidth() / 2f, bitmap.getHeight() / 2f);
         }
     }
 
     private static void getFaceCenter(@NonNull final Face face, @NonNull final PointF center) {
-        center.set(face.getPosition().x + (face.getWidth() / 2), face.getPosition().y + (face.getHeight() / 2));
+        center.set(face.getPosition().x + (face.getWidth() / 2f), face.getPosition().y + (face.getHeight() / 2f));
     }
 
     private static float getTopPoint(final int height, final float scaledHeight, final float faceCenterY) {
-        if (faceCenterY <= height / 2) {
-            return 0f;
-        }
+        if (faceCenterY <= height / 2f) return 0f;
+        if ((scaledHeight - faceCenterY) <= height / 2f) return height - scaledHeight;
 
-        if ((scaledHeight - faceCenterY) <= height / 2) {
-            return height - scaledHeight;
-        }
-
-        return (height / 2) - faceCenterY;
+        return (height / 2f) - faceCenterY;
     }
 
     private static float getLeftPoint(final int width, final float scaledWidth, final float faceCenterX) {
-        if (faceCenterX <= width / 2) {
-            return 0f;
-        }
+        if (faceCenterX <= width / 2f) return 0f;
+        if ((scaledWidth - faceCenterX) <= width / 2f) return width - scaledWidth;
 
-        if ((scaledWidth - faceCenterX) <= width / 2) {
-            return width - scaledWidth;
-        }
-
-        return (width / 2) - faceCenterX;
+        return (width / 2f) - faceCenterX;
     }
 }
