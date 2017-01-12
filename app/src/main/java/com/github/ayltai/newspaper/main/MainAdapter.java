@@ -7,16 +7,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.firebase.crash.FirebaseCrash;
 
 import com.github.ayltai.newspaper.data.Favorite;
 import com.github.ayltai.newspaper.data.FavoriteManager;
 import com.github.ayltai.newspaper.list.ListPresenter;
 import com.github.ayltai.newspaper.list.ListScreen;
+import com.github.ayltai.newspaper.util.LogUtils;
 
 import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
@@ -41,7 +39,7 @@ final class MainAdapter extends PagerAdapter implements Closeable {
                 this.favorite = favorite;
 
                 this.notifyDataSetChanged();
-            }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage()));
+            }, error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error));
     }
 
     @Override
@@ -65,9 +63,9 @@ final class MainAdapter extends PagerAdapter implements Closeable {
         this.subscriptions.add(view.attachments().subscribe(dummy -> {
             presenter.onViewAttached(view);
             presenter.bind(this.realm, new ListScreen.Key(this.favorite.getSources().get(position).getUrl()));
-        }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+        }, error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
 
-        this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+        this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
 
         this.views.put(position, view);
         container.addView(view);
@@ -105,7 +103,7 @@ final class MainAdapter extends PagerAdapter implements Closeable {
             try {
                 ((Closeable)view).close();
             } catch (final IOException e) {
-                FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), e.getMessage());
+                LogUtils.e(this.getClass().getName(), e.getMessage(), e);
             }
         }
     }

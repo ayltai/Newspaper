@@ -18,20 +18,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.crash.FirebaseCrash;
-
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
+import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.piasy.biv.indicator.progresspie.ProgressPieIndicator;
 import com.github.piasy.biv.view.BigImageView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -363,9 +361,9 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         if (this.subscriptions == null) {
             this.subscriptions = new CompositeSubscription();
 
-            this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(null), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+            this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(null), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
 
-            this.subscriptions.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(null), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+            this.subscriptions.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(null), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
 
             this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(dummy -> {
                 this.setIsBookmarked(!this.isBookmarked);
@@ -373,7 +371,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                 if (this.smallBang != null && this.isBookmarked) this.smallBang.bang(this.bookmark);
 
                 this.bookmarks.onNext(this.isBookmarked);
-            }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+            }, error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
         }
     }
 }

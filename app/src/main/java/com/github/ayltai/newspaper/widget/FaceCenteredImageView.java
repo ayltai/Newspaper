@@ -25,6 +25,7 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.graphics.FaceCenterCrop;
 import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.util.ContextUtils;
+import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.piasy.biv.view.BigImageView;
 
 import rx.Observable;
@@ -129,9 +130,9 @@ public final class FaceCenteredImageView extends BigImageView {
 
             this.mCurrentImageFile.set(this, file);
         } catch (final NoSuchFieldException e) {
-            FirebaseCrash.logcat(Log.WARN, this.getClass().getName(), e.getMessage());
+            LogUtils.w(this.getClass().getName(), e.getMessage(), e);
         } catch (final IllegalAccessException e) {
-            FirebaseCrash.logcat(Log.WARN, this.getClass().getName(), e.getMessage());
+            LogUtils.w(this.getClass().getName(), e.getMessage(), e);
         }
     }
 
@@ -142,9 +143,9 @@ public final class FaceCenteredImageView extends BigImageView {
 
             return (List<File>)this.mTempImages.get(this);
         } catch (final NoSuchFieldException e) {
-            FirebaseCrash.logcat(Log.WARN, this.getClass().getName(), e.getMessage());
+            LogUtils.w(this.getClass().getName(), e.getMessage(), e);
         } catch (final IllegalAccessException e) {
-            FirebaseCrash.logcat(Log.WARN, this.getClass().getName(), e.getMessage());
+            LogUtils.w(this.getClass().getName(), e.getMessage(), e);
         }
 
         return null;

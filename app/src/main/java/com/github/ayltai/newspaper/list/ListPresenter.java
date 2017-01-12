@@ -15,6 +15,7 @@ import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.rss.Client;
+import com.github.ayltai.newspaper.util.LogUtils;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -73,7 +74,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
             .doOnNext(this::copyToRealmOrUpdate)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(data -> this.getView().setItems(this.key, data), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage()));
+            .subscribe(data -> this.getView().setItems(this.key, data), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error));
     }
 
     private void bindFromRemote(final int timeout) {
@@ -82,7 +83,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
             .timeout(timeout, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(data -> this.getView().setItems(this.key, data), error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage()));
+            .subscribe(data -> this.getView().setItems(this.key, data), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error));
     }
 
     private void copyToRealmOrUpdate(@NonNull final Feed feed) {
@@ -139,6 +140,6 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                     this.bindFromRemote();
                 }
             }
-        }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage())));
+        }, error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
     }
 }

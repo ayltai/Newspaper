@@ -24,7 +24,6 @@ import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -39,6 +38,7 @@ import com.github.ayltai.newspaper.main.MainScreen;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
+import com.github.ayltai.newspaper.util.LogUtils;
 
 import flow.Flow;
 import flow.KeyDispatcher;
@@ -241,7 +241,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
                         if (task.isSuccessful()) {
                             this.config.activateFetched();
                         } else {
-                            FirebaseCrash.logcat(Log.WARN, this.getClass().getName(), "Failed to fetch remote config");
+                            LogUtils.w(this.getClass().getName(), "Failed to fetch remote config");
                         }
                     });
             });
@@ -265,6 +265,6 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     private static void logConnectionError(@NonNull final ConnectionResult connectionResult) {
-        FirebaseCrash.logcat(Log.WARN, MainActivity.class.getName(), "onConnectionFailed: errorCode=" + connectionResult.getErrorCode() + ", errorMessage=" + connectionResult.getErrorMessage());
+        LogUtils.w(MainActivity.class.getName(), "onConnectionFailed: errorCode=" + connectionResult.getErrorCode() + ", errorMessage=" + connectionResult.getErrorMessage());
     }
 }
