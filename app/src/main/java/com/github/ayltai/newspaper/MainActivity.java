@@ -19,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.google.android.gms.appinvite.AppInvite;
@@ -283,11 +282,6 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
         incomingState.restore(view);
 
         this.setContentView(view);
-
-        if (incomingState.getKey() instanceof ItemScreen.Key) {
-            view.setAnimation(AnimationUtils.loadAnimation(view.getContext(), android.R.anim.fade_in));
-            view.animate();
-        }
 
         callback.onTraversalCompleted();
     }
