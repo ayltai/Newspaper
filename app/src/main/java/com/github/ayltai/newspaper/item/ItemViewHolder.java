@@ -2,7 +2,6 @@ package com.github.ayltai.newspaper.item;
 
 import java.io.Closeable;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +19,7 @@ import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
+import com.github.ayltai.newspaper.util.IntentUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.piasy.biv.view.BigImageView;
@@ -182,7 +182,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Override
     public void share(@NonNull final String url) {
-        this.itemView.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(url)), this.itemView.getContext().getText(R.string.share_to)));
+        IntentUtils.share(this.itemView.getContext(), url);
     }
 
     //endregion

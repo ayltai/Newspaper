@@ -2,7 +2,6 @@ package com.github.ayltai.newspaper.item;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -28,6 +27,7 @@ import com.github.ayltai.newspaper.rss.Item;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
+import com.github.ayltai.newspaper.util.IntentUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.piasy.biv.indicator.progresspie.ProgressPieIndicator;
@@ -282,7 +282,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     @Override
     public void share(@NonNull final String url) {
-        this.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(url)), this.getContext().getText(R.string.share_to)));
+        IntentUtils.share(this.getContext(), url);
     }
 
     //endregion
