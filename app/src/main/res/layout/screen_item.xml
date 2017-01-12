@@ -17,13 +17,10 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:contentScrim="?attr/colorPrimary">
-            <com.github.ayltai.newspaper.widget.FaceCenteredImageView
-                android:id="@+id/thumbnail"
+            <FrameLayout
+                android:id="@+id/thumbnailContainer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/thumbnail_cozy"
-                android:background="@drawable/thumbnail_placeholder"
-                app:layout_collapseMode="parallax"
-                app:initScaleType="centerCrop" />
+                android:layout_height="@dimen/thumbnail_cozy" />
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"

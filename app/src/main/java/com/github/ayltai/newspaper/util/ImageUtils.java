@@ -14,5 +14,6 @@ public final class ImageUtils {
         imageView.setZoomEnabled(false);
         imageView.setQuickScaleEnabled(false);
         imageView.setMaxScale(Constants.MAX_IMAGE_SCALE);
+        imageView.setParallelLoadingEnabled(true);
     }
 }

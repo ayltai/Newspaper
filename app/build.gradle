@@ -116,14 +116,14 @@ dependencies {
     }
     compile 'com.google.android.gms:play-services-vision:10.0.1'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
-    compile ('com.github.piasy:BigImageViewer:1.2.4') {
+    compile ('com.github.piasy:BigImageViewer:1.2.5') {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.davemorrissey.labs', module: 'subsampling-scale-image-view'
     }
-    compile ('com.github.piasy:FrescoImageLoader:1.2.4') {
+    compile ('com.github.piasy:FrescoImageLoader:1.2.5') {
         exclude group: 'com.facebook.fresco', module: 'fresco'
     }
-    compile 'com.github.piasy:ProgressPieIndicator:1.2.4'
+    compile 'com.github.piasy:ProgressPieIndicator:1.2.5'
 
     // Eye candies
     compile ('hanks.xyz:smallbang-library:0.1.2') {

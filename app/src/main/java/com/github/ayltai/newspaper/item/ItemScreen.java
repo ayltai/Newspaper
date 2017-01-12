@@ -13,11 +13,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
@@ -150,6 +150,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     private TextView     description;
     private TextView     source;
     private TextView     publishDate;
+    private ViewGroup    thumbnailContainer;
     private BigImageView thumbnail;
     private SmallBang    smallBang;
 
@@ -309,21 +310,23 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         if (activity != null) this.smallBang = SmallBang.attach2Window(activity);
 
         if (this.hasAttached) {
-            ((SubsamplingScaleImageView)this.thumbnail.getChildAt(0)).setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
+            this.thumbnailContainer.removeViewAt(0);
+
+            this.initThumbnail();
         } else {
             final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_item, this, false);
 
-            this.appBarLayout = (AppBarLayout)view.findViewById(R.id.appBarLayout);
-            this.toolbarTitle = (TextView)view.findViewById(R.id.toolbar_title);
-            this.bookmark     = (ImageView)view.findViewById(R.id.bookmark);
-            this.share        = view.findViewById(R.id.share);
-            this.title        = (TextView)view.findViewById(R.id.title);
-            this.description  = (TextView)view.findViewById(R.id.description);
-            this.source       = (TextView)view.findViewById(R.id.source);
-            this.publishDate  = (TextView)view.findViewById(R.id.publishDate);
-            this.thumbnail    = (BigImageView)view.findViewById(R.id.thumbnail);
+            this.appBarLayout       = (AppBarLayout)view.findViewById(R.id.appBarLayout);
+            this.toolbarTitle       = (TextView)view.findViewById(R.id.toolbar_title);
+            this.bookmark           = (ImageView)view.findViewById(R.id.bookmark);
+            this.share              = view.findViewById(R.id.share);
+            this.title              = (TextView)view.findViewById(R.id.title);
+            this.description        = (TextView)view.findViewById(R.id.description);
+            this.source             = (TextView)view.findViewById(R.id.source);
+            this.publishDate        = (TextView)view.findViewById(R.id.publishDate);
+            this.thumbnailContainer = (ViewGroup)view.findViewById(R.id.thumbnailContainer);
 
-            this.thumbnail.setProgressIndicator(new ProgressPieIndicator());
+            this.initThumbnail();
 
             final Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
@@ -373,5 +376,12 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                 this.bookmarks.onNext(this.isBookmarked);
             }, error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
         }
+    }
+
+    private void initThumbnail() {
+        this.thumbnail = (BigImageView)LayoutInflater.from(this.getContext()).inflate(R.layout.view_image, this.thumbnailContainer, false);
+        this.thumbnail.setProgressIndicator(new ProgressPieIndicator());
+
+        this.thumbnailContainer.addView(this.thumbnail);
     }
 }

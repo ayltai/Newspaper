@@ -127,20 +127,20 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
                     outgoingState.save(((ViewGroup)this.findViewById(android.R.id.content)).getChildAt(0));
 
                 final Presenter.View view;
-                final Presenter presenter;
+                final Presenter      presenter;
 
                 if (this.screens.containsKey(incomingState.getKey().getClass())) {
-                    view = this.screens.get(incomingState.getKey().getClass());
+                    view      = this.screens.get(incomingState.getKey().getClass());
                     presenter = this.presenters.get(view);
                 } else {
                     if (incomingState.getKey() instanceof ItemScreen.Key) {
-                        view = new ItemScreen(this);
+                        view      = new ItemScreen(this);
                         presenter = new ItemPresenter(this.realm);
 
                         this.subscriptions.add(view.attachments().subscribe(dummy -> presenter.onViewAttached(view), error -> Log.e(this.getClass().getName(), error.getMessage(), error)));
                         this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> Log.e(this.getClass().getName(), error.getMessage(), error)));
                     } else {
-                        view = new MainScreen(this, this.realm);
+                        view      = new MainScreen(this, this.realm);
                         presenter = new MainPresenter();
                     }
 

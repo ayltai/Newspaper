@@ -2,8 +2,7 @@ package com.github.ayltai.newspaper;
 
 import android.app.Application;
 
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
+import com.facebook.common.logging.FLog;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
 import com.squareup.leakcanary.LeakCanary;
@@ -23,8 +22,8 @@ public final class MainApplication extends Application {
             .schemaVersion(BuildConfig.VERSION_CODE)
             .build());
 
-        BigImageViewer.initialize(FrescoImageLoader.with(this.getApplicationContext(), ImagePipelineConfig.newBuilder(this.getApplicationContext())
-            .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
-            .build()));
+        BigImageViewer.initialize(FrescoImageLoader.with(this.getApplicationContext()));
+
+        if (BuildConfig.DEBUG) FLog.setMinimumLoggingLevel(FLog.WARN);
     }
 }
