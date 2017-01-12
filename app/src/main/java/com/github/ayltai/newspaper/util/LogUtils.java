@@ -33,9 +33,9 @@ public final class LogUtils {
     public static void d(final String tag, final String message, final Throwable throwable) {
         if (BuildConfig.DEBUG) {
             if (throwable == null) {
-                Log.v(tag, message);
+                Log.d(tag, message);
             } else {
-                Log.v(tag, message, throwable);
+                Log.d(tag, message, throwable);
             }
         } else {
             FirebaseCrash.logcat(Log.DEBUG, tag, message);
@@ -49,9 +49,9 @@ public final class LogUtils {
     public static void i(final String tag, final String message, final Throwable throwable) {
         if (BuildConfig.DEBUG) {
             if (throwable == null) {
-                Log.v(tag, message);
+                Log.i(tag, message);
             } else {
-                Log.v(tag, message, throwable);
+                Log.i(tag, message, throwable);
             }
         } else {
             FirebaseCrash.logcat(Log.INFO, tag, message);
@@ -65,9 +65,9 @@ public final class LogUtils {
     public static void w(final String tag, final String message, final Throwable throwable) {
         if (BuildConfig.DEBUG) {
             if (throwable == null) {
-                Log.v(tag, message);
+                Log.w(tag, message);
             } else {
-                Log.v(tag, message, throwable);
+                Log.w(tag, message, throwable);
             }
         } else {
             FirebaseCrash.logcat(Log.WARN, tag, message);
@@ -81,9 +81,9 @@ public final class LogUtils {
     public static void e(final String tag, final String message, final Throwable throwable) {
         if (BuildConfig.DEBUG) {
             if (throwable == null) {
-                Log.v(tag, message);
+                Log.e(tag, message);
             } else {
-                Log.v(tag, message, throwable);
+                Log.e(tag, message, throwable);
             }
         } else {
             FirebaseCrash.logcat(Log.ERROR, tag, message);
