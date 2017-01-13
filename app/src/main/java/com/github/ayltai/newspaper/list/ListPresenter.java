@@ -14,6 +14,7 @@ import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.rss.Client;
 import com.github.ayltai.newspaper.util.LogUtils;
+import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -65,6 +66,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
         }
     }
 
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private void bindFromRemote() {
         this.client.get(this.key.getUrl())
             .doOnNext(this::copyToRealmOrUpdate)
@@ -80,6 +82,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
             });
     }
 
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private void bindFromRemote(final int timeout) {
         this.client.get(this.key.getUrl())
             .doOnNext(this::copyToRealmOrUpdate)

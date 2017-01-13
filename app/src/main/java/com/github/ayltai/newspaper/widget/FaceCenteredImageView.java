@@ -125,6 +125,7 @@ public final class FaceCenteredImageView extends BigImageView {
 
     //region Reflected methods
 
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private void setCurrentImageFile(@NonNull final File file) {
         try {
             if (this.mCurrentImageFile == null) this.mCurrentImageFile = BigImageView.class.getDeclaredField("mCurrentImageFile");
@@ -138,6 +139,7 @@ public final class FaceCenteredImageView extends BigImageView {
         }
     }
 
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private List<File> getTempImages() {
         try {
             if (this.mTempImages == null) this.mTempImages = BigImageView.class.getDeclaredField("mTempImages");
