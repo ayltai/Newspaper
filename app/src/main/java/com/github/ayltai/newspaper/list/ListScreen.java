@@ -159,12 +159,8 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        if (this.hasAttached && this.position > -1 && this.recyclerView.getAdapter() != null) {
-            if (Constants.SOURCE_BOOKMARK.equals(this.parentKey.url)) {
-                this.setItems(this.parentKey, this.feed);
-            } else {
-                if (this.recyclerView.getAdapter().getItemCount() > 0) this.recyclerView.scrollToPosition(this.position);
-            }
+        if (this.hasAttached) {
+            this.setItems(this.parentKey, this.feed);
         } else {
             final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_list, this, false);
 
