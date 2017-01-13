@@ -268,7 +268,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
                         if (task.isSuccessful()) {
                             this.config.activateFetched();
                         } else {
-                            LogUtils.w(this.getClass().getName(), "Failed to fetch remote config");
+                            LogUtils.getInstance().w(this.getClass().getName(), "Failed to fetch remote config");
                         }
                     });
             });
@@ -287,6 +287,6 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     private static void logConnectionError(@NonNull final ConnectionResult connectionResult) {
-        LogUtils.w(MainActivity.class.getName(), "onConnectionFailed: errorCode=" + connectionResult.getErrorCode() + ", errorMessage=" + connectionResult.getErrorMessage());
+        LogUtils.getInstance().w(MainActivity.class.getName(), "onConnectionFailed: errorCode=" + connectionResult.getErrorCode() + ", errorMessage=" + connectionResult.getErrorMessage());
     }
 }

@@ -84,8 +84,8 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
         final SwipeHorizontalMenuLayout swipeHorizontalMenuLayout = (SwipeHorizontalMenuLayout)this.itemView;
 
-        this.subscriptions.add(RxView.clicks(this.itemView).subscribe(v -> this.clicks.onNext(null), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
-        if (this.thumbnail != null) this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(v -> this.clicks.onNext(null), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
+        this.subscriptions.add(RxView.clicks(this.itemView).subscribe(v -> this.clicks.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error)));
+        if (this.thumbnail != null) this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(v -> this.clicks.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error)));
 
         if (this.bookmark != null) this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(v -> {
             this.setIsBookmarked(!this.isBookmarked);

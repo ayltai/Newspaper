@@ -326,13 +326,11 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             this.publishDate        = (TextView)view.findViewById(R.id.publishDate);
             this.thumbnailContainer = (ViewGroup)view.findViewById(R.id.thumbnailContainer);
 
-            this.initThumbnail();
-
             final Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
             toolbar.setNavigationOnClickListener(v -> Flow.get(v).goBack());
 
-            ImageUtils.configure((SubsamplingScaleImageView)this.thumbnail.getChildAt(0));
+            this.initThumbnail();
 
             this.addView(view);
 
@@ -364,9 +362,9 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         if (this.subscriptions == null) {
             this.subscriptions = new CompositeSubscription();
 
-            this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(null), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
+            this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error)));
 
-            this.subscriptions.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(null), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
+            this.subscriptions.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error)));
 
             this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(dummy -> {
                 this.setIsBookmarked(!this.isBookmarked);
@@ -374,7 +372,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                 if (this.smallBang != null && this.isBookmarked) this.smallBang.bang(this.bookmark);
 
                 this.bookmarks.onNext(this.isBookmarked);
-            }, error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
+            }, error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error)));
         }
     }
 
@@ -383,5 +381,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         this.thumbnail.setProgressIndicator(new ProgressPieIndicator());
 
         this.thumbnailContainer.addView(this.thumbnail);
+
+        ImageUtils.configure((SubsamplingScaleImageView)this.thumbnail.getChildAt(0));
     }
 }

@@ -132,9 +132,9 @@ public final class FaceCenteredImageView extends BigImageView {
 
             this.mCurrentImageFile.set(this, file);
         } catch (final NoSuchFieldException e) {
-            LogUtils.w(this.getClass().getName(), e.getMessage(), e);
+            LogUtils.getInstance().w(this.getClass().getName(), e.getMessage(), e);
         } catch (final IllegalAccessException e) {
-            LogUtils.w(this.getClass().getName(), e.getMessage(), e);
+            LogUtils.getInstance().w(this.getClass().getName(), e.getMessage(), e);
         }
     }
 
@@ -145,9 +145,9 @@ public final class FaceCenteredImageView extends BigImageView {
 
             return (List<File>)this.mTempImages.get(this);
         } catch (final NoSuchFieldException e) {
-            LogUtils.w(this.getClass().getName(), e.getMessage(), e);
+            LogUtils.getInstance().w(this.getClass().getName(), e.getMessage(), e);
         } catch (final IllegalAccessException e) {
-            LogUtils.w(this.getClass().getName(), e.getMessage(), e);
+            LogUtils.getInstance().w(this.getClass().getName(), e.getMessage(), e);
         }
 
         return null;

@@ -7,6 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.ShareEvent;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.data.Feed;
@@ -14,7 +18,6 @@ import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
 import com.github.ayltai.newspaper.util.ItemUtils;
-import com.github.ayltai.newspaper.util.LogUtils;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -80,7 +83,7 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
 
             if (this.getView().bookmarks() != null) {
                 this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK)
-                    .subscribe(feed -> this.getView().setIsBookmarked(feed.contains(this.item)), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error));
+                    .subscribe(feed -> this.getView().setIsBookmarked(feed.contains(this.item)), error -> this.log().e(this.getClass().getName(), error.getMessage(), error));
             }
 
             final Date publishDate = this.item.getPublishDate();
@@ -135,6 +138,11 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
         this.realm.commitTransaction();
     }
 
+    @VisibleForTesting
+    Answers getAnswers() {
+        return Answers.getInstance();
+    }
+
     //region Event handlers
 
     private void attachEvents() {
@@ -148,24 +156,45 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
 
     private void attachClicks() {
         if (this.getView().clicks() != null) this.subscriptions.add(this.getView().clicks().subscribe(dummy -> {
-            if (this.parentKey != null) this.getView().showItem(this.parentKey, this.item);
-        }, error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
+            if (this.parentKey != null) {
+                this.getView().showItem(this.parentKey, this.item);
+
+                this.getAnswers().logContentView(new ContentViewEvent()
+                    .putContentId(this.item.getGuid())
+                    .putContentName(this.item.getTitle())
+                    .putContentType(this.item.getClass().getName()));
+            }
+        }, error -> this.log().e(this.getClass().getName(), error.getMessage(), error)));
     }
 
     private void attachZooms() {
         if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(dummy -> {
             if (this.item != null && this.item.getMediaUrl() != null) this.getView().showOriginalMedia(ItemUtils.getOriginalMediaUrl(this.item.getMediaUrl()));
-        }, error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
+        }, error -> this.log().e(this.getClass().getName(), error.getMessage(), error)));
     }
 
     private void attachBookmarks() {
-        if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks().subscribe(bookmark -> this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK).subscribe(feed -> this.updateFeed(feed, bookmark), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
+        if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks().subscribe(bookmark -> this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK).subscribe(feed -> {
+            this.updateFeed(feed, bookmark);
+
+            this.getAnswers().logCustom(new CustomEvent(bookmark ? "Bookmark (Add)" : "Bookmark (Remove)")
+                .putCustomAttribute("contentId", this.item.getGuid())
+                .putCustomAttribute("contentName", this.item.getTitle())
+                .putCustomAttribute("contentType", this.item.getClass().getName()));
+        }, error -> this.log().e(this.getClass().getName(), error.getMessage(), error)), error -> this.log().e(this.getClass().getName(), error.getMessage(), error)));
     }
 
     private void attachShares() {
         if (this.getView().shares() != null) this.subscriptions.add(this.getView().shares().subscribe(dummy -> {
-            if (this.item != null && this.item.getLink() != null) this.getView().share(this.item.getLink());
-        }, error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
+            if (this.item != null && this.item.getLink() != null) {
+                this.getView().share(this.item.getLink());
+
+                this.getAnswers().logShare(new ShareEvent()
+                    .putContentId(this.item.getGuid())
+                    .putContentName(this.item.getTitle())
+                    .putContentType(this.item.getClass().getName()));
+            }
+        }, error -> this.log().e(this.getClass().getName(), error.getMessage(), error)));
     }
 
     //endregion

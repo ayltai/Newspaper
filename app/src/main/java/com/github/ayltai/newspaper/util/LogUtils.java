@@ -6,15 +6,24 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import com.github.ayltai.newspaper.BuildConfig;
 
-public final class LogUtils {
+@SuppressWarnings("checkstyle:finalclass")
+public class LogUtils {
+    private static LogUtils instance;
+
+    public static LogUtils getInstance() {
+        if (instance == null) instance = new LogUtils();
+
+        return instance;
+    }
+
     private LogUtils() {
     }
 
-    public static void v(final String tag, final String message) {
-        LogUtils.v(tag, message, null);
+    public void v(final String tag, final String message) {
+        this.v(tag, message, null);
     }
 
-    public static void v(final String tag, final String message, final Throwable throwable) {
+    public void v(final String tag, final String message, final Throwable throwable) {
         if (BuildConfig.DEBUG) {
             if (throwable == null) {
                 Log.v(tag, message);
@@ -26,11 +35,11 @@ public final class LogUtils {
         }
     }
 
-    public static void d(final String tag, final String message) {
-        LogUtils.v(tag, message, null);
+    public void d(final String tag, final String message) {
+        this.d(tag, message, null);
     }
 
-    public static void d(final String tag, final String message, final Throwable throwable) {
+    public void d(final String tag, final String message, final Throwable throwable) {
         if (BuildConfig.DEBUG) {
             if (throwable == null) {
                 Log.d(tag, message);
@@ -42,11 +51,11 @@ public final class LogUtils {
         }
     }
 
-    public static void i(final String tag, final String message) {
-        LogUtils.v(tag, message, null);
+    public void i(final String tag, final String message) {
+        this.i(tag, message, null);
     }
 
-    public static void i(final String tag, final String message, final Throwable throwable) {
+    public void i(final String tag, final String message, final Throwable throwable) {
         if (BuildConfig.DEBUG) {
             if (throwable == null) {
                 Log.i(tag, message);
@@ -58,11 +67,11 @@ public final class LogUtils {
         }
     }
 
-    public static void w(final String tag, final String message) {
-        LogUtils.v(tag, message, null);
+    public void w(final String tag, final String message) {
+        this.w(tag, message, null);
     }
 
-    public static void w(final String tag, final String message, final Throwable throwable) {
+    public void w(final String tag, final String message, final Throwable throwable) {
         if (BuildConfig.DEBUG) {
             if (throwable == null) {
                 Log.w(tag, message);
@@ -74,11 +83,11 @@ public final class LogUtils {
         }
     }
 
-    public static void e(final String tag, final String message) {
-        LogUtils.v(tag, message, null);
+    public void e(final String tag, final String message) {
+        this.e(tag, message, null);
     }
 
-    public static void e(final String tag, final String message, final Throwable throwable) {
+    public void e(final String tag, final String message, final Throwable throwable) {
         if (BuildConfig.DEBUG) {
             if (throwable == null) {
                 Log.e(tag, message);

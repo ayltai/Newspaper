@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.appsee.Appsee;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.facebook.common.logging.FLog;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
@@ -21,7 +22,7 @@ public final class MainApplication extends Application {
 
         if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
 
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics(), new Answers());
         Optimizely.startOptimizelyWithAPIToken(this.getString(R.string.com_optimizely_api_key), this);
         Appsee.start(this.getString(R.string.com_appsee_apikey));
         BigImageViewer.initialize(FrescoImageLoader.with(this.getApplicationContext()));

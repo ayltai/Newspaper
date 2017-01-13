@@ -6,9 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
-
-import com.google.firebase.crash.FirebaseCrash;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
@@ -63,7 +60,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                     }
 
                     this.isBound = true;
-                }, error -> FirebaseCrash.logcat(Log.ERROR, this.getClass().getName(), error.getMessage()));
+                }, error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error));
         }
     }
 
@@ -73,7 +70,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
             .timeout(Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(data -> this.getView().setItems(this.key, data), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error));
+            .subscribe(data -> this.getView().setItems(this.key, data), error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error));
     }
 
     private void bindFromRemote(final int timeout) {
@@ -82,7 +79,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
             .timeout(timeout, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(data -> this.getView().setItems(this.key, data), error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error));
+            .subscribe(data -> this.getView().setItems(this.key, data), error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error));
     }
 
     private void copyToRealmOrUpdate(@NonNull final Feed feed) {
@@ -139,6 +136,6 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                     this.bindFromRemote();
                 }
             }
-        }, error -> LogUtils.e(this.getClass().getName(), error.getMessage(), error)));
+        }, error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error)));
     }
 }

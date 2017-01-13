@@ -9,12 +9,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import com.crashlytics.android.answers.Answers;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.PresenterTest;
 import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
+import com.github.ayltai.newspaper.util.LogUtils;
 
 import io.realm.RealmList;
 import rx.Observable;
@@ -59,8 +61,14 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         Mockito.when(feedManager.getFeed(ItemPresenterTest.KEY_PARENT_URL)).thenReturn(Observable.just(this.feed));
 
         final ItemPresenter presenter = Mockito.spy(new ItemPresenter(null));
-        Mockito.when(presenter.getFeedManager()).thenReturn(feedManager);
+        Mockito.doReturn(feedManager).when(presenter).getFeedManager();
         Mockito.doNothing().when(presenter).updateFeed(Mockito.any(Feed.class), Mockito.anyBoolean());
+
+        final Answers answers = Mockito.mock(Answers.class);
+        Mockito.doReturn(answers).when(presenter).getAnswers();
+
+        final LogUtils logUtils = Mockito.mock(LogUtils.class);
+        Mockito.doReturn(logUtils).when(presenter).log();
 
         return presenter;
     }
