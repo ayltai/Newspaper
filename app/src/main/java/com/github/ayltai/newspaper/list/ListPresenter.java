@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.list;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -70,7 +71,13 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
             .timeout(Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(data -> this.getView().setItems(this.key, data), error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error));
+            .subscribe(data -> this.getView().setItems(this.key, data), error -> {
+                if (error instanceof TimeoutException) {
+                    LogUtils.getInstance().w(this.getClass().getName(), error.getMessage(), error);
+                } else {
+                    LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error);
+                }
+            });
     }
 
     private void bindFromRemote(final int timeout) {
@@ -79,7 +86,13 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
             .timeout(timeout, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(data -> this.getView().setItems(this.key, data), error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error));
+            .subscribe(data -> this.getView().setItems(this.key, data), error -> {
+                if (error instanceof TimeoutException) {
+                    LogUtils.getInstance().w(this.getClass().getName(), error.getMessage(), error);
+                } else {
+                    LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error);
+                }
+            });
     }
 
     private void copyToRealmOrUpdate(@NonNull final Feed feed) {

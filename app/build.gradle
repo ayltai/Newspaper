@@ -92,10 +92,13 @@ dependencies {
     compile 'com.google.firebase:firebase-invites:10.0.1'
 
     // Fabric
+    compile('io.fabric.sdk.android:fabric:1.3.14@aar') {
+        transitive = true;
+    }
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
-    compile('io.fabric.sdk.android:fabric:1.3.14@aar') {
+    compile('com.crashlytics.sdk.android:answers:1.3.10@aar') {
         transitive = true;
     }
     compile('com.optimizely:optimizely:1.7.0@aar') {

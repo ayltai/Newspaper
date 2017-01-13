@@ -3,10 +3,12 @@ package com.github.ayltai.newspaper.setting;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import com.facebook.common.internal.Sets;
 import com.github.ayltai.newspaper.Constants;
@@ -17,14 +19,28 @@ import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 public final class Settings {
     //region Constants
 
-    public static final String PREF_COMPACT_LAYOUT = "PREF_COMPACT_LAYOUT";
-    public static final String PREF_CATEGORIES     = "PREF_CATEGORIES";
+    static final String PREF_COMPACT_LAYOUT = "PREF_COMPACT_LAYOUT";
+    static final String PREF_CATEGORIES     = "PREF_CATEGORIES";
+
+    private static final String PREF_USER_ID = "PREF_USER_ID";
 
     //endregion
 
     private static final Map<String, Integer> POSITIONS = new HashMap<>();
 
     private Settings() {
+    }
+
+    public static String getUserId(@NonNull final Context context) {
+        String userId = PreferenceManager.getDefaultSharedPreferences(context).getString(Settings.PREF_USER_ID, null);
+
+        if (TextUtils.isEmpty(userId)) {
+            userId = UUID.randomUUID().toString();
+
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString(Settings.PREF_USER_ID, userId).apply();
+        }
+
+        return userId;
     }
 
     @Constants.ListViewType
