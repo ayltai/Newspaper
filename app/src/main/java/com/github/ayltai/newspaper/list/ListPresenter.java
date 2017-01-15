@@ -73,7 +73,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                     }
 
                     this.isBound = true;
-                }, error -> this.log().e(this.getClass().getName(), error.getMessage(), error));
+                }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error));
         }
     }
 
@@ -96,15 +96,15 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                 },
                 error -> {
                     if (error instanceof TimeoutException) {
-                        this.log().w(this.getClass().getName(), error.getMessage(), error);
+                        this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
                     } else {
-                        this.log().e(this.getClass().getName(), error.getMessage(), error);
+                        this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
                     }
                 });
     }
 
     private void checkForUpdate() {
-        if (BuildConfig.DEBUG) Log.i(this.getClass().getName(), "Scheduled update check");
+        if (BuildConfig.DEBUG) Log.i(this.getClass().getSimpleName(), "Scheduled update check");
 
         if (this.subscription != null) this.subscription.unsubscribe();
 
@@ -195,6 +195,6 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                     this.bindFromRemote(Constants.REFRESH_LOAD_TIMEOUT);
                 }
             }
-        }, error -> this.log().e(this.getClass().getName(), error.getMessage(), error)));
+        }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 }

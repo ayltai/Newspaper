@@ -34,12 +34,12 @@ public final class MainApplication extends Application {
         Optimizely.startOptimizelyAsync(this.getString(R.string.com_optimizely_api_key), this, new DefaultOptimizelyEventListener() {
             @Override
             public void onOptimizelyStarted() {
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getName(), "Optimizely started");
+                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Optimizely started");
             }
 
             @Override
             public void onOptimizelyFailedToStart(final String errorMessage) {
-                LogUtils.getInstance().w(this.getClass().getName(), "Failed to start Optimizely for reason: " + errorMessage);
+                LogUtils.getInstance().w(this.getClass().getSimpleName(), "Failed to start Optimizely for reason: " + errorMessage);
             }
         });
 
