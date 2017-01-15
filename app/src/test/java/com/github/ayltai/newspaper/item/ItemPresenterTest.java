@@ -138,7 +138,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     public void testWhenBookmarkedThenUpdateFeed() throws Exception {
         this.bind();
 
-        this.bookmarks.onNext(true);
+        this.bookmarks.onNext(Boolean.TRUE);
 
         Mockito.verify(this.getPresenter(), Mockito.times(1)).updateFeed(this.feed, true);
     }

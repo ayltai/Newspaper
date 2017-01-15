@@ -39,7 +39,7 @@ final class MainAdapter extends PagerAdapter implements Closeable {
                 this.favorite = favorite;
 
                 this.notifyDataSetChanged();
-            }, error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error));
+            }, error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error));
     }
 
     @Override
@@ -63,9 +63,9 @@ final class MainAdapter extends PagerAdapter implements Closeable {
         this.subscriptions.add(view.attachments().subscribe(dummy -> {
             presenter.onViewAttached(view);
             presenter.bind(this.realm, new ListScreen.Key(this.favorite.getSources().get(position).getUrl()));
-        }, error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error)));
+        }, error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
-        this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error)));
+        this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
         this.views.put(position, view);
         container.addView(view);
@@ -105,7 +105,7 @@ final class MainAdapter extends PagerAdapter implements Closeable {
             try {
                 ((Closeable)view).close();
             } catch (final IOException e) {
-                LogUtils.getInstance().e(this.getClass().getName(), e.getMessage(), e);
+                LogUtils.getInstance().e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
         }
     }

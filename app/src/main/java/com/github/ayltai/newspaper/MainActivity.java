@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -44,6 +45,8 @@ import flow.KeyParceler;
 import flow.State;
 import flow.TraversalCallback;
 import io.realm.Realm;
+import jp.wasabeef.takt.Seat;
+import jp.wasabeef.takt.Takt;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -69,6 +72,8 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (BuildConfig.DEBUG) Takt.stock(this.getApplication()).seat(Seat.TOP_RIGHT).color(Color.WHITE).play();
+
         this.setUpRemoteConfig();
 
         this.realm     = Realm.getDefaultInstance();
@@ -88,6 +93,8 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
     protected void onDestroy() {
         super.onDestroy();
 
+        if (BuildConfig.DEBUG) Takt.finish();
+
         if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
 
         for (final Presenter.View view : this.screens.values()) {
@@ -95,7 +102,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
                 try {
                     ((Closeable)view).close();
                 } catch (final IOException e) {
-                    Log.e(this.getClass().getName(), e.getMessage(), e);
+                    Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
                 }
             }
         }
@@ -136,8 +143,8 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
                         view      = new ItemScreen(this);
                         presenter = new ItemPresenter(this.realm);
 
-                        this.subscriptions.add(view.attachments().subscribe(dummy -> presenter.onViewAttached(view), error -> Log.e(this.getClass().getName(), error.getMessage(), error)));
-                        this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> Log.e(this.getClass().getName(), error.getMessage(), error)));
+                        this.subscriptions.add(view.attachments().subscribe(dummy -> presenter.onViewAttached(view), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
+                        this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
                     } else {
                         view      = new MainScreen(this, this.realm);
                         presenter = new MainPresenter();
@@ -268,7 +275,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
                         if (task.isSuccessful()) {
                             this.config.activateFetched();
                         } else {
-                            LogUtils.getInstance().w(this.getClass().getName(), "Failed to fetch remote config");
+                            LogUtils.getInstance().w(this.getClass().getSimpleName(), "Failed to fetch remote config");
                         }
                     });
             });

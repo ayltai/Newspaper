@@ -169,9 +169,9 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                 this.title.setVisibility(View.GONE);
                 this.toolbarTitle.setText(this.getResources().getText(R.string.app_name));
             } else {
-                if (BuildConfig.DEBUG) Log.d(this.getClass().getName(), "title 1 = " + title);
+                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "title 1 = " + title);
                 final CharSequence value = ItemUtils.removeHtml(title);
-                if (BuildConfig.DEBUG) Log.d(this.getClass().getName(), "title 2 = " + value);
+                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "title 2 = " + value);
 
                 this.title.setVisibility(View.VISIBLE);
                 this.title.setText(value);
@@ -186,9 +186,9 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             if (TextUtils.isEmpty(description)) {
                 this.description.setVisibility(View.GONE);
             } else {
-                if (BuildConfig.DEBUG) Log.d(this.getClass().getName(), "description 1 = " + description);
+                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "description 1 = " + description);
                 final CharSequence value = ItemUtils.removeHtml(description);
-                if (BuildConfig.DEBUG) Log.d(this.getClass().getName(), "description 2 = " + value);
+                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "description 2 = " + value);
 
                 this.description.setVisibility(View.VISIBLE);
                 this.description.setText(value);
@@ -362,9 +362,9 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         if (this.subscriptions == null) {
             this.subscriptions = new CompositeSubscription();
 
-            this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error)));
+            this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
-            this.subscriptions.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error)));
+            this.subscriptions.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
             this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(dummy -> {
                 this.setIsBookmarked(!this.isBookmarked);
@@ -372,7 +372,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                 if (this.smallBang != null && this.isBookmarked) this.smallBang.bang(this.bookmark);
 
                 this.bookmarks.onNext(this.isBookmarked);
-            }, error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error)));
+            }, error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
         }
     }
 

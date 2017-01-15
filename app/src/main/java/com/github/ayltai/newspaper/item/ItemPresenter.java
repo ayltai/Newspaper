@@ -83,7 +83,7 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
 
             if (this.getView().bookmarks() != null) {
                 this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK)
-                    .subscribe(feed -> this.getView().setIsBookmarked(feed.contains(this.item)), error -> this.log().e(this.getClass().getName(), error.getMessage(), error));
+                    .subscribe(feed -> this.getView().setIsBookmarked(feed.contains(this.item)), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error));
             }
 
             final Date publishDate = this.item.getPublishDate();
@@ -164,13 +164,13 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
                     .putContentName(this.item.getTitle())
                     .putContentType(this.item.getClass().getName()));
             }
-        }, error -> this.log().e(this.getClass().getName(), error.getMessage(), error)));
+        }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 
     private void attachZooms() {
         if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(dummy -> {
             if (this.item != null && this.item.getMediaUrl() != null) this.getView().showOriginalMedia(ItemUtils.getOriginalMediaUrl(this.item.getMediaUrl()));
-        }, error -> this.log().e(this.getClass().getName(), error.getMessage(), error)));
+        }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 
     private void attachBookmarks() {
@@ -181,7 +181,7 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
                 .putCustomAttribute("contentId", this.item.getGuid())
                 .putCustomAttribute("contentName", this.item.getTitle())
                 .putCustomAttribute("contentType", this.item.getClass().getName()));
-        }, error -> this.log().e(this.getClass().getName(), error.getMessage(), error)), error -> this.log().e(this.getClass().getName(), error.getMessage(), error)));
+        }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 
     private void attachShares() {
@@ -194,7 +194,7 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
                     .putContentName(this.item.getTitle())
                     .putContentType(this.item.getClass().getName()));
             }
-        }, error -> this.log().e(this.getClass().getName(), error.getMessage(), error)));
+        }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 
     //endregion

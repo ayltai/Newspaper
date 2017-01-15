@@ -13,6 +13,7 @@ public final class Constants {
     public static final int REFRESH_LOAD_TIMEOUT = 30;
     public static final int INIT_LOAD_TIMEOUT    = 3;
     public static final int INIT_LOAD_ITEM_COUNT = 10;
+    public static final int UPDATE_INTERVAL      = 3 * 60;
 
     public static final int REQUEST_SETTINGS = 1;
     public static final int REQUEST_FIREBASE = 2;
