@@ -13,7 +13,6 @@ import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.rss.Client;
-import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
 import io.realm.Realm;
@@ -53,7 +52,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                         if (feed != null && Constants.SOURCE_BOOKMARK.equals(this.key.getUrl())) {
                             this.getView().setItems(this.key, feed);
                         } else {
-                            this.bindFromRemote();
+                            this.bindFromRemote(Constants.REFRESH_LOAD_TIMEOUT);
                         }
                     } else {
                         this.getView().setItems(this.key, feed);
@@ -62,24 +61,8 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                     }
 
                     this.isBound = true;
-                }, error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error));
+                }, error -> this.log().e(this.getClass().getName(), error.getMessage(), error));
         }
-    }
-
-    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
-    private void bindFromRemote() {
-        this.client.get(this.key.getUrl())
-            .doOnNext(this::copyToRealmOrUpdate)
-            .timeout(Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(data -> this.getView().setItems(this.key, data), error -> {
-                if (error instanceof TimeoutException) {
-                    LogUtils.getInstance().w(this.getClass().getName(), error.getMessage(), error);
-                } else {
-                    LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error);
-                }
-            });
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
@@ -91,9 +74,9 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
             .subscribeOn(Schedulers.io())
             .subscribe(data -> this.getView().setItems(this.key, data), error -> {
                 if (error instanceof TimeoutException) {
-                    LogUtils.getInstance().w(this.getClass().getName(), error.getMessage(), error);
+                    this.log().w(this.getClass().getName(), error.getMessage(), error);
                 } else {
-                    LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error);
+                    this.log().e(this.getClass().getName(), error.getMessage(), error);
                 }
             });
     }
@@ -149,9 +132,9 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
 
                     this.bind(this.realm, this.key);
                 } else {
-                    this.bindFromRemote();
+                    this.bindFromRemote(Constants.REFRESH_LOAD_TIMEOUT);
                 }
             }
-        }, error -> LogUtils.getInstance().e(this.getClass().getName(), error.getMessage(), error)));
+        }, error -> this.log().e(this.getClass().getName(), error.getMessage(), error)));
     }
 }
