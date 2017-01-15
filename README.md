@@ -40,6 +40,7 @@ This app is made with the support of open source software:
 * [JUnit 4](https://github.com/junit-team/junit4)
 * [Mockito](https://github.com/mockito/mockito)
 * [LeakCanary](https://github.com/square/leakcanary)
+* [Takt](https://github.com/wasabeef/Takt)
 
 … and closed source software:
 

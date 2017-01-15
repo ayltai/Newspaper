@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -44,6 +45,8 @@ import flow.KeyParceler;
 import flow.State;
 import flow.TraversalCallback;
 import io.realm.Realm;
+import jp.wasabeef.takt.Seat;
+import jp.wasabeef.takt.Takt;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -69,6 +72,8 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (BuildConfig.DEBUG) Takt.stock(this.getApplication()).seat(Seat.TOP_RIGHT).color(Color.WHITE).play();
+
         this.setUpRemoteConfig();
 
         this.realm     = Realm.getDefaultInstance();
@@ -87,6 +92,8 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (BuildConfig.DEBUG) Takt.finish();
 
         if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
 
