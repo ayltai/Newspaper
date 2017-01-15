@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
@@ -139,6 +140,17 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     @Override
     public Observable<Void> refreshes() {
         return this.refreshes;
+    }
+
+    @Override
+    public void showUpdateIndicator() {
+        final Snackbar snackbar = Snackbar.make(this, R.string.update_indicator, Snackbar.LENGTH_LONG)
+            .setAction(R.string.action_refresh, view -> this.refreshes.onNext(null));
+
+        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setTextColor(ContextCompat.getColor(this.getContext(), R.color.textColorInverse));
+        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_action)).setTextColor(ContextCompat.getColor(this.getContext(), R.color.colorPrimary));
+
+        snackbar.show();
     }
 
     //region Lifecycle
