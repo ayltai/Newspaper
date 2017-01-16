@@ -22,6 +22,6 @@ test:
     - cp -r app/build/reports/tests/testDebugUnitTest/* $CIRCLE_TEST_REPORTS
     - cp -r app/build/reports/jacoco/jacocoReport/html/* $CIRCLE_TEST_REPORTS
     - cp -r app/build/outputs/findbugs/findbugs-output.html $CIRCLE_TEST_REPORTS
-    - ./gradlew assembleRelease && cp -r app/build/outputs/apk/app-release.apk $CIRCLE_ARTIFACTS
+    - ./gradlew assembleRelease && cp -r app/build/outputs/apk/app-release.apk $CIRCLE_ARTIFACTS && cp -r app/build/outputs/mapping/release/mapping.txt $CIRCLE_ARTIFACTS
   post:
     - bash <(curl -s https://codecov.io/bash)
