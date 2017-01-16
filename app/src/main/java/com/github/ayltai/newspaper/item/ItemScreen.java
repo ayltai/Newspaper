@@ -2,12 +2,15 @@ package com.github.ayltai.newspaper.item;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -326,8 +329,11 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             this.publishDate        = (TextView)view.findViewById(R.id.publishDate);
             this.thumbnailContainer = (ViewGroup)view.findViewById(R.id.thumbnailContainer);
 
+            final Drawable drawable = ContextCompat.getDrawable(this.getContext(), R.drawable.ic_arrow_back_white_24px);
+            DrawableCompat.setTint(drawable, ContextUtils.getColor(this.getContext(), R.attr.indicatorColor));
+
             final Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
+            toolbar.setNavigationIcon(drawable);
             toolbar.setNavigationOnClickListener(v -> Flow.get(v).goBack());
 
             this.initThumbnail();

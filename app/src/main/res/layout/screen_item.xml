@@ -41,12 +41,13 @@
                         android:lines="1"
                         android:ellipsize="end"
                         android:textSize="@dimen/text_title"
-                        android:textColor="@color/textColorInverse" />
+                        android:textColor="?attr/textColorInverse" />
                     <ImageView
                         android:id="@+id/bookmark"
                         android:layout_height="@dimen/swipe_menu_item_width"
                         android:contentDescription="@string/action_bookmark"
                         android:scaleType="center"
+                        android:tint="?attr/indicatorColor"
                         app:srcCompat="@drawable/ic_bookmark_border_white_24px"
                         style="@style/ImageButton" />
                     <ImageView
@@ -54,6 +55,7 @@
                         android:layout_height="@dimen/swipe_menu_item_width"
                         android:contentDescription="@string/action_share"
                         android:scaleType="center"
+                        android:tint="?attr/indicatorColor"
                         app:srcCompat="@drawable/ic_share_white_24px"
                         style="@style/ImageButton" />
                 </LinearLayout>

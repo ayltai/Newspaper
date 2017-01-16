@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/space_3"
-        android:tint="@color/textColorHint"
+        android:tint="?attr/textColorHint"
         app:srcCompat="@drawable/ic_chrome_reader_mode_black" />
     <TextView
         android:layout_width="wrap_content"
@@ -24,6 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/space_2"
         android:text="@string/empty_news_description"
-        android:textColor="@color/textColorHint"
+        android:textColor="?attr/textColorHint"
         android:textAppearance="?android:textAppearanceMedium" />
 </merge>

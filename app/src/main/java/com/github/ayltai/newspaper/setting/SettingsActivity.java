@@ -9,10 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.util.ContextUtils;
 
 public final class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
+        ContextUtils.setTheme(this);
+
         super.onCreate(savedInstanceState);
 
         this.setContentView(R.layout.activity_settings);

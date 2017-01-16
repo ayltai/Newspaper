@@ -15,7 +15,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +36,7 @@ import com.github.ayltai.newspaper.main.MainPresenter;
 import com.github.ayltai.newspaper.main.MainScreen;
 import com.github.ayltai.newspaper.net.ConnectivityChangeReceiver;
 import com.github.ayltai.newspaper.setting.Settings;
+import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 
 import flow.Flow;
@@ -70,6 +70,8 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
+        ContextUtils.setTheme(this);
+
         super.onCreate(savedInstanceState);
 
         if (BuildConfig.DEBUG) Takt.stock(this.getApplication()).seat(Seat.TOP_RIGHT).color(Color.WHITE).play();
@@ -93,7 +95,13 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
     protected void onDestroy() {
         super.onDestroy();
 
-        if (BuildConfig.DEBUG) Takt.finish();
+        if (BuildConfig.DEBUG) {
+            try {
+                Takt.finish();
+            } catch (final IllegalArgumentException e) {
+                // Ignored
+            }
+        }
 
         if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
 
@@ -245,7 +253,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
 
     private void setUpConnectivityChangeReceiver() {
         this.snackbar = Snackbar.make(this.findViewById(android.R.id.content), R.string.error_no_connection, Snackbar.LENGTH_INDEFINITE);
-        ((TextView)this.snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setTextColor(ContextCompat.getColor(this, R.color.textColorInverse));
+        ((TextView)this.snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setTextColor(ContextUtils.getColor(this, R.attr.textColorInverse));
 
         this.receiver = new ConnectivityChangeReceiver(this) {
             @Override

@@ -20,6 +20,7 @@ import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.setting.SettingsActivity;
+import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Duration;
@@ -162,7 +163,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
     private void showAbout() {
         new MaterialStyledDialog.Builder(this.getContext())
             .setStyle(Style.HEADER_WITH_ICON)
-            .setHeaderColor(R.color.colorPrimary)
+            .setHeaderColor(ContextUtils.getResourceId(this.getContext(), R.attr.primaryColor))
             .setIcon(R.mipmap.ic_launcher)
             .setTitle(R.string.app_name)
             .setDescription(String.format(this.getContext().getString(R.string.app_version), BuildConfig.VERSION_NAME))

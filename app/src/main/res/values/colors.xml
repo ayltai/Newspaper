@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#8067b7</color>
-    <color name="colorPrimaryDark">#6a50a7</color>
-    <color name="colorAccent">#8067b7</color>
-    <color name="windowBackground">#f5f7fa</color>
-    <color name="textColor">#323133</color>
-    <color name="textColorHint">#aab2bd</color>
-    <color name="textColorInverse">#ffffff</color>
-    <color name="divider">#7f7f7f</color>
-    <color name="indicator">#ffffff</color>
-    <color name="swipeMenuBackground">#656d78</color>
+    <color name="primaryColorLight">#8067b7</color>
+    <color name="primaryColorDarkLight">#6a50a7</color>
+    <color name="accentColorLight">#8067b7</color>
+    <color name="textColorLight">#323133</color>
+    <color name="textColorHintLight">#aab2bd</color>
+    <color name="textColorInverseLight">#ffffff</color>
+    <color name="windowBackgroundLight">#f5f7fa</color>
+    <color name="indicatorColorLight">#ffffff</color>
+    <color name="swipeMenuBackgroundLight">#656d78</color>
+    <color name="primaryColorDark">#8067b7</color>
+    <color name="primaryColorDarkDark">#6a50a7</color>
+    <color name="accentColorDark">#8067b7</color>
+    <color name="textColorDark">#e6e9ed</color>
+    <color name="textColorHintDark">#aab2bd</color>
+    <color name="textColorInverseDark">#ffffff</color>
+    <color name="windowBackgroundDark">#3c3b3d</color>
+    <color name="indicatorColorDark">#ffffff</color>
+    <color name="swipeMenuBackgroundDark">#656d78</color>
 </resources>

@@ -20,6 +20,7 @@ public final class Settings {
     //region Constants
 
     static final String PREF_COMPACT_LAYOUT = "PREF_COMPACT_LAYOUT";
+    static final String PREF_DARK_THEME     = "PREF_DARK_THEME";
     static final String PREF_CATEGORIES     = "PREF_CATEGORIES";
 
     private static final String PREF_USER_ID = "PREF_USER_ID";
@@ -46,6 +47,10 @@ public final class Settings {
     @Constants.ListViewType
     public static int getListViewType(@NonNull final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Settings.PREF_COMPACT_LAYOUT, true) ? Constants.LIST_VIEW_TYPE_COMPACT : Constants.LIST_VIEW_TYPE_COZY;
+    }
+
+    public static boolean isDarkTheme(@NonNull final Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_DARK_THEME, false);
     }
 
     public static Set<String> getCategories(@NonNull final Context context) {

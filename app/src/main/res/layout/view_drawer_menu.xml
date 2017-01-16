@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="?attr/primaryColor"
     android:orientation="vertical">
     <include layout="@layout/view_statusbar_padding" />
     <android.support.v7.widget.Toolbar
@@ -16,10 +16,13 @@
             android:id="@+id/drawer_close"
             android:layout_width="wrap_content"
             android:layout_height="?attr/actionBarSize"
+            android:paddingLeft="0dp"
+            android:paddingStart="0dp"
             android:paddingRight="@dimen/space_2"
             android:paddingEnd="@dimen/space_2"
             android:contentDescription="@string/app_name"
             android:scaleType="center"
+            android:tint="?attr/indicatorColor"
             app:srcCompat="@drawable/ic_close_white_24px" />
     </android.support.v7.widget.Toolbar>
     <TextView

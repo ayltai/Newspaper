@@ -23,7 +23,9 @@
     <string name="action_about">關於</string>
     <string name="action_refresh">更新</string>
     <string name="pref_general">一般</string>
+    <string name="pref_design">設計</string>
     <string name="pref_compact_layout">密集設計</string>
+    <string name="pref_dark_theme">深色主題</string>
     <string name="pref_categories">分類</string>
     <string-array name="pref_category_entries">
         <item>焦點</item>

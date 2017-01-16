@@ -31,14 +31,19 @@
                         android:id="@+id/drawer_open"
                         android:layout_width="wrap_content"
                         android:layout_height="?attr/actionBarSize"
+                        android:paddingLeft="0dp"
+                        android:paddingStart="0dp"
                         android:paddingRight="@dimen/space_2"
                         android:paddingEnd="@dimen/space_2"
                         android:contentDescription="@string/app_name"
                         android:scaleType="center"
+                        android:tint="?attr/indicatorColor"
                         app:srcCompat="@drawable/ic_menu_white_24px" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="?attr/actionBarSize"
+                        android:paddingLeft="0dp"
+                        android:paddingStart="0dp"
                         android:paddingRight="0dp"
                         android:paddingEnd="0dp"
                         android:gravity="center_vertical"
@@ -53,7 +58,7 @@
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 app:tabGravity="fill"
                 app:tabMode="scrollable"
-                app:tabIndicatorColor="@color/indicator" />
+                app:tabIndicatorColor="?attr/indicatorColor" />
         </android.support.design.widget.AppBarLayout>
         <com.github.ayltai.newspaper.widget.NonSwipeableViewPager
             android:id="@+id/viewPager"

@@ -8,7 +8,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +22,7 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.setting.Settings;
+import com.github.ayltai.newspaper.util.ContextUtils;
 
 import flow.ClassKey;
 import io.realm.Realm;
@@ -147,8 +147,8 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         final Snackbar snackbar = Snackbar.make(this, R.string.update_indicator, Snackbar.LENGTH_LONG)
             .setAction(R.string.action_refresh, view -> this.refreshes.onNext(null));
 
-        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setTextColor(ContextCompat.getColor(this.getContext(), R.color.textColorInverse));
-        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_action)).setTextColor(ContextCompat.getColor(this.getContext(), R.color.colorPrimary));
+        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setTextColor(ContextUtils.getColor(this.getContext(), R.attr.textColorInverse));
+        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_action)).setTextColor(ContextUtils.getColor(this.getContext(), R.attr.primaryColor));
 
         snackbar.show();
     }
@@ -183,7 +183,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             if (Settings.getListViewType(this.getContext()) == Constants.LIST_VIEW_TYPE_COMPACT) this.recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), LinearLayoutManager.VERTICAL));
 
             this.swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
-            this.swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+            this.swipeRefreshLayout.setColorSchemeResources(ContextUtils.getResourceId(this.getContext(), R.attr.primaryColor));
             this.swipeRefreshLayout.setOnRefreshListener(() -> this.refreshes.onNext(null));
 
             this.empty = (ViewGroup)view.findViewById(R.id.empty);
@@ -234,20 +234,22 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         DummyViewHolder(@NonNull final View itemView) {
             super(itemView);
 
+            final int textColor = ContextUtils.getColor(itemView.getContext(), R.attr.textColorHint);
+
             final TextView title = (TextView)itemView.findViewById(R.id.title);
-            title.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.textColorHint));
+            title.setTextColor(textColor);
             title.setText("██████████");
 
             final TextView description = (TextView)itemView.findViewById(R.id.description);
-            description.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.textColorHint));
+            description.setTextColor(textColor);
             description.setText("████████████████████████████████████████████████████████████████████████████████████████████████████");
 
             final TextView source = (TextView)itemView.findViewById(R.id.source);
-            source.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.textColorHint));
+            source.setTextColor(textColor);
             source.setText("█████");
 
             final TextView publishDate = (TextView)itemView.findViewById(R.id.publishDate);
-            publishDate.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.textColorHint));
+            publishDate.setTextColor(textColor);
             publishDate.setText("███████");
         }
     }
