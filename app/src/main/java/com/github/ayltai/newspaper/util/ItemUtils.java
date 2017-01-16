@@ -52,6 +52,7 @@ public final class ItemUtils {
         return url.substring(index);
     }
 
+    @SuppressFBWarnings("CSI_CHAR_SET_ISSUES_USE_STANDARD_CHARSET_NAME")
     @Nullable
     public static String getId(@NonNull final Item item) {
         if (item.getGuid() == null) return item.getTitle();
