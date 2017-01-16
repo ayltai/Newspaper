@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.appsee.Appsee;
 import com.crashlytics.android.Crashlytics;
@@ -24,6 +25,8 @@ public final class MainApplication extends Application {
         super.onCreate();
 
         if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
+
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         Fabric.with(this, new Crashlytics(), new Answers());
         Appsee.start(this.getString(R.string.com_appsee_apikey));
