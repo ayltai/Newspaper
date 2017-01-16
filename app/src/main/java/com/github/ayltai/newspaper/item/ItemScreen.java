@@ -172,9 +172,9 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                 this.title.setVisibility(View.GONE);
                 this.toolbarTitle.setText(this.getResources().getText(R.string.app_name));
             } else {
-                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "title 1 = " + title);
+                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "title (before) = " + title);
                 final CharSequence value = ItemUtils.removeHtml(title);
-                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "title 2 = " + value);
+                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "title (after) = " + value);
 
                 this.title.setVisibility(View.VISIBLE);
                 this.title.setText(value);
@@ -189,9 +189,9 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             if (TextUtils.isEmpty(description)) {
                 this.description.setVisibility(View.GONE);
             } else {
-                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "description 1 = " + description);
+                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "description (before) = " + description);
                 final CharSequence value = ItemUtils.removeHtml(description);
-                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "description 2 = " + value);
+                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "description (after) = " + value);
 
                 this.description.setVisibility(View.VISIBLE);
                 this.description.setText(value);

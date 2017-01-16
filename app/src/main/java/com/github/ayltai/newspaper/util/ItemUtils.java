@@ -1,10 +1,14 @@
 package com.github.ayltai.newspaper.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.regex.Pattern;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.rss.Item;
@@ -46,5 +50,18 @@ public final class ItemUtils {
         if (index == -1) return url;
 
         return url.substring(index);
+    }
+
+    @Nullable
+    public static String getId(@NonNull final Item item) {
+        if (item.getGuid() == null) return item.getTitle();
+
+        try {
+            return URLDecoder.decode(item.getGuid(), Constants.ENCODING_UTF8);
+        } catch (final UnsupportedEncodingException e) {
+            Log.w(ItemUtils.class.getSimpleName(), e.getMessage(), e);
+        }
+
+        return item.getTitle();
     }
 }

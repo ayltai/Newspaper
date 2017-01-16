@@ -11,6 +11,7 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.answers.ShareEvent;
+import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.data.Feed;
@@ -75,6 +76,8 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
         this.type      = type;
 
         if (this.isViewAttached()) {
+            if (BuildConfig.DEBUG) this.log().d(this.getClass().getName(), "guid = " + this.item.getGuid());
+
             this.getView().setTitle(this.item.getTitle());
             this.getView().setDescription(this.item.getDescription());
             this.getView().setSource(this.item.getSource());
@@ -160,7 +163,7 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
                 this.getView().showItem(this.parentKey, this.item);
 
                 this.getAnswers().logContentView(new ContentViewEvent()
-                    .putContentId(this.item.getGuid())
+                    .putContentId(ItemUtils.getId(this.item))
                     .putContentName(this.item.getTitle())
                     .putContentType(this.item.getClass().getName()));
             }
@@ -178,7 +181,7 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
             this.updateFeed(feed, bookmark);
 
             this.getAnswers().logCustom(new CustomEvent(bookmark ? "Bookmark (Add)" : "Bookmark (Remove)")
-                .putCustomAttribute("contentId", this.item.getGuid())
+                .putCustomAttribute("contentId", ItemUtils.getId(this.item))
                 .putCustomAttribute("contentName", this.item.getTitle())
                 .putCustomAttribute("contentType", this.item.getClass().getName()));
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
@@ -190,7 +193,7 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
                 this.getView().share(this.item.getLink());
 
                 this.getAnswers().logShare(new ShareEvent()
-                    .putContentId(this.item.getGuid())
+                    .putContentId(ItemUtils.getId(this.item))
                     .putContentName(this.item.getTitle())
                     .putContentType(this.item.getClass().getName()));
             }
