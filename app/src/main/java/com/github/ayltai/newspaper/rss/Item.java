@@ -104,7 +104,6 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
 
         final Item item = (Item)o;
         return this.guid == null ? item.guid == null : this.guid.equals(item.guid);
-
     }
 
     @Override

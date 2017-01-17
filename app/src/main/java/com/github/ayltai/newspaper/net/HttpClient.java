@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -47,28 +45,16 @@ public final class HttpClient implements Closeable {
         }
     }
 
-    public static void closeQuietly(@Nullable final InputStream inputStream) {
-        try {
-            if (inputStream != null) inputStream.close();
-        } catch (final IOException e) {
-            Log.e(HttpClient.class.getName(), e.getMessage(), e);
-        }
-    }
-
     public InputStream download(@NonNull final String url) throws IOException {
         final Call call = this.client.newCall(new Request.Builder().url(url).build());
         this.calls.add(call);
 
         final Response response = call.execute();
 
-        try {
-            if (response.isSuccessful()) {
-                return response.body().byteStream();
-            } else {
-                throw new IOException("Unexpected response " + response);
-            }
-        } finally {
-            this.calls.remove(call);
+        if (response.isSuccessful()) {
+            return response.body().byteStream();
+        } else {
+            throw new IOException("Unexpected response " + response);
         }
     }
 }

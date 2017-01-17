@@ -7,6 +7,8 @@ import java.util.Collections;
 
 import android.support.annotation.NonNull;
 
+import org.apache.commons.io.IOUtils;
+
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.github.ayltai.newspaper.data.Feed;
@@ -30,7 +32,7 @@ public final class Client implements Closeable {
             } catch (final XmlPullParserException | IOException e) {
                 subscriber.onError(e);
             } finally {
-                HttpClient.closeQuietly(inputStream);
+                IOUtils.closeQuietly(inputStream);
             }
         });
     }
