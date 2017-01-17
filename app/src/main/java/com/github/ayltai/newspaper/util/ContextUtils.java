@@ -37,7 +37,11 @@ public final class ContextUtils {
         return value.resourceId;
     }
 
-    public static void setTheme(@NonNull final Context context) {
+    public static void setAppTheme(@NonNull final Context context) {
         context.setTheme(Settings.isDarkTheme(context) ? R.style.AppTheme_Dark : R.style.AppTheme_Light);
+    }
+
+    public static void setSettingsTheme(@NonNull final Context context) {
+        context.setTheme(Settings.isDarkTheme(context) ? R.style.SettingsTheme_Dark : R.style.SettingsTheme_Light);
     }
 }

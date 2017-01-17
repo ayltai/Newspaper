@@ -6,16 +6,12 @@
         <item name="colorPrimary">?attr/primaryColor</item>
         <item name="colorPrimaryDark">?attr/primaryColorDark</item>
         <item name="colorAccent">?attr/accentColor</item>
-        <item name="android:windowBackground">?attr/windowBackground</item>
         <item name="android:textColor">?attr/textColor</item>
         <item name="android:textColorHint">?attr/textColorHint</item>
+        <item name="android:windowBackground">?attr/windowBackground</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-        <item name="alertDialogTheme">@style/Theme.AppCompat.DayNight.Dialog.Alert</item>
     </style>
-    <style
-        name="AppTheme.Light"
-        parent="AppTheme">
+    <style name="AppTheme.Light">
         <item name="primaryColor">@color/primaryColorLight</item>
         <item name="primaryColorDark">@color/primaryColorDarkLight</item>
         <item name="accentColor">@color/accentColorLight</item>
@@ -26,9 +22,7 @@
         <item name="indicatorColor">@color/indicatorColorLight</item>
         <item name="swipeMenuBackground">@color/swipeMenuBackgroundLight</item>
     </style>
-    <style
-        name="AppTheme.Dark"
-        parent="AppTheme">
+    <style name="AppTheme.Dark">
         <item name="primaryColor">@color/primaryColorDark</item>
         <item name="primaryColorDark">@color/primaryColorDarkDark</item>
         <item name="accentColor">@color/accentColorDark</item>
@@ -38,5 +32,35 @@
         <item name="windowBackground">@color/windowBackgroundDark</item>
         <item name="indicatorColor">@color/indicatorColorDark</item>
         <item name="swipeMenuBackground">@color/swipeMenuBackgroundDark</item>
+    </style>
+    <style
+        name="SettingsTheme"
+        parent="PreferenceFixTheme.Light.NoActionBar">
+        <item name="colorPrimary">?attr/primaryColor</item>
+        <item name="colorPrimaryDark">?attr/primaryColorDark</item>
+        <item name="colorAccent">?attr/accentColor</item>
+        <item name="android:textColor">?attr/textColor</item>
+        <item name="android:textColorHint">?attr/textColorHint</item>
+        <item name="android:windowBackground">?attr/windowBackground</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="alertDialogTheme">@style/Theme.AppCompat.DayNight.Dialog.Alert</item>
+    </style>
+    <style name="SettingsTheme.Light">
+        <item name="primaryColor">@color/primaryColorLight</item>
+        <item name="primaryColorDark">@color/primaryColorDarkLight</item>
+        <item name="accentColor">@color/accentColorLight</item>
+        <item name="textColor">@color/textColorLight</item>
+        <item name="textColorHint">@color/textColorHintLight</item>
+        <item name="textColorInverse">@color/textColorInverseLight</item>
+        <item name="windowBackground">@color/windowBackgroundLight</item>
+    </style>
+    <style name="SettingsTheme.Dark">
+        <item name="primaryColor">@color/primaryColorDark</item>
+        <item name="primaryColorDark">@color/primaryColorDarkDark</item>
+        <item name="accentColor">@color/accentColorDark</item>
+        <item name="textColor">@color/textColorDark</item>
+        <item name="textColorHint">@color/textColorHintDark</item>
+        <item name="textColorInverse">@color/textColorInverseDark</item>
+        <item name="windowBackground">@color/windowBackgroundDark</item>
     </style>
 </resources>

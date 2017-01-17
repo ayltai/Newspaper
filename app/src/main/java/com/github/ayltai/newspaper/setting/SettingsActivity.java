@@ -14,7 +14,7 @@ import com.github.ayltai.newspaper.util.ContextUtils;
 public final class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
-        ContextUtils.setTheme(this);
+        ContextUtils.setSettingsTheme(this);
 
         super.onCreate(savedInstanceState);
 

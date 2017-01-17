@@ -70,7 +70,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
-        ContextUtils.setTheme(this);
+        ContextUtils.setAppTheme(this);
 
         super.onCreate(savedInstanceState);
 
