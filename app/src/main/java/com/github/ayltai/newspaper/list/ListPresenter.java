@@ -95,6 +95,8 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                     this.getView().setItems(this.key, feed);
                 },
                 error -> {
+                    this.getView().setItems(this.key, this.feed);
+
                     if (error instanceof TimeoutException) {
                         this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
                     } else {
