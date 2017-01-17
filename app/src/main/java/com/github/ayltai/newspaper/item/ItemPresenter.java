@@ -160,8 +160,10 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
             if (this.parentKey != null) {
                 this.getView().showItem(this.parentKey, this.item);
 
-                this.answers().logContentView(AnalyticsUtils.applyAttributes(new ContentViewEvent(), this.item));
-                this.analytics().logEvent(FirebaseAnalytics.Event.VIEW_ITEM, AnalyticsUtils.createBundle(this.item));
+                if (!BuildConfig.DEBUG) {
+                    this.answers().logContentView(AnalyticsUtils.applyAttributes(new ContentViewEvent(), this.item));
+                    this.analytics().logEvent(FirebaseAnalytics.Event.VIEW_ITEM, AnalyticsUtils.createBundle(this.item));
+                }
             }
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
@@ -176,8 +178,10 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
         if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks().subscribe(bookmark -> this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK).subscribe(feed -> {
             this.updateFeed(feed, bookmark);
 
-            this.answers().logCustom(AnalyticsUtils.applyAttributes(new CustomEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE), this.item));
-            this.analytics().logEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE, AnalyticsUtils.createBundle(this.item));
+            if (!BuildConfig.DEBUG) {
+                this.answers().logCustom(AnalyticsUtils.applyAttributes(new CustomEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE), this.item));
+                this.analytics().logEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE, AnalyticsUtils.createBundle(this.item));
+            }
 
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
@@ -187,13 +191,10 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
             if (this.item != null && this.item.getLink() != null) {
                 this.getView().share(this.item.getLink());
 
-                this.answers().logShare(new ShareEvent()
-                    .putContentId(ItemUtils.getId(this.item))
-                    .putContentName(this.item.getTitle())
-                    .putContentType(this.item.getClass().getName()));
-
-                this.answers().logShare(AnalyticsUtils.applyAttributes(new ShareEvent(), this.item));
-                this.analytics().logEvent(FirebaseAnalytics.Event.SHARE, AnalyticsUtils.createBundle(this.item));
+                if (!BuildConfig.DEBUG) {
+                    this.answers().logShare(AnalyticsUtils.applyAttributes(new ShareEvent(), this.item));
+                    this.analytics().logEvent(FirebaseAnalytics.Event.SHARE, AnalyticsUtils.createBundle(this.item));
+                }
             }
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
