@@ -6,6 +6,7 @@ import java.util.concurrent.TimeoutException;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
@@ -27,7 +28,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public class ListPresenter extends Presenter<ListPresenter.View> {
     public interface View extends Presenter.View {
-        void setItems(@NonNull ListScreen.Key parentKey, @NonNull Feed feed);
+        void setItems(@NonNull ListScreen.Key parentKey, @Nullable Feed feed);
 
         @NonNull Observable<Void> refreshes();
 

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.github.ayltai.newspaper.rss.Item;
 import com.jakewharton.rxbinding.view.RxView;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmRecyclerViewAdapter;
 import rx.subscriptions.CompositeSubscription;
 
@@ -35,8 +37,8 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
 
     //endregion
 
-    ListAdapter(@NonNull final Context context, @NonNull final ListScreen.Key parentKey, @Constants.ListViewType final int listViewType, @NonNull final Feed feed, @NonNull final Realm realm) {
-        super(context, feed.getItems(), false);
+    ListAdapter(@NonNull final Context context, @NonNull final ListScreen.Key parentKey, @Constants.ListViewType final int listViewType, @Nullable final Feed feed, @NonNull final Realm realm) {
+        super(context, feed == null ? new RealmList<>() : feed.getItems(), false);
 
         this.context      = context;
         this.parentKey    = parentKey;
@@ -47,7 +49,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
 
     @Override
     public int getItemCount() {
-        return this.feed.getItems().size();
+        return this.feed == null ? 0 : this.feed.getItems().size();
     }
 
     @Override

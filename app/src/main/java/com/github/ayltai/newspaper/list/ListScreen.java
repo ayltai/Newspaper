@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
@@ -112,7 +113,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     }
 
     @Override
-    public void setItems(@NonNull final ListScreen.Key parentKey, @NonNull final Feed feed) {
+    public void setItems(@NonNull final ListScreen.Key parentKey, @Nullable final Feed feed) {
         this.close();
 
         this.parentKey = parentKey;
@@ -121,7 +122,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         this.recyclerView.setAdapter(this.adapter = new ListAdapter(this.getContext(), parentKey, Settings.getListViewType(this.getContext()), this.feed, this.realm));
         this.empty.removeAllViews();
 
-        if (this.feed.getItems().isEmpty()) {
+        if (this.feed == null || this.feed.getItems().isEmpty()) {
             LayoutInflater.from(this.getContext()).inflate(Constants.SOURCE_BOOKMARK.equals(this.parentKey.url) ? R.layout.view_empty_bookmark : R.layout.view_empty_news, this.empty, true);
 
             this.recyclerView.setVisibility(View.GONE);
