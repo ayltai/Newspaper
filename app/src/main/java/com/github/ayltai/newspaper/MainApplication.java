@@ -26,8 +26,6 @@ public final class MainApplication extends Application {
 
         if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
 
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-
         Fabric.with(this, new Crashlytics(), new Answers());
         Appsee.start(this.getString(R.string.com_appsee_apikey));
         BigImageViewer.initialize(FrescoImageLoader.with(this.getApplicationContext()));
