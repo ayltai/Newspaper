@@ -67,7 +67,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         Mockito.doNothing().when(presenter).updateFeed(Mockito.any(Feed.class), Mockito.anyBoolean());
 
         final Answers answers = Mockito.mock(Answers.class);
-        Mockito.doReturn(answers).when(presenter).getAnswers();
+        Mockito.doReturn(answers).when(presenter).answers();
 
         final LogUtils logUtils = Mockito.mock(LogUtils.class);
         Mockito.doReturn(logUtils).when(presenter).log();

@@ -11,6 +11,7 @@ import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.github.ayltai.newspaper.BuildConfig;
+import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.data.Feed;
@@ -112,8 +113,8 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
         if (this.subscription != null) this.subscription.unsubscribe();
 
         this.subscription = this.client.get(this.key.getUrl())
-            .delaySubscription(Constants.UPDATE_INTERVAL, TimeUnit.SECONDS)
-            .timeout(Constants.UPDATE_INTERVAL + Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
+            .delaySubscription(Configs.getUpdateInterval(), TimeUnit.SECONDS)
+            .timeout(Configs.getUpdateInterval() + Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(this::showUpdateIndicator, error -> {

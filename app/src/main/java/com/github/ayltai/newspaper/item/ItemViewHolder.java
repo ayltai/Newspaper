@@ -2,6 +2,7 @@ package com.github.ayltai.newspaper.item;
 
 import java.io.Closeable;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -141,6 +142,12 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
         this.isBookmarked = isBookmarked;
 
         this.bookmark.setImageResource(this.isBookmarked ? R.drawable.ic_bookmark_white_24px : R.drawable.ic_bookmark_border_white_24px);
+    }
+
+    @NonNull
+    @Override
+    public Context getContext() {
+        return this.itemView.getContext();
     }
 
     //endregion

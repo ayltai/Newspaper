@@ -279,7 +279,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
             .subscribe(config -> {
                 this.config = config;
                 // TODO: Applies default config
-                // this.config.setDefaults(R.xml.config);
+                this.config.setDefaults(R.xml.config);
 
                 this.applyRemoteConfig();
 
@@ -295,7 +295,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     private void applyRemoteConfig() {
-        // TODO: Applies remote config
+        Configs.apply(this.config);
     }
 
     private void dispatch(@NonNull final View view, @NonNull final State incomingState, @NonNull final TraversalCallback callback) {

@@ -7,17 +7,20 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
-import com.crashlytics.android.answers.Answers;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.answers.ShareEvent;
 import com.github.ayltai.newspaper.BuildConfig;
+import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
+import com.github.ayltai.newspaper.util.AnalyticsUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
 
 import io.realm.Realm;
@@ -62,7 +65,7 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
     private CompositeSubscription subscriptions;
     private ListScreen.Key        parentKey;
     private Item                  item;
-    private int                   type = Constants.LIST_VIEW_TYPE_DEFAULT;
+    private int                   type = Configs.getDefaultListViewType();
 
     //endregion
 
@@ -141,11 +144,6 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
         this.realm.commitTransaction();
     }
 
-    @VisibleForTesting
-    Answers getAnswers() {
-        return Answers.getInstance();
-    }
-
     //region Event handlers
 
     private void attachEvents() {
@@ -162,10 +160,8 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
             if (this.parentKey != null) {
                 this.getView().showItem(this.parentKey, this.item);
 
-                this.getAnswers().logContentView(new ContentViewEvent()
-                    .putContentId(ItemUtils.getId(this.item))
-                    .putContentName(this.item.getTitle())
-                    .putContentType(this.item.getClass().getName()));
+                this.answers().logContentView(AnalyticsUtils.applyAttributes(new ContentViewEvent(), this.item));
+                this.analytics().logEvent(FirebaseAnalytics.Event.VIEW_ITEM, AnalyticsUtils.createBundle(this.item));
             }
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
@@ -180,10 +176,9 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
         if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks().subscribe(bookmark -> this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK).subscribe(feed -> {
             this.updateFeed(feed, bookmark);
 
-            this.getAnswers().logCustom(new CustomEvent(bookmark ? "Bookmark (Add)" : "Bookmark (Remove)")
-                .putCustomAttribute("contentId", ItemUtils.getId(this.item))
-                .putCustomAttribute("contentName", this.item.getTitle())
-                .putCustomAttribute("contentType", this.item.getClass().getName()));
+            this.answers().logCustom(AnalyticsUtils.applyAttributes(new CustomEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE), this.item));
+            this.analytics().logEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE, AnalyticsUtils.createBundle(this.item));
+
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 
@@ -192,10 +187,13 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
             if (this.item != null && this.item.getLink() != null) {
                 this.getView().share(this.item.getLink());
 
-                this.getAnswers().logShare(new ShareEvent()
+                this.answers().logShare(new ShareEvent()
                     .putContentId(ItemUtils.getId(this.item))
                     .putContentName(this.item.getTitle())
                     .putContentType(this.item.getClass().getName()));
+
+                this.answers().logShare(AnalyticsUtils.applyAttributes(new ShareEvent(), this.item));
+                this.analytics().logEvent(FirebaseAnalytics.Event.SHARE, AnalyticsUtils.createBundle(this.item));
             }
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }

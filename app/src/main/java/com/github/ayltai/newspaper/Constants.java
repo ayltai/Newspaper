@@ -13,7 +13,8 @@ public final class Constants {
     public static final int REFRESH_LOAD_TIMEOUT = 30;
     public static final int INIT_LOAD_TIMEOUT    = 3;
     public static final int INIT_LOAD_ITEM_COUNT = 10;
-    public static final int UPDATE_INTERVAL      = 3 * 60;
+
+    static final int UPDATE_INTERVAL = 3 * 60;
 
     public static final int REQUEST_SETTINGS = 1;
     public static final int REQUEST_FIREBASE = 2;
@@ -27,6 +28,9 @@ public final class Constants {
     public static final String EMPTY = "";
 
     public static final String SOURCE_BOOKMARK = "BOOKMARK";
+
+    public static final String ANALYTICS_BOOKMARK_ADD    = "Bookmark (Add)";
+    public static final String ANALYTICS_BOOKMARK_REMOVE = "Bookmark (Remove)";
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({ Constants.LIST_VIEW_TYPE_COZY, Constants.LIST_VIEW_TYPE_COMPACT })
