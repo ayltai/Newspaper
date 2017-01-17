@@ -244,7 +244,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     public void setIsBookmarked(final boolean isBookmarked) {
         this.isBookmarked = isBookmarked;
 
-        this.bookmark.setImageResource(this.isBookmarked ? R.drawable.ic_bookmark_white_24px : R.drawable.ic_bookmark_border_white_24px);
+        this.bookmark.setImageDrawable(AppCompatDrawableManager.get().getDrawable(this.getContext(), this.isBookmarked ? R.drawable.ic_bookmark_white_24px : R.drawable.ic_bookmark_border_white_24px));
     }
 
     //endregion
