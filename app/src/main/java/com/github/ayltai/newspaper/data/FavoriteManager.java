@@ -39,7 +39,7 @@ public final class FavoriteManager {
             if (favorites.isEmpty()) {
                 subscriber.onNext(this.createFromSettings());
             } else {
-                subscriber.onNext(this.syncWithSettings(favorites.first()));
+                subscriber.onNext(this.syncWithSettings(this.syncWithSettings(favorites.first())));
             }
         });
     }
