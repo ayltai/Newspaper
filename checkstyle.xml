@@ -209,7 +209,7 @@
         <module name="CovariantEquals"/>
         <module name="EqualsHashCode"/>
         <module name="MethodCount">
-            <property name="maxTotal" value="20"/>
+            <property name="maxTotal" value="25"/>
         </module>
         <module name="MethodLength">
             <property name="max" value="150"/>

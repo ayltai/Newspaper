@@ -6,6 +6,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -141,7 +142,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
     public void setIsBookmarked(final boolean isBookmarked) {
         this.isBookmarked = isBookmarked;
 
-        this.bookmark.setImageResource(this.isBookmarked ? R.drawable.ic_bookmark_white_24px : R.drawable.ic_bookmark_border_white_24px);
+        this.bookmark.setImageDrawable(AppCompatDrawableManager.get().getDrawable(this.getContext(), this.isBookmarked ? R.drawable.ic_bookmark_white_24px : R.drawable.ic_bookmark_border_white_24px));
     }
 
     @NonNull

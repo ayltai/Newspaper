@@ -1,7 +1,6 @@
 package com.github.ayltai.newspaper;
 
 import android.app.Application;
-import android.support.v7.app.AppCompatDelegate;
 
 import com.appsee.Appsee;
 import com.crashlytics.android.Crashlytics;
