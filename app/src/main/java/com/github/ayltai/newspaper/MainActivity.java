@@ -1,69 +1,40 @@
 package com.github.ayltai.newspaper;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
-import com.github.ayltai.newspaper.item.ItemPresenter;
-import com.github.ayltai.newspaper.item.ItemScreen;
-import com.github.ayltai.newspaper.list.ListScreen;
-import com.github.ayltai.newspaper.main.MainPresenter;
-import com.github.ayltai.newspaper.main.MainScreen;
 import com.github.ayltai.newspaper.net.ConnectivityChangeReceiver;
-import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 
-import flow.Flow;
-import flow.KeyDispatcher;
-import flow.KeyParceler;
-import flow.State;
-import flow.TraversalCallback;
-import io.realm.Realm;
 import jp.wasabeef.takt.Seat;
 import jp.wasabeef.takt.Takt;
 import rx.Observable;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 public final class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
-    private final Map<Class<?>, Presenter.View>  screens    = new HashMap<>();
-    private final Map<Presenter.View, Presenter> presenters = new HashMap<>();
-
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
-
     //region Variables
 
+    private FlowController             controller;
     private FirebaseRemoteConfig       config;
     private GoogleApiClient            client;
-    private FirebaseAnalytics          analytics;
-    private Realm                      realm;
     private ConnectivityChangeReceiver receiver;
     private Snackbar                   snackbar;
 
@@ -82,9 +53,6 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
         if (BuildConfig.DEBUG) Takt.stock(this.getApplication()).seat(Seat.TOP_RIGHT).color(Color.WHITE).play();
 
         this.setUpRemoteConfig();
-
-        this.realm     = Realm.getDefaultInstance();
-        this.analytics = FirebaseAnalytics.getInstance(this.getApplicationContext());
 
         this.client = new GoogleApiClient.Builder(this.getApplicationContext())
             .enableAutoManage(this, this)
@@ -108,75 +76,16 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
             }
         }
 
-        if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
-
-        for (final Presenter.View view : this.screens.values()) {
-            if (view instanceof Closeable) {
-                try {
-                    ((Closeable)view).close();
-                } catch (final IOException e) {
-                    Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
-                }
-            }
-        }
+        this.controller.onDestroy();
 
         FaceDetectorFactory.release();
-
-        if (!this.realm.isClosed()) this.realm.close();
     }
 
     @Override
     protected void attachBaseContext(final Context newBase) {
-        super.attachBaseContext(Flow.configure(newBase, this)
-            .keyParceler(new KeyParceler() {
-                @NonNull
-                @Override
-                public Parcelable toParcelable(@NonNull final Object key) {
-                    return (Parcelable)key;
-                }
+        this.controller = new FlowController(this);
 
-                @NonNull
-                @Override
-                public Object toKey(@NonNull final Parcelable parcelable) {
-                    return parcelable;
-                }
-            })
-            .dispatcher(KeyDispatcher.configure(this, (outgoingState, incomingState, direction, incomingContexts, callback) -> {
-                if (outgoingState != null)
-                    outgoingState.save(((ViewGroup)this.findViewById(android.R.id.content)).getChildAt(0));
-
-                final Presenter.View view;
-                final Presenter      presenter;
-
-                if (this.screens.containsKey(incomingState.getKey().getClass())) {
-                    view      = this.screens.get(incomingState.getKey().getClass());
-                    presenter = this.presenters.get(view);
-                } else {
-                    if (incomingState.getKey() instanceof ItemScreen.Key) {
-                        view      = new ItemScreen(this);
-                        presenter = new ItemPresenter(this.realm);
-
-                        this.subscriptions.add(view.attachments().subscribe(dummy -> presenter.onViewAttached(view), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
-                        this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
-                    } else {
-                        view      = new MainScreen(this, this.realm);
-                        presenter = new MainPresenter();
-                    }
-
-                    this.screens.put(incomingState.getKey().getClass(), view);
-                    this.presenters.put(view, presenter);
-                }
-
-                if (incomingState.getKey() instanceof ItemScreen.Key) {
-                    final ItemScreen.Key key = incomingState.getKey();
-
-                    ((ItemPresenter)presenter).bind((ListScreen.Key)key.getParentKey(), key.getItem(), Settings.getListViewType(this));
-                }
-
-                this.dispatch((View)view, incomingState, callback);
-            }).build())
-            .defaultKey(Constants.KEY_SCREEN_MAIN)
-            .install());
+        super.attachBaseContext(this.controller.attachNewBase(newBase));
     }
 
     @Override
@@ -234,13 +143,7 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
 
     @Override
     public void onBackPressed() {
-        if (!Flow.get(this).goBack()) {
-            final View view = ((ViewGroup)this.findViewById(android.R.id.content)).getChildAt(0);
-
-            if (view instanceof MainScreen) {
-                if (!((MainScreen)view).goBack()) super.onBackPressed();
-            }
-        }
+        if (!this.controller.onBackPressed()) super.onBackPressed();
     }
 
     @Override
@@ -296,14 +199,6 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
 
     private void applyRemoteConfig() {
         Configs.apply(this.config);
-    }
-
-    private void dispatch(@NonNull final View view, @NonNull final State incomingState, @NonNull final TraversalCallback callback) {
-        incomingState.restore(view);
-
-        this.setContentView(view);
-
-        callback.onTraversalCompleted();
     }
 
     private static void logConnectionError(@NonNull final ConnectionResult connectionResult) {
