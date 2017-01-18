@@ -13,6 +13,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.IntentUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
+import com.github.ayltai.newspaper.widget.FaceCenteredImageView;
 import com.github.piasy.biv.indicator.progresspie.ProgressPieIndicator;
 import com.github.piasy.biv.view.BigImageView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -385,6 +387,17 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     private void initThumbnail() {
         this.thumbnail = (BigImageView)LayoutInflater.from(this.getContext()).inflate(R.layout.view_image, this.thumbnailContainer, false);
         this.thumbnail.setProgressIndicator(new ProgressPieIndicator());
+
+        if (this.thumbnail instanceof FaceCenteredImageView) {
+            final Activity activity = ContextUtils.getActivity(this.getContext());
+
+            if (activity != null) {
+                final DisplayMetrics metrics = new DisplayMetrics();
+                activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+                ((FaceCenteredImageView)this.thumbnail).setScreenWidth(metrics.widthPixels);
+            }
+        }
 
         this.thumbnailContainer.addView(this.thumbnail);
 

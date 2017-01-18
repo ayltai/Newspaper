@@ -36,10 +36,12 @@ public final class FaceCenterCrop {
         this.height = height;
     }
 
-    public PointF findCroppedCenter(@NonNull final File file) {
+    public ScaleCenter findCroppedCenter(@NonNull final File file) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+
+        final float ratio = Math.max((float)this.width / options.outWidth, (float)this.height / options.outHeight);
 
         options.inSampleSize = 1;
         while (options.outWidth / options.inSampleSize > FaceCenterCrop.MAX_WIDTH || options.outHeight / options.inSampleSize > FaceCenterCrop.MAX_HEIGHT) options.inSampleSize *= 2;
@@ -47,22 +49,20 @@ public final class FaceCenterCrop {
         options.inJustDecodeBounds = false;
         final Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 
-        final float scaleX = (float)width / bitmap.getWidth();
-        final float scaleY = (float)height / bitmap.getHeight();
-        final float scale  = Math.max(scaleX, scaleY);
+        final float scaleX = (float)this.width / bitmap.getWidth();
+        final float scaleY = (float)this.height / bitmap.getHeight();
 
-        final PointF center = findCroppedCenter(bitmap, width, height, scale, scaleX, scaleY);
+        final PointF center = findCroppedCenter(bitmap, this.width, this.height, scaleX, scaleY);
+        center.x *= options.inSampleSize;
+        center.y *= options.inSampleSize;
 
-        center.x *= options.inSampleSize * scale;
-        center.y *= options.inSampleSize * scale;
-
-        return center;
+        return new ScaleCenter(ratio, center);
     }
 
     @SuppressFBWarnings("MOM_MISLEADING_OVERLOAD_MODEL")
-    private static PointF findCroppedCenter(@NonNull final Bitmap bitmap, final int width, final int height, final float scale, final float scaleX, final float scaleY) {
-        final float halfWidth  = scale * bitmap.getWidth() / 2f;
-        final float halfHeight = scale * bitmap.getHeight() / 2f;
+    private static PointF findCroppedCenter(@NonNull final Bitmap bitmap, final int width, final int height, final float scaleX, final float scaleY) {
+        final float halfWidth  = bitmap.getWidth()  / 2f;
+        final float halfHeight = bitmap.getHeight() / 2f;
 
         if (width == 0 || height == 0 || Math.abs(scaleX - scaleY) < MAX_DELTA) return new PointF(halfWidth, halfHeight);
 
@@ -70,9 +70,9 @@ public final class FaceCenterCrop {
 
         FaceCenterCrop.detectFace(bitmap, center);
 
-        if (scaleX < scaleY) return new PointF(halfWidth + FaceCenterCrop.getLeftPoint(width, scale * bitmap.getWidth(), scale * center.x), halfHeight);
+        if (scaleX < scaleY) return new PointF(center.x, halfHeight);
 
-        return new PointF(halfWidth, halfHeight + FaceCenterCrop.getTopPoint(height, scale * bitmap.getHeight(), scale * center.y));
+        return new PointF(halfWidth, center.y);
     }
 
     private static void detectFace(@NonNull final Bitmap bitmap, @NonNull final PointF centerOfAllFaces) {
@@ -106,19 +106,5 @@ public final class FaceCenterCrop {
 
     private static void getFaceCenter(@NonNull final Face face, @NonNull final PointF center) {
         center.set(face.getPosition().x + (face.getWidth() / 2f), face.getPosition().y + (face.getHeight() / 2f));
-    }
-
-    private static float getTopPoint(final int height, final float scaledHeight, final float faceCenterY) {
-        if (faceCenterY <= height / 2f) return 0f;
-        if ((scaledHeight - faceCenterY) <= height / 2f) return height - scaledHeight;
-
-        return (height / 2f) - faceCenterY;
-    }
-
-    private static float getLeftPoint(final int width, final float scaledWidth, final float faceCenterX) {
-        if (faceCenterX <= width / 2f) return 0f;
-        if ((scaledWidth - faceCenterX) <= width / 2f) return width - scaledWidth;
-
-        return (width / 2f) - faceCenterX;
     }
 }

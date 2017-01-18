@@ -4,22 +4,19 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.PointF;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.graphics.FaceCenterCrop;
 import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
-import com.github.ayltai.newspaper.util.ContextUtils;
+import com.github.ayltai.newspaper.graphics.ScaleCenter;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.piasy.biv.view.BigImageView;
@@ -55,6 +52,10 @@ public final class FaceCenteredImageView extends BigImageView {
 
     //endregion
 
+    public void setScreenWidth(final int screenWidth) {
+        this.screenWidth = screenWidth;
+    }
+
     @UiThread
     @Override
     public void onCacheHit(final File image) {
@@ -81,23 +82,16 @@ public final class FaceCenteredImageView extends BigImageView {
         super.onAttachedToWindow();
 
         ((SubsamplingScaleImageView)this.getChildAt(0)).recycle();
-
-        final Activity activity = ContextUtils.getActivity(this.getContext());
-
-        if (activity != null) {
-            final DisplayMetrics metrics = new DisplayMetrics();
-            activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-            this.screenWidth = metrics.widthPixels;
-        }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        if (this.subscription != null) this.subscription.unsubscribe();
-        this.subscription = null;
+        if (this.subscription != null) {
+            this.subscription.unsubscribe();
+            this.subscription = null;
+        }
     }
 
     private Subscription translate(@NonNull final File image) {
@@ -106,20 +100,18 @@ public final class FaceCenteredImageView extends BigImageView {
         return FaceCenteredImageView.translate(image, this.screenWidth, this.getContext().getResources().getDimensionPixelSize(R.dimen.thumbnail_cozy))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(center -> {
+            .subscribe(scaleCenter -> {
                 this.doShowImage(image);
 
                 final SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)this.getChildAt(0);
-                final float                     scale     = imageView.getScale();
 
-                imageView.resetScaleAndCenter();
-                imageView.setScaleAndCenter(scale, center);
+                imageView.setScaleAndCenter(scaleCenter.scale, scaleCenter.center);
             });
     }
 
     @SuppressFBWarnings("MOM_MISLEADING_OVERLOAD_MODEL")
     @NonNull
-    private static Observable<PointF> translate(@NonNull final File image, final int width, final int height) {
+    private static Observable<ScaleCenter> translate(@NonNull final File image, final int width, final int height) {
         return Observable.create(subscriber -> subscriber.onNext(new FaceCenterCrop(width, height).findCroppedCenter(image)));
     }
 
