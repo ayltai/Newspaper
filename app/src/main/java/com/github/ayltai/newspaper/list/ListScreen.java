@@ -21,13 +21,17 @@ import android.widget.TextView;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.RxBus;
 import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
+import com.github.ayltai.newspaper.util.LogUtils;
 
 import flow.ClassKey;
+import io.realm.FeedRealmProxy;
 import io.realm.Realm;
 import rx.Observable;
+import rx.Subscriber;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 
@@ -88,11 +92,26 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     //region Variables
 
+    private final Subscriber<Feed> subscriber = new Subscriber<Feed>() {
+        @Override
+        public void onCompleted() {
+        }
+
+        @Override
+        public void onError(final Throwable e) {
+            LogUtils.getInstance().e(this.getClass().getSimpleName(), e.getMessage(), e);
+        }
+
+        @Override
+        public void onNext(final Feed feed) {
+            if (ListScreen.this.parentKey != null && Constants.SOURCE_BOOKMARK.equals(ListScreen.this.parentKey.url)) ListScreen.this.setItems(ListScreen.this.parentKey, feed);
+        }
+    };
+
     private final Realm realm;
 
     private ListScreen.Key parentKey;
     private Feed           feed;
-    private int            position = RecyclerView.NO_POSITION;
     private boolean        hasAttached;
 
     //endregion
@@ -110,11 +129,17 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         super(context);
 
         this.realm = realm;
+
+        RxBus.getInstance().register(Feed.class, this.subscriber);
+        RxBus.getInstance().register(FeedRealmProxy.class, this.subscriber);
     }
 
     @Override
     public void setItems(@NonNull final ListScreen.Key parentKey, @Nullable final Feed feed) {
-        this.close();
+        if (this.adapter != null) {
+            this.adapter.close();
+            this.adapter = null;
+        }
 
         this.parentKey = parentKey;
         this.feed      = feed;
@@ -201,14 +226,20 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        if (this.parentKey != null) Settings.setPosition(this.parentKey.getUrl(), this.position = ((LinearLayoutManager)this.recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
+        if (this.parentKey != null) Settings.setPosition(this.parentKey.getUrl(), ((LinearLayoutManager)this.recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
 
         this.detachedFromWindow.onNext(null);
     }
 
     @Override
     public void close() {
-        if (this.adapter != null) this.adapter.close();
+        RxBus.getInstance().unregister(Feed.class, this.subscriber);
+        RxBus.getInstance().unregister(FeedRealmProxy.class, this.subscriber);
+
+        if (this.adapter != null) {
+            this.adapter.close();
+            this.adapter = null;
+        }
     }
 
     //endregion

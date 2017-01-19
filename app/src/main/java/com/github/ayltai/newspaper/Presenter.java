@@ -50,6 +50,11 @@ public abstract class Presenter<V extends Presenter.View> extends BasePresenter 
     }
 
     @VisibleForTesting
+    public RxBus bus() {
+        return RxBus.getInstance();
+    }
+
+    @VisibleForTesting
     public LogUtils log() {
         return LogUtils.getInstance();
     }

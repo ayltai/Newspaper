@@ -13,15 +13,20 @@ import android.view.ViewGroup;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.RxBus;
 import com.github.ayltai.newspaper.data.Feed;
+import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.item.ItemPresenter;
 import com.github.ayltai.newspaper.item.ItemViewHolder;
 import com.github.ayltai.newspaper.rss.Item;
+import com.github.ayltai.newspaper.util.LogUtils;
 import com.jakewharton.rxbinding.view.RxView;
 
+import io.realm.ItemRealmProxy;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmRecyclerViewAdapter;
+import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
 
 final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> implements Closeable {
@@ -32,8 +37,10 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
     private final Context                            context;
     private final ListScreen.Key                     parentKey;
     private final int                                listViewType;
-    private final Feed                               feed;
     private final Realm                              realm;
+    private final Subscriber<Item>                   subscriber;
+
+    private Feed feed;
 
     //endregion
 
@@ -45,6 +52,48 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
         this.listViewType = listViewType;
         this.feed         = feed;
         this.realm        = realm;
+
+        if (Constants.SOURCE_BOOKMARK.equals(this.parentKey.getUrl())) {
+            this.subscriber = new Subscriber<Item>() {
+                @Override
+                public void onCompleted() {
+                }
+
+                @Override
+                public void onError(final Throwable e) {
+                    LogUtils.getInstance().e(this.getClass().getSimpleName(), e.getMessage(), e);
+                }
+
+                @Override
+                public void onNext(final Item item) {
+                    new FeedManager(ListAdapter.this.realm).getFeed(Constants.SOURCE_BOOKMARK)
+                        .subscribe(feed -> {
+                            ListAdapter.this.feed = feed;
+
+                            if (feed.contains(item)) {
+                                if (feed.getItems().size() == 1) {
+                                    // Hides empty view
+                                    RxBus.getInstance().send(feed);
+                                } else {
+                                    ListAdapter.this.notifyItemInserted(feed.indexOf(item));
+                                }
+                            } else {
+                                if (feed.getItems().isEmpty()) {
+                                    // Shows empty view
+                                    RxBus.getInstance().send(feed);
+                                } else {
+                                    ListAdapter.this.notifyItemRemoved(feed.indexOf(item));
+                                }
+                            }
+                        });
+                }
+            };
+
+            RxBus.getInstance().register(Item.class, this.subscriber);
+            RxBus.getInstance().register(ItemRealmProxy.class, this.subscriber);
+        } else {
+            this.subscriber = null;
+        }
     }
 
     @Override
@@ -76,6 +125,11 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
 
     @Override
     public void close() {
+        if (this.subscriber != null) {
+            RxBus.getInstance().unregister(Item.class, this.subscriber);
+            RxBus.getInstance().unregister(ItemRealmProxy.class, this.subscriber);
+        }
+
         if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
 
         for (final ItemViewHolder holder : this.map.keySet()) holder.close();

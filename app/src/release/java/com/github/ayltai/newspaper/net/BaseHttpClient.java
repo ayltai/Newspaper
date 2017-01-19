@@ -2,8 +2,6 @@ package com.github.ayltai.newspaper.net;
 
 import java.util.concurrent.TimeUnit;
 
-import com.github.ayltai.newspaper.BuildConfig;
-
 import okhttp3.OkHttpClient;
 
 public abstract class BaseHttpClient {

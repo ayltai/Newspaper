@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.PresenterTest;
+import com.github.ayltai.newspaper.RxBus;
 import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.util.LogUtils;
@@ -40,6 +41,9 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
 
         final ListPresenter presenter = Mockito.spy(new ListPresenter());
         Mockito.when(presenter.getFeedManager()).thenReturn(feedManager);
+
+        final RxBus bus = Mockito.mock(RxBus.class);
+        Mockito.doReturn(bus).when(presenter).bus();
 
         final LogUtils logUtils = Mockito.mock(LogUtils.class);
         Mockito.doReturn(logUtils).when(presenter).log();
