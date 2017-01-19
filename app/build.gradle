@@ -152,6 +152,10 @@ dependencies {
     compile 'com.tubb.smrv:swipemenu-recyclerview:5.4.0'
     compile 'com.github.Yalantis:GuillotineMenu-Android:1.2'
 
+    // Facebook Stetho
+    compile 'com.facebook.stetho:stetho:1.4.2'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
+
     // LeakCanary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'

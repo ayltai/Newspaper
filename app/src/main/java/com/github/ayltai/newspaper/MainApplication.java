@@ -6,6 +6,7 @@ import com.appsee.Appsee;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.common.logging.FLog;
+import com.facebook.stetho.Stetho;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.piasy.biv.BigImageViewer;
@@ -25,7 +26,6 @@ public final class MainApplication extends Application {
 
         if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
 
-        Fabric.with(this, new Crashlytics(), new Answers());
         Appsee.start(this.getString(R.string.com_appsee_apikey));
         BigImageViewer.initialize(FrescoImageLoader.with(this.getApplicationContext()));
         Realm.init(this);
@@ -46,6 +46,9 @@ public final class MainApplication extends Application {
         if (BuildConfig.DEBUG) {
             FLog.setMinimumLoggingLevel(FLog.WARN);
             Optimizely.enableEditor();
+        } else {
+            Fabric.with(this, new Crashlytics(), new Answers());
+            Stetho.initializeWithDefaults(this);
         }
 
         Appsee.setUserId(Settings.getUserId(this));

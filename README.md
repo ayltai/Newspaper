@@ -22,7 +22,7 @@ This app supports Android 4.1 Jelly Bean (API 16) or later.
 This app is made with the support of open source software:
 
 * [Flow](https://github.com/square/flow)
-* [Realm](https://realm.io/news/realm-for-android/)
+* [Realm](https://realm.io/news/realm-for-android)
 * [Facebook Fresco](https://github.com/facebook/fresco)
 * [FrescoImageViewer](https://github.com/stfalcon-studio/FrescoImageViewer)
 * [Subsampling Scale Image View](https://github.com/davemorrissey/subsampling-scale-image-view)
@@ -39,15 +39,16 @@ This app is made with the support of open source software:
 * [RxBinding](https://github.com/JakeWharton/RxBinding)
 * [JUnit 4](https://github.com/junit-team/junit4)
 * [Mockito](https://github.com/mockito/mockito)
+* [Facebook Stetho](http://facebook.github.io/stetho)
 * [LeakCanary](https://github.com/square/leakcanary)
 * [Takt](https://github.com/wasabeef/Takt)
 
 … and closed source software:
 
-* [Google Mobile Vision](https://developers.google.com/vision/)
-* [Firebase Remote Config](https://firebase.google.com/docs/remote-config/)
-* [Firebase App Invites](https://firebase.google.com/docs/invites/)
-* [Firebase Crash Reporting](https://firebase.google.com/docs/remote-config/)
+* [Google Mobile Vision](https://developers.google.com/vision)
+* [Firebase Remote Config](https://firebase.google.com/docs/remote-config)
+* [Firebase App Invites](https://firebase.google.com/docs/invites)
+* [Firebase Crash Reporting](https://firebase.google.com/docs/remote-config)
 * [Fabric Crashlytics](https://fabric.io/kits/android/crashlytics)
 * [Fabric Answers](https://fabric.io/kits/android/answers)
 * [Fabric Optimizely](https://fabric.io/kits/android/optimizely)
