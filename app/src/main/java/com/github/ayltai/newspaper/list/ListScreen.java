@@ -201,8 +201,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        this.position = ((LinearLayoutManager)this.recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-        Settings.setPosition(this.parentKey.url, this.position);
+        if (this.parentKey != null) Settings.setPosition(this.parentKey.getUrl(), this.position = ((LinearLayoutManager)this.recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
 
         this.detachedFromWindow.onNext(null);
     }

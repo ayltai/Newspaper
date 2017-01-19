@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.widget.TextView;
 
@@ -24,12 +22,10 @@ import com.github.ayltai.newspaper.net.ConnectivityChangeReceiver;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 
-import jp.wasabeef.takt.Seat;
-import jp.wasabeef.takt.Takt;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-public final class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public final class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
     //region Variables
 
     private FlowController             controller;
@@ -50,8 +46,6 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
 
         super.onCreate(savedInstanceState);
 
-        if (BuildConfig.DEBUG) Takt.stock(this.getApplication()).seat(Seat.TOP_RIGHT).color(Color.WHITE).play();
-
         this.setUpRemoteConfig();
 
         this.client = new GoogleApiClient.Builder(this.getApplicationContext())
@@ -67,14 +61,6 @@ public final class MainActivity extends AppCompatActivity implements GoogleApiCl
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if (BuildConfig.DEBUG) {
-            try {
-                Takt.finish();
-            } catch (final IllegalArgumentException e) {
-                // Ignored
-            }
-        }
 
         this.controller.onDestroy();
 

@@ -21,9 +21,9 @@ allprojects {
         jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
-        maven { url 'http://dl.bintray.com/optimizely/optimizely' }
         maven { url 'https://maven.fabric.io/public' }
         maven { url 'http://dl.bintray.com/piasy/maven' }
+        maven { url 'http://dl.bintray.com/optimizely/optimizely' }
     }
 }
 

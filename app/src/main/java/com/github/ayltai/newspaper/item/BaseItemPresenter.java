@@ -7,11 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
-import com.crashlytics.android.answers.ContentViewEvent;
-import com.crashlytics.android.answers.CustomEvent;
-import com.crashlytics.android.answers.ShareEvent;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
@@ -20,14 +15,13 @@ import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
-import com.github.ayltai.newspaper.util.AnalyticsUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
 
 import io.realm.Realm;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
-public class ItemPresenter extends Presenter<ItemPresenter.View> {
+public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View> {
     public interface View extends Presenter.View {
         void setTitle(@Nullable String title);
 
@@ -62,14 +56,15 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
 
     private final Realm realm;
 
-    private CompositeSubscription subscriptions;
-    private ListScreen.Key        parentKey;
-    private Item                  item;
-    private int                   type = Configs.getDefaultListViewType();
+    protected CompositeSubscription subscriptions;
+    protected ListScreen.Key        parentKey;
+    protected Item                  item;
+
+    private int type = Configs.getDefaultListViewType();
 
     //endregion
 
-    public ItemPresenter(@NonNull final Realm realm) {
+    protected BaseItemPresenter(@NonNull final Realm realm) {
         this.realm = realm;
     }
 
@@ -100,7 +95,7 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
     //region Lifecycle
 
     @Override
-    public final void onViewAttached(@NonNull final ItemPresenter.View view) {
+    public final void onViewAttached(@NonNull final BaseItemPresenter.View view) {
         super.onViewAttached(view);
 
         if (this.item != null) this.bind(this.parentKey, this.item, this.type);
@@ -155,18 +150,7 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
         this.attachShares();
     }
 
-    private void attachClicks() {
-        if (this.getView().clicks() != null) this.subscriptions.add(this.getView().clicks().subscribe(dummy -> {
-            if (this.parentKey != null) {
-                this.getView().showItem(this.parentKey, this.item);
-
-                if (!BuildConfig.DEBUG) {
-                    this.answers().logContentView(AnalyticsUtils.applyAttributes(new ContentViewEvent(), this.item));
-                    this.analytics().logEvent(FirebaseAnalytics.Event.VIEW_ITEM, AnalyticsUtils.createBundle(this.item));
-                }
-            }
-        }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
-    }
+    protected abstract void attachClicks();
 
     private void attachZooms() {
         if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(dummy -> {
@@ -174,30 +158,9 @@ public class ItemPresenter extends Presenter<ItemPresenter.View> {
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 
-    private void attachBookmarks() {
-        if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks().subscribe(bookmark -> this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK).subscribe(feed -> {
-            this.updateFeed(feed, bookmark);
+    protected abstract void attachBookmarks();
 
-            if (!BuildConfig.DEBUG) {
-                this.answers().logCustom(AnalyticsUtils.applyAttributes(new CustomEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE), this.item));
-                this.analytics().logEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE, AnalyticsUtils.createBundle(this.item));
-            }
-
-        }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
-    }
-
-    private void attachShares() {
-        if (this.getView().shares() != null) this.subscriptions.add(this.getView().shares().subscribe(dummy -> {
-            if (this.item != null && this.item.getLink() != null) {
-                this.getView().share(this.item.getLink());
-
-                if (!BuildConfig.DEBUG) {
-                    this.answers().logShare(AnalyticsUtils.applyAttributes(new ShareEvent(), this.item));
-                    this.analytics().logEvent(FirebaseAnalytics.Event.SHARE, AnalyticsUtils.createBundle(this.item));
-                }
-            }
-        }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
-    }
+    protected abstract void attachShares();
 
     //endregion
 }

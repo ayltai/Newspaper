@@ -8,12 +8,11 @@ import android.support.annotation.VisibleForTesting;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import com.crashlytics.android.answers.Answers;
 import com.github.ayltai.newspaper.util.LogUtils;
 
 import rx.Observable;
 
-public abstract class Presenter<V extends Presenter.View> {
+public abstract class Presenter<V extends Presenter.View> extends BasePresenter {
     public interface View {
         @Nullable
         Observable<Void> attachments();
@@ -53,11 +52,6 @@ public abstract class Presenter<V extends Presenter.View> {
     @VisibleForTesting
     public LogUtils log() {
         return LogUtils.getInstance();
-    }
-
-    @VisibleForTesting
-    public Answers answers() {
-        return Answers.getInstance();
     }
 
     @VisibleForTesting

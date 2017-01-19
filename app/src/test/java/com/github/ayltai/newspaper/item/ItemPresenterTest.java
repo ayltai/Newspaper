@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.crashlytics.android.answers.Answers;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.PresenterTest;
 import com.github.ayltai.newspaper.data.Feed;
@@ -65,9 +64,6 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         final ItemPresenter presenter = Mockito.spy(new ItemPresenter(null));
         Mockito.doReturn(feedManager).when(presenter).getFeedManager();
         Mockito.doNothing().when(presenter).updateFeed(Mockito.any(Feed.class), Mockito.anyBoolean());
-
-        final Answers answers = Mockito.mock(Answers.class);
-        Mockito.doReturn(answers).when(presenter).answers();
 
         final LogUtils logUtils = Mockito.mock(LogUtils.class);
         Mockito.doReturn(logUtils).when(presenter).log();
