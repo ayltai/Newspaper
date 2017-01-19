@@ -18,9 +18,13 @@ public final class MainApplication extends BaseApplication {
 
         Appsee.start(this.getString(R.string.com_appsee_apikey));
         Appsee.setUserId(Settings.getUserId(this));
+
         BigImageViewer.initialize(FrescoImageLoader.with(this.getApplicationContext()));
+
         Realm.init(this);
-        Realm.setDefaultConfiguration(new RealmConfiguration.Builder().schemaVersion(BuildConfig.VERSION_CODE).build());
+        Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
+            .migration((realm, oldVersion, newVersion) -> {})
+            .schemaVersion(BuildConfig.VERSION_CODE).build());
 
         Optimizely.startOptimizelyAsync(this.getString(R.string.com_optimizely_api_key), this, new DefaultOptimizelyEventListener() {
             @Override
