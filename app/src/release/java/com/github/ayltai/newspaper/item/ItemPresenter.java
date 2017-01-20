@@ -34,7 +34,9 @@ public class ItemPresenter extends BaseItemPresenter {
         if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks()
             .subscribe(bookmark -> this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK)
                 .subscribe(feed -> {
+                    final int index = feed.indexOf(this.item);
                     this.updateFeed(feed, bookmark);
+                    this.bus().send(Pair.create(index, this.item));
 
                     this.answers().logCustom(AnalyticsUtils.applyAttributes(new CustomEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE), this.item));
                     this.analytics().logEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE, AnalyticsUtils.createBundle(this.item));
@@ -46,7 +48,6 @@ public class ItemPresenter extends BaseItemPresenter {
         if (this.getView().shares() != null) this.subscriptions.add(this.getView().shares().subscribe(dummy -> {
             if (this.item != null && this.item.getLink() != null) {
                 this.getView().share(this.item.getLink());
-                this.bus().send(this.item);
 
                 this.answers().logShare(AnalyticsUtils.applyAttributes(new ShareEvent(), this.item));
                 this.analytics().logEvent(FirebaseAnalytics.Event.SHARE, AnalyticsUtils.createBundle(this.item));

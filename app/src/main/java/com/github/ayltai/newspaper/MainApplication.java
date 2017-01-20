@@ -23,7 +23,7 @@ public final class MainApplication extends BaseApplication {
 
         Realm.init(this);
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
-            .migration((realm, oldVersion, newVersion) -> {})
+            .migration((realm, oldVersion, newVersion) -> { })
             .schemaVersion(BuildConfig.VERSION_CODE).build());
 
         Optimizely.startOptimizelyAsync(this.getString(R.string.com_optimizely_api_key), this, new DefaultOptimizelyEventListener() {

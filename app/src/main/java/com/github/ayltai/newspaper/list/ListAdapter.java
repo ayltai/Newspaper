@@ -7,6 +7,7 @@ import java.util.Map;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ import com.github.ayltai.newspaper.rss.Item;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.jakewharton.rxbinding.view.RxView;
 
-import io.realm.ItemRealmProxy;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmRecyclerViewAdapter;
@@ -38,7 +38,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
     private final ListScreen.Key                     parentKey;
     private final int                                listViewType;
     private final Realm                              realm;
-    private final Subscriber<Item>                   subscriber;
+    private final Subscriber<Pair<Integer, Item>>    subscriber;
 
     private Feed feed;
 
@@ -54,7 +54,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
         this.realm        = realm;
 
         if (Constants.SOURCE_BOOKMARK.equals(this.parentKey.getUrl())) {
-            this.subscriber = new Subscriber<Item>() {
+            this.subscriber = new Subscriber<Pair<Integer, Item>>() {
                 @Override
                 public void onCompleted() {
                 }
@@ -65,32 +65,29 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
                 }
 
                 @Override
-                public void onNext(final Item item) {
+                public void onNext(final Pair<Integer, Item> pair) {
                     new FeedManager(ListAdapter.this.realm).getFeed(Constants.SOURCE_BOOKMARK)
                         .subscribe(feed -> {
-                            ListAdapter.this.feed = feed;
-
-                            if (feed.contains(item)) {
+                            if (feed.contains(pair.second)) {
                                 if (feed.getItems().size() == 1) {
                                     // Hides empty view
                                     RxBus.getInstance().send(feed);
                                 } else {
-                                    ListAdapter.this.notifyItemInserted(feed.indexOf(item));
+                                    ListAdapter.this.notifyItemInserted(feed.indexOf(pair.second));
                                 }
                             } else {
                                 if (feed.getItems().isEmpty()) {
                                     // Shows empty view
                                     RxBus.getInstance().send(feed);
                                 } else {
-                                    ListAdapter.this.notifyItemRemoved(feed.indexOf(item));
+                                    ListAdapter.this.notifyItemRemoved(pair.first);
                                 }
                             }
                         });
                 }
             };
 
-            RxBus.getInstance().register(Item.class, this.subscriber);
-            RxBus.getInstance().register(ItemRealmProxy.class, this.subscriber);
+            RxBus.getInstance().register(Pair.class, this.subscriber);
         } else {
             this.subscriber = null;
         }
@@ -125,10 +122,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
 
     @Override
     public void close() {
-        if (this.subscriber != null) {
-            RxBus.getInstance().unregister(Item.class, this.subscriber);
-            RxBus.getInstance().unregister(ItemRealmProxy.class, this.subscriber);
-        }
+        if (this.subscriber != null) RxBus.getInstance().unregister(Pair.class, this.subscriber);
 
         if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
 

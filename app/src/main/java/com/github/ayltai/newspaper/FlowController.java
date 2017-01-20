@@ -48,7 +48,7 @@ final class FlowController {
 
     //endregion
 
-    public FlowController(@NonNull final Activity activity) {
+    FlowController(@NonNull final Activity activity) {
         this.activity = activity;
         this.realm    = Realm.getDefaultInstance();
     }

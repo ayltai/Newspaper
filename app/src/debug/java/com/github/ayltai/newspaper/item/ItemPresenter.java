@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.item;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.github.ayltai.newspaper.Constants;
 
@@ -23,8 +24,9 @@ public class ItemPresenter extends BaseItemPresenter {
         if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks()
             .subscribe(bookmark -> this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK)
                 .subscribe(feed -> {
+                    final int index = feed.indexOf(this.item);
                     this.updateFeed(feed, bookmark);
-                    this.bus().send(this.item);
+                    this.bus().send(Pair.create(index, this.item));
                 }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 

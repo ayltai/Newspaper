@@ -92,7 +92,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     //region Variables
 
-    private final Subscriber<Feed> subscriber = new Subscriber<Feed>() {
+    private final Subscriber<FeedRealmProxy> subscriber = new Subscriber<FeedRealmProxy>() {
         @Override
         public void onCompleted() {
         }
@@ -103,7 +103,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         }
 
         @Override
-        public void onNext(final Feed feed) {
+        public void onNext(final FeedRealmProxy feed) {
             if (ListScreen.this.parentKey != null && Constants.SOURCE_BOOKMARK.equals(ListScreen.this.parentKey.url)) ListScreen.this.setItems(ListScreen.this.parentKey, feed);
         }
     };
@@ -130,7 +130,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
         this.realm = realm;
 
-        RxBus.getInstance().register(Feed.class, this.subscriber);
+        //RxBus.getInstance().register(Feed.class, this.subscriber);
         RxBus.getInstance().register(FeedRealmProxy.class, this.subscriber);
     }
 
@@ -233,7 +233,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @Override
     public void close() {
-        RxBus.getInstance().unregister(Feed.class, this.subscriber);
+        //RxBus.getInstance().unregister(Feed.class, this.subscriber);
         RxBus.getInstance().unregister(FeedRealmProxy.class, this.subscriber);
 
         if (this.adapter != null) {

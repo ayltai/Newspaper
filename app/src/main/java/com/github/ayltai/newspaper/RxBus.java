@@ -16,8 +16,8 @@ import rx.subjects.Subject;
 public class RxBus {
     private static final RxBus INSTANCE = new RxBus();
 
-    private final Map<Pair<Class<?>, Subscriber<?>>, Subscription> subscriptions = new HashMap<>();
-    private final Subject<Object, ?>                               bus           = new SerializedSubject<>(PublishSubject.create());
+    private final Map<Pair<Class, Subscriber>, Subscription> subscriptions = new HashMap<>();
+    private final Subject<Object, ?>                         bus           = new SerializedSubject<>(PublishSubject.create());
 
     public static RxBus getInstance() {
         return RxBus.INSTANCE;
@@ -27,23 +27,21 @@ public class RxBus {
     public RxBus() {
     }
 
-    public <T> void register(@NonNull final Class<? extends T> eventType, @NonNull final Subscriber<T> subscriber) {
-        final Pair<Class<?>, Subscriber<?>> key = Pair.create(eventType, subscriber);
+    public void register(@NonNull final Class eventType, @NonNull final Subscriber subscriber) {
+        final Pair<Class, Subscriber> key = Pair.create(eventType, subscriber);
 
         if (this.subscriptions.containsKey(key)) throw new IllegalArgumentException("The given subscriber is already registered");
 
-        this.subscriptions.put(key, this.bus.filter(event -> event != null && event.getClass().equals(eventType)).subscribe(o -> subscriber.onNext((T)o)));
+        this.subscriptions.put(key, this.bus.filter(event -> event != null && event.getClass().equals(eventType)).subscribe(subscriber::onNext));
     }
 
-    public <T> void unregister(@NonNull final Class<? extends T> eventType, @NonNull final Subscriber<T> subscriber) {
-        final Pair<Class<?>, Subscriber<?>> key = Pair.create(eventType, subscriber);
+    public void unregister(@NonNull final Class eventType, @NonNull final Subscriber subscriber) {
+        final Pair<Class, Subscriber> key = Pair.create(eventType, subscriber);
 
-        if (!this.subscriptions.containsKey(key)) throw new IllegalArgumentException("The given subscriber is not registered");
-
-        this.subscriptions.remove(key).unsubscribe();
+        if (this.subscriptions.containsKey(key)) this.subscriptions.remove(key).unsubscribe();
     }
 
-    public <T> void send(@NonNull final T event) {
+    public void send(@NonNull final Object event) {
         if (!this.subscriptions.isEmpty()) this.bus.onNext(event);
     }
 }
