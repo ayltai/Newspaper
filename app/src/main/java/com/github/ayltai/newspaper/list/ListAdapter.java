@@ -38,7 +38,44 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
     private final ListScreen.Key                     parentKey;
     private final int                                listViewType;
     private final Realm                              realm;
-    private final Subscriber<Pair<Integer, Item>>    subscriber;
+
+    private final Subscriber<Pair<Integer, Item>> subscriber = new Subscriber<Pair<Integer, Item>>() {
+        @Override
+        public void onCompleted() {
+        }
+
+        @Override
+        public void onError(final Throwable e) {
+            LogUtils.getInstance().e(this.getClass().getSimpleName(), e.getMessage(), e);
+        }
+
+        @Override
+        public void onNext(final Pair<Integer, Item> pair) {
+            new FeedManager(ListAdapter.this.realm).getFeed(Constants.SOURCE_BOOKMARK)
+                .subscribe(feed -> {
+                    if (Constants.SOURCE_BOOKMARK.equals(ListAdapter.this.parentKey.getUrl())) {
+                        if (pair.first < 0) {
+                            if (feed.getItems().size() == 1) {
+                                // Hides empty view
+                                RxBus.getInstance().send(feed);
+                            } else {
+                                ListAdapter.this.notifyItemInserted(feed.indexOf(pair.second));
+                            }
+                        } else {
+                            if (feed.getItems().isEmpty()) {
+                                // Shows empty view
+                                RxBus.getInstance().send(feed);
+                            } else {
+                                ListAdapter.this.notifyItemRemoved(pair.first);
+                            }
+                        }
+                    } else {
+                        final int index = ListAdapter.this.feed.indexOf(pair.second);
+                        if (index > -1) ListAdapter.this.notifyItemChanged(index);
+                    }
+                });
+        }
+    };
 
     private Feed feed;
 
@@ -53,44 +90,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
         this.feed         = feed;
         this.realm        = realm;
 
-        if (Constants.SOURCE_BOOKMARK.equals(this.parentKey.getUrl())) {
-            this.subscriber = new Subscriber<Pair<Integer, Item>>() {
-                @Override
-                public void onCompleted() {
-                }
-
-                @Override
-                public void onError(final Throwable e) {
-                    LogUtils.getInstance().e(this.getClass().getSimpleName(), e.getMessage(), e);
-                }
-
-                @Override
-                public void onNext(final Pair<Integer, Item> pair) {
-                    new FeedManager(ListAdapter.this.realm).getFeed(Constants.SOURCE_BOOKMARK)
-                        .subscribe(feed -> {
-                            if (feed.contains(pair.second)) {
-                                if (feed.getItems().size() == 1) {
-                                    // Hides empty view
-                                    RxBus.getInstance().send(feed);
-                                } else {
-                                    ListAdapter.this.notifyItemInserted(feed.indexOf(pair.second));
-                                }
-                            } else {
-                                if (feed.getItems().isEmpty()) {
-                                    // Shows empty view
-                                    RxBus.getInstance().send(feed);
-                                } else {
-                                    ListAdapter.this.notifyItemRemoved(pair.first);
-                                }
-                            }
-                        });
-                }
-            };
-
-            RxBus.getInstance().register(Pair.class, this.subscriber);
-        } else {
-            this.subscriber = null;
-        }
+        RxBus.getInstance().register(Pair.class, this.subscriber);
     }
 
     @Override
@@ -122,7 +122,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
 
     @Override
     public void close() {
-        if (this.subscriber != null) RxBus.getInstance().unregister(Pair.class, this.subscriber);
+        RxBus.getInstance().unregister(Pair.class, this.subscriber);
 
         if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
 
