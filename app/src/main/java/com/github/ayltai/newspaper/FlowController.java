@@ -7,15 +7,11 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import com.github.ayltai.newspaper.item.ItemPresenter;
 import com.github.ayltai.newspaper.item.ItemScreen;
@@ -101,8 +97,7 @@ final class FlowController {
                     ((ItemPresenter)presenter).bind((ListScreen.Key)key.getParentKey(), key.getItem(), Settings.getListViewType(this.activity));
                 }
 
-                //this.dispatch((View)view, incomingState, callback);
-                this.transit(outgoingState, incomingState, outgoingState == null ? null : (View)this.screens.get(outgoingState.getKey().getClass()), (View)view, callback);
+                this.dispatch((View)view, incomingState, callback);
             }).build())
             .defaultKey(Constants.KEY_SCREEN_MAIN)
             .install();
@@ -134,33 +129,6 @@ final class FlowController {
         }
 
         if (!this.realm.isClosed()) this.realm.close();
-    }
-
-    private void transit(@Nullable final State outgoingState, @NonNull final State incomingState, @Nullable final View fromView, @NonNull final View toView, @NonNull final TraversalCallback callback) {
-        if (outgoingState == null || fromView == null || Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            this.dispatch(toView, incomingState, callback);
-        } else {
-            final Animation animation = AnimationUtils.loadAnimation(this.activity, R.anim.slide_out_bottom);
-
-            animation.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(final Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(final Animation animation) {
-                    FlowController.this.dispatch(toView, incomingState, callback);
-
-                    toView.startAnimation(AnimationUtils.loadAnimation(FlowController.this.activity, R.anim.slide_in_bottom));
-                }
-
-                @Override
-                public void onAnimationRepeat(final Animation animation) {
-                }
-            });
-
-            fromView.startAnimation(animation);
-        }
     }
 
     private void dispatch(@NonNull final View view, @NonNull final State incomingState, @NonNull final TraversalCallback callback) {
