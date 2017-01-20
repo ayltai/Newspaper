@@ -7,6 +7,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -136,7 +137,7 @@ final class FlowController {
     }
 
     private void transit(@Nullable final State outgoingState, @NonNull final State incomingState, @Nullable final View fromView, @NonNull final View toView, @NonNull final TraversalCallback callback) {
-        if (outgoingState == null || fromView == null) {
+        if (outgoingState == null || fromView == null || Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             this.dispatch(toView, incomingState, callback);
         } else {
             final Animation animation = AnimationUtils.loadAnimation(this.activity, R.anim.slide_out_bottom);
