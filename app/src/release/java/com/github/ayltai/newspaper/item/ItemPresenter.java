@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.item;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
