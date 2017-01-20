@@ -11,6 +11,7 @@ import com.github.ayltai.newspaper.RxBus;
 import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.util.LogUtils;
+import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
 import io.realm.RealmList;
 import rx.Observable;
@@ -33,6 +34,7 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
 
     private final Feed feed = new Feed(ListPresenterTest.KEY_PARENT_URL, new RealmList<>());
 
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
     @NonNull
     @Override
     protected ListPresenter createPresenter() {
