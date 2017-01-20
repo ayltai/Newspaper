@@ -94,9 +94,7 @@ public final class FavoriteManager {
             }
         }
 
-        final Realm realm = Realm.getDefaultInstance();
-
-        realm.beginTransaction();
+        this.realm.beginTransaction();
 
         favorite.getSources().removeAll(oldSources);
         favorite.getSources().addAll(newSources);
@@ -104,9 +102,8 @@ public final class FavoriteManager {
         FavoriteManager.sort(urls, favorite);
         this.localizeNames(urls, names, favorite);
 
-        realm.copyToRealmOrUpdate(favorite);
-        realm.commitTransaction();
-        realm.close();
+        this.realm.copyToRealmOrUpdate(favorite);
+        this.realm.commitTransaction();
 
         return favorite;
     }

@@ -233,7 +233,6 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @Override
     public void close() {
-        //RxBus.getInstance().unregister(Feed.class, this.subscriber);
         RxBus.getInstance().unregister(FeedRealmProxy.class, this.subscriber);
 
         if (this.adapter != null) {
