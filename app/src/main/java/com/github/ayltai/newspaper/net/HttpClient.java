@@ -6,7 +6,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.github.ayltai.newspaper.util.TestUtils;
 
 import okhttp3.Call;
 import okhttp3.Request;
@@ -15,8 +19,12 @@ import okhttp3.Response;
 public final class HttpClient extends BaseHttpClient implements Closeable {
     private final List<Call> calls = new ArrayList<>();
 
-    public HttpClient() {
+    private final Context context;
+
+    public HttpClient(@Nullable final Context context) {
         super();
+
+        this.context = context;
     }
 
     @Override
@@ -31,6 +39,8 @@ public final class HttpClient extends BaseHttpClient implements Closeable {
     }
 
     public InputStream download(@NonNull final String url) throws IOException {
+        if (TestUtils.isRunningTest()) return this.mockDownload(url);
+
         final Call call = this.client.newCall(new Request.Builder().url(url).build());
         this.calls.add(call);
 
@@ -41,5 +51,11 @@ public final class HttpClient extends BaseHttpClient implements Closeable {
         } else {
             throw new IOException("Unexpected response " + response);
         }
+    }
+
+    private InputStream mockDownload(@NonNull final String url) throws IOException {
+        if (this.context == null) return null;
+
+        return this.context.getResources().openRawResource(BaseHttpClient.ASSETS.get(url));
     }
 }

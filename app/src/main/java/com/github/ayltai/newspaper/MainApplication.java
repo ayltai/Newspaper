@@ -3,6 +3,7 @@ package com.github.ayltai.newspaper;
 import com.appsee.Appsee;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.LogUtils;
+import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
 import com.optimizely.Optimizely;
@@ -16,9 +17,6 @@ public final class MainApplication extends BaseApplication {
     public void onCreate() {
         super.onCreate();
 
-        Appsee.start(this.getString(R.string.com_appsee_apikey));
-        Appsee.setUserId(Settings.getUserId(this));
-
         BigImageViewer.initialize(FrescoImageLoader.with(this.getApplicationContext()));
 
         Realm.init(this);
@@ -26,16 +24,22 @@ public final class MainApplication extends BaseApplication {
             .migration((realm, oldVersion, newVersion) -> { })
             .schemaVersion(BuildConfig.VERSION_CODE).build());
 
-        Optimizely.startOptimizelyAsync(this.getString(R.string.com_optimizely_api_key), this, new DefaultOptimizelyEventListener() {
-            @Override
-            public void onOptimizelyStarted() {
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Optimizely started");
-            }
+        if (!TestUtils.isRunningTest()) {
+            Appsee.start(this.getString(R.string.com_appsee_apikey));
+            Appsee.setUserId(Settings.getUserId(this));
 
-            @Override
-            public void onOptimizelyFailedToStart(final String errorMessage) {
-                LogUtils.getInstance().w(this.getClass().getSimpleName(), "Failed to start Optimizely for reason: " + errorMessage);
-            }
-        });
+            Optimizely.startOptimizelyAsync(this.getString(R.string.com_optimizely_api_key), this, new DefaultOptimizelyEventListener() {
+                @Override
+                public void onOptimizelyStarted() {
+                    if (BuildConfig.DEBUG)
+                        LogUtils.getInstance().d(this.getClass().getSimpleName(), "Optimizely started");
+                }
+
+                @Override
+                public void onOptimizelyFailedToStart(final String errorMessage) {
+                    LogUtils.getInstance().w(this.getClass().getSimpleName(), "Failed to start Optimizely for reason: " + errorMessage);
+                }
+            });
+        }
     }
 }

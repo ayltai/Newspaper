@@ -21,6 +21,7 @@ import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.net.ConnectivityChangeReceiver;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
+import com.github.ayltai.newspaper.util.TestUtils;
 
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -46,12 +47,14 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
 
         super.onCreate(savedInstanceState);
 
-        this.setUpRemoteConfig();
+        if (!TestUtils.isRunningTest()) {
+            this.setUpRemoteConfig();
 
-        this.client = new GoogleApiClient.Builder(this.getApplicationContext())
-            .enableAutoManage(this, this)
-            .addApiIfAvailable(AppInvite.API)
-            .build();
+            this.client = new GoogleApiClient.Builder(this.getApplicationContext())
+                .enableAutoManage(this, this)
+                .addApiIfAvailable(AppInvite.API)
+                .build();
+        }
 
         this.setUpConnectivityChangeReceiver();
 
@@ -92,14 +95,14 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     public void onStart() {
         super.onStart();
 
-        this.client.connect();
+        if (!TestUtils.isRunningTest()) this.client.connect();
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        this.client.disconnect();
+        if (!TestUtils.isRunningTest()) this.client.disconnect();
     }
 
     @Override

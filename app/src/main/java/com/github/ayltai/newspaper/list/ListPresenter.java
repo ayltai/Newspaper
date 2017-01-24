@@ -107,6 +107,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
                 });
     }
 
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private void checkForUpdate() {
         if (BuildConfig.DEBUG) Log.i(this.getClass().getSimpleName(), "Scheduled update check");
 
@@ -159,7 +160,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
 
         this.attachEvents();
 
-        if (this.client == null) this.client = new Client();
+        if (this.client == null) this.client = new Client(view.getContext());
     }
 
     @Override

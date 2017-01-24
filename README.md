@@ -1,7 +1,7 @@
 Newspaper
 =========
 
-[![CircleCI](https://circleci.com/gh/ayltai/Newspaper/tree/master.svg?style=svg)](https://circleci.com/gh/ayltai/Newspaper/tree/master) [![Build Status](https://travis-ci.org/ayltai/Newspaper.svg?branch=master)](https://travis-ci.org/ayltai/Newspaper) [![codecov](https://codecov.io/gh/ayltai/Newspaper/branch/master/graph/badge.svg)](https://codecov.io/gh/ayltai/Newspaper) [![Dependency Status](https://www.versioneye.com/user/projects/586396dc7c01f00031549c16/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/586396dc7c01f00031549c16)
+[![CircleCI](https://circleci.com/gh/ayltai/Newspaper/tree/master.svg?style=shield)](https://circleci.com/gh/ayltai/Newspaper/tree/master) [![codecov](https://codecov.io/gh/ayltai/Newspaper/branch/master/graph/badge.svg)](https://codecov.io/gh/ayltai/Newspaper) [![Dependency Status](https://www.versioneye.com/user/projects/586396dc7c01f00031549c16/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/586396dc7c01f00031549c16)
 
 A Yahoo news app clone that is better than the original. Made with ❤
 
@@ -38,6 +38,7 @@ This app is made with the support of open source software:
 * [RxJava](https://github.com/ReactiveX/RxJava)
 * [RxAndroid](https://github.com/ReactiveX/RxAndroid)
 * [RxBinding](https://github.com/JakeWharton/RxBinding)
+* [Espresso](https://google.github.io/android-testing-support-library/)
 * [JUnit 4](https://github.com/junit-team/junit4)
 * [Mockito](https://github.com/mockito/mockito)
 * [Facebook Stetho](http://facebook.github.io/stetho)

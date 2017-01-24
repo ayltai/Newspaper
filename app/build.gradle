@@ -17,13 +17,14 @@ android {
     buildToolsVersion '25.0.2'
 
     defaultConfig {
-        applicationId 'com.github.ayltai.newspaper'
-        minSdkVersion 16
+        applicationId    'com.github.ayltai.newspaper'
+        minSdkVersion    16
         targetSdkVersion 25
         versionCode 4
         versionName '1.1.2'
 
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunnerArguments disableAnalytics: 'true'
 
         vectorDrawables {
             useSupportLibrary true
@@ -32,14 +33,18 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('../key-store.jks')
-            keyAlias System.getenv('ANDROID_KEY_ALIAS')
+            storeFile     file('../key-store.jks')
+            keyAlias      System.getenv('ANDROID_KEY_ALIAS')
             storePassword System.getenv('ANDROID_STORE_PASSWORD')
-            keyPassword System.getenv('ANDROID_KEY_PASSWORD')
+            keyPassword   System.getenv('ANDROID_KEY_PASSWORD')
         }
     }
 
     buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+
         release {
             minifyEnabled true
             signingConfig signingConfigs.release
@@ -66,7 +71,7 @@ android {
 }
 
 checkstyle {
-    configFile rootProject.file('checkstyle.xml')
+    configFile     rootProject.file('checkstyle.xml')
     showViolations true
 }
 
@@ -163,10 +168,22 @@ dependencies {
         exclude module: 'hamcrest-core'
         exclude module: 'objenesis'
     }
-
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.1', {
+    androidTestCompile ('com.android.support.test:runner:0.5') {
         exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    }
+    androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.2') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.2') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
+    androidTestCompile ('com.android.support.test.espresso:espresso-intents:2.2.2') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }
 
 task customFindBugs(type: FindBugs) {

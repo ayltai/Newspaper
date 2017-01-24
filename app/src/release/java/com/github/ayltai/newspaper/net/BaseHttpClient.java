@@ -1,10 +1,14 @@
 package com.github.ayltai.newspaper.net;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 
 public abstract class BaseHttpClient {
+    static final Map<String, Integer> ASSETS = new HashMap<>();
+
     //region Constants
 
     private static final long CONNECT_TIMEOUT = 60;
@@ -13,9 +17,9 @@ public abstract class BaseHttpClient {
 
     //endregion
 
-    protected final OkHttpClient client;
+    final OkHttpClient client;
 
-    protected BaseHttpClient() {
+    BaseHttpClient() {
         this.client = new OkHttpClient.Builder()
             .connectTimeout(BaseHttpClient.CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(BaseHttpClient.READ_TIMEOUT, TimeUnit.SECONDS)
