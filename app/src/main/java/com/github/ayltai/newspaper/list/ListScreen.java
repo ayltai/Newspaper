@@ -86,7 +86,8 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     private final BehaviorSubject<Void> attachedToWindow   = BehaviorSubject.create();
     private final BehaviorSubject<Void> detachedFromWindow = BehaviorSubject.create();
 
-    private final PublishSubject<Void> refreshes = PublishSubject.create();
+    private final PublishSubject<Void> refreshSubject    = PublishSubject.create();
+    private final Observable<Void>     refreshObservable = this.refreshSubject.doOnNext(dummy -> this.resetPosition = true);
 
     //endregion
 
@@ -113,6 +114,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     private ListScreen.Key parentKey;
     private Feed           feed;
     private boolean        hasAttached;
+    private boolean        resetPosition;
 
     //endregion
 
@@ -153,7 +155,13 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             this.recyclerView.setVisibility(View.GONE);
             this.empty.setVisibility(View.VISIBLE);
         } else {
-            this.recyclerView.scrollToPosition(Settings.getPosition(this.parentKey.url));
+            if (this.resetPosition) {
+                this.resetPosition = false;
+
+                Settings.setPosition(this.parentKey.url, 0);
+            } else {
+                this.recyclerView.scrollToPosition(Settings.getPosition(this.parentKey.url));
+            }
 
             this.recyclerView.setVisibility(View.VISIBLE);
             this.empty.setVisibility(View.GONE);
@@ -165,13 +173,16 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     @NonNull
     @Override
     public Observable<Void> refreshes() {
-        return this.refreshes;
+        return this.refreshObservable;
     }
 
     @Override
     public void showUpdateIndicator() {
         final Snackbar snackbar = Snackbar.make(this, R.string.update_indicator, Snackbar.LENGTH_LONG)
-            .setAction(R.string.action_refresh, view -> this.refreshes.onNext(null));
+            .setAction(R.string.action_refresh, view -> {
+                this.swipeRefreshLayout.setRefreshing(true);
+                this.refreshSubject.onNext(null);
+            });
 
         ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setTextColor(ContextUtils.getColor(this.getContext(), R.attr.textColorInverse));
         ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_action)).setTextColor(ContextUtils.getColor(this.getContext(), R.attr.primaryColor));
@@ -210,7 +221,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
             this.swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
             this.swipeRefreshLayout.setColorSchemeResources(ContextUtils.getResourceId(this.getContext(), R.attr.primaryColor));
-            this.swipeRefreshLayout.setOnRefreshListener(() -> this.refreshes.onNext(null));
+            this.swipeRefreshLayout.setOnRefreshListener(() -> this.refreshSubject.onNext(null));
 
             this.empty = (ViewGroup)view.findViewById(R.id.empty);
 
