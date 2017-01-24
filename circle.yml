@@ -3,25 +3,47 @@ machine:
     version: oraclejdk8
   environment:
     ANDROID_HOME: /usr/local/android-sdk-linux
-
+    # Disable emulator audio
+    QEMU_AUDIO_DRV: none
 dependencies:
   cache_directories:
-    - "/usr/local/android-sdk-linux/build-tools"
-    - "/usr/local/android-sdk-linux/extras"
+    - /usr/local/android-sdk-linux/build-tools
+    - /usr/local/android-sdk-linux/platforms
+    - /usr/local/android-sdk-linux/system-images
   pre:
     - chmod +x gradlew
+    # Decrypt google-services.json
     - openssl aes-256-cbc -d -in app/google-services.json.cipher -out app/google-services.json -k $ANDROID_KEY
+    # Decrypt key store
     - openssl aes-256-cbc -d -in key-store.jks.cipher -out key-store.jks -k $ANDROID_KEY
   override:
-    - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-25.0.2,android-25,extra-android-m2repository,extra-android-support,extra-google-m2repository,extra-google-google_play_services
-
-test:
-  override:
-    - ./gradlew -i check jacocoReport customFindBugs
-    - cp -r app/build/test-results/testDebugUnitTest/*.xml $CIRCLE_TEST_REPORTS
-    - cp -r app/build/reports/tests/testDebugUnitTest/* $CIRCLE_TEST_REPORTS
-    - cp -r app/build/reports/jacoco/jacocoReport/html/* $CIRCLE_TEST_REPORTS
-    - cp -r app/build/outputs/findbugs/findbugs-output.html $CIRCLE_TEST_REPORTS
-    - ./gradlew assembleRelease && cp -r app/build/outputs/apk/app-release.apk $CIRCLE_ARTIFACTS && cp -r app/build/outputs/mapping/release/mapping.txt $CIRCLE_ARTIFACTS
+    - if [ ! -e $ANDROID_HOME/build-tools/25.0.2 ]; then echo y | android update sdk --no-ui --all --filter build-tools-25.0.2; fi
+    - if [ ! -e $ANDROID_HOME/platforms/android-25 ]; then echo y | android update sdk --no-ui --all --filter android-25; fi
+    - echo y | android update sdk --no-ui --all --filter tools,platform-tools,extra-android-m2repository,extra-android-support,extra-google-m2repository,extra-google-google_play_services
+    - if [ "$CIRCLE_NODE_INDEX" == "0" ]; then (source scripts/ci-helpers.sh && downloadAndroidSdk 16 && downloadAndroidSdk 21); fi
+    - if [ "$CIRCLE_NODE_INDEX" == "1" ]; then (source scripts/ci-helpers.sh && downloadAndroidSdk 17 && downloadAndroidSdk 22); fi
+    - if [ "$CIRCLE_NODE_INDEX" == "2" ]; then (source scripts/ci-helpers.sh && downloadAndroidSdk 18 && downloadAndroidSdk 23); fi
+    - if [ "$CIRCLE_NODE_INDEX" == "3" ]; then (source scripts/ci-helpers.sh && downloadAndroidSdk 19 && downloadAndroidSdk 24); fi
   post:
-    - bash <(curl -s https://codecov.io/bash)
+    - android list targets
+test:
+  pre:
+    - case $CIRCLE_NODE_INDEX in 0) (source scripts/ci-helpers.sh && createAndroidEmulator 16 && createAndroidEmulator 21) ;; 1) (source scripts/ci-helpers.sh && createAndroidEmulator 17 && createAndroidEmulator 22) ;; 2) (source scripts/ci-helpers.sh && createAndroidEmulator 18 && createAndroidEmulator 23) ;; 3) (source scripts/ci-helpers.sh && createAndroidEmulator 19 && createAndroidEmulator 24) ;; esac:
+        parallel: true
+  override:
+    - case $CIRCLE_NODE_INDEX in 0) (source scripts/ci-helpers.sh && generateTestReports && runInstrumentalTests 16) ;; 1) (source scripts/ci-helpers.sh && inspectCode && runInstrumentalTests 17) ;; 2) (source scripts/ci-helpers.sh && runInstrumentalTests 18) ;; 3) (source scripts/ci-helpers.sh && runInstrumentalTests 19) ;; esac:
+        parallel: true
+        timeout: 1800
+    - case $CIRCLE_NODE_INDEX in 0) (source scripts/ci-helpers.sh && runInstrumentalTests 21) ;; 1) (source scripts/ci-helpers.sh && runInstrumentalTests 22) ;; 2) (source scripts/ci-helpers.sh && runInstrumentalTests 23 && buildRelease) ;; 3) (source scripts/ci-helpers.sh && runInstrumentalTests 24) ;; esac:
+        parallel: true
+        timeout: 1800
+    - cp -r app/build/outputs/androidTest-results/connected/*.xml $CIRCLE_TEST_REPORTS
+  post:
+    - if [ "$CIRCLE_NODE_INDEX" == "3" ]; then bash <(curl -s https://codecov.io/bash); fi:
+        parallel: true
+deployment:
+  production:
+    branch: master
+    commands:
+      - if [ "$CIRCLE_NODE_INDEX" == "2" ]; then ./gradlew crashlyticsUploadDistributionRelease; fi:
+          timeout: 300
