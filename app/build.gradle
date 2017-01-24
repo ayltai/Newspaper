@@ -12,6 +12,9 @@ jacoco {
     toolVersion '0.7.4.201502262128'
 }
 
+String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
+String VERSION_HASH     = 'git rev-parse --short HEAD'.execute().text.trim()
+
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
@@ -20,8 +23,8 @@ android {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    16
         targetSdkVersion 25
-        versionCode 4
-        versionName '1.1.2'
+        versionCode      5
+        versionName      '1.1.3r' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
