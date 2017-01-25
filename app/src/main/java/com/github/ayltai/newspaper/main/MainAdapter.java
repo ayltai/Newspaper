@@ -21,16 +21,20 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 final class MainAdapter extends PagerAdapter implements Closeable {
+    //region Variables
+
     private final SparseArrayCompat<View> views = new SparseArrayCompat<>();
     private final Context                 context;
-    private final Realm                   realm;
 
     private CompositeSubscription subscriptions;
+    private Realm                 realm;
     private Favorite              favorite;
 
-    MainAdapter(@NonNull final Context context, @NonNull final Realm realm) {
+    //endregion
+
+    MainAdapter(@NonNull final Context context) {
         this.context = context;
-        this.realm   = realm;
+        this.realm   = Realm.getDefaultInstance();
 
         new FavoriteManager(context, realm).getFavorite()
             .observeOn(AndroidSchedulers.mainThread())
@@ -56,7 +60,7 @@ final class MainAdapter extends PagerAdapter implements Closeable {
     @Override
     public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
         final ListPresenter presenter = new ListPresenter();
-        final ListScreen    view      = new ListScreen(this.context, this.realm);
+        final ListScreen    view      = new ListScreen(this.context);
 
         if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
@@ -98,6 +102,8 @@ final class MainAdapter extends PagerAdapter implements Closeable {
         for (int i = 0; i < this.views.size(); i++) this.closeView(this.views.get(this.views.keyAt(i)));
 
         this.views.clear();
+
+        if (!this.realm.isClosed()) this.realm.close();
     }
 
     private void closeView(final View view) {

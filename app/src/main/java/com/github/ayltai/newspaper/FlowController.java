@@ -83,7 +83,7 @@ final class FlowController {
                         this.subscriptions.add(view.attachments().subscribe(dummy -> presenter.onViewAttached(view), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
                         this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
                     } else {
-                        view      = new MainScreen(this.activity, this.realm);
+                        view      = new MainScreen(this.activity);
                         presenter = new MainPresenter();
                     }
 

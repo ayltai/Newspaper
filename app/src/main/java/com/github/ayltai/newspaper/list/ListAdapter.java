@@ -81,14 +81,14 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
 
     //endregion
 
-    ListAdapter(@NonNull final Context context, @NonNull final ListScreen.Key parentKey, @Constants.ListViewType final int listViewType, @Nullable final Feed feed, @NonNull final Realm realm) {
+    ListAdapter(@NonNull final Context context, @NonNull final ListScreen.Key parentKey, @Constants.ListViewType final int listViewType, @Nullable final Feed feed) {
         super(context, feed == null ? new RealmList<>() : feed.getItems(), false);
 
         this.context      = context;
         this.parentKey    = parentKey;
         this.listViewType = listViewType;
         this.feed         = feed;
-        this.realm        = realm;
+        this.realm        = Realm.getDefaultInstance();
 
         RxBus.getInstance().register(Pair.class, this.subscriber);
     }
@@ -129,5 +129,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
         for (final ItemViewHolder holder : this.map.keySet()) holder.close();
 
         this.map.clear();
+
+        if (!this.realm.isClosed()) this.realm.close();
     }
 }

@@ -126,10 +126,10 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     //endregion
 
-    public ListScreen(@NonNull final Context context, @NonNull final Realm realm) {
+    public ListScreen(@NonNull final Context context) {
         super(context);
 
-        this.realm = realm;
+        this.realm = Realm.getDefaultInstance();
 
         //RxBus.getInstance().register(Feed.class, this.subscriber);
         RxBus.getInstance().register(FeedRealmProxy.class, this.subscriber);
@@ -145,7 +145,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         this.parentKey = parentKey;
         this.feed      = feed;
 
-        this.recyclerView.setAdapter(this.adapter = new ListAdapter(this.getContext(), parentKey, Settings.getListViewType(this.getContext()), this.feed, this.realm));
+        this.recyclerView.setAdapter(this.adapter = new ListAdapter(this.getContext(), parentKey, Settings.getListViewType(this.getContext()), this.feed));
         this.empty.removeAllViews();
 
         if (this.feed == null || this.feed.getItems().isEmpty()) {
@@ -179,8 +179,10 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     public void showUpdateIndicator() {
         final Snackbar snackbar = Snackbar.make(this, R.string.update_indicator, Snackbar.LENGTH_LONG)
             .setAction(R.string.action_refresh, view -> {
-                this.swipeRefreshLayout.setRefreshing(true);
-                this.refreshSubject.onNext(null);
+                this.swipeRefreshLayout.post(() -> {
+                    this.swipeRefreshLayout.setRefreshing(true);
+                    this.refreshSubject.onNext(null);
+                });
             });
 
         ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setTextColor(ContextUtils.getColor(this.getContext(), R.attr.textColorInverse));
@@ -247,6 +249,8 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             this.adapter.close();
             this.adapter = null;
         }
+
+        if (!this.realm.isClosed()) this.realm.close();
     }
 
     //endregion

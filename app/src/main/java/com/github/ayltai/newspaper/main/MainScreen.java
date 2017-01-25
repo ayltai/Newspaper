@@ -29,7 +29,6 @@ import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 
 import flow.ClassKey;
-import io.realm.Realm;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 
@@ -79,8 +78,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
     //region Variables
 
-    private final Realm realm;
-
+    private ViewPager           viewPager;
     private MainAdapter         adapter;
     private boolean             hasAttached;
     private boolean             isDrawerOpened;
@@ -88,10 +86,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
     //endregion
 
-    public MainScreen(@NonNull final Context context, @NonNull final Realm realm) {
+    public MainScreen(@NonNull final Context context) {
         super(context);
-
-        this.realm = realm;
     }
 
     public boolean goBack() {
@@ -123,13 +119,14 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
         super.onAttachedToWindow();
 
         if (!this.hasAttached) {
-            final View      view      = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, false);
-            final ViewPager viewPager = (ViewPager)view.findViewById(R.id.viewPager);
+            final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, false);
+
+            this.viewPager = (ViewPager)view.findViewById(R.id.viewPager);
 
             ((CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout)).setTitleEnabled(false);
+            ((TabLayout)view.findViewById(R.id.tabLayout)).setupWithViewPager(this.viewPager);
 
-            ((TabLayout)view.findViewById(R.id.tabLayout)).setupWithViewPager(viewPager);
-            viewPager.setAdapter(this.adapter = new MainAdapter(this.getContext(), this.realm));
+            this.viewPager.setAdapter(this.adapter = new MainAdapter(this.getContext()));
 
             this.addView(view);
 
@@ -150,7 +147,10 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
     @Override
     public void close() {
-        if (this.adapter != null) this.adapter.close();
+        if (this.adapter != null) {
+            this.adapter.close();
+            this.adapter = null;
+        }
     }
 
     //endregion
