@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryColorLight">#8067b7</color>
-    <color name="primaryColorDarkLight">#6a50a7</color>
-    <color name="accentColorLight">#8067b7</color>
+    <color name="primaryColorLight">#e04a19</color>
+    <color name="primaryColorDarkLight">#d74417</color>
+    <color name="accentColorLight">#e04a19</color>
     <color name="textColorLight">#323133</color>
     <color name="textColorHintLight">#aab2bd</color>
     <color name="textColorInverseLight">#ffffff</color>
-    <color name="windowBackgroundLight">#f5f7fa</color>
+    <color name="windowBackgroundLight">#eeeeee</color>
+    <color name="cardBackgroundLight">#fafafa</color>
     <color name="indicatorColorLight">#ffffff</color>
     <color name="swipeMenuBackgroundLight">#656d78</color>
-    <color name="primaryColorDark">#8067b7</color>
-    <color name="primaryColorDarkDark">#6a50a7</color>
-    <color name="accentColorDark">#8067b7</color>
+    <color name="primaryColorDark">#263238</color>
+    <color name="primaryColorDarkDark">#1c282e</color>
+    <color name="accentColorDark">#e04a19</color>
     <color name="textColorDark">#e6e9ed</color>
     <color name="textColorHintDark">#aab2bd</color>
     <color name="textColorInverseDark">#ffffff</color>
-    <color name="windowBackgroundDark">#3c3b3d</color>
+    <color name="windowBackgroundDark">#1f242c</color>
+    <color name="cardBackgroundDark">#3f4b5c</color>
     <color name="indicatorColorDark">#ffffff</color>
     <color name="swipeMenuBackgroundDark">#656d78</color>
 </resources>

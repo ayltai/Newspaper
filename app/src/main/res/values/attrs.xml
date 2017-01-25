@@ -22,6 +22,9 @@
         name="windowBackground"
         format="color" />
     <attr
+        name="cardBackground"
+        format="color" />
+    <attr
         name="dividerColor"
         format="color" />
     <attr

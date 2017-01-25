@@ -18,8 +18,8 @@
             android:layout_height="?attr/actionBarSize"
             android:paddingLeft="0dp"
             android:paddingStart="0dp"
-            android:paddingRight="@dimen/space_2"
-            android:paddingEnd="@dimen/space_2"
+            android:paddingRight="@dimen/space_3"
+            android:paddingEnd="@dimen/space_3"
             android:contentDescription="@string/app_name"
             android:scaleType="center"
             android:tint="?attr/indicatorColor"
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:padding="@dimen/space_3"
+        android:padding="@dimen/space_4"
         android:background="?android:attr/selectableItemBackground"
         android:text="@string/action_settings"
         style="@style/DrawerMenuItem" />
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:padding="@dimen/space_3"
+        android:padding="@dimen/space_4"
         android:background="?android:attr/selectableItemBackground"
         android:text="@string/action_about"
         style="@style/DrawerMenuItem" />

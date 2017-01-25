@@ -10,19 +10,19 @@
     <android.support.v7.widget.AppCompatImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/space_3"
+        android:layout_margin="@dimen/space_4"
         android:tint="?attr/textColorHint"
         app:srcCompat="@drawable/ic_book_black" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/space_3"
+        android:layout_margin="@dimen/space_4"
         android:text="@string/empty_bookmark_title"
         android:textAppearance="?android:textAppearanceLarge" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/space_2"
+        android:layout_margin="@dimen/space_3"
         android:text="@string/empty_bookmark_description"
         android:textColor="?attr/textColorHint"
         android:textAppearance="?android:textAppearanceMedium" />

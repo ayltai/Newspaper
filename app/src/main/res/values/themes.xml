@@ -19,6 +19,7 @@
         <item name="textColorHint">@color/textColorHintLight</item>
         <item name="textColorInverse">@color/textColorInverseLight</item>
         <item name="windowBackground">@color/windowBackgroundLight</item>
+        <item name="cardBackground">@color/cardBackgroundLight</item>
         <item name="indicatorColor">@color/indicatorColorLight</item>
         <item name="swipeMenuBackground">@color/swipeMenuBackgroundLight</item>
     </style>
@@ -30,6 +31,7 @@
         <item name="textColorHint">@color/textColorHintDark</item>
         <item name="textColorInverse">@color/textColorInverseDark</item>
         <item name="windowBackground">@color/windowBackgroundDark</item>
+        <item name="cardBackground">@color/cardBackgroundDark</item>
         <item name="indicatorColor">@color/indicatorColorDark</item>
         <item name="swipeMenuBackground">@color/swipeMenuBackgroundDark</item>
     </style>
