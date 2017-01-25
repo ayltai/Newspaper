@@ -6,13 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import com.github.ayltai.newspaper.util.LogUtils;
 
 import rx.Observable;
 
-public abstract class Presenter<V extends Presenter.View> extends BasePresenter {
+public abstract class Presenter<V extends Presenter.View> extends BasePresenter<V> {
     public interface View {
         @Nullable
         Observable<Void> attachments();
@@ -24,7 +22,7 @@ public abstract class Presenter<V extends Presenter.View> extends BasePresenter 
         Context getContext();
     }
 
-    private V       view;
+
     private boolean isViewAttached;
 
     protected Presenter() {
@@ -57,10 +55,5 @@ public abstract class Presenter<V extends Presenter.View> extends BasePresenter 
     @VisibleForTesting
     public LogUtils log() {
         return LogUtils.getInstance();
-    }
-
-    @VisibleForTesting
-    public FirebaseAnalytics analytics() {
-        return FirebaseAnalytics.getInstance(this.view.getContext());
     }
 }
