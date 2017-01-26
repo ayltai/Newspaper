@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.RxBus;
@@ -188,7 +189,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             });
 
         ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setTextColor(ContextUtils.getColor(this.getContext(), R.attr.textColorInverse));
-        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_action)).setTextColor(ContextUtils.getColor(this.getContext(), R.attr.primaryColor));
+        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_action)).setTextColor(ContextUtils.getColor(this.getContext(), R.attr.accentColor));
 
         snackbar.show();
     }
@@ -224,7 +225,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             this.swipeRefreshLayout.setColorSchemeResources(ContextUtils.getResourceId(this.getContext(), R.attr.primaryColor));
             this.swipeRefreshLayout.setOnRefreshListener(() -> this.refreshSubject.onNext(null));
 
-            new GravitySnapHelper(Gravity.TOP).attachToRecyclerView(this.recyclerView);
+            if (Configs.isScrollSnapEnabled()) new GravitySnapHelper(Gravity.TOP).attachToRecyclerView(this.recyclerView);
 
             this.empty = (ViewGroup)view.findViewById(R.id.empty);
 

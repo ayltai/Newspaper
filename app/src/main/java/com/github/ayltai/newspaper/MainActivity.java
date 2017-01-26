@@ -171,7 +171,6 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
             .subscribeOn(Schedulers.io())
             .subscribe(config -> {
                 this.config = config;
-                // TODO: Applies default config
                 this.config.setDefaults(R.xml.config);
 
                 this.applyRemoteConfig();

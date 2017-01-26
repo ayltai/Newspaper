@@ -7,6 +7,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 public final class Configs {
     private static final String KEY_DEFAULT_LIST_VIEW_TYPE = "default_list_view_type";
     private static final String KEY_UPDATE_INTERVAL        = "update_interval";
+    private static final String KEY_SCROLL_SNAP            = "scroll_snap";
 
     private static FirebaseRemoteConfig config;
 
@@ -21,6 +22,12 @@ public final class Configs {
         if (Configs.config == null) return Constants.UPDATE_INTERVAL;
 
         return (int)Configs.config.getLong(Configs.KEY_UPDATE_INTERVAL);
+    }
+
+    public static boolean isScrollSnapEnabled() {
+        if (Configs.config == null) return Constants.SCROLL_SNAP;
+
+        return (boolean)Configs.config.getBoolean(Configs.KEY_SCROLL_SNAP);
     }
 
     static void apply(@NonNull final FirebaseRemoteConfig config) {
