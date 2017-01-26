@@ -53,12 +53,15 @@ Temporary Items
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
+.idea/androidDexCompiler.xml
 .idea/findbugs-idea.xml
 .idea/checkstyle-idea.xml
 .idea/workspace.xml
+.idea/bashsupport_project.xml
 .idea/tasks.xml
 .idea/qaplug_profiles.xml
 .idea/markdown-navigator.xml
+.idea/markdown-exported-files.xml
 .idea/misc.xml
 .idea/externalDependencies.xml
 .idea/*/*.xml

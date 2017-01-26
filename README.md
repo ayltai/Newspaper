@@ -28,6 +28,7 @@ This app is made with the support of open source software:
 * [FrescoImageViewer](https://github.com/stfalcon-studio/FrescoImageViewer)
 * [Subsampling Scale Image View](https://github.com/davemorrissey/subsampling-scale-image-view)
 * [BigImageViewer](https://github.com/Piasy/BigImageViewer)
+* [GravitySnapHelper](https://github.com/rubensousa/RecyclerViewSnap)
 * [SwipeMenu](https://github.com/TUBB/SwipeMenu)
 * [MaterialStyledDialogs](https://github.com/javiersantos/MaterialStyledDialogs)
 * [Guillotine Animation](https://github.com/Yalantis/GuillotineMenu-Android)

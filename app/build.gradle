@@ -148,6 +148,7 @@ dependencies {
     compile 'com.github.javiersantos:MaterialStyledDialogs:2.0'
     compile 'com.tubb.smrv:swipemenu-recyclerview:5.4.0'
     compile 'com.github.Yalantis:GuillotineMenu-Android:1.2'
+    compile 'com.github.rubensousa:gravitysnaphelper:1.0'
 
     // Facebook Stetho
     debugCompile 'com.facebook.stetho:stetho:1.4.2'
