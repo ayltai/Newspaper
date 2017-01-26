@@ -10,6 +10,10 @@
     </entry>
     <entry>
         <key>scroll_snap</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>item_animation</key>
         <value>true</value>
     </entry>
 </defaultsMap>

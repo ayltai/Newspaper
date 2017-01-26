@@ -32,6 +32,9 @@ import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper;
 import flow.ClassKey;
 import io.realm.FeedRealmProxy;
 import io.realm.Realm;
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subjects.BehaviorSubject;
@@ -145,11 +148,9 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             this.adapter = null;
         }
 
-        this.parentKey = parentKey;
-        this.feed      = feed;
+        this.adapter = new ListAdapter(this.getContext(), this.parentKey = parentKey, Settings.getListViewType(this.getContext()), this.feed = feed);
 
-        this.recyclerView.setAdapter(this.adapter = new ListAdapter(this.getContext(), parentKey, Settings.getListViewType(this.getContext()), this.feed));
-        this.empty.removeAllViews();
+        this.setUpRecyclerView();
 
         if (this.feed == null || this.feed.getItems().isEmpty()) {
             LayoutInflater.from(this.getContext()).inflate(Constants.SOURCE_BOOKMARK.equals(this.parentKey.url) ? R.layout.view_empty_bookmark : R.layout.view_empty_news, this.empty, true);
@@ -259,6 +260,22 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     }
 
     //endregion
+
+    private void setUpRecyclerView() {
+        if (Configs.isItemAnimationEnabled()) {
+            final AnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(this.adapter);
+            alphaAdapter.setFirstOnly(false);
+
+            final AnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(alphaAdapter);
+            scaleAdapter.setFirstOnly(false);
+
+            this.recyclerView.setAdapter(scaleAdapter);
+        } else {
+            this.recyclerView.setAdapter(this.adapter);
+        }
+
+        this.empty.removeAllViews();
+    }
 
     private static final class DummyAdapter extends RecyclerView.Adapter<ListScreen.DummyViewHolder> {
         @Override
