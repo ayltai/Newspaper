@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 
-import android.content.Context;
+import javax.inject.Inject;
+
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
 
@@ -22,8 +22,9 @@ import rx.Observable;
 public final class Client implements Closeable {
     private final HttpClient client;
 
-    public Client(@Nullable final Context context) {
-        this.client = new HttpClient(context);
+    @Inject
+    public Client(@NonNull final HttpClient client) {
+        this.client = client;
     }
 
     public Observable<Feed> get(@NonNull final String url) {

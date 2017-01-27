@@ -3,6 +3,8 @@ package com.github.ayltai.newspaper.list;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.inject.Inject;
+
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -13,11 +15,15 @@ import android.util.Log;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
+import com.github.ayltai.newspaper.ContextModule;
 import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.data.FeedManager;
+import com.github.ayltai.newspaper.net.NetModule;
 import com.github.ayltai.newspaper.rss.Client;
+import com.github.ayltai.newspaper.rss.DaggerRssComponent;
 import com.github.ayltai.newspaper.rss.Item;
+import com.github.ayltai.newspaper.rss.RssModule;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
 import io.realm.Realm;
@@ -38,16 +44,19 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
 
     //region Variables
 
+    @Inject
+    Client client;
+
     private CompositeSubscription subscriptions;
     private Subscription          subscription;
     private Realm                 realm;
-    private Client                client;
     private ListScreen.Key        key;
     private Feed                  feed;
     private boolean               isBound;
 
     //endregion
 
+    @Inject
     public ListPresenter() {
     }
 
@@ -158,9 +167,14 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
     public void onViewAttached(@NonNull final ListPresenter.View view) {
         super.onViewAttached(view);
 
-        this.attachEvents();
+        if (this.client == null) this.client = DaggerRssComponent.builder()
+            .contextModule(new ContextModule(view.getContext()))
+            .netModule(new NetModule())
+            .rssModule(new RssModule())
+            .build()
+            .client();
 
-        if (this.client == null) this.client = new Client(view.getContext());
+        this.attachEvents();
     }
 
     @Override
@@ -177,7 +191,10 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
             this.subscription = null;
         }
 
-        if (this.client != null) this.client.close();
+        if (this.client != null) {
+            this.client.close();
+            this.client = null;
+        }
     }
 
     //endregion

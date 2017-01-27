@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +23,7 @@ public final class HttpClient extends BaseHttpClient implements Closeable {
 
     private final Context context;
 
+    @Inject
     public HttpClient(@Nullable final Context context) {
         super();
 
