@@ -6,14 +6,17 @@ import android.support.annotation.NonNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
-@RunWith(JUnit4.class)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class)
 public abstract class PresenterTest<P extends Presenter, V extends Presenter.View> {
     private final PublishSubject<Void> attachments = PublishSubject.create();
     private final PublishSubject<Void> detachments = PublishSubject.create();
@@ -47,6 +50,7 @@ public abstract class PresenterTest<P extends Presenter, V extends Presenter.Vie
         this.presenter = this.createPresenter();
         this.view      = this.createView();
 
+        Mockito.when(this.view.getContext()).thenReturn(RuntimeEnvironment.application);
         Mockito.when(this.view.attachments()).thenReturn(this.attachments);
         Mockito.when(this.view.detachments()).thenReturn(this.detachments);
 

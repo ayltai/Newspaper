@@ -15,14 +15,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!TestUtils.isRunningTest()) Takt.stock(this.getApplication()).seat(Seat.TOP_RIGHT).color(Color.WHITE).play();
+        if (!TestUtils.isRunningInstrumentalTest()) Takt.stock(this.getApplication()).seat(Seat.TOP_RIGHT).color(Color.WHITE).play();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        if (!TestUtils.isRunningTest()) {
+        if (!TestUtils.isRunningInstrumentalTest()) {
             try {
                 Takt.finish();
             } catch (final IllegalArgumentException e) {

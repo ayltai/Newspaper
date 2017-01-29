@@ -19,12 +19,14 @@ public final class MainApplication extends BaseApplication {
 
         BigImageViewer.initialize(FrescoImageLoader.with(this.getApplicationContext()));
 
-        Realm.init(this);
-        Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
-            .migration((realm, oldVersion, newVersion) -> { })
-            .schemaVersion(BuildConfig.VERSION_CODE).build());
+        if (!TestUtils.isRunningUnitTest()) {
+            Realm.init(this);
+            Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
+                .migration((realm, oldVersion, newVersion) -> {})
+                .schemaVersion(BuildConfig.VERSION_CODE).build());
+        }
 
-        if (!TestUtils.isRunningTest()) {
+        if (!TestUtils.isRunningInstrumentalTest()) {
             Appsee.start(this.getString(R.string.com_appsee_apikey));
             Appsee.setUserId(Settings.getUserId(this));
 

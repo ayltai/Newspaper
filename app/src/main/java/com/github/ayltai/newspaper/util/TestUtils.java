@@ -3,25 +3,43 @@ package com.github.ayltai.newspaper.util;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class TestUtils {
-    private static AtomicBoolean isRunningTest;
+    private static AtomicBoolean isRunningUnitTest;
+    private static AtomicBoolean isRunningInstrumentalTest;
 
     private TestUtils() {
     }
 
-    public static synchronized boolean isRunningTest() {
-        if (TestUtils.isRunningTest == null) {
-            boolean isRunningTest = false;
+    public static synchronized boolean isRunningUnitTest() {
+        if (TestUtils.isRunningUnitTest == null) {
+            boolean isRunningUnitTest = false;
 
             try {
-                Class.forName("android.support.test.espresso.Espresso");
-                isRunningTest = true;
+                Class.forName("org.robolectric.RobolectricTestRunner");
+                isRunningUnitTest = true;
             } catch (final ClassNotFoundException e) {
                 // Ignored
             }
 
-            TestUtils.isRunningTest = new AtomicBoolean(isRunningTest);
+            TestUtils.isRunningUnitTest = new AtomicBoolean(isRunningUnitTest);
         }
 
-        return TestUtils.isRunningTest.get();
+        return TestUtils.isRunningUnitTest.get();
+    }
+
+    public static synchronized boolean isRunningInstrumentalTest() {
+        if (TestUtils.isRunningInstrumentalTest == null) {
+            boolean isRunningInstrumentalTest = false;
+
+            try {
+                Class.forName("android.support.test.espresso.Espresso");
+                isRunningInstrumentalTest = true;
+            } catch (final ClassNotFoundException e) {
+                // Ignored
+            }
+
+            TestUtils.isRunningInstrumentalTest = new AtomicBoolean(isRunningInstrumentalTest);
+        }
+
+        return TestUtils.isRunningInstrumentalTest.get();
     }
 }
