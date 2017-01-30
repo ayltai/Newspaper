@@ -15,7 +15,7 @@ public final class ContextModule {
     }
 
     @Provides
-    public Context provideContext() {
+    Context provideContext() {
         return this.context;
     }
 }

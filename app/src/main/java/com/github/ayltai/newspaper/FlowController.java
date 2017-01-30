@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Parcelable;
@@ -16,7 +18,6 @@ import android.view.ViewGroup;
 import com.github.ayltai.newspaper.item.ItemPresenter;
 import com.github.ayltai.newspaper.item.ItemScreen;
 import com.github.ayltai.newspaper.list.ListScreen;
-import com.github.ayltai.newspaper.main.MainPresenter;
 import com.github.ayltai.newspaper.main.MainScreen;
 import com.github.ayltai.newspaper.setting.Settings;
 
@@ -40,17 +41,20 @@ final class FlowController {
 
     //region Variables
 
-    private final Activity activity;
-    private final Realm    realm;
+    private final Activity      activity;
+    private final Realm         realm;
+    private final MainComponent component;
 
     //endregion
 
+    @Inject
     FlowController(@NonNull final Activity activity) {
-        this.activity = activity;
-        this.realm    = Realm.getDefaultInstance();
+        this.activity  = activity;
+        this.realm     = Realm.getDefaultInstance();
+        this.component = DaggerMainComponent.builder().mainModule(new MainModule(this.activity)).build();
     }
 
-    public Context attachNewBase(@NonNull final Context newBase) {
+    Context attachNewBase(@NonNull final Context newBase) {
         return Flow.configure(newBase, this.activity)
             .keyParceler(new KeyParceler() {
                 @NonNull
@@ -77,14 +81,14 @@ final class FlowController {
                     presenter = this.presenters.get(view);
                 } else {
                     if (incomingState.getKey() instanceof ItemScreen.Key) {
-                        view      = new ItemScreen(this.activity);
-                        presenter = new ItemPresenter(this.realm);
+                        view      = this.component.itemView();
+                        presenter = this.component.itemPresenter();
 
                         this.subscriptions.add(view.attachments().subscribe(dummy -> presenter.onViewAttached(view), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
                         this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
                     } else {
-                        view      = new MainScreen(this.activity);
-                        presenter = new MainPresenter();
+                        view      = this.component.mainView();
+                        presenter = this.component.mainPresenter();
                     }
 
                     this.screens.put(incomingState.getKey().getClass(), view);
@@ -103,7 +107,7 @@ final class FlowController {
             .install();
     }
 
-    public boolean onBackPressed() {
+    boolean onBackPressed() {
         if (!Flow.get(this.activity).goBack()) {
             final View view = ((ViewGroup)this.activity.findViewById(android.R.id.content)).getChildAt(0);
 
@@ -115,7 +119,7 @@ final class FlowController {
         return true;
     }
 
-    public void onDestroy() {
+    void onDestroy() {
         if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
 
         for (final Presenter.View view : this.screens.values()) {

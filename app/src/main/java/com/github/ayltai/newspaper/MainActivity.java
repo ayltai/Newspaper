@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper;
 
+import javax.inject.Inject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,11 +31,16 @@ import rx.schedulers.Schedulers;
 public final class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
     //region Variables
 
-    private FlowController             controller;
+    @Inject FlowController controller;
+
     private FirebaseRemoteConfig       config;
     private GoogleApiClient            client;
     private ConnectivityChangeReceiver receiver;
     private Snackbar                   snackbar;
+
+    @Inject
+    public MainActivity() {
+    }
 
     //endregion
 
@@ -73,7 +80,10 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
 
     @Override
     protected void attachBaseContext(final Context newBase) {
-        this.controller = new FlowController(this);
+        DaggerMainComponent.builder()
+            .mainModule(new MainModule(this))
+            .build()
+            .inject(this);
 
         super.attachBaseContext(this.controller.attachNewBase(newBase));
     }

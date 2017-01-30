@@ -22,7 +22,7 @@ public final class MainApplication extends BaseApplication {
         if (!TestUtils.isRunningUnitTest()) {
             Realm.init(this);
             Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
-                .migration((realm, oldVersion, newVersion) -> {})
+                .migration((realm, oldVersion, newVersion) -> { })
                 .schemaVersion(BuildConfig.VERSION_CODE).build());
         }
 

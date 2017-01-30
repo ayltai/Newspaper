@@ -2,6 +2,8 @@ package com.github.ayltai.newspaper.list;
 
 import java.io.Closeable;
 
+import javax.inject.Inject;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Parcel;
@@ -132,12 +134,12 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     //endregion
 
+    @Inject
     public ListScreen(@NonNull final Context context) {
         super(context);
 
         this.realm = Realm.getDefaultInstance();
 
-        //RxBus.getInstance().register(Feed.class, this.subscriber);
         RxBus.getInstance().register(FeedRealmProxy.class, this.subscriber);
     }
 

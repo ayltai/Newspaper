@@ -3,6 +3,9 @@ package com.github.ayltai.newspaper.main;
 import java.io.Closeable;
 import java.io.IOException;
 
+import javax.inject.Inject;
+
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SparseArrayCompat;
@@ -10,33 +13,52 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.ayltai.newspaper.ContextModule;
+import com.github.ayltai.newspaper.DaggerMainComponent;
+import com.github.ayltai.newspaper.MainComponent;
+import com.github.ayltai.newspaper.MainModule;
+import com.github.ayltai.newspaper.data.DaggerDataComponent;
+import com.github.ayltai.newspaper.data.DataModule;
 import com.github.ayltai.newspaper.data.Favorite;
 import com.github.ayltai.newspaper.data.FavoriteManager;
 import com.github.ayltai.newspaper.list.ListPresenter;
 import com.github.ayltai.newspaper.list.ListScreen;
+import com.github.ayltai.newspaper.net.NetModule;
+import com.github.ayltai.newspaper.rss.DaggerRssComponent;
+import com.github.ayltai.newspaper.rss.RssModule;
 import com.github.ayltai.newspaper.util.LogUtils;
 
 import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-final class MainAdapter extends PagerAdapter implements Closeable {
+public final class MainAdapter extends PagerAdapter implements Closeable {
     //region Variables
 
     private final SparseArrayCompat<View> views = new SparseArrayCompat<>();
     private final Context                 context;
+    private final MainComponent           component;
+
+    @Inject Realm           realm;
+    @Inject FavoriteManager favoriteManager;
 
     private CompositeSubscription subscriptions;
-    private Realm                 realm;
     private Favorite              favorite;
 
     //endregion
 
-    MainAdapter(@NonNull final Context context) {
-        this.context = context;
-        this.realm   = Realm.getDefaultInstance();
+    @Inject
+    public MainAdapter(@NonNull final Context context) {
+        this.context   = context;
+        this.component = DaggerMainComponent.builder().mainModule(new MainModule((Activity)this.context)).build();
 
-        new FavoriteManager(context, realm).getFavorite()
+        DaggerDataComponent.builder()
+            .dataModule(new DataModule(this.context))
+            .build()
+            .inject(this);
+
+        //noinspection InstanceVariableUsedBeforeInitialized
+        this.favoriteManager.getFavorite()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe(favorite -> {
@@ -59,8 +81,15 @@ final class MainAdapter extends PagerAdapter implements Closeable {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
-        final ListPresenter presenter = new ListPresenter();
-        final ListScreen    view      = new ListScreen(this.context);
+        final ListPresenter presenter = this.component.listPresenter();
+        final ListScreen    view      = (ListScreen)this.component.listView();
+
+        DaggerRssComponent.builder()
+            .contextModule(new ContextModule(this.context))
+            .netModule(new NetModule())
+            .rssModule(new RssModule())
+            .build()
+            .inject(presenter);
 
         if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 

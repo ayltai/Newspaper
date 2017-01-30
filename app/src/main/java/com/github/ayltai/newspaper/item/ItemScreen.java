@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper.item;
 
+import javax.inject.Inject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -161,6 +163,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     //endregion
 
+    @Inject
     public ItemScreen(@NonNull final Context context) {
         super(context);
     }

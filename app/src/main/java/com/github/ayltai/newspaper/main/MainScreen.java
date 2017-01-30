@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper.main;
 
+import javax.inject.Inject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -18,6 +20,8 @@ import android.widget.FrameLayout;
 
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
+import com.github.ayltai.newspaper.DaggerMainComponent;
+import com.github.ayltai.newspaper.MainModule;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.setting.SettingsActivity;
 import com.github.ayltai.newspaper.util.ContextUtils;
@@ -86,6 +90,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
     //endregion
 
+    @Inject
     public MainScreen(@NonNull final Context context) {
         super(context);
     }
@@ -126,7 +131,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
             ((CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout)).setTitleEnabled(false);
             ((TabLayout)view.findViewById(R.id.tabLayout)).setupWithViewPager(this.viewPager);
 
-            this.viewPager.setAdapter(this.adapter = new MainAdapter(this.getContext()));
+            this.viewPager.setAdapter(this.adapter = DaggerMainComponent.builder().mainModule(new MainModule((Activity)view.getContext())).build().mainAdapter());
 
             this.addView(view);
 

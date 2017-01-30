@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper.item;
 
+import javax.inject.Inject;
+
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
@@ -14,6 +16,7 @@ import com.github.ayltai.newspaper.util.AnalyticsUtils;
 import io.realm.Realm;
 
 public class ItemPresenter extends BaseItemPresenter {
+    @Inject
     public ItemPresenter(@NonNull final Realm realm) {
         super(realm);
     }

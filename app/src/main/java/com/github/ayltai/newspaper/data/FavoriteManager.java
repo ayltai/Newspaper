@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -24,6 +26,7 @@ public final class FavoriteManager {
     private final Context context;
     private final Realm   realm;
 
+    @Inject
     public FavoriteManager(@NonNull final Context context, @NonNull final Realm realm) {
         this.context = context;
         this.realm   = realm;
