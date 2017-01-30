@@ -5,7 +5,7 @@ Newspaper
 
 A Yahoo news app clone that is better than the original. Made with ❤
 
-![Screenshot (Compact)](screenshot_compact_framed.resized.png "Screenshot (Compact)") ![Screenshot (Cozy)](screenshot_cozy_framed.resized.png "Screenshot (Cozy)") ![Screenshot (Dark)](screenshot_dark_framed.resized.png "Screenshot (Dark)")
+![Screenshot (Compact)](screenshots/screenshot_compact_framed.resized.png "Screenshot (Compact)") ![Screenshot (Cozy)](screenshots/screenshot_cozy_framed.resized.png "Screenshot (Cozy)") ![Screenshot (Dark)](screenshots/screenshot_dark_framed.resized.png "Screenshot (Dark)")
 
 ## Features
 * Run much faster than the [original app](https://play.google.com/store/apps/details?id=com.yahoo.infohub)
