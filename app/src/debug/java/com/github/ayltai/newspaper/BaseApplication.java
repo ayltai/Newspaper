@@ -12,7 +12,7 @@ public abstract class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (!TestUtils.isRunningInstrumentalTest()) {
+        if (!TestUtils.isRunningUnitTest() && !TestUtils.isRunningInstrumentalTest()) {
             if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
 
             FLog.setMinimumLoggingLevel(FLog.WARN);
