@@ -3,9 +3,10 @@
     <!-- http://stackoverflow.com/questions/7568579/eclipsefindbugs-exclude-filter-files-doesnt-work -->
     <Match>
         <Or>
-            <Class name="~.*\.R\$.*"/>
-            <Class name="~.*\.Manifest\$.*"/>
-            <Package name="~io\.realm\.*"/>
+            <Class name="~.*\.R\$.*" />
+            <Class name="~.*\.Manifest\$.*" />
+            <Class name="~.*\.*$.*" />
+            <Package name="~io\.realm\.*" />
             <Bug pattern="SUA_SUSPICIOUS_UNINITIALIZED_ARRAY" />
         </Or>
     </Match>
