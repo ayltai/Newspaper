@@ -6,6 +6,7 @@ apply plugin: 'realm-android'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'org.standardout.versioneye'
 
 jacoco {

@@ -38,7 +38,7 @@ test:
         timeout: 1800
     - cp -r app/build/outputs/androidTest-results/connected/*.xml $CIRCLE_TEST_REPORTS
   post:
-    - if [ "$CIRCLE_NODE_INDEX" == "3" ]; then bash <(curl -s https://codecov.io/bash); fi:
+    - if [ "$CIRCLE_NODE_INDEX" == "0" ]; then ./gradlew coveralls && bash <(curl -s https://codecov.io/bash); fi:
         parallel: true
 deployment:
   production:
