@@ -21,7 +21,7 @@ import okhttp3.Response;
 public final class HttpClient extends BaseHttpClient implements Closeable {
     private final List<Call> calls = new ArrayList<>();
 
-    private final Context context;
+    private Context context;
 
     @Inject
     public HttpClient(@Nullable final Context context) {
@@ -39,8 +39,11 @@ public final class HttpClient extends BaseHttpClient implements Closeable {
 
             this.calls.clear();
         }
+
+        this.context = null;
     }
 
+    @Nullable
     public InputStream download(@NonNull final String url) throws IOException {
         if (TestUtils.isRunningInstrumentalTest()) return this.mockDownload(url);
 
@@ -56,6 +59,7 @@ public final class HttpClient extends BaseHttpClient implements Closeable {
         }
     }
 
+    @Nullable
     private InputStream mockDownload(@NonNull final String url) throws IOException {
         if (this.context == null) return null;
 

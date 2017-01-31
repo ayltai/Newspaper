@@ -48,7 +48,8 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
     Client client;
 
     private CompositeSubscription subscriptions;
-    private Subscription          subscription;
+    private Subscription          refreshSubscription;
+    private Subscription          updateSubscription;
     private Realm                 realm;
     private ListScreen.Key        key;
     private Feed                  feed;
@@ -90,7 +91,9 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private void bindFromRemote(final int timeout) {
-        this.client.get(this.key.getUrl())
+        if (this.refreshSubscription != null) this.refreshSubscription.unsubscribe();
+
+        this.refreshSubscription = this.client.get(this.key.getUrl())
             .doOnNext(data -> {
                 this.copyToRealmOrUpdate(data);
 
@@ -120,9 +123,9 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
     private void checkForUpdate() {
         if (BuildConfig.DEBUG) Log.i(this.getClass().getSimpleName(), "Scheduled update check");
 
-        if (this.subscription != null) this.subscription.unsubscribe();
+        if (this.updateSubscription != null) this.updateSubscription.unsubscribe();
 
-        this.subscription = this.client.get(this.key.getUrl())
+        this.updateSubscription = this.client.get(this.key.getUrl())
             .delaySubscription(Configs.getUpdateInterval(), TimeUnit.SECONDS)
             .timeout(Configs.getUpdateInterval() + Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
@@ -186,9 +189,14 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
             this.subscriptions = null;
         }
 
-        if (this.subscription != null) {
-            this.subscription.unsubscribe();
-            this.subscription = null;
+        if (this.refreshSubscription != null) {
+            this.refreshSubscription.unsubscribe();
+            this.refreshSubscription = null;
+        }
+
+        if (this.updateSubscription != null) {
+            this.updateSubscription.unsubscribe();
+            this.updateSubscription = null;
         }
 
         if (this.client != null) {

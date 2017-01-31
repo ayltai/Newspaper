@@ -110,7 +110,7 @@ public final class MainAdapter extends PagerAdapter implements Closeable {
     public void destroyItem(@NonNull final ViewGroup container, final int position, final Object object) {
         final View view = this.views.get(position);
 
-        this.closeView(view);
+        if (view != null) this.closeView(view);
 
         if (this.views.indexOfKey(position) > -1) container.removeView(view);
     }
@@ -123,6 +123,8 @@ public final class MainAdapter extends PagerAdapter implements Closeable {
 
     @Override
     public void close() {
+        for (int i = 0; i < this.views.size(); i++) this.closeView(this.views.get(this.views.keyAt(i)));
+
         if (this.subscriptions != null && this.subscriptions.hasSubscriptions()) {
             this.subscriptions.unsubscribe();
             this.subscriptions = null;
@@ -135,7 +137,7 @@ public final class MainAdapter extends PagerAdapter implements Closeable {
         if (!this.realm.isClosed()) this.realm.close();
     }
 
-    private void closeView(final View view) {
+    private void closeView(@NonNull final View view) {
         if (view instanceof Closeable) {
             try {
                 ((Closeable)view).close();

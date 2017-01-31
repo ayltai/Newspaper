@@ -259,6 +259,8 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         }
 
         if (!this.realm.isClosed()) this.realm.close();
+
+        this.detachedFromWindow.onNext(null);
     }
 
     //endregion
