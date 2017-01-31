@@ -1,7 +1,5 @@
 package com.github.ayltai.newspaper;
 
-import com.appsee.Appsee;
-import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.BigImageViewer;
@@ -27,9 +25,6 @@ public final class MainApplication extends BaseApplication {
         }
 
         if (!TestUtils.isRunningInstrumentalTest()) {
-            Appsee.start(this.getString(R.string.com_appsee_apikey));
-            Appsee.setUserId(Settings.getUserId(this));
-
             Optimizely.startOptimizelyAsync(this.getString(R.string.com_optimizely_api_key), this, new DefaultOptimizelyEventListener() {
                 @Override
                 public void onOptimizelyStarted() {

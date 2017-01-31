@@ -19,8 +19,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
+import com.appsee.Appsee;
 import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.net.ConnectivityChangeReceiver;
+import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -55,6 +57,9 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
 
         if (!TestUtils.isRunningInstrumentalTest()) {
+            Appsee.start(this.getString(R.string.com_appsee_apikey));
+            Appsee.setUserId(Settings.getUserId(this));
+
             this.setUpRemoteConfig();
 
             this.client = new GoogleApiClient.Builder(this.getApplicationContext())
