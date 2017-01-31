@@ -37,7 +37,7 @@ function runInstrumentalTests() {
 }
 
 function buildRelease() {
-    ./gradlew assembleRelease -PfabricApiSecret=$FABRIC_API_SECRET -PfabricApiKey=$FABRIC_API_KEY --console=plain && cp -r app/build/outputs/apk/app-release.apk $CIRCLE_ARTIFACTS && cp -r app/build/outputs/mapping/release/mapping.txt $CIRCLE_ARTIFACTS
+    ./gradlew -PfabricApiSecret=$FABRIC_API_SECRET -PfabricApiKey=$FABRIC_API_KEY assembleRelease crashlyticsUploadDistributionRelease --console=plain && cp -r app/build/outputs/apk/app-release.apk $CIRCLE_ARTIFACTS && cp -r app/build/outputs/mapping/release/mapping.txt $CIRCLE_ARTIFACTS
 }
 
 function downloadAndroidSdk() {

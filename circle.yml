@@ -40,10 +40,3 @@ test:
   post:
     - if [ "$CIRCLE_NODE_INDEX" == "0" ]; then bash <(curl -s https://codecov.io/bash); fi:
         parallel: true
-deployment:
-  production:
-    branch: master
-    commands:
-      - if [ "$CIRCLE_NODE_INDEX" == "2" ]; then ./gradlew -i -PfabricApiSecret=$FABRIC_API_SECRET -PfabricApiKey=$FABRIC_API_KEY crashlyticsUploadDistributionRelease; fi:
-          parallel: true
-          timeout: 900
