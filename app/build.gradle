@@ -279,7 +279,7 @@ task uploadCoverageToCodacy(type: JavaExec, dependsOn : jacocoTestReport) {
         "-l",
         "Java",
         "-r",
-        "${buildDir}/reports/jacoco/jacocoReport/jacocoReport.xml"
+        "${buildDir}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
     ]
 }
 

@@ -37,6 +37,9 @@ test:
         parallel: true
         timeout: 1800
     - cp -r app/build/outputs/androidTest-results/connected/*.xml $CIRCLE_TEST_REPORTS
+  post:
+    - if [ "$CIRCLE_NODE_INDEX" == "0" ]; then bash <(curl -s https://codecov.io/bash); fi:
+        parallel: true
 deployment:
   production:
     branch: master
