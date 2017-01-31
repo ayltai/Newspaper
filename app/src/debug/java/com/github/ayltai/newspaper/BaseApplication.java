@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper;
 
 import android.app.Application;
+import android.os.StrictMode;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.stetho.Stetho;
@@ -13,6 +14,20 @@ public abstract class BaseApplication extends Application {
         super.onCreate();
 
         if (!TestUtils.isRunningUnitTest() && !TestUtils.isRunningInstrumentalTest()) {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectCustomSlowCalls()
+                .detectNetwork()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
+
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectActivityLeaks()
+                .detectLeakedRegistrationObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
+
             if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
 
             FLog.setMinimumLoggingLevel(FLog.WARN);
