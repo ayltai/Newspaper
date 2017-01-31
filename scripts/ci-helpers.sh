@@ -2,7 +2,7 @@
 
 function generateTestReports() {
     ./gradlew -i testDebugUnitTest jacocoReport uploadCoverageToCodacy --console=plain
-    cp -r app/build/test-results/testDebugUnitTest/debug/*.xml $CIRCLE_TEST_REPORTS && cp -r app/build/reports/tests/testDebugUnitTest $CIRCLE_TEST_REPORTS && cp -r app/build/reports/jacoco/jacocoReport $CIRCLE_TEST_REPORTS
+    cp -r app/build/test-results/testDebugUnitTest/debug/*.xml $CIRCLE_TEST_REPORTS && cp -r app/build/reports/tests/testDebugUnitTest $CIRCLE_TEST_REPORTS && cp -r app/build/reports/jacoco/jacocoTestReport $CIRCLE_TEST_REPORTS
 }
 
 function inspectCode() {

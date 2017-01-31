@@ -9,7 +9,7 @@ apply plugin: 'jacoco'
 apply plugin: 'org.standardout.versioneye'
 
 jacoco {
-    toolVersion '0.7.4.201502262128'
+    toolVersion '0.7.8'
 }
 
 String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
@@ -52,6 +52,14 @@ android {
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses true
+            }
         }
     }
 
@@ -223,9 +231,14 @@ task customFindBugs(type: FindBugs) {
 
 assemble.dependsOn customFindBugs
 
-task jacocoReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+def coverageSourceDirs = [
+    'src/main/java',
+    'src/debug/java'
+]
+
+task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     group       = 'Reporting'
-    description = 'Generate Jacoco coverage reports after running tests.'
+    description = 'Generate Jacoco coverage reports'
 
     reports {
         xml.enabled  = true
@@ -246,7 +259,7 @@ task jacocoReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
         ]
     )
 
-    sourceDirectories = files('src/main/java')
+    sourceDirectories = files(coverageSourceDirs)
     executionData     = files('build/jacoco/testDebugUnitTest.exec')
 
     doFirst {
@@ -258,7 +271,7 @@ task jacocoReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     }
 }
 
-task uploadCoverageToCodacy(type: JavaExec, dependsOn : jacocoReport) {
+task uploadCoverageToCodacy(type: JavaExec, dependsOn : jacocoTestReport) {
     main      = "com.codacy.CodacyCoverageReporter"
     classpath = configurations.codacy
 
