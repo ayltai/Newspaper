@@ -45,4 +45,5 @@ deployment:
     branch: master
     commands:
       - if [ "$CIRCLE_NODE_INDEX" == "2" ]; then ./gradlew -i crashlyticsUploadDistributionRelease; fi:
+          parallel: true
           timeout: 300
