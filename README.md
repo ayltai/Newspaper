@@ -57,5 +57,3 @@ This app is made with the support of open source software:
 * [Firebase Crash Reporting](https://firebase.google.com/docs/remote-config)
 * [Fabric Crashlytics](https://fabric.io/kits/android/crashlytics)
 * [Fabric Answers](https://fabric.io/kits/android/answers)
-* [Fabric Optimizely](https://fabric.io/kits/android/optimizely)
-* [Fabric Appsee](https://fabric.io/kits/android/appsee)

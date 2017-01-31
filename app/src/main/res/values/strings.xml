@@ -2,8 +2,6 @@
 <resources>
     <string name="app_name">Newspaper</string>
     <string name="app_version">Version %s</string>
-    <string name="com_optimizely_api_key" translatable="false">AANaHPIBp9zgU9KuPn2d53aPKF01yjad~8156910516</string>
-    <string name="com_appsee_apikey" translatable="false">1934da7544254ff7823d510cffaa078a</string>
     <string name="error_no_connection">No internet connection</string>
     <string name="empty_news_title">We couldn\'t find any news for you</string>
     <string name="empty_news_description">Please try again later</string>
