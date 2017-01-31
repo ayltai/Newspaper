@@ -1,6 +1,7 @@
 Newspaper
 =========
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&utm_medium=referral&utm_content=ayltai/Newspaper&utm_campaign=badger)
 [![Release](https://img.shields.io/github/release/ayltai/Newspaper.svg?label=Release&maxAge=300)](https://128-77390316-gh.circle-artifacts.com/2/tmp/circle-artifacts.Rf0kL1V/app-release.apk) [![Build Status](https://img.shields.io/circleci/project/github/ayltai/Newspaper/master.svg?label=Build&maxAge=300)](https://circleci.com/gh/ayltai/Newspaper/tree/master) [![Dependency Status](https://img.shields.io/versioneye/d/user/projects/586396dc7c01f00031549c16.svg?label=Dependencies&maxAge=300)](https://www.versioneye.com/user/projects/586396dc7c01f00031549c16) [![Android API](https://img.shields.io/badge/API-16%2B-blue.svg?style=flat&label=API&maxAge=300)](https://www.android.com/history/) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=License&maxAge=300)](https://github.com/ayltai/Newspaper/blob/master/LICENSE)
 
 A Yahoo news app clone that is better than the original. Made with ❤
