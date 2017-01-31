@@ -78,6 +78,10 @@ checkstyle {
     showViolations true
 }
 
+configurations {
+    codacy
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -186,6 +190,9 @@ dependencies {
     androidTestCompile ('com.android.support.test.espresso:espresso-intents:2.2.2') {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+
+    // Code coverage by Codacy
+    codacy 'com.github.codacy:codacy-coverage-reporter:1.0.13'
 }
 
 task customFindBugs(type: FindBugs) {
@@ -243,6 +250,45 @@ task jacocoReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
                 file.renameTo(file.path.replace('$$', '$'))
             }
         }
+    }
+}
+
+task uploadCoverageToCodacy(type: JavaExec, dependsOn : jacocoReport) {
+    main      = "com.codacy.CodacyCoverageReporter"
+    classpath = configurations.codacy
+
+    args = [
+        "-l",
+        "Java",
+        "-r",
+        "${buildDir}/reports/jacoco/jacocoReport/jacocoReport.xml"
+    ]
+}
+
+task (codacyDepsize) << {
+    def size = 0;
+
+    configurations.codacy.collect {
+        it.length() / (1024 * 1024)
+    }
+    .each {
+        size += it
+    }
+
+    println "Total dependencies size: ${Math.round(size * 100) / 100} MB"
+
+    configurations.codacy.sort {
+        -it.length()
+    }
+    .each {
+        println "${it.name}: ${Math.round(it.length() / (1024) * 100) / 100} KB"
+    }
+}
+
+task (codacyLocs) << {
+    configurations.codacy.each {
+        String jarName = it
+        println jarName
     }
 }
 
