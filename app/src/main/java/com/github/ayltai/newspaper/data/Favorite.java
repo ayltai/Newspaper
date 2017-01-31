@@ -18,6 +18,7 @@ public class Favorite extends RealmObject {
         this.sources = sources;
     }
 
+    @NonNull
     public final RealmList<Source> getSources() {
         return this.sources;
     }

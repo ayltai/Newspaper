@@ -27,6 +27,7 @@ public final class Client implements Closeable {
         this.client = client;
     }
 
+    @NonNull
     public Observable<Feed> get(@NonNull final String url) {
         return Observable.create(subscriber -> {
             InputStream inputStream = null;

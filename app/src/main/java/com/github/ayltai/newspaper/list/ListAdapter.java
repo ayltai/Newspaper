@@ -98,6 +98,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
         return this.feed == null ? 0 : this.feed.getItems().size();
     }
 
+    @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         final View view = LayoutInflater.from(this.context).inflate(R.layout.view_item_container, parent, false);

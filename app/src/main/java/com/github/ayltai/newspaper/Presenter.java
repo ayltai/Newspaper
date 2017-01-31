@@ -32,6 +32,7 @@ public abstract class Presenter<V extends Presenter.View> extends BasePresenter<
         return this.isViewAttached;
     }
 
+    @Nullable
     public V getView() {
         return this.view;
     }
@@ -48,11 +49,13 @@ public abstract class Presenter<V extends Presenter.View> extends BasePresenter<
     }
 
     @VisibleForTesting
+    @NonNull
     public RxBus bus() {
         return RxBus.getInstance();
     }
 
     @VisibleForTesting
+    @NonNull
     public LogUtils log() {
         return LogUtils.getInstance();
     }

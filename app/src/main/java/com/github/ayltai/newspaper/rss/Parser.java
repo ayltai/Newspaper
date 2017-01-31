@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Xml;
 
@@ -37,7 +39,8 @@ final class Parser {
     private Parser() {
     }
 
-    static List<Item> parse(final InputStream inputStream) throws XmlPullParserException, IOException {
+    @NonNull
+    static List<Item> parse(@Nullable final InputStream inputStream) throws XmlPullParserException, IOException {
         if (inputStream == null) return new ArrayList<>();
 
         final XmlPullParser parser = Xml.newPullParser();
@@ -49,7 +52,8 @@ final class Parser {
         return Parser.readChannel(parser);
     }
 
-    private static List<Item> readChannel(final XmlPullParser parser) throws XmlPullParserException, IOException {
+    @NonNull
+    private static List<Item> readChannel(@NonNull final XmlPullParser parser) throws XmlPullParserException, IOException {
         final List<Item> items = new ArrayList<>();
 
         parser.require(XmlPullParser.START_TAG, null, Parser.TAG_RSS);
@@ -67,7 +71,8 @@ final class Parser {
         return items;
     }
 
-    private static List<Item> readItems(final XmlPullParser parser) throws XmlPullParserException, IOException {
+    @NonNull
+    private static List<Item> readItems(@NonNull final XmlPullParser parser) throws XmlPullParserException, IOException {
         final List<Item> items = new ArrayList<>();
 
         parser.require(XmlPullParser.START_TAG, null, Parser.TAG_CHANNEL);
@@ -89,7 +94,8 @@ final class Parser {
         return items;
     }
 
-    private static Item readItem(final XmlPullParser parser) throws XmlPullParserException, IOException {
+    @NonNull
+    private static Item readItem(@NonNull final XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, Parser.TAG_ITEM);
 
         final Item item = new Item();
@@ -137,7 +143,7 @@ final class Parser {
         return item;
     }
 
-    private static long readPublishDate(final XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static long readPublishDate(@NonNull final XmlPullParser parser) throws XmlPullParserException, IOException {
         final String value = Parser.readTag(parser, Item.TAG_PUBLISH_DATE);
 
         try {
@@ -149,7 +155,8 @@ final class Parser {
         return 0;
     }
 
-    private static String readMediaUrl(final XmlPullParser parser) throws XmlPullParserException, IOException {
+    @NonNull
+    private static String readMediaUrl(@NonNull final XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, Item.TAG_MEDIA_CONTENT);
 
         final String value = parser.getAttributeValue(null, Item.ATTR_URL);
@@ -160,7 +167,8 @@ final class Parser {
         return value;
     }
 
-    private static String readTag(final XmlPullParser parser, final String tag) throws XmlPullParserException, IOException {
+    @Nullable
+    private static String readTag(@NonNull final XmlPullParser parser, @NonNull final String tag) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, tag);
 
         String value = null;
@@ -175,7 +183,7 @@ final class Parser {
         return value;
     }
 
-    private static void skipTags(final XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static void skipTags(@NonNull final XmlPullParser parser) throws XmlPullParserException, IOException {
         if (parser.getEventType() != XmlPullParser.START_TAG) throw new IllegalStateException();
 
         int depth = 1;

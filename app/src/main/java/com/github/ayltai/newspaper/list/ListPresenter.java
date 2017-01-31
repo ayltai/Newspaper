@@ -208,6 +208,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
     //endregion
 
     @VisibleForTesting
+    @NonNull
     FeedManager getFeedManager() {
         return new FeedManager(this.realm);
     }

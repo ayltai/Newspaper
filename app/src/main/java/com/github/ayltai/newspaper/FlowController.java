@@ -54,6 +54,7 @@ final class FlowController {
         this.component = DaggerMainComponent.builder().mainModule(new MainModule(this.activity)).build();
     }
 
+    @NonNull
     Context attachNewBase(@NonNull final Context newBase) {
         return Flow.configure(newBase, this.activity)
             .keyParceler(new KeyParceler() {

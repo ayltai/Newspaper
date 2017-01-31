@@ -24,7 +24,7 @@ public class RxBus {
     }
 
     @VisibleForTesting
-    public RxBus() {
+    RxBus() {
     }
 
     public void register(@NonNull final Class eventType, @NonNull final Subscriber subscriber) {

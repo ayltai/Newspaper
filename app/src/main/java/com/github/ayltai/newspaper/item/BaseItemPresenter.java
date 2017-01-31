@@ -116,6 +116,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     //endregion
 
     @VisibleForTesting
+    @NonNull
     FeedManager getFeedManager() {
         return new FeedManager(this.realm);
     }

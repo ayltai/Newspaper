@@ -13,6 +13,7 @@ public class FeedManager {
         this.realm = realm;
     }
 
+    @NonNull
     public Observable<Feed> getFeed(@NonNull final String url) {
         if (this.realm.isClosed()) throw new IllegalStateException("Realm is closed");
 

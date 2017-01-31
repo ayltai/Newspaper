@@ -32,6 +32,7 @@ public final class Settings {
     private Settings() {
     }
 
+    @NonNull
     public static String getUserId(@NonNull final Context context) {
         String userId = PreferenceManager.getDefaultSharedPreferences(context).getString(Settings.PREF_USER_ID, null);
 
@@ -53,6 +54,7 @@ public final class Settings {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_DARK_THEME, false);
     }
 
+    @NonNull
     public static Set<String> getCategories(@NonNull final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, Sets.newHashSet(context.getResources().getStringArray(R.array.pref_category_values)));
     }

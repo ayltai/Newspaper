@@ -36,6 +36,7 @@ public final class FaceCenterCrop {
         this.height = height;
     }
 
+    @NonNull
     public ScaleCenter findCroppedCenter(@NonNull final File file) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -60,6 +61,7 @@ public final class FaceCenterCrop {
     }
 
     @SuppressFBWarnings("MOM_MISLEADING_OVERLOAD_MODEL")
+    @NonNull
     private static PointF findCroppedCenter(@NonNull final Bitmap bitmap, final int width, final int height, final float scaleX, final float scaleY) {
         final float halfWidth  = bitmap.getWidth()  / 2f;
         final float halfHeight = bitmap.getHeight() / 2f;

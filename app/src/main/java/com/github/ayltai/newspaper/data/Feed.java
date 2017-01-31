@@ -34,10 +34,12 @@ public class Feed extends RealmObject {
 
     //region Properties
 
+    @NonNull
     public final String getUrl() {
         return this.url;
     }
 
+    @NonNull
     public final RealmList<Item> getItems() {
         return this.items;
     }
