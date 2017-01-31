@@ -44,6 +44,6 @@ deployment:
   production:
     branch: master
     commands:
-      - if [ "$CIRCLE_NODE_INDEX" == "2" ]; then ./gradlew -i crashlyticsUploadDistributionRelease; fi:
+      - if [ "$CIRCLE_NODE_INDEX" == "2" ]; then ./gradlew -i -PfabricApiSecret=$FABRIC_API_SECRET -PfabricApiKey=$FABRIC_API_KEY crashlyticsUploadDistributionRelease; fi:
           parallel: true
-          timeout: 300
+          timeout: 900
