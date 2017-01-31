@@ -1,12 +1,12 @@
 #!/bin/bash
 
 function generateTestReports() {
-    ./gradlew -i testDebugUnitTest jacocoTestReport uploadCoverageToCodacy --console=plain
+    ./gradlew -i testDebugUnitTest -PfabricApiSecret=$FABRIC_API_SECRET -PfabricApiKey=$FABRIC_API_KEY jacocoTestReport uploadCoverageToCodacy --console=plain
     cp -r app/build/test-results/testDebugUnitTest/debug/*.xml $CIRCLE_TEST_REPORTS && cp -r app/build/reports/tests/testDebugUnitTest $CIRCLE_TEST_REPORTS && cp -r app/build/reports/jacoco/jacocoTestReport $CIRCLE_TEST_REPORTS
 }
 
 function inspectCode() {
-    ./gradlew -i testDebugUnitTest customFindBugs --console=plain
+    ./gradlew -i testDebugUnitTest -PfabricApiSecret=$FABRIC_API_SECRET -PfabricApiKey=$FABRIC_API_KEY customFindBugs --console=plain
     cp -r app/build/outputs/findbugs $CIRCLE_TEST_REPORTS
 }
 
@@ -28,7 +28,7 @@ function runInstrumentalTests() {
     setUpAndroidEmulator $1
 
     # Run instrumental tests
-    ./gradlew -i connectedDebugAndroidTest --console=plain
+    ./gradlew -i connectedDebugAndroidTest -PfabricApiSecret=$FABRIC_API_SECRET -PfabricApiKey=$FABRIC_API_KEY --console=plain
 
     # Stop the emulator
     adb emu kill
