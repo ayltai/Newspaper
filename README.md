@@ -54,6 +54,7 @@ This app is made with the support of open source software:
 * [Google Mobile Vision](https://developers.google.com/vision)
 * [Firebase Remote Config](https://firebase.google.com/docs/remote-config)
 * [Firebase App Invites](https://firebase.google.com/docs/invites)
-* [Firebase Crash Reporting](https://firebase.google.com/docs/remote-config)
+* [Firebase Analytics](https://firebase.google.com/docs/analytics)
+* [Firebase Crash Reporting](https://firebase.google.com/docs/crash)
 * [Fabric Crashlytics](https://fabric.io/kits/android/crashlytics)
 * [Fabric Answers](https://fabric.io/kits/android/answers)
