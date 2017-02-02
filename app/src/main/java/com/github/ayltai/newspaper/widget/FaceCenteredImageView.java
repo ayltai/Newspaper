@@ -66,6 +66,7 @@ public final class FaceCenteredImageView extends BigImageView {
         this.subscription = this.translate(image);
     }
 
+    @SuppressWarnings("WrongThread")
     @WorkerThread
     @Override
     public void onCacheMiss(final File image) {
