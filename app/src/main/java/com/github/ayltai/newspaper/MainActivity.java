@@ -72,10 +72,12 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     protected void onDestroy() {
         super.onDestroy();
 
-        this.controller.onDestroy();
-        this.controller = null;
+        if (this.isFinishing()) {
+            this.controller.onDestroy();
+            this.controller = null;
 
-        FaceDetectorFactory.release();
+            FaceDetectorFactory.release();
+        }
     }
 
     @Override
