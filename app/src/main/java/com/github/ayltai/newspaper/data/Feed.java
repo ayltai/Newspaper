@@ -69,4 +69,30 @@ public class Feed extends RealmObject {
 
         return -1;
     }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+
+        if (obj instanceof Feed) {
+            final Feed feed = (Feed)obj;
+
+            if (this.url.equals(feed.url) && this.items.size() == feed.items.size()) {
+                for (int i = 0; i < this.items.size(); i++) {
+                    if (!this.items.get(i).equals(feed.items.get(i))) return false;
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    @SuppressWarnings("CheckStyle")
+    @Override
+    public int hashCode() {
+        return 31 * this.url.hashCode() + this.items.hashCode();
+    }
 }

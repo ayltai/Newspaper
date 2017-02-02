@@ -98,12 +98,16 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     }
 
     @Override
-    public final boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
+    public final boolean equals(final Object obj) {
+        if (this == obj) return true;
 
-        final Item item = (Item)o;
-        return this.guid == null ? item.guid == null : this.guid.equals(item.guid);
+        if (obj instanceof Item) {
+            final Item item = (Item)obj;
+
+            return this.guid == null ? item.guid == null : this.guid.equals(item.guid);
+        }
+
+        return false;
     }
 
     @Override
