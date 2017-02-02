@@ -63,7 +63,7 @@ public class Feed extends RealmObject {
         this.images.clear();
 
         for (final Item item : this.items) {
-            if (item.getMediaUrl() != null) this.images.add(ItemUtils.getOriginalMediaUrl(item.getMediaUrl()));
+            if (item.getMediaUrl() != null && ItemUtils.hasOriginalMediaUrl(item.getMediaUrl())) this.images.add(ItemUtils.getOriginalMediaUrl(item.getMediaUrl()));
         }
     }
 

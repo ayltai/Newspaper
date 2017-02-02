@@ -66,7 +66,7 @@ public final class FaceCenterCrop {
         final float halfWidth  = bitmap.getWidth()  / 2f;
         final float halfHeight = bitmap.getHeight() / 2f;
 
-        if (width == 0 || height == 0 || Math.abs(scaleX - scaleY) < MAX_DELTA) return new PointF(halfWidth, halfHeight);
+        if (width == 0 || height == 0 || Math.abs(scaleX - scaleY) < FaceCenterCrop.MAX_DELTA) return new PointF(halfWidth, halfHeight);
 
         final PointF center = new PointF();
 
