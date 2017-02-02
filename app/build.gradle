@@ -111,18 +111,24 @@ dependencies {
     }
 
     // Firebase
-    compile 'com.google.firebase:firebase-core:10.0.1'
-    compile 'com.google.firebase:firebase-crash:10.0.1'
-    compile 'com.google.firebase:firebase-config:10.0.1'
-    compile 'com.google.firebase:firebase-invites:10.0.1'
+    compile ('com.google.firebase:firebase-core:10.0.1') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    compile ('com.google.firebase:firebase-crash:10.0.1') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    compile ('com.google.firebase:firebase-config:10.0.1') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    compile ('com.google.firebase:firebase-invites:10.0.1') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 
     // Fabric
     releaseCompile('io.fabric.sdk.android:fabric:1.3.15@aar')           { transitive = true; }
     releaseCompile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') { transitive = true; }
     releaseCompile('com.crashlytics.sdk.android:answers:1.3.11@aar')    { transitive = true; }
     testCompile('com.crashlytics.sdk.android:answers:1.3.11@aar') { transitive = true; }
-    compile('com.optimizely:optimizely:1.7.0@aar') { transitive = true; }
-    compile('com.appsee:appsee-android:2.3@aar')   { transitive = true; }
 
     // ReactiveX
     compile 'io.reactivex:rxjava:1.2.5'
@@ -130,8 +136,9 @@ dependencies {
         exclude group: 'io.reactivex', module: 'rxjava'
     }
     compile ('com.jakewharton.rxbinding:rxbinding:1.0.0') {
-        exclude group: 'io.reactivex', module: 'rxjava'
-        exclude group: 'io.reactivex', module: 'rxandroid'
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'io.reactivex',        module: 'rxjava'
+        exclude group: 'io.reactivex',        module: 'rxandroid'
     }
 
     // Dagger 2
@@ -139,7 +146,9 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
 
     // Flow by Square
-    compile 'com.squareup.flow:flow:1.0.0-alpha2'
+    compile ('com.squareup.flow:flow:1.0.0-alpha2') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 
     // Networking
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
@@ -152,8 +161,12 @@ dependencies {
     compile ('com.github.stfalcon:frescoimageviewer:0.4.1') {
         exclude group: 'com.facebook.fresco', module: 'fresco'
     }
-    compile 'com.google.android.gms:play-services-vision:10.0.1'
-    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
+    compile ('com.google.android.gms:play-services-vision:10.0.1') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    compile ('com.davemorrissey.labs:subsampling-scale-image-view:3.6.0') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
     compile ('com.github.piasy:BigImageViewer:1.2.5') {
         exclude group: 'com.android.support',    module: 'support-annotations'
         exclude group: 'com.davemorrissey.labs', module: 'subsampling-scale-image-view'
@@ -165,11 +178,24 @@ dependencies {
 
     // Eye candies
     compile ('hanks.xyz:smallbang-library:0.1.2') {
+        exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
-    compile 'com.github.javiersantos:MaterialStyledDialogs:2.0'
+    compile ('com.github.javiersantos:MaterialStyledDialogs:2.0') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-compat'
+        exclude group: 'com.android.support', module: 'support-core-utils'
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
     compile 'com.github.Yalantis:GuillotineMenu-Android:1.2'
-    compile 'jp.wasabeef:recyclerview-animators:2.2.5'
+    compile ('jp.wasabeef:recyclerview-animators:2.2.5') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-compat'
+        exclude group: 'com.android.support', module: 'support-core-utils'
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
 
     // Facebook Stetho
     debugCompile 'com.facebook.stetho:stetho:1.4.2'

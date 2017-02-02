@@ -6,11 +6,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -52,11 +50,8 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
     private final TextView         publishDate;
     private final BigImageView     thumbnail;
     private final SimpleDraweeView draweeView;
-    private final ImageView        bookmark;
 
     //endregion
-
-    private boolean isBookmarked;
 
     public ItemViewHolder(@NonNull final View itemView) {
         super(itemView);
@@ -66,7 +61,6 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
         this.description = (TextView)itemView.findViewById(R.id.description);
         this.source      = (TextView)itemView.findViewById(R.id.source);
         this.publishDate = (TextView)itemView.findViewById(R.id.publishDate);
-        this.bookmark    = (ImageView)itemView.findViewById(R.id.bookmark);
 
         final View view = itemView.findViewById(R.id.thumbnail);
 
@@ -128,9 +122,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Override
     public void setIsBookmarked(final boolean isBookmarked) {
-        this.isBookmarked = isBookmarked;
-
-        this.bookmark.setImageDrawable(AppCompatDrawableManager.get().getDrawable(this.getContext(), this.isBookmarked ? R.drawable.ic_bookmark_white_24px : R.drawable.ic_bookmark_border_white_24px));
+        // Ignored
     }
 
     @NonNull

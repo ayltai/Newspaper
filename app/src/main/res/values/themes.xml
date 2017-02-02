@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style
         name="AppTheme"
         parent="@style/Theme.AppCompat.Light.NoActionBar">
@@ -9,7 +9,7 @@
         <item name="android:textColor">?attr/textColor</item>
         <item name="android:textColorHint">?attr/textColorHint</item>
         <item name="android:windowBackground">?attr/windowBackground</item>
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="21">true</item>
     </style>
     <style name="AppTheme.Light">
         <item name="primaryColor">@color/primaryColorLight</item>
@@ -44,7 +44,7 @@
         <item name="android:textColor">?attr/textColor</item>
         <item name="android:textColorHint">?attr/textColorHint</item>
         <item name="android:windowBackground">?attr/windowBackground</item>
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="21">true</item>
         <item name="alertDialogTheme">@style/Theme.AppCompat.DayNight.Dialog.Alert</item>
     </style>
     <style name="SettingsTheme.Light">

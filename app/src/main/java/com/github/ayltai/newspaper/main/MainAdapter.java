@@ -29,7 +29,6 @@ import com.github.ayltai.newspaper.rss.RssModule;
 import com.github.ayltai.newspaper.util.LogUtils;
 
 import io.realm.Realm;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public final class MainAdapter extends PagerAdapter implements Closeable {
@@ -59,8 +58,6 @@ public final class MainAdapter extends PagerAdapter implements Closeable {
 
         //noinspection InstanceVariableUsedBeforeInitialized
         this.favoriteManager.getFavorite()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe(favorite -> {
                 this.favorite = favorite;
 
