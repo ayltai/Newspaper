@@ -145,31 +145,36 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @Override
     public void setItems(@NonNull final ListScreen.Key parentKey, @Nullable final Feed feed) {
-        if (this.adapter != null) {
-            this.adapter.close();
-            this.adapter = null;
-        }
+        if (this.feed == null || !this.feed.equals(feed)) {
+            if (this.adapter != null) {
+                // Detaches the adapter from RecyclerView before updating the adapter
+                this.recyclerView.setAdapter(null);
 
-        this.adapter = new ListAdapter(this.getContext(), this.parentKey = parentKey, Settings.getListViewType(this.getContext()), this.feed = feed);
-
-        this.setUpRecyclerView();
-
-        if (this.feed == null || this.feed.getItems().isEmpty()) {
-            LayoutInflater.from(this.getContext()).inflate(Constants.SOURCE_BOOKMARK.equals(this.parentKey.url) ? R.layout.view_empty_bookmark : R.layout.view_empty_news, this.empty, true);
-
-            this.recyclerView.setVisibility(View.GONE);
-            this.empty.setVisibility(View.VISIBLE);
-        } else {
-            if (this.resetPosition) {
-                this.resetPosition = false;
-
-                Settings.setPosition(this.parentKey.url, 0);
-            } else {
-                this.recyclerView.scrollToPosition(Settings.getPosition(this.parentKey.url));
+                this.adapter.close();
+                this.adapter = null;
             }
 
-            this.recyclerView.setVisibility(View.VISIBLE);
-            this.empty.setVisibility(View.GONE);
+            this.adapter = new ListAdapter(this.getContext(), this.parentKey = parentKey, Settings.getListViewType(this.getContext()), this.feed = feed);
+
+            this.setUpRecyclerView();
+
+            if (this.feed == null || this.feed.getItems().isEmpty()) {
+                LayoutInflater.from(this.getContext()).inflate(Constants.SOURCE_BOOKMARK.equals(this.parentKey.url) ? R.layout.view_empty_bookmark : R.layout.view_empty_news, this.empty, true);
+
+                this.recyclerView.setVisibility(View.GONE);
+                this.empty.setVisibility(View.VISIBLE);
+            } else {
+                if (this.resetPosition) {
+                    this.resetPosition = false;
+
+                    Settings.setPosition(this.parentKey.url, 0);
+                } else {
+                    this.recyclerView.scrollToPosition(Settings.getPosition(this.parentKey.url));
+                }
+
+                this.recyclerView.setVisibility(View.VISIBLE);
+                this.empty.setVisibility(View.GONE);
+            }
         }
 
         if (this.swipeRefreshLayout.isRefreshing()) this.swipeRefreshLayout.setRefreshing(false);
