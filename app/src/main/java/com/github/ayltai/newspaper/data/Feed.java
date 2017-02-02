@@ -90,7 +90,7 @@ public class Feed extends RealmObject {
 
     }
 
-    @SuppressWarnings("CheckStyle")
+    @SuppressWarnings("checkstyle:magicnumber")
     @Override
     public int hashCode() {
         return 31 * this.url.hashCode() + this.items.hashCode();
