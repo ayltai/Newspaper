@@ -127,13 +127,14 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
     private final ImageLoader.Callback callback = new ImageLoader.Callback() {
         @Override
         public void onCacheHit(final File image) {
-            MainScreen.this.showHeaderImage(image);
+            // FIXME: Exception may be thrown if the bitmap dimensions are too large
+            MainScreen.this.headerImage.post(() -> MainScreen.this.headerImage.setImageBitmap(BitmapFactory.decodeFile(image.getAbsolutePath())));
         }
 
         @SuppressWarnings("WrongThread")
         @Override
         public void onCacheMiss(final File image) {
-            MainScreen.this.showHeaderImage(image);
+            this.onCacheHit(image);
         }
 
         @Override
@@ -349,10 +350,5 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
         } else {
             MainScreen.this.imageLoader.loadImage(Uri.parse(this.images.get(MainScreen.RANDOM.nextInt(this.images.size()))), this.callback);
         }
-    }
-
-    private void showHeaderImage(@NonNull final File image) {
-        // FIXME: Exception may be thrown if the bitmap dimensions are too large
-        this.headerImage.post(() -> this.headerImage.setImageBitmap(BitmapFactory.decodeFile(image.getAbsolutePath())));
     }
 }
