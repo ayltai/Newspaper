@@ -89,7 +89,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
         this.feed         = feed;
         this.realm        = Realm.getDefaultInstance();
 
-        RxBus.getInstance().register(ImagesUpdatedEvent.class, this.subscriber);
+        RxBus.getInstance().register(ItemUpdatedEvent.class, this.subscriber);
     }
 
     @Override

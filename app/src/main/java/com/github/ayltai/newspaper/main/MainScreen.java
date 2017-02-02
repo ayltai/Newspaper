@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper.main;
 
+import java.util.concurrent.Executors;
+
 import javax.inject.Inject;
 
 import android.annotation.SuppressLint;
@@ -17,14 +19,27 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
+import com.facebook.common.references.CloseableReference;
+import com.facebook.datasource.BaseDataSubscriber;
+import com.facebook.datasource.DataSource;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.image.CloseableBitmap;
+import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.DaggerMainComponent;
 import com.github.ayltai.newspaper.MainModule;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.RxBus;
+import com.github.ayltai.newspaper.data.Source;
+import com.github.ayltai.newspaper.list.ImagesUpdatedEvent;
 import com.github.ayltai.newspaper.setting.SettingsActivity;
 import com.github.ayltai.newspaper.util.ContextUtils;
+import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Duration;
@@ -34,6 +49,7 @@ import com.yalantis.guillotine.interfaces.GuillotineListener;
 
 import flow.ClassKey;
 import rx.Observable;
+import rx.Subscriber;
 import rx.subjects.BehaviorSubject;
 
 @SuppressLint("ViewConstructor")
@@ -80,9 +96,42 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
     //endregion
 
+    private final Subscriber<ImagesUpdatedEvent> subscriber = new Subscriber<ImagesUpdatedEvent>() {
+        @Override
+        public void onCompleted() {
+        }
+
+        @Override
+        public void onError(final Throwable e) {
+            LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
+        }
+
+        @Override
+        public void onNext(final ImagesUpdatedEvent imagesUpdatedEvent) {
+            final Source source = MainScreen.this.adapter.getSource(MainScreen.this.viewPager.getCurrentItem());
+
+            if (source != null && imagesUpdatedEvent.getUrl().equals(source.getUrl()) && !imagesUpdatedEvent.getImages().isEmpty()) {
+                final DataSource<CloseableReference<CloseableImage>> dataSource = Fresco.getImagePipeline().fetchDecodedImage(ImageRequest.fromUri(imagesUpdatedEvent.getImages().get(0)), null);
+
+                dataSource.subscribe(new BaseDataSubscriber<CloseableReference<CloseableImage>>() {
+                    @Override
+                    protected void onNewResultImpl(final DataSource<CloseableReference<CloseableImage>> dataSource) {
+                        MainScreen.this.logoBackground.setImageBitmap(((CloseableBitmap)dataSource.getResult().get()).getUnderlyingBitmap());
+                    }
+
+                    @Override
+                    protected void onFailureImpl(final DataSource<CloseableReference<CloseableImage>> dataSource) {
+                    }
+                }, Executors.newSingleThreadExecutor());
+            }
+        }
+    };
+
+    private ViewPager    viewPager;
+    private KenBurnsView logoBackground;
+
     //region Variables
 
-    private ViewPager           viewPager;
     private MainAdapter         adapter;
     private boolean             hasAttached;
     private boolean             isDrawerOpened;
@@ -133,6 +182,9 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
             this.viewPager.setAdapter(this.adapter = DaggerMainComponent.builder().mainModule(new MainModule((Activity)view.getContext())).build().mainAdapter());
 
+            this.logoBackground = (KenBurnsView)view.findViewById(R.id.logoBackground);
+            this.logoBackground.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
             this.addView(view);
 
             this.setUpDrawerMenu(view);
@@ -141,11 +193,15 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
         }
 
         this.attachedToWindow.onNext(null);
+
+        RxBus.getInstance().register(ImagesUpdatedEvent.class, this.subscriber);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+
+        RxBus.getInstance().unregister(ImagesUpdatedEvent.class, this.subscriber);
 
         this.detachedFromWindow.onNext(null);
     }
@@ -156,6 +212,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
             this.adapter.close();
             this.adapter = null;
         }
+
+        RxBus.getInstance().unregister(ImagesUpdatedEvent.class, this.subscriber);
     }
 
     //endregion

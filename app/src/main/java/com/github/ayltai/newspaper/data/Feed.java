@@ -1,16 +1,24 @@
 package com.github.ayltai.newspaper.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.rss.Item;
+import com.github.ayltai.newspaper.util.ItemUtils;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 public class Feed extends RealmObject {
     static final String FIELD_URL = "url";
+
+    @Ignore
+    private final List<String> images = new ArrayList<>();
 
     //region Fields
 
@@ -44,7 +52,20 @@ public class Feed extends RealmObject {
         return this.items;
     }
 
+    @NonNull
+    public final List<String> getImages() {
+        return this.images;
+    }
+
     //endregion
+
+    public final void updateImages() {
+        this.images.clear();
+
+        for (final Item item : this.items) {
+            if (item.getMediaUrl() != null) this.images.add(ItemUtils.getOriginalMediaUrl(item.getMediaUrl()));
+        }
+    }
 
     public final boolean contains(@Nullable final Item item) {
         if (item == null) return false;

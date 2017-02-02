@@ -143,6 +143,12 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @Override
     public void setItems(@NonNull final ListScreen.Key parentKey, @Nullable final Feed feed) {
+        if (feed != null) {
+            feed.updateImages();
+
+            RxBus.getInstance().send(new ImagesUpdatedEvent(feed.getUrl(), feed.getImages()));
+        }
+
         if (this.feed == null || !this.feed.equals(feed)) {
             if (this.adapter != null) {
                 // Detaches the adapter from RecyclerView before updating the adapter
@@ -186,7 +192,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @Override
     public void showUpdateIndicator() {
-        final Snackbar snackbar = Snackbar.make(this, R.string.update_indicator, Snackbar.LENGTH_LONG)
+        final Snackbar snackbar = Snackbar.make(this, R.string.update_indicator, Constants.UPDATE_INDICATOR_DURATION)
             .setAction(R.string.action_refresh, view -> {
                 this.swipeRefreshLayout.post(() -> {
                     this.swipeRefreshLayout.setRefreshing(true);

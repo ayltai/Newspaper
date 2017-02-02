@@ -196,6 +196,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
+    compile 'com.flaviofaria:kenburnsview:1.0.7'
 
     // Facebook Stetho
     debugCompile 'com.facebook.stetho:stetho:1.4.2'

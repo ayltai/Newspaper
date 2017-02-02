@@ -29,7 +29,7 @@ This app is made with the support of open source software:
 * [Subsampling Scale Image View](https://github.com/davemorrissey/subsampling-scale-image-view)
 * [BigImageViewer](https://github.com/Piasy/BigImageViewer)
 * [RecyclerView Animators](https://github.com/wasabeef/recyclerview-animators)
-* [MaterialViewPager](https://github.com/florent37/MaterialViewPager)
+* [KenBurnsView](https://github.com/flavioarfaria/KenBurnsView)
 * [MaterialStyledDialogs](https://github.com/javiersantos/MaterialStyledDialogs)
 * [Guillotine Animation](https://github.com/Yalantis/GuillotineMenu-Android)
 * [SmallBang](https://github.com/hanks-zyh/SmallBang)

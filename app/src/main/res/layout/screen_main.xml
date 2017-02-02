@@ -17,9 +17,10 @@
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsingToolbarLayout"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:contentScrim="?attr/colorPrimary">
+                <include layout="@layout/view_main_header" />
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
@@ -60,17 +61,11 @@
                 app:tabMode="scrollable"
                 app:tabIndicatorColor="?attr/indicatorColor" />
         </android.support.design.widget.AppBarLayout>
-        <LinearLayout
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-            <include layout="@layout/view_main_header" />
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

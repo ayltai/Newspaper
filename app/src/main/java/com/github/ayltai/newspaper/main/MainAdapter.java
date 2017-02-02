@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataModule;
 import com.github.ayltai.newspaper.data.Favorite;
 import com.github.ayltai.newspaper.data.FavoriteManager;
+import com.github.ayltai.newspaper.data.Source;
 import com.github.ayltai.newspaper.list.ListPresenter;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.net.NetModule;
@@ -63,6 +65,11 @@ public final class MainAdapter extends PagerAdapter implements Closeable {
 
                 this.notifyDataSetChanged();
             }, error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error));
+    }
+
+    @Nullable
+    public Source getSource(final int index) {
+        return this.favorite == null ? null : this.favorite.getSources().get(index);
     }
 
     @Override
