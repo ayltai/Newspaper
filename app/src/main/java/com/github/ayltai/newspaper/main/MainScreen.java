@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -117,7 +118,14 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
                     @Override
                     protected void onNewResultImpl(final DataSource<CloseableReference<CloseableImage>> dataSource) {
                         if (dataSource.hasResult()) {
-                            MainScreen.this.logoBackground.post(() -> MainScreen.this.logoBackground.setImageBitmap(((CloseableBitmap)dataSource.getResult().get()).getUnderlyingBitmap()));
+                            MainScreen.this.logoBackground.post(() -> {
+                                // FIXME: No exception should be thrown if the data source is used properly
+                                try {
+                                    MainScreen.this.logoBackground.setImageBitmap(((CloseableBitmap)dataSource.getResult().get()).getUnderlyingBitmap());
+                                } catch (final NullPointerException e) {
+                                    Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                                }
+                            });
                         }
                     }
 
