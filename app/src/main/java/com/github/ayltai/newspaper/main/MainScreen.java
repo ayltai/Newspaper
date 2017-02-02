@@ -1,6 +1,9 @@
 package com.github.ayltai.newspaper.main;
 
-import java.util.concurrent.Executors;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -9,27 +12,19 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
-import com.facebook.common.references.CloseableReference;
-import com.facebook.datasource.BaseDataSubscriber;
-import com.facebook.datasource.DataSource;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.image.CloseableBitmap;
-import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.flaviofaria.kenburnsview.KenBurnsView;
+import com.flaviofaria.kenburnsview.Transition;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.DaggerMainComponent;
@@ -37,6 +32,8 @@ import com.github.ayltai.newspaper.MainModule;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.RxBus;
 import com.github.ayltai.newspaper.data.Source;
+import com.github.ayltai.newspaper.graphics.DaggerGraphicsComponent;
+import com.github.ayltai.newspaper.graphics.GraphicsModule;
 import com.github.ayltai.newspaper.list.ImagesUpdatedEvent;
 import com.github.ayltai.newspaper.setting.SettingsActivity;
 import com.github.ayltai.newspaper.util.ContextUtils;
@@ -45,6 +42,7 @@ import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Duration;
 import com.github.javiersantos.materialstyleddialogs.enums.Style;
+import com.github.piasy.biv.loader.ImageLoader;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 
@@ -90,6 +88,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
         //endregion
     }
 
+    private static final Random RANDOM = new Random();
+
     //region Events
 
     private final BehaviorSubject<Void> attachedToWindow   = BehaviorSubject.create();
@@ -109,36 +109,57 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
         @Override
         public void onNext(final ImagesUpdatedEvent imagesUpdatedEvent) {
-            final Source source = MainScreen.this.adapter.getSource(MainScreen.this.viewPager.getCurrentItem());
+            if (MainScreen.this.adapter != null) {
+                final Source source = MainScreen.this.adapter.getSource(MainScreen.this.viewPager.getCurrentItem());
 
-            if (source != null && imagesUpdatedEvent.getUrl().equals(source.getUrl()) && !imagesUpdatedEvent.getImages().isEmpty()) {
-                final DataSource<CloseableReference<CloseableImage>> dataSource = Fresco.getImagePipeline().fetchDecodedImage(ImageRequest.fromUri(imagesUpdatedEvent.getImages().get(0)), null);
+                if (source != null && imagesUpdatedEvent.getUrl().equals(source.getUrl())) {
+                    synchronized (MainScreen.this.images) {
+                        MainScreen.this.images.clear();
+                        MainScreen.this.images.addAll(imagesUpdatedEvent.getImages());
 
-                dataSource.subscribe(new BaseDataSubscriber<CloseableReference<CloseableImage>>() {
-                    @Override
-                    protected void onNewResultImpl(final DataSource<CloseableReference<CloseableImage>> dataSource) {
-                        if (dataSource.hasResult()) {
-                            MainScreen.this.logoBackground.post(() -> {
-                                // FIXME: No exception should be thrown if the data source is used properly
-                                try {
-                                    MainScreen.this.logoBackground.setImageBitmap(((CloseableBitmap)dataSource.getResult().get()).getUnderlyingBitmap());
-                                } catch (final NullPointerException e) {
-                                    Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
-                                }
-                            });
-                        }
+                        MainScreen.this.updateHeaderImages();
                     }
-
-                    @Override
-                    protected void onFailureImpl(final DataSource<CloseableReference<CloseableImage>> dataSource) {
-                    }
-                }, Executors.newSingleThreadExecutor());
+                }
             }
         }
     };
 
+    private final ImageLoader.Callback callback = new ImageLoader.Callback() {
+        @Override
+        public void onCacheHit(final File image) {
+            MainScreen.this.showHeaderImage(image);
+        }
+
+        @SuppressWarnings("WrongThread")
+        @Override
+        public void onCacheMiss(final File image) {
+            MainScreen.this.showHeaderImage(image);
+        }
+
+        @Override
+        public void onStart() {
+        }
+
+        @Override
+        public void onProgress(final int progress) {
+        }
+
+        @Override
+        public void onFinish() {
+        }
+    };
+
+    private final List<String> images = new ArrayList<>();
+
+    @Inject
+    ImageLoader imageLoader;
+
+    //region Components
+
     private ViewPager    viewPager;
-    private KenBurnsView logoBackground;
+    private KenBurnsView headerImage;
+
+    //endregion
 
     //region Variables
 
@@ -152,6 +173,11 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
     @Inject
     public MainScreen(@NonNull final Context context) {
         super(context);
+
+        DaggerGraphicsComponent.builder()
+            .graphicsModule(new GraphicsModule(context))
+            .build()
+            .inject(this);
     }
 
     public boolean goBack() {
@@ -183,17 +209,41 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
         super.onAttachedToWindow();
 
         if (!this.hasAttached) {
-            final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, false);
+            final View                    view    = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, false);
+            final CollapsingToolbarLayout toolbar = (CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout);
+
+            this.headerImage = (KenBurnsView)view.findViewById(R.id.headerImage);
+            this.headerImage.setTransitionListener(new KenBurnsView.TransitionListener() {
+                @Override
+                public void onTransitionStart(final Transition transition) {
+                }
+
+                @Override
+                public void onTransitionEnd(final Transition transition) {
+                    MainScreen.this.updateHeaderImages();
+                }
+            });
 
             this.viewPager = (ViewPager)view.findViewById(R.id.viewPager);
-
-            ((CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout)).setTitleEnabled(false);
-            ((TabLayout)view.findViewById(R.id.tabLayout)).setupWithViewPager(this.viewPager);
-
             this.viewPager.setAdapter(this.adapter = DaggerMainComponent.builder().mainModule(new MainModule((Activity)view.getContext())).build().mainAdapter());
+            this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+                }
 
-            this.logoBackground = (KenBurnsView)view.findViewById(R.id.logoBackground);
-            this.logoBackground.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                @Override
+                public void onPageSelected(final int position) {
+                    toolbar.setTitle(position == MainScreen.this.adapter.getCount() ? MainScreen.this.getResources().getText(R.string.title_bookmark) : MainScreen.this.adapter.getPageTitle(position));
+
+                    MainScreen.this.updateHeaderImages();
+                }
+
+                @Override
+                public void onPageScrollStateChanged(final int state) {
+                }
+            });
+
+            toolbar.setTitle(this.adapter.getPageTitle(0));
 
             this.addView(view);
 
@@ -291,5 +341,18 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
                 }
             })
             .build();
+    }
+
+    private void updateHeaderImages() {
+        if (this.images.isEmpty()) {
+            this.headerImage.post(() -> this.headerImage.setImageBitmap(null));
+        } else {
+            MainScreen.this.imageLoader.loadImage(Uri.parse(this.images.get(MainScreen.RANDOM.nextInt(this.images.size()))), this.callback);
+        }
+    }
+
+    private void showHeaderImage(@NonNull final File image) {
+        // FIXME: Exception may be thrown if the bitmap dimensions are too large
+        this.headerImage.post(() -> this.headerImage.setImageBitmap(BitmapFactory.decodeFile(image.getAbsolutePath())));
     }
 }
