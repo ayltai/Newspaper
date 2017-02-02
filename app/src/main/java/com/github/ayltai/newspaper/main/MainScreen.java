@@ -116,7 +116,9 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
                 dataSource.subscribe(new BaseDataSubscriber<CloseableReference<CloseableImage>>() {
                     @Override
                     protected void onNewResultImpl(final DataSource<CloseableReference<CloseableImage>> dataSource) {
-                        MainScreen.this.logoBackground.post(() -> MainScreen.this.logoBackground.setImageBitmap(((CloseableBitmap)dataSource.getResult().get()).getUnderlyingBitmap()));
+                        if (dataSource.hasResult()) {
+                            MainScreen.this.logoBackground.post(() -> MainScreen.this.logoBackground.setImageBitmap(((CloseableBitmap)dataSource.getResult().get()).getUnderlyingBitmap()));
+                        }
                     }
 
                     @Override
