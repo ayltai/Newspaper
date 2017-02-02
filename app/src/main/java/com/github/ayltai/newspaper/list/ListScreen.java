@@ -14,7 +14,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
-import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper;
 
 import flow.ClassKey;
 import io.realm.FeedRealmProxy;
@@ -232,8 +230,6 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             this.swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
             this.swipeRefreshLayout.setColorSchemeResources(ContextUtils.getResourceId(this.getContext(), R.attr.primaryColor));
             this.swipeRefreshLayout.setOnRefreshListener(() -> this.refreshSubject.onNext(null));
-
-            if (Configs.isScrollSnapEnabled()) new GravitySnapHelper(Gravity.TOP).attachToRecyclerView(this.recyclerView);
 
             this.empty = (ViewGroup)view.findViewById(R.id.empty);
 

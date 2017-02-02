@@ -26,7 +26,6 @@ import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.piasy.biv.view.BigImageView;
 import com.jakewharton.rxbinding.view.RxView;
-import com.tubb.smrv.SwipeHorizontalMenuLayout;
 
 import flow.Flow;
 import rx.Observable;
@@ -84,26 +83,15 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
             this.draweeView = null;
         }
 
-        final SwipeHorizontalMenuLayout swipeHorizontalMenuLayout = (SwipeHorizontalMenuLayout)this.itemView;
+        this.subscriptions.add(RxView.clicks(this.itemView)
+            .subscribe(
+                v -> this.clicks.onNext(null),
+                error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
-        this.subscriptions.add(RxView.clicks(this.itemView).subscribe(v -> this.clicks.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
-        if (this.thumbnail != null) this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(v -> this.clicks.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
-
-        if (this.bookmark != null) this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(v -> {
-            this.setIsBookmarked(!this.isBookmarked);
-
-            swipeHorizontalMenuLayout.smoothCloseMenu();
-
-            this.bookmarks.onNext(this.isBookmarked);
-        }));
-
-        final View share = itemView.findViewById(R.id.share);
-
-        if (share != null) this.subscriptions.add(RxView.clicks(share).subscribe(v -> {
-            swipeHorizontalMenuLayout.smoothCloseMenu();
-
-            this.shares.onNext(null);
-        }));
+        if (this.thumbnail != null) this.subscriptions.add(RxView.clicks(this.thumbnail)
+            .subscribe(
+                v -> this.clicks.onNext(null),
+                error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 
     //region Properties

@@ -101,10 +101,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
-        final View view = LayoutInflater.from(this.context).inflate(R.layout.view_item_container, parent, false);
-
-        LayoutInflater.from(this.context).inflate(this.listViewType == Constants.LIST_VIEW_TYPE_COZY ? R.layout.view_item_cozy : R.layout.view_item_compact, (ViewGroup)view.findViewById(R.id.smContentView), true);
-
+        final View           view      = LayoutInflater.from(this.context).inflate(this.listViewType == Constants.LIST_VIEW_TYPE_COZY ? R.layout.view_item_cozy : R.layout.view_item_compact, parent, false);
         final ItemViewHolder holder    = new ItemViewHolder(view);
         final ItemPresenter  presenter = new ItemPresenter(this.realm);
 

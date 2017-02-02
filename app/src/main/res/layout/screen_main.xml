@@ -60,11 +60,17 @@
                 app:tabMode="scrollable"
                 app:tabIndicatorColor="?attr/indicatorColor" />
         </android.support.design.widget.AppBarLayout>
-        <com.github.ayltai.newspaper.widget.NonSwipeableViewPager
-            android:id="@+id/viewPager"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <include layout="@layout/view_main_header" />
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>
