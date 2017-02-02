@@ -6,7 +6,7 @@
     <dimen name="space_4">16dp</dimen>
     <dimen name="divider_height">1px</dimen>
     <dimen name="item_corner_radius_cozy">6dp</dimen>
-    <dimen name="item_corner_radius_compact">4dp</dimen>
+    <dimen name="item_corner_radius_compact">0dp</dimen>
     <dimen name="thumbnail_width">72dp</dimen>
     <dimen name="thumbnail_height">72dp</dimen>
     <dimen name="thumbnail_cozy">200dp</dimen>
