@@ -7,7 +7,6 @@ import java.util.Map;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
     private final int                                listViewType;
     private final Realm                              realm;
 
-    private final Subscriber<Pair<Integer, Item>> subscriber = new Subscriber<Pair<Integer, Item>>() {
+    private final Subscriber<ItemUpdatedEvent> subscriber = new Subscriber<ItemUpdatedEvent>() {
         @Override
         public void onCompleted() {
         }
@@ -50,27 +49,27 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
         }
 
         @Override
-        public void onNext(final Pair<Integer, Item> pair) {
+        public void onNext(final ItemUpdatedEvent itemUpdatedEvent) {
             new FeedManager(ListAdapter.this.realm).getFeed(Constants.SOURCE_BOOKMARK)
                 .subscribe(feed -> {
                     if (Constants.SOURCE_BOOKMARK.equals(ListAdapter.this.parentKey.getUrl())) {
-                        if (pair.first < 0) {
+                        if (itemUpdatedEvent.getIndex() < 0) {
                             if (feed.getItems().size() == 1) {
                                 // Hides empty view
-                                RxBus.getInstance().send(feed);
+                                RxBus.getInstance().send(new FeedUpdatedEvent(feed));
                             } else {
-                                ListAdapter.this.notifyItemInserted(feed.indexOf(pair.second));
+                                ListAdapter.this.notifyItemInserted(feed.indexOf(itemUpdatedEvent.getItem()));
                             }
                         } else {
                             if (feed.getItems().isEmpty()) {
                                 // Shows empty view
-                                RxBus.getInstance().send(feed);
+                                RxBus.getInstance().send(new FeedUpdatedEvent(feed));
                             } else {
-                                ListAdapter.this.notifyItemRemoved(pair.first);
+                                ListAdapter.this.notifyItemRemoved(itemUpdatedEvent.getIndex());
                             }
                         }
                     } else {
-                        final int index = ListAdapter.this.feed.indexOf(pair.second);
+                        final int index = ListAdapter.this.feed.indexOf(itemUpdatedEvent.getItem());
                         if (index > -1) ListAdapter.this.notifyItemChanged(index);
                     }
                 });
@@ -90,7 +89,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
         this.feed         = feed;
         this.realm        = Realm.getDefaultInstance();
 
-        RxBus.getInstance().register(Pair.class, this.subscriber);
+        RxBus.getInstance().register(ImagesUpdatedEvent.class, this.subscriber);
     }
 
     @Override
@@ -120,7 +119,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
 
     @Override
     public void close() {
-        RxBus.getInstance().unregister(Pair.class, this.subscriber);
+        RxBus.getInstance().unregister(ItemUpdatedEvent.class, this.subscriber);
 
         if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
 

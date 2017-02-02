@@ -18,10 +18,11 @@ import com.github.ayltai.newspaper.rss.Item;
 public final class ItemUtils {
     //region Constants
 
-    private static final String IDEOGRAPHIC_SPACE = new String(new byte[] { (byte)227, (byte)128, (byte)128 }); // E3 80 80
-    private static final String ELLIPSIS          = Pattern.quote(" ...");
-    private static final String PROMOTIONS        = "promotions";
-    private static final String UNIFIED           = "unified";
+    private static final String IDEOGRAPHIC_SPACE        = new String(new byte[] { (byte)227, (byte)128, (byte)128 }); // E3 80 80
+    private static final String ELLIPSIS                 = Pattern.quote(" ...");
+    private static final String PROMOTIONS               = "promotions";
+    private static final String UNIFIED                  = "unified";
+    private static final String ORIGINAL_MEDIA_URL_TOKEN = "http://media.zenfs.com/";
 
     //endregion
 
@@ -43,9 +44,13 @@ public final class ItemUtils {
             .replaceAll(ItemUtils.ELLIPSIS, Constants.EMPTY));
     }
 
+    public static boolean hasOriginalMediaUrl(@NonNull final String url) {
+        return url.lastIndexOf(ItemUtils.ORIGINAL_MEDIA_URL_TOKEN) > -1;
+    }
+
     @NonNull
     public static String getOriginalMediaUrl(@NonNull final String url) {
-        final int index = url.lastIndexOf("http://media.zenfs.com/");
+        final int index = url.lastIndexOf(ItemUtils.ORIGINAL_MEDIA_URL_TOKEN);
 
         if (index == -1) return url;
 

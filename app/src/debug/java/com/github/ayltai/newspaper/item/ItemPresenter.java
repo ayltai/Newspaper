@@ -3,9 +3,9 @@ package com.github.ayltai.newspaper.item;
 import javax.inject.Inject;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 
 import com.github.ayltai.newspaper.Constants;
+import com.github.ayltai.newspaper.list.ItemUpdatedEvent;
 
 import io.realm.Realm;
 
@@ -29,7 +29,7 @@ public class ItemPresenter extends BaseItemPresenter {
                 .subscribe(feed -> {
                     final int index = feed.indexOf(this.item);
                     this.updateFeed(feed, bookmark);
-                    this.bus().send(Pair.create(index, this.item));
+                    this.bus().send(new ItemUpdatedEvent(index, this.item));
                 }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 

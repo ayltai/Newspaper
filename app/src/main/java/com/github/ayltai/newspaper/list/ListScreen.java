@@ -138,7 +138,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
         this.realm = Realm.getDefaultInstance();
 
-        RxBus.getInstance().register(FeedRealmProxy.class, this.subscriber);
+        RxBus.getInstance().register(FeedUpdatedEvent.class, this.subscriber);
     }
 
     @Override
@@ -252,7 +252,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @Override
     public void close() {
-        RxBus.getInstance().unregister(FeedRealmProxy.class, this.subscriber);
+        RxBus.getInstance().unregister(FeedUpdatedEvent.class, this.subscriber);
 
         if (this.adapter != null) {
             this.adapter.close();
