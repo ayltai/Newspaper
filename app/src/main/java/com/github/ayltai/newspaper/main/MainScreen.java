@@ -47,6 +47,7 @@ import com.yalantis.guillotine.interfaces.GuillotineListener;
 import flow.ClassKey;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
 @SuppressLint("ViewConstructor")
@@ -91,6 +92,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
     private final BehaviorSubject<Void>    attachedToWindow   = BehaviorSubject.create();
     private final BehaviorSubject<Void>    detachedFromWindow = BehaviorSubject.create();
     private final BehaviorSubject<Integer> pageChanges        = BehaviorSubject.create();
+    private final PublishSubject<Void>     previousClicks     = PublishSubject.create();
+    private final PublishSubject<Void>     nextClicks         = PublishSubject.create();
 
     //endregion
 
@@ -106,6 +109,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
     private KenBurnsView            headerImage0;
     private KenBurnsView            headerImage1;
     private ViewSwitcher            viewSwitcher;
+    private View                    previousButton;
+    private View                    nextButton;
 
     //endregion
 
@@ -201,6 +206,40 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
         }
     }
 
+    //region Navigation
+
+    @Override
+    public void enablePrevious(final boolean enabled) {
+        this.previousButton.setVisibility(enabled ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void enableNext(final boolean enabled) {
+        this.nextButton.setVisibility(enabled ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public Observable<Void> previousClicks() {
+        return this.previousClicks;
+    }
+
+    @Override
+    public Observable<Void> nextClicks() {
+        return this.nextClicks;
+    }
+
+    @Override
+    public void navigatePrevious() {
+        this.viewPager.setCurrentItem(this.viewPager.getCurrentItem() - 1, true);
+    }
+
+    @Override
+    public void navigateNext() {
+        this.viewPager.setCurrentItem(this.viewPager.getCurrentItem() + 1, true);
+    }
+
+    //endregion
+
     @Override
     public boolean goBack() {
         if (this.isDrawerOpened) {
@@ -260,28 +299,9 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
             this.toolbar = (CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout);
 
-            this.viewSwitcher = (ViewSwitcher)view.findViewById(R.id.viewSwitcher);
-            this.headerImage0 = (KenBurnsView)view.findViewById(R.id.headerImage0);
-            this.headerImage1 = (KenBurnsView)view.findViewById(R.id.headerImage1);
-
-            this.headerImage0.setTransitionListener(this);
-            this.headerImage1.setTransitionListener(this);
-
-            this.viewPager = (ViewPager)view.findViewById(R.id.viewPager);
-            this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-                }
-
-                @Override
-                public void onPageSelected(final int position) {
-                    MainScreen.this.pageChanges.onNext(position);
-                }
-
-                @Override
-                public void onPageScrollStateChanged(final int state) {
-                }
-            });
+            this.setUpHeader(view);
+            this.setUpNavigation(view);
+            this.setUpViewPager(view);
 
             this.addView(view);
 
@@ -376,5 +396,40 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
                 }
             })
             .build();
+    }
+
+    private void setUpHeader(@NonNull final View view) {
+        this.viewSwitcher = (ViewSwitcher)view.findViewById(R.id.viewSwitcher);
+        this.headerImage0 = (KenBurnsView)view.findViewById(R.id.headerImage0);
+        this.headerImage1 = (KenBurnsView)view.findViewById(R.id.headerImage1);
+
+        this.headerImage0.setTransitionListener(this);
+        this.headerImage1.setTransitionListener(this);
+    }
+
+    private void setUpNavigation(@NonNull final View view) {
+        this.previousButton = view.findViewById(R.id.navigate_previous);
+        this.nextButton     = view.findViewById(R.id.navigate_next);
+
+        this.subscriptions.add(RxView.clicks(this.previousButton).subscribe(dummy -> this.previousClicks.onNext(null)));
+        this.subscriptions.add(RxView.clicks(this.nextButton).subscribe(dummy -> this.nextClicks.onNext(null)));
+    }
+
+    private void setUpViewPager(@NonNull final View view) {
+        this.viewPager = (ViewPager)view.findViewById(R.id.viewPager);
+        this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(final int position) {
+                MainScreen.this.pageChanges.onNext(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(final int state) {
+            }
+        });
     }
 }

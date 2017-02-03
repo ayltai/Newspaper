@@ -26,7 +26,7 @@
         android:layout_height="@dimen/header_image_height"
         android:background="@drawable/text_protection_scrim" />
     <ImageView
-        android:id="@+id/navigate_back"
+        android:id="@+id/navigate_previous"
         android:layout_width="@dimen/navigation_indicator"
         android:layout_height="@dimen/navigation_indicator"
         android:layout_gravity="start|center_vertical"

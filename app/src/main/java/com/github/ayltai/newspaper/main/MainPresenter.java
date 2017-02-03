@@ -27,6 +27,18 @@ public class MainPresenter extends Presenter<MainPresenter.View> {
 
         void updateHeaderImages(@Nullable List<String> images);
 
+        void enablePrevious(boolean enabled);
+
+        void enableNext(boolean enabled);
+
+        Observable<Void> previousClicks();
+
+        Observable<Void> nextClicks();
+
+        void navigatePrevious();
+
+        void navigateNext();
+
         boolean goBack();
 
         @NonNull
@@ -84,7 +96,13 @@ public class MainPresenter extends Presenter<MainPresenter.View> {
             this.currentPosition = position;
 
             this.updateHeader();
-        }));
+
+            this.view.enablePrevious(this.currentPosition > 0);
+            this.view.enableNext(this.currentPosition < this.adapter.getCount() - 1);
+        }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+
+        this.subscriptions.add(this.view.previousClicks().subscribe(dummy -> this.view.navigatePrevious(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+        this.subscriptions.add(this.view.nextClicks().subscribe(dummy -> this.view.navigateNext(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
         this.bus().register(ImagesUpdatedEvent.class, this.subscriber);
     }
