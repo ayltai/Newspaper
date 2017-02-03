@@ -48,12 +48,12 @@ public final class FaceCenterCrop {
         while (options.outWidth / options.inSampleSize > FaceCenterCrop.MAX_WIDTH || options.outHeight / options.inSampleSize > FaceCenterCrop.MAX_HEIGHT) options.inSampleSize *= 2;
 
         options.inJustDecodeBounds = false;
+
         final Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+        final float  scaleX = (float)this.width / bitmap.getWidth();
+        final float  scaleY = (float)this.height / bitmap.getHeight();
+        final PointF center = FaceCenterCrop.findCroppedCenter(bitmap, this.width, this.height, scaleX, scaleY);
 
-        final float scaleX = (float)this.width / bitmap.getWidth();
-        final float scaleY = (float)this.height / bitmap.getHeight();
-
-        final PointF center = findCroppedCenter(bitmap, this.width, this.height, scaleX, scaleY);
         center.x *= options.inSampleSize;
         center.y *= options.inSampleSize;
 
