@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import android.support.annotation.NonNull;
@@ -39,6 +40,12 @@ public class RxBus {
         final Pair<Class, Subscriber> key = Pair.create(eventType, subscriber);
 
         if (this.subscriptions.containsKey(key)) this.subscriptions.remove(key).unsubscribe();
+    }
+
+    public void unregisterAll() {
+        for (final Pair<Class, Subscriber> pair : new HashSet<>(this.subscriptions.keySet())) {
+            this.unregister(pair.first, pair.second);
+        }
     }
 
     public void send(@NonNull final Object event) {
