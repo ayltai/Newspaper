@@ -5,6 +5,7 @@ import java.io.Closeable;
 import javax.inject.Inject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -252,7 +253,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        if (this.parentKey != null) Settings.setPosition(this.parentKey.getUrl(), ((LinearLayoutManager)this.recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
+        if (this.parentKey != null && !((Activity)this.getContext()).isFinishing()) Settings.setPosition(this.parentKey.getUrl(), ((LinearLayoutManager)this.recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
 
         this.detachedFromWindow.onNext(null);
     }

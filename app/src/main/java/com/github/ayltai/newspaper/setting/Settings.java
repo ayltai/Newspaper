@@ -9,6 +9,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.facebook.common.internal.Sets;
 import com.github.ayltai.newspaper.Constants;
