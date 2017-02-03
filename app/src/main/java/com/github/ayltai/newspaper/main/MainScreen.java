@@ -31,6 +31,7 @@ import com.github.ayltai.newspaper.graphics.GraphicsModule;
 import com.github.ayltai.newspaper.graphics.ImageLoaderCallback;
 import com.github.ayltai.newspaper.setting.SettingsActivity;
 import com.github.ayltai.newspaper.util.ContextUtils;
+import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.jakewharton.rxbinding.view.RxView;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
@@ -164,7 +165,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
     private void updateHeaderImage(@NonNull final ImageView imageView) {
         if (this.images == null || this.images.isEmpty()) {
             imageView.post(() -> imageView.setImageBitmap(null));
-        } else {
+        } else if (!TestUtils.isRunningInstrumentalTest()) {
             if (this.imageIndex == this.images.size()) {
                 this.imageIndex = 0;
 
