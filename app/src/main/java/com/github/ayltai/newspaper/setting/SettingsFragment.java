@@ -16,8 +16,13 @@ import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
 @SuppressFBWarnings("PDP_POORLY_DEFINED_PARAMETER")
 public final class SettingsFragment extends PreferenceFragmentCompat {
+    private static int resultCode = Activity.RESULT_CANCELED;
+
     @Override
     public void onCreatePreferences(@NonNull final Bundle savedInstanceState, final String rootKey) {
+        this.getActivity().setResult(SettingsFragment.resultCode);
+        SettingsFragment.resultCode = Activity.RESULT_CANCELED;
+
         this.addPreferencesFromResource(R.xml.preferences);
 
         final boolean     isCompactLayout = Settings.getListViewType(this.getContext()) == Constants.LIST_VIEW_TYPE_COMPACT;
@@ -31,7 +36,11 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         this.findPreference(Settings.PREF_DARK_THEME).setOnPreferenceChangeListener((preference, newValue) -> {
-            if (isDarkTheme != (boolean)newValue) this.getActivity().setResult(Activity.RESULT_OK);
+            if (isDarkTheme != (boolean)newValue) {
+                SettingsFragment.resultCode = Activity.RESULT_OK;
+
+                this.getActivity().recreate();
+            }
 
             return true;
         });
@@ -39,7 +48,10 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
         this.findPreference(Settings.PREF_CATEGORIES).setOnPreferenceChangeListener((preference, newValue) -> {
             final Set<String> newCategories = (Set<String>)newValue;
 
-            if (!categories.containsAll(newCategories) || !newCategories.containsAll(categories)) this.getActivity().setResult(Activity.RESULT_OK);
+            if (!categories.containsAll(newCategories) || !newCategories.containsAll(categories)) {
+                SettingsFragment.resultCode = Activity.RESULT_OK;
+                this.getActivity().setResult(Activity.RESULT_OK);
+            }
 
             return true;
         });
