@@ -3,7 +3,6 @@ package com.github.ayltai.newspaper.main;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -41,12 +40,14 @@ import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Duration;
 import com.github.javiersantos.materialstyleddialogs.enums.Style;
 import com.github.piasy.biv.loader.ImageLoader;
+import com.jakewharton.rxbinding.view.RxView;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 
 import flow.ClassKey;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
+import rx.subscriptions.CompositeSubscription;
 
 @SuppressLint("ViewConstructor")
 public final class MainScreen extends FrameLayout implements MainPresenter.View, KenBurnsView.TransitionListener {
@@ -85,8 +86,6 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
         //endregion
     }
 
-    private static final Random RANDOM = new Random();
-
     //region Events
 
     private final BehaviorSubject<Void>    attachedToWindow   = BehaviorSubject.create();
@@ -97,6 +96,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
     @Inject
     ImageLoader imageLoader;
+
+    private final CompositeSubscription subscriptions = new CompositeSubscription();
 
     //region Components
 
@@ -167,7 +168,13 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
         if (this.images == null || this.images.isEmpty()) {
             imageView.post(() -> imageView.setImageBitmap(null));
         } else {
-            this.imageLoader.loadImage(Uri.parse(this.images.get(MainScreen.RANDOM.nextInt(this.images.size()))), new ImageLoader.Callback() {
+            if (this.imageIndex == this.images.size()) {
+                this.imageIndex = 0;
+
+                Collections.shuffle(this.images);
+            }
+
+            this.imageLoader.loadImage(Uri.parse(this.images.get(this.imageIndex++)), new ImageLoader.Callback() {
                 @Override
                 public void onCacheHit(final File image) {
                     imageView.post(() -> imageView.setImageBitmap(BitmapFactory.decodeFile(image.getAbsolutePath(), ImageUtils.createOptions(image, Constants.MAX_IMAGE_WIDTH, Constants.MAX_IMAGE_HEIGHT))));
@@ -247,6 +254,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
         super.onAttachedToWindow();
 
         if (!this.hasAttached) {
+            this.hasAttached = true;
+
             final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, false);
 
             this.toolbar = (CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout);
@@ -297,6 +306,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
             this.adapter.close();
             this.adapter = null;
         }
+
+        if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
     }
 
     //endregion
@@ -332,19 +343,20 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
     private void setUpDrawerMenu(@NonNull final View view) {
         final View drawerMenu = LayoutInflater.from(this.getContext()).inflate(R.layout.view_drawer_menu, this, false);
-        drawerMenu.setOnClickListener(v -> {
-            // Prevent click-through
-        });
 
-        drawerMenu.findViewById(R.id.action_settings).setOnClickListener(v -> {
+        this.subscriptions.add(RxView.clicks(drawerMenu).subscribe(dummy -> {
+            // Prevent click-through
+        }));
+
+        this.subscriptions.add(RxView.clicks(drawerMenu.findViewById(R.id.action_settings)).subscribe(dummy -> {
             this.animation.close();
             this.showSettings();
-        });
+        }));
 
-        drawerMenu.findViewById(R.id.action_about).setOnClickListener(v -> {
+        this.subscriptions.add(RxView.clicks(drawerMenu.findViewById(R.id.action_about)).subscribe(dummy -> {
             this.animation.close();
             this.showAbout();
-        });
+        }));
 
         this.addView(drawerMenu);
 

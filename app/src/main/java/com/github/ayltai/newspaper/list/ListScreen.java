@@ -227,6 +227,8 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         if (this.hasAttached) {
             this.setItems(this.parentKey, this.feed);
         } else {
+            this.hasAttached = true;
+
             final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_list, this, false);
 
             this.recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
@@ -240,8 +242,6 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             this.empty = (ViewGroup)view.findViewById(R.id.empty);
 
             this.addView(view);
-
-            this.hasAttached = true;
         }
 
         this.attachedToWindow.onNext(null);

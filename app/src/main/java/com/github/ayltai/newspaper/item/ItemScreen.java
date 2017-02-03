@@ -325,6 +325,8 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
             this.initThumbnail();
         } else {
+            this.hasAttached = true;
+
             final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_item, this, false);
 
             this.appBarLayout       = (AppBarLayout)view.findViewById(R.id.appBarLayout);
@@ -347,8 +349,6 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             this.initThumbnail();
 
             this.addView(view);
-
-            this.hasAttached = true;
         }
 
         this.attachEvents();
