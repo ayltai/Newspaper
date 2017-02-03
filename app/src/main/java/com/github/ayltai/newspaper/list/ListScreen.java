@@ -25,6 +25,7 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.RxBus;
 import com.github.ayltai.newspaper.data.Feed;
+import com.github.ayltai.newspaper.main.ImagesUpdatedEvent;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.LogUtils;

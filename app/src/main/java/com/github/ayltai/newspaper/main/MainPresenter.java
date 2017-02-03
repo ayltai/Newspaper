@@ -14,7 +14,6 @@ import com.github.ayltai.newspaper.DaggerMainComponent;
 import com.github.ayltai.newspaper.MainModule;
 import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.data.Source;
-import com.github.ayltai.newspaper.list.ImagesUpdatedEvent;
 
 import rx.Observable;
 import rx.Subscriber;

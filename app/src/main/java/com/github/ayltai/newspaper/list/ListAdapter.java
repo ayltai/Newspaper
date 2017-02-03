@@ -17,6 +17,7 @@ import com.github.ayltai.newspaper.RxBus;
 import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.item.ItemPresenter;
+import com.github.ayltai.newspaper.item.ItemUpdatedEvent;
 import com.github.ayltai.newspaper.item.ItemViewHolder;
 import com.github.ayltai.newspaper.rss.Item;
 import com.github.ayltai.newspaper.util.LogUtils;

@@ -5,7 +5,6 @@ import javax.inject.Inject;
 import android.support.annotation.NonNull;
 
 import com.github.ayltai.newspaper.Constants;
-import com.github.ayltai.newspaper.list.ItemUpdatedEvent;
 
 import io.realm.Realm;
 
