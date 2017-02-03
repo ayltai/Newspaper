@@ -11,23 +11,56 @@ import jp.wasabeef.takt.Seat;
 import jp.wasabeef.takt.Takt;
 
 public abstract class BaseActivity extends AppCompatActivity {
+    //region Variables
+
+    private static int     referenceCount;
+    private static boolean pendingCreation;
+
+    //endregion
+
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!TestUtils.isRunningInstrumentalTest()) Takt.stock(this.getApplication()).seat(Seat.TOP_RIGHT).color(Color.WHITE).play();
+        if (!TestUtils.isRunningInstrumentalTest()) {
+            if (BaseActivity.referenceCount > 0) {
+                BaseActivity.stopTakt();
+
+                BaseActivity.pendingCreation = true;
+            } else {
+                this.startTakt();
+            }
+        }
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         if (!TestUtils.isRunningInstrumentalTest()) {
-            try {
-                Takt.finish();
-            } catch (final IllegalArgumentException e) {
-                // Ignored
+            if (BaseActivity.pendingCreation) {
+                BaseActivity.pendingCreation = false;
+
+                this.startTakt();
+            } else {
+                BaseActivity.stopTakt();
             }
         }
+
+        super.onDestroy();
+    }
+
+    private void startTakt() {
+        Takt.stock(this.getApplication()).seat(Seat.TOP_RIGHT).color(Color.WHITE).play();
+
+        BaseActivity.referenceCount++;
+    }
+
+    private static void stopTakt() {
+        try {
+            Takt.finish();
+        } catch (final IllegalArgumentException | NullPointerException e) {
+            // Ignored
+        }
+
+        BaseActivity.referenceCount--;
     }
 }
