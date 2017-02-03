@@ -23,7 +23,7 @@
                 app:initScaleType="centerCrop" />
             <TextView
                 android:id="@+id/title"
-                android:layout_marginTop="@dimen/space_4"
+                android:layout_marginTop="@dimen/space_5"
                 android:layout_marginBottom="@dimen/space_3"
                 style="@style/Cozy.Title" />
             <TextView
@@ -37,7 +37,7 @@
                 style="@style/Cozy.Source" />
             <TextView
                 android:id="@+id/publishDate"
-                android:layout_marginBottom="@dimen/space_4"
+                android:layout_marginBottom="@dimen/space_5"
                 style="@style/Cozy.PublishDate" />
         </LinearLayout>
     </android.support.v7.widget.CardView>

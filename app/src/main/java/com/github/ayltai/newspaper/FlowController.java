@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.github.ayltai.newspaper.item.ItemPresenter;
 import com.github.ayltai.newspaper.item.ItemScreen;
 import com.github.ayltai.newspaper.list.ListScreen;
+import com.github.ayltai.newspaper.main.MainPresenter;
 import com.github.ayltai.newspaper.main.MainScreen;
 import com.github.ayltai.newspaper.setting.Settings;
 
@@ -27,6 +28,7 @@ import flow.KeyParceler;
 import flow.State;
 import flow.TraversalCallback;
 import io.realm.Realm;
+import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
 final class FlowController {
@@ -85,11 +87,24 @@ final class FlowController {
                         view      = this.component.itemView();
                         presenter = this.component.itemPresenter();
 
-                        this.subscriptions.add(view.attachments().subscribe(dummy -> presenter.onViewAttached(view), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
-                        this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
+                        final Observable<Void> attachments = view.attachments();
+                        final Observable<Void> detachments = view.detachments();
+
+                        if (attachments != null) this.subscriptions.add(attachments.subscribe(dummy -> presenter.onViewAttached(view), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
+                        if (detachments != null) this.subscriptions.add(detachments.subscribe(dummy -> presenter.onViewDetached(), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
                     } else {
                         view      = this.component.mainView();
                         presenter = this.component.mainPresenter();
+
+                        final Observable<Void> attachments = view.attachments();
+                        final Observable<Void> detachments = view.detachments();
+
+                        if (attachments != null) this.subscriptions.add(attachments.subscribe(dummy -> {
+                            presenter.onViewAttached(view);
+                            ((MainPresenter)presenter).bind();
+                        }, error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
+
+                        if (detachments != null) this.subscriptions.add(detachments.subscribe(dummy -> presenter.onViewDetached(), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
                     }
 
                     this.screens.put(incomingState.getKey().getClass(), view);

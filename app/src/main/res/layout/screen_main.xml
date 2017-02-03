@@ -9,41 +9,7 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/collapsingToolbarLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
-                app:contentScrim="?attr/colorPrimary"
-                app:titleEnabled="true">
-                <com.flaviofaria.kenburnsview.KenBurnsView
-                    android:id="@+id/headerImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/logo_background_height"
-                    android:scaleType="centerCrop" />
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                    app:layout_collapseMode="parallax"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-                    <ImageView
-                        android:id="@+id/drawer_open"
-                        android:layout_width="wrap_content"
-                        android:layout_height="?attr/actionBarSize"
-                        android:contentDescription="@string/app_name"
-                        android:scaleType="center"
-                        android:tint="?attr/indicatorColor"
-                        app:srcCompat="@drawable/ic_menu_white_24px" />
-                </android.support.v7.widget.Toolbar>
-            </android.support.design.widget.CollapsingToolbarLayout>
-        </android.support.design.widget.AppBarLayout>
+        <include layout="@layout/view_main_appbar" />
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"

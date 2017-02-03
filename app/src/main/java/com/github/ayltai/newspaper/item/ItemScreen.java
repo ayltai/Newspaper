@@ -249,7 +249,10 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     public void setIsBookmarked(final boolean isBookmarked) {
         this.isBookmarked = isBookmarked;
 
-        this.bookmark.setImageDrawable(AppCompatDrawableManager.get().getDrawable(this.getContext(), this.isBookmarked ? R.drawable.ic_bookmark_white_24px : R.drawable.ic_bookmark_border_white_24px));
+        final Drawable drawable = AppCompatDrawableManager.get().getDrawable(this.getContext(), this.isBookmarked ? R.drawable.ic_bookmark : R.drawable.ic_bookmark_border);
+        DrawableCompat.setTint(drawable, ContextUtils.getColor(this.getContext(), R.attr.indicatorColor));
+
+        this.bookmark.setImageDrawable(drawable);
     }
 
     //endregion
@@ -334,7 +337,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             this.publishDate        = (TextView)view.findViewById(R.id.publishDate);
             this.thumbnailContainer = (ViewGroup)view.findViewById(R.id.thumbnailContainer);
 
-            final Drawable drawable = AppCompatDrawableManager.get().getDrawable(this.getContext(), R.drawable.ic_arrow_back_white_24px);
+            final Drawable drawable = AppCompatDrawableManager.get().getDrawable(this.getContext(), R.drawable.ic_arrow_back);
             DrawableCompat.setTint(drawable, ContextUtils.getColor(this.getContext(), R.attr.indicatorColor));
 
             final Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);

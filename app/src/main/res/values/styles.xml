@@ -3,8 +3,8 @@
     <style name="Cozy">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">@dimen/space_4</item>
-        <item name="android:layout_marginRight">@dimen/space_4</item>
+        <item name="android:layout_marginLeft">@dimen/space_5</item>
+        <item name="android:layout_marginRight">@dimen/space_5</item>
     </style>
     <style name="Cozy.Title">
         <item name="android:textSize">18sp</item>
@@ -54,8 +54,8 @@
     <style name="Item">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">@dimen/space_4</item>
-        <item name="android:layout_marginRight">@dimen/space_4</item>
+        <item name="android:layout_marginLeft">@dimen/space_5</item>
+        <item name="android:layout_marginRight">@dimen/space_5</item>
         <item name="android:textIsSelectable">true</item>
     </style>
     <style name="Item.Title">

@@ -33,7 +33,7 @@ import com.github.ayltai.newspaper.util.LogUtils;
 import io.realm.Realm;
 import rx.subscriptions.CompositeSubscription;
 
-public final class MainAdapter extends PagerAdapter implements Closeable {
+public class MainAdapter extends PagerAdapter implements Closeable {
     //region Variables
 
     private final SparseArrayCompat<View> views = new SparseArrayCompat<>();
@@ -68,23 +68,23 @@ public final class MainAdapter extends PagerAdapter implements Closeable {
     }
 
     @Nullable
-    public Source getSource(final int index) {
+    public final Source getSource(final int index) {
         return this.favorite == null ? null : this.favorite.getSources().get(index);
     }
 
     @Override
-    public int getCount() {
+    public final int getCount() {
         return this.favorite == null ? 0 : this.favorite.getSources().size();
     }
 
     @Override
-    public boolean isViewFromObject(final View view, final Object object) {
+    public final boolean isViewFromObject(final View view, final Object object) {
         return view == object;
     }
 
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
+    public final Object instantiateItem(@NonNull final ViewGroup container, final int position) {
         final ListPresenter presenter = this.component.listPresenter();
         final ListScreen    view      = (ListScreen)this.component.listView();
 
@@ -111,7 +111,7 @@ public final class MainAdapter extends PagerAdapter implements Closeable {
     }
 
     @Override
-    public void destroyItem(@NonNull final ViewGroup container, final int position, final Object object) {
+    public final void destroyItem(@NonNull final ViewGroup container, final int position, final Object object) {
         final View view = this.views.get(position);
 
         if (view != null) this.closeView(view);
@@ -121,12 +121,12 @@ public final class MainAdapter extends PagerAdapter implements Closeable {
 
     @NonNull
     @Override
-    public CharSequence getPageTitle(final int position) {
+    public final CharSequence getPageTitle(final int position) {
         return this.favorite.getSources().get(position).getName();
     }
 
     @Override
-    public void close() {
+    public final void close() {
         for (int i = 0; i < this.views.size(); i++) this.closeView(this.views.get(this.views.keyAt(i)));
 
         if (this.subscriptions != null && this.subscriptions.hasSubscriptions()) {

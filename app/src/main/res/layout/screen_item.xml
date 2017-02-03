@@ -48,7 +48,7 @@
                         android:contentDescription="@string/action_bookmark"
                         android:scaleType="center"
                         android:tint="?attr/indicatorColor"
-                        app:srcCompat="@drawable/ic_bookmark_border_white_24px"
+                        app:srcCompat="@drawable/ic_bookmark_border"
                         style="@style/ImageButton" />
                     <ImageView
                         android:id="@+id/share"
@@ -56,7 +56,7 @@
                         android:contentDescription="@string/action_share"
                         android:scaleType="center"
                         android:tint="?attr/indicatorColor"
-                        app:srcCompat="@drawable/ic_share_white_24px"
+                        app:srcCompat="@drawable/ic_share"
                         style="@style/ImageButton" />
                 </LinearLayout>
             </android.support.v7.widget.Toolbar>
@@ -72,12 +72,12 @@
             android:orientation="vertical">
             <TextView
                 android:id="@+id/title"
-                android:layout_marginTop="@dimen/space_4"
+                android:layout_marginTop="@dimen/space_5"
                 android:gravity="center_horizontal"
                 style="@style/Item.Title" />
             <TextView
                 android:id="@+id/source"
-                android:layout_marginTop="@dimen/space_4"
+                android:layout_marginTop="@dimen/space_5"
                 android:gravity="center_horizontal"
                 style="@style/Item.Source" />
             <TextView
@@ -86,8 +86,8 @@
                 style="@style/Item.PublishDate" />
             <TextView
                 android:id="@+id/description"
-                android:layout_marginTop="@dimen/space_4"
-                android:layout_marginBottom="@dimen/space_4"
+                android:layout_marginTop="@dimen/space_5"
+                android:layout_marginBottom="@dimen/space_5"
                 style="@style/Item.Description" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

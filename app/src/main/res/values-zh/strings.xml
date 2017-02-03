@@ -18,6 +18,8 @@
     <string name="time_ago_day">昨天</string>
     <string name="time_ago_days">%s天前</string>
     <string name="title_bookmark">書籤</string>
+    <string name="go_back">上一個類別</string>
+    <string name="go_next">下一個類別</string>
     <string name="action_settings">設置</string>
     <string name="action_bookmark">書籤</string>
     <string name="action_share">分享</string>

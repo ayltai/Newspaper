@@ -20,4 +20,7 @@
     <color name="cardBackgroundDark">#3f4b5c</color>
     <color name="indicatorColorDark">#ffffff</color>
     <color name="swipeMenuBackgroundDark">#656d78</color>
+    <color name="textProtectionScrimTop">#00000000</color>
+    <color name="textProtectionScrimCenter">#44000000</color>
+    <color name="textProtectionScrimBottom">#99000000</color>
 </resources>

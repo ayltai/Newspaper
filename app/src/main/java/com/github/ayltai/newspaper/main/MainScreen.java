@@ -1,7 +1,6 @@
 package com.github.ayltai.newspaper.main;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -27,17 +26,11 @@ import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
-import com.github.ayltai.newspaper.DaggerMainComponent;
-import com.github.ayltai.newspaper.MainModule;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.RxBus;
-import com.github.ayltai.newspaper.data.Source;
 import com.github.ayltai.newspaper.graphics.DaggerGraphicsComponent;
 import com.github.ayltai.newspaper.graphics.GraphicsModule;
-import com.github.ayltai.newspaper.list.ImagesUpdatedEvent;
 import com.github.ayltai.newspaper.setting.SettingsActivity;
 import com.github.ayltai.newspaper.util.ContextUtils;
-import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Duration;
@@ -48,7 +41,6 @@ import com.yalantis.guillotine.interfaces.GuillotineListener;
 
 import flow.ClassKey;
 import rx.Observable;
-import rx.Subscriber;
 import rx.subjects.BehaviorSubject;
 
 @SuppressLint("ViewConstructor")
@@ -92,37 +84,11 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
     //region Events
 
-    private final BehaviorSubject<Void> attachedToWindow   = BehaviorSubject.create();
-    private final BehaviorSubject<Void> detachedFromWindow = BehaviorSubject.create();
+    private final BehaviorSubject<Void>    attachedToWindow   = BehaviorSubject.create();
+    private final BehaviorSubject<Void>    detachedFromWindow = BehaviorSubject.create();
+    private final BehaviorSubject<Integer> pageChanges        = BehaviorSubject.create();
 
     //endregion
-
-    private final Subscriber<ImagesUpdatedEvent> subscriber = new Subscriber<ImagesUpdatedEvent>() {
-        @Override
-        public void onCompleted() {
-        }
-
-        @Override
-        public void onError(final Throwable e) {
-            LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
-        }
-
-        @Override
-        public void onNext(final ImagesUpdatedEvent imagesUpdatedEvent) {
-            if (MainScreen.this.adapter != null) {
-                final Source source = MainScreen.this.adapter.getSource(MainScreen.this.viewPager.getCurrentItem());
-
-                if (source != null && imagesUpdatedEvent.getUrl().equals(source.getUrl())) {
-                    synchronized (MainScreen.this.images) {
-                        MainScreen.this.images.clear();
-                        MainScreen.this.images.addAll(imagesUpdatedEvent.getImages());
-
-                        MainScreen.this.updateHeaderImages();
-                    }
-                }
-            }
-        }
-    };
 
     private final ImageLoader.Callback callback = new ImageLoader.Callback() {
         @Override
@@ -150,15 +116,14 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
         }
     };
 
-    private final List<String> images = new ArrayList<>();
-
     @Inject
     ImageLoader imageLoader;
 
     //region Components
 
-    private ViewPager    viewPager;
-    private KenBurnsView headerImage;
+    private CollapsingToolbarLayout toolbar;
+    private ViewPager               viewPager;
+    private KenBurnsView            headerImage;
 
     //endregion
 
@@ -166,8 +131,10 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
     private MainAdapter         adapter;
     private boolean             hasAttached;
+    private boolean             isBound;
     private boolean             isDrawerOpened;
     private GuillotineAnimation animation;
+    private List<String>        images;
 
     //endregion
 
@@ -181,6 +148,38 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
             .inject(this);
     }
 
+    @Override
+    public void bind(@NonNull final MainAdapter adapter) {
+        if (!this.isBound) {
+            this.isBound = true;
+
+            this.viewPager.setAdapter(this.adapter = adapter);
+
+            this.pageChanges.onNext(0);
+        }
+    }
+
+    @Override
+    public void updateHeaderTitle(@NonNull final CharSequence title) {
+        this.toolbar.setTitle(title);
+    }
+
+    @Override
+    public void updateHeaderImages(@NonNull final List<String> images) {
+        this.images = images;
+
+        this.updateHeaderImages();
+    }
+
+    private void updateHeaderImages() {
+        if (this.images == null || this.images.isEmpty()) {
+            this.headerImage.post(() -> this.headerImage.setImageBitmap(null));
+        } else {
+            MainScreen.this.imageLoader.loadImage(Uri.parse(this.images.get(MainScreen.RANDOM.nextInt(this.images.size()))), this.callback);
+        }
+    }
+
+    @Override
     public boolean goBack() {
         if (this.isDrawerOpened) {
             this.animation.close();
@@ -189,6 +188,11 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
         }
 
         return false;
+    }
+
+    @Override
+    public Observable<Integer> pageChanges() {
+        return this.pageChanges;
     }
 
     //region Lifecycle
@@ -210,8 +214,9 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
         super.onAttachedToWindow();
 
         if (!this.hasAttached) {
-            final View                    view    = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, false);
-            final CollapsingToolbarLayout toolbar = (CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout);
+            final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, false);
+
+            this.toolbar = (CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout);
 
             this.headerImage = (KenBurnsView)view.findViewById(R.id.headerImage);
             this.headerImage.setTransitionListener(new KenBurnsView.TransitionListener() {
@@ -226,7 +231,6 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
             });
 
             this.viewPager = (ViewPager)view.findViewById(R.id.viewPager);
-            this.viewPager.setAdapter(this.adapter = DaggerMainComponent.builder().mainModule(new MainModule((Activity)view.getContext())).build().mainAdapter());
             this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
@@ -234,17 +238,13 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
                 @Override
                 public void onPageSelected(final int position) {
-                    toolbar.setTitle(position == MainScreen.this.adapter.getCount() ? MainScreen.this.getResources().getText(R.string.title_bookmark) : MainScreen.this.adapter.getPageTitle(position));
-
-                    MainScreen.this.updateHeaderImages();
+                    MainScreen.this.pageChanges.onNext(position);
                 }
 
                 @Override
                 public void onPageScrollStateChanged(final int state) {
                 }
             });
-
-            toolbar.setTitle(this.adapter.getPageTitle(0));
 
             this.addView(view);
 
@@ -254,15 +254,11 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
         }
 
         this.attachedToWindow.onNext(null);
-
-        RxBus.getInstance().register(ImagesUpdatedEvent.class, this.subscriber);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-
-        RxBus.getInstance().unregister(ImagesUpdatedEvent.class, this.subscriber);
 
         this.detachedFromWindow.onNext(null);
     }
@@ -273,8 +269,6 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
             this.adapter.close();
             this.adapter = null;
         }
-
-        RxBus.getInstance().unregister(ImagesUpdatedEvent.class, this.subscriber);
     }
 
     //endregion
@@ -342,13 +336,5 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
                 }
             })
             .build();
-    }
-
-    private void updateHeaderImages() {
-        if (this.images.isEmpty()) {
-            this.headerImage.post(() -> this.headerImage.setImageBitmap(null));
-        } else {
-            MainScreen.this.imageLoader.loadImage(Uri.parse(this.images.get(MainScreen.RANDOM.nextInt(this.images.size()))), this.callback);
-        }
     }
 }
