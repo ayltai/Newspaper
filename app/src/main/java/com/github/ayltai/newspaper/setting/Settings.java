@@ -51,7 +51,7 @@ public final class Settings {
     }
 
     public static boolean isDarkTheme(@NonNull final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_DARK_THEME, false);
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Settings.PREF_DARK_THEME, false);
     }
 
     @NonNull
@@ -67,5 +67,9 @@ public final class Settings {
 
     public static void setPosition(@NonNull final String url, final int position) {
         Settings.POSITIONS.put(url, position);
+    }
+
+    public static void resetPosition() {
+        Settings.POSITIONS.clear();
     }
 }

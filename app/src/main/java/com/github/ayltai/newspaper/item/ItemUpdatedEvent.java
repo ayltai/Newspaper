@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.list;
+package com.github.ayltai.newspaper.item;
 
 import android.support.annotation.NonNull;
 

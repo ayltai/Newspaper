@@ -21,6 +21,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.net.ConnectivityChangeReceiver;
+import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -75,6 +76,8 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
         if (this.isFinishing()) {
             this.controller.onDestroy();
             this.controller = null;
+
+            Settings.resetPosition();
         }
 
         FaceDetectorFactory.release();
