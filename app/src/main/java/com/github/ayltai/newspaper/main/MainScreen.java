@@ -1,6 +1,5 @@
 package com.github.ayltai.newspaper.main;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -8,10 +7,8 @@ import javax.inject.Inject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -27,18 +24,13 @@ import android.widget.ViewSwitcher;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
-import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.graphics.DaggerGraphicsComponent;
 import com.github.ayltai.newspaper.graphics.GraphicsModule;
+import com.github.ayltai.newspaper.graphics.ImageLoaderCallback;
 import com.github.ayltai.newspaper.setting.SettingsActivity;
 import com.github.ayltai.newspaper.util.ContextUtils;
-import com.github.ayltai.newspaper.util.ImageUtils;
-import com.github.ayltai.newspaper.util.SuppressFBWarnings;
-import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
-import com.github.javiersantos.materialstyleddialogs.enums.Duration;
-import com.github.javiersantos.materialstyleddialogs.enums.Style;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.jakewharton.rxbinding.view.RxView;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
@@ -179,30 +171,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
                 Collections.shuffle(this.images);
             }
 
-            this.imageLoader.loadImage(Uri.parse(this.images.get(this.imageIndex++)), new ImageLoader.Callback() {
-                @Override
-                public void onCacheHit(final File image) {
-                    imageView.post(() -> imageView.setImageBitmap(BitmapFactory.decodeFile(image.getAbsolutePath(), ImageUtils.createOptions(image, Constants.MAX_IMAGE_WIDTH, Constants.MAX_IMAGE_HEIGHT))));
-                }
-
-                @SuppressWarnings("WrongThread")
-                @Override
-                public void onCacheMiss(final File image) {
-                    this.onCacheHit(image);
-                }
-
-                @Override
-                public void onStart() {
-                }
-
-                @Override
-                public void onProgress(final int progress) {
-                }
-
-                @Override
-                public void onFinish() {
-                }
-            });
+            this.imageLoader.loadImage(Uri.parse(this.images.get(this.imageIndex++)), new ImageLoaderCallback(imageView));
         }
     }
 
@@ -299,9 +268,29 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
             this.toolbar = (CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout);
 
-            this.setUpHeader(view);
-            this.setUpNavigation(view);
-            this.setUpViewPager(view);
+            // Sets up header
+            this.viewSwitcher = (ViewSwitcher)view.findViewById(R.id.viewSwitcher);
+            this.headerImage0 = (KenBurnsView)view.findViewById(R.id.headerImage0);
+            this.headerImage1 = (KenBurnsView)view.findViewById(R.id.headerImage1);
+
+            this.headerImage0.setTransitionListener(this);
+            this.headerImage1.setTransitionListener(this);
+
+            // Sets up navigation
+            this.previousButton = view.findViewById(R.id.navigate_previous);
+            this.nextButton     = view.findViewById(R.id.navigate_next);
+
+            this.subscriptions.add(RxView.clicks(this.previousButton).subscribe(dummy -> this.previousClicks.onNext(null)));
+            this.subscriptions.add(RxView.clicks(this.nextButton).subscribe(dummy -> this.nextClicks.onNext(null)));
+
+            // Sets up ViewPager
+            this.viewPager = (ViewPager)view.findViewById(R.id.viewPager);
+            this.viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                @Override
+                public void onPageSelected(final int position) {
+                    MainScreen.this.pageChanges.onNext(position);
+                }
+            });
 
             this.addView(view);
 
@@ -332,35 +321,6 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
     //endregion
 
-    private void showSettings() {
-        ((Activity)this.getContext()).startActivityForResult(new Intent(this.getContext(), SettingsActivity.class), Constants.REQUEST_SETTINGS);
-    }
-
-    @SuppressFBWarnings({"NAB_NEEDLESS_BOOLEAN_CONSTANT_CONVERSION", "PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS"})
-    private void showAbout() {
-        new MaterialStyledDialog.Builder(this.getContext())
-            .setStyle(Style.HEADER_WITH_ICON)
-            .setHeaderColor(ContextUtils.getResourceId(this.getContext(), R.attr.primaryColor))
-            .setIcon(R.mipmap.ic_launcher)
-            .setTitle(R.string.app_name)
-            .setDescription(String.format(this.getContext().getString(R.string.app_version), BuildConfig.VERSION_NAME))
-            .setPositiveText(android.R.string.ok)
-            .setNegativeText(R.string.rate_app)
-            .onNegative((dialog, which) -> {
-                final String name = this.getContext().getPackageName();
-
-                try {
-                    this.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + name)));
-                } catch (final ActivityNotFoundException e) {
-                    this.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + name)));
-                }
-            })
-            .withIconAnimation(true)
-            .withDialogAnimation(true, Duration.NORMAL)
-            .withDivider(true)
-            .show();
-    }
-
     private void setUpDrawerMenu(@NonNull final View view) {
         final View drawerMenu = LayoutInflater.from(this.getContext()).inflate(R.layout.view_drawer_menu, this, false);
 
@@ -370,12 +330,12 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
         this.subscriptions.add(RxView.clicks(drawerMenu.findViewById(R.id.action_settings)).subscribe(dummy -> {
             this.animation.close();
-            this.showSettings();
+            ((Activity)this.getContext()).startActivityForResult(new Intent(this.getContext(), SettingsActivity.class), Constants.REQUEST_SETTINGS);
         }));
 
         this.subscriptions.add(RxView.clicks(drawerMenu.findViewById(R.id.action_about)).subscribe(dummy -> {
             this.animation.close();
-            this.showAbout();
+            ContextUtils.showAbout(this.getContext());
         }));
 
         this.addView(drawerMenu);
@@ -396,40 +356,5 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
                 }
             })
             .build();
-    }
-
-    private void setUpHeader(@NonNull final View view) {
-        this.viewSwitcher = (ViewSwitcher)view.findViewById(R.id.viewSwitcher);
-        this.headerImage0 = (KenBurnsView)view.findViewById(R.id.headerImage0);
-        this.headerImage1 = (KenBurnsView)view.findViewById(R.id.headerImage1);
-
-        this.headerImage0.setTransitionListener(this);
-        this.headerImage1.setTransitionListener(this);
-    }
-
-    private void setUpNavigation(@NonNull final View view) {
-        this.previousButton = view.findViewById(R.id.navigate_previous);
-        this.nextButton     = view.findViewById(R.id.navigate_next);
-
-        this.subscriptions.add(RxView.clicks(this.previousButton).subscribe(dummy -> this.previousClicks.onNext(null)));
-        this.subscriptions.add(RxView.clicks(this.nextButton).subscribe(dummy -> this.nextClicks.onNext(null)));
-    }
-
-    private void setUpViewPager(@NonNull final View view) {
-        this.viewPager = (ViewPager)view.findViewById(R.id.viewPager);
-        this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(final int position) {
-                MainScreen.this.pageChanges.onNext(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(final int state) {
-            }
-        });
     }
 }
