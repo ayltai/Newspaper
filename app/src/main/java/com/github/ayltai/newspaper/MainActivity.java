@@ -39,6 +39,8 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     private ConnectivityChangeReceiver receiver;
     private Snackbar                   snackbar;
 
+    private boolean rememberPosition;
+
     @Inject
     public MainActivity() {
     }
@@ -73,12 +75,10 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     protected void onDestroy() {
         super.onDestroy();
 
-        if (this.isFinishing()) {
-            this.controller.onDestroy();
-            this.controller = null;
+        if (!this.rememberPosition) Settings.resetPosition();
 
-            Settings.resetPosition();
-        }
+        this.controller.onDestroy();
+        this.controller = null;
 
         FaceDetectorFactory.release();
     }
@@ -143,7 +143,12 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Constants.REQUEST_SETTINGS && resultCode == Activity.RESULT_OK) this.startActivity(this.getBaseContext().getPackageManager().getLaunchIntentForPackage(this.getBaseContext().getPackageName()).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        if (requestCode == Constants.REQUEST_SETTINGS && resultCode == Activity.RESULT_OK) {
+            this.rememberPosition = true;
+
+            this.finish();
+            this.startActivity(this.getBaseContext().getPackageManager().getLaunchIntentForPackage(this.getBaseContext().getPackageName()).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        }
     }
 
     @Override

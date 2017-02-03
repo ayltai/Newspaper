@@ -231,11 +231,22 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         } else {
             this.hasAttached = true;
 
-            final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_list, this, false);
+            final View                view          = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_list, this, false);
+            final LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
 
             this.recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
-            this.recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            this.recyclerView.setLayoutManager(layoutManager);
             this.recyclerView.setAdapter(new ListScreen.DummyAdapter());
+
+            this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
+                    if (ListScreen.this.parentKey != null) {
+                        final int position = layoutManager.findFirstCompletelyVisibleItemPosition();
+                        Settings.setPosition(ListScreen.this.parentKey.url, position == RecyclerView.NO_POSITION ? layoutManager.findFirstVisibleItemPosition() : position);
+                    }
+                }
+            });
 
             this.swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
             this.swipeRefreshLayout.setColorSchemeResources(ContextUtils.getResourceId(this.getContext(), R.attr.primaryColor));
