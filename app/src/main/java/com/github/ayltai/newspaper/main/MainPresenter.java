@@ -7,6 +7,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import com.github.ayltai.newspaper.DaggerMainComponent;
@@ -25,10 +26,11 @@ public class MainPresenter extends Presenter<MainPresenter.View> {
 
         void updateHeaderTitle(@NonNull CharSequence title);
 
-        void updateHeaderImages(@NonNull List<String> images);
+        void updateHeaderImages(@Nullable List<String> images);
 
         boolean goBack();
 
+        @NonNull
         Observable<Integer> pageChanges();
     }
 
@@ -112,6 +114,7 @@ public class MainPresenter extends Presenter<MainPresenter.View> {
     }
 
     @VisibleForTesting
+    @NonNull
     MainAdapter createMainAdapter() {
         return DaggerMainComponent.builder().mainModule(new MainModule((Activity)this.view.getContext())).build().mainAdapter();
     }

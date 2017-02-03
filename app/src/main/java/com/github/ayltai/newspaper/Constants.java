@@ -25,7 +25,9 @@ public final class Constants {
 
     public static final int DRAWER_MENU_ANIMATION_DELAY = 250;
 
-    public static final int MAX_IMAGE_SCALE = 100;
+    public static final int MAX_IMAGE_SCALE  = 100;
+    public static final int MAX_IMAGE_WIDTH  = 2048;
+    public static final int MAX_IMAGE_HEIGHT = 2048;
 
     public static final String ENCODING_UTF8 = "UTF-8";
 

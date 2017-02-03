@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.main;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -16,11 +17,14 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ViewSwitcher;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
@@ -31,6 +35,7 @@ import com.github.ayltai.newspaper.graphics.DaggerGraphicsComponent;
 import com.github.ayltai.newspaper.graphics.GraphicsModule;
 import com.github.ayltai.newspaper.setting.SettingsActivity;
 import com.github.ayltai.newspaper.util.ContextUtils;
+import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Duration;
@@ -44,7 +49,7 @@ import rx.Observable;
 import rx.subjects.BehaviorSubject;
 
 @SuppressLint("ViewConstructor")
-public final class MainScreen extends FrameLayout implements MainPresenter.View {
+public final class MainScreen extends FrameLayout implements MainPresenter.View, KenBurnsView.TransitionListener {
     public static final class Key extends ClassKey implements Parcelable {
         public Key() {
         }
@@ -90,32 +95,6 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
     //endregion
 
-    private final ImageLoader.Callback callback = new ImageLoader.Callback() {
-        @Override
-        public void onCacheHit(final File image) {
-            // FIXME: Exception may be thrown if the bitmap dimensions are too large
-            MainScreen.this.headerImage.post(() -> MainScreen.this.headerImage.setImageBitmap(BitmapFactory.decodeFile(image.getAbsolutePath())));
-        }
-
-        @SuppressWarnings("WrongThread")
-        @Override
-        public void onCacheMiss(final File image) {
-            this.onCacheHit(image);
-        }
-
-        @Override
-        public void onStart() {
-        }
-
-        @Override
-        public void onProgress(final int progress) {
-        }
-
-        @Override
-        public void onFinish() {
-        }
-    };
-
     @Inject
     ImageLoader imageLoader;
 
@@ -123,7 +102,9 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
     private CollapsingToolbarLayout toolbar;
     private ViewPager               viewPager;
-    private KenBurnsView            headerImage;
+    private KenBurnsView            headerImage0;
+    private KenBurnsView            headerImage1;
+    private ViewSwitcher            viewSwitcher;
 
     //endregion
 
@@ -135,6 +116,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
     private boolean             isDrawerOpened;
     private GuillotineAnimation animation;
     private List<String>        images;
+    private int                 imageIndex;
+    private boolean             imageToggle;
 
     //endregion
 
@@ -165,17 +148,49 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
     }
 
     @Override
-    public void updateHeaderImages(@NonNull final List<String> images) {
-        this.images = images;
+    public void updateHeaderImages(@Nullable final List<String> images) {
+        this.images     = images;
+        this.imageIndex = 0;
 
-        this.updateHeaderImages();
+        if (this.images != null && !this.images.isEmpty()) {
+            Collections.shuffle(this.images);
+
+            if (this.imageToggle) {
+                this.updateHeaderImage(this.headerImage1);
+            } else {
+                this.updateHeaderImage(this.headerImage0);
+            }
+        }
     }
 
-    private void updateHeaderImages() {
+    private void updateHeaderImage(@NonNull final ImageView imageView) {
         if (this.images == null || this.images.isEmpty()) {
-            this.headerImage.post(() -> this.headerImage.setImageBitmap(null));
+            imageView.post(() -> imageView.setImageBitmap(null));
         } else {
-            MainScreen.this.imageLoader.loadImage(Uri.parse(this.images.get(MainScreen.RANDOM.nextInt(this.images.size()))), this.callback);
+            this.imageLoader.loadImage(Uri.parse(this.images.get(MainScreen.RANDOM.nextInt(this.images.size()))), new ImageLoader.Callback() {
+                @Override
+                public void onCacheHit(final File image) {
+                    imageView.post(() -> imageView.setImageBitmap(BitmapFactory.decodeFile(image.getAbsolutePath(), ImageUtils.createOptions(image, Constants.MAX_IMAGE_WIDTH, Constants.MAX_IMAGE_HEIGHT))));
+                }
+
+                @SuppressWarnings("WrongThread")
+                @Override
+                public void onCacheMiss(final File image) {
+                    this.onCacheHit(image);
+                }
+
+                @Override
+                public void onStart() {
+                }
+
+                @Override
+                public void onProgress(final int progress) {
+                }
+
+                @Override
+                public void onFinish() {
+                }
+            });
         }
     }
 
@@ -190,9 +205,27 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
         return false;
     }
 
+    @NonNull
     @Override
     public Observable<Integer> pageChanges() {
         return this.pageChanges;
+    }
+
+    @Override
+    public void onTransitionStart(final Transition transition) {
+    }
+
+    @Override
+    public void onTransitionEnd(final Transition transition) {
+        if (this.imageToggle) {
+            this.updateHeaderImage(this.headerImage0);
+            this.viewSwitcher.showPrevious();
+        } else {
+            this.updateHeaderImage(this.headerImage1);
+            this.viewSwitcher.showNext();
+        }
+
+        this.imageToggle = !this.imageToggle;
     }
 
     //region Lifecycle
@@ -218,17 +251,12 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View 
 
             this.toolbar = (CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout);
 
-            this.headerImage = (KenBurnsView)view.findViewById(R.id.headerImage);
-            this.headerImage.setTransitionListener(new KenBurnsView.TransitionListener() {
-                @Override
-                public void onTransitionStart(final Transition transition) {
-                }
+            this.viewSwitcher = (ViewSwitcher)view.findViewById(R.id.viewSwitcher);
+            this.headerImage0 = (KenBurnsView)view.findViewById(R.id.headerImage0);
+            this.headerImage1 = (KenBurnsView)view.findViewById(R.id.headerImage1);
 
-                @Override
-                public void onTransitionEnd(final Transition transition) {
-                    MainScreen.this.updateHeaderImages();
-                }
-            });
+            this.headerImage0.setTransitionListener(this);
+            this.headerImage1.setTransitionListener(this);
 
             this.viewPager = (ViewPager)view.findViewById(R.id.viewPager);
             this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
