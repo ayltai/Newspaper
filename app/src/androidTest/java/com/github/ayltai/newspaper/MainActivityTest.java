@@ -1,7 +1,6 @@
 package com.github.ayltai.newspaper;
 
 import android.app.Activity;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
@@ -19,9 +18,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.github.ayltai.newspaper.util.MoreViewMatchers;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
-
-import junit.framework.AssertionFailedError;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -47,21 +45,14 @@ public final class MainActivityTest {
         for (int i = 0; i < shortCategories.length; i++) {
             final String longCategory = longCategories[i];
 
-            Espresso.onView(ViewMatchers.withId(R.id.navigate_next))
-                .perform(ViewActions.click());
-
             Espresso.onView(ViewMatchers.withId(R.id.collapsingToolbarLayout))
-                .check((view, noViewFoundException) -> {
-                    if (noViewFoundException == null) {
-                        final CollapsingToolbarLayout toolbar = (CollapsingToolbarLayout)view;
-
-                        if (toolbar.getTitle() == null) throw new AssertionFailedError("Expected: " + longCategory + "\n     Got: null");
-                        if (longCategory.equals(toolbar.getTitle().toString())) throw new AssertionFailedError("Expected: " + longCategory + "\n     Got: " + toolbar.getTitle());
-                    }
-                });
+                .check(ViewAssertions.matches(MoreViewMatchers.withTitle(longCategory)));
 
             Espresso.onView(Matchers.allOf(ViewMatchers.withText(shortCategories[i]), ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.tabLayout))))
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+            Espresso.onView(ViewMatchers.withId(R.id.navigate_next))
+                .perform(ViewActions.click());
         }
     }
 
