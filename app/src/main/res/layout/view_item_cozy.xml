@@ -7,8 +7,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_3"
-        android:layout_marginBottom="@dimen/space_3"
+        android:layout_marginBottom="@dimen/space_5"
         app:cardCornerRadius="@dimen/item_corner_radius_cozy"
         app:cardBackgroundColor="?attr/cardBackground">
         <LinearLayout
