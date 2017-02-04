@@ -32,6 +32,10 @@ public final class FaceDetectorFactory {
         }
     }
 
+    public static boolean isValid() {
+        return FaceDetectorFactory.context != null && FaceDetectorFactory.detector != null && FaceDetectorFactory.detector.isOperational();
+    }
+
     @NonNull
     static FaceDetector getDetector() {
         if (FaceDetectorFactory.context == null) throw new IllegalStateException(FaceDetectorFactory.ERROR_MESSAGE);

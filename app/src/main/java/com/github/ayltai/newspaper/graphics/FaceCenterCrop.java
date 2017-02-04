@@ -78,11 +78,10 @@ public final class FaceCenterCrop {
     }
 
     private static void detectFace(@NonNull final Bitmap bitmap, @NonNull final PointF centerOfAllFaces) {
-        final FaceDetector faceDetector = FaceDetectorFactory.getDetector();
-
-        if (faceDetector.isOperational()) {
-            final SparseArray<Face> faces      = faceDetector.detect(new Frame.Builder().setBitmap(bitmap).build());
-            final int               totalFaces = faces.size();
+        if (FaceDetectorFactory.isValid()) {
+            final FaceDetector      faceDetector = FaceDetectorFactory.getDetector();
+            final SparseArray<Face> faces        = faceDetector.detect(new Frame.Builder().setBitmap(bitmap).build());
+            final int               totalFaces   = faces.size();
 
             if (totalFaces > 0) {
                 float sumX = 0f;
@@ -93,8 +92,8 @@ public final class FaceCenterCrop {
 
                     FaceCenterCrop.getFaceCenter(faces.get(faces.keyAt(i)), faceCenter);
 
-                    sumX = sumX + faceCenter.x;
-                    sumY = sumY + faceCenter.y;
+                    sumX += faceCenter.x;
+                    sumY += faceCenter.y;
                 }
 
                 centerOfAllFaces.set(sumX / totalFaces, sumY / totalFaces);
