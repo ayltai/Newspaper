@@ -50,6 +50,7 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
 
     private CompositeSubscription subscriptions;
     private Favorite              favorite;
+    private int                   fakeCount;
 
     //endregion
 
@@ -81,12 +82,16 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
 
     @Nullable
     /* final */ Source getSource(final int index) {
+        if (this.realm.isClosed()) return null;
+
         return this.favorite == null ? null : this.favorite.getSources().get(index);
     }
 
     @Override
     public /* final */ int getCount() {
-        return this.favorite == null ? 0 : this.favorite.getSources().size();
+        if (this.realm.isClosed()) return this.fakeCount;
+
+        return this.fakeCount = this.favorite == null ? 0 : this.favorite.getSources().size();
     }
 
     @Override
@@ -134,6 +139,8 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
     @NonNull
     @Override
     public final CharSequence getPageTitle(final int position) {
+        if (this.realm.isClosed()) return Constants.EMPTY;
+
         return this.titles.get(this.favorite.getSources().get(position).getUrl());
     }
 

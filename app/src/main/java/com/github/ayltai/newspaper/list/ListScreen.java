@@ -145,6 +145,8 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @Override
     public void setItems(@NonNull final ListScreen.Key parentKey, @Nullable final Feed feed) {
+        if (this.realm.isClosed()) return;
+
         if (feed != null) {
             feed.updateImages();
 

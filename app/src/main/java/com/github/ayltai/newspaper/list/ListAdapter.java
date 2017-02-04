@@ -38,6 +38,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
     private final ListScreen.Key                     parentKey;
     private final int                                listViewType;
     private final Realm                              realm;
+    private final Feed                               feed;
 
     private final Subscriber<ItemUpdatedEvent> subscriber = new Subscriber<ItemUpdatedEvent>() {
         @Override
@@ -77,7 +78,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
         }
     };
 
-    private Feed feed;
+    private int fakeCount;
 
     //endregion
 
@@ -95,7 +96,9 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
 
     @Override
     public int getItemCount() {
-        return this.feed == null ? 0 : this.feed.getItems().size();
+        if (this.realm.isClosed()) return this.fakeCount;
+
+        return this.fakeCount = this.feed == null ? 0 : this.feed.getItems().size();
     }
 
     @NonNull
@@ -115,6 +118,8 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
 
     @Override
     public void onBindViewHolder(@NonNull final ItemViewHolder holder, final int position) {
+        if (this.realm.isClosed()) return;
+
         this.map.get(holder).bind(this.parentKey, this.feed.getItems().get(position), this.listViewType);
     }
 
