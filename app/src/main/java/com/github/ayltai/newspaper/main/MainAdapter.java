@@ -2,6 +2,8 @@ package com.github.ayltai.newspaper.main;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -14,10 +16,12 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.ContextModule;
 import com.github.ayltai.newspaper.DaggerMainComponent;
 import com.github.ayltai.newspaper.MainComponent;
 import com.github.ayltai.newspaper.MainModule;
+import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataModule;
 import com.github.ayltai.newspaper.data.Favorite;
@@ -36,7 +40,8 @@ import rx.subscriptions.CompositeSubscription;
 public class MainAdapter extends PagerAdapter implements Closeable {
     //region Variables
 
-    private final SparseArrayCompat<View> views = new SparseArrayCompat<>();
+    private final Map<String, String>     titles = new HashMap<>();
+    private final SparseArrayCompat<View> views  = new SparseArrayCompat<>();
     private final Context                 context;
     private final MainComponent           component;
 
@@ -57,6 +62,13 @@ public class MainAdapter extends PagerAdapter implements Closeable {
             .dataModule(new DataModule(this.context))
             .build()
             .inject(this);
+
+        final String[] titles = this.context.getResources().getStringArray(R.array.pref_category_short_entries);
+        final String[] urls   = this.context.getResources().getStringArray(R.array.pref_category_values);
+
+        for (int i = 0; i < titles.length; i++) this.titles.put(urls[i], titles[i]);
+
+        this.titles.put(Constants.SOURCE_BOOKMARK, this.context.getString(R.string.title_bookmark));
 
         //noinspection InstanceVariableUsedBeforeInitialized
         this.favoriteManager.getFavorite()
@@ -122,7 +134,7 @@ public class MainAdapter extends PagerAdapter implements Closeable {
     @NonNull
     @Override
     public final CharSequence getPageTitle(final int position) {
-        return this.favorite.getSources().get(position).getName();
+        return this.titles.get(this.favorite.getSources().get(position).getUrl());
     }
 
     @Override

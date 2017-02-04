@@ -40,8 +40,13 @@ public final class MainActivityTest {
     }
 
     @Test
-    public void tapThroughAllTabs() {
-        for (final String category : InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.pref_category_entries)) {
+    public void swipeThroughAllTabs() {
+        final String[] shortCategories = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.pref_category_short_entries);
+        final String[] longCategories  = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.pref_category_entries);
+
+        for (int i = 0; i < shortCategories.length; i++) {
+            final String longCategory = longCategories[i];
+
             Espresso.onView(ViewMatchers.withId(R.id.navigate_next))
                 .perform(ViewActions.click());
 
@@ -50,10 +55,13 @@ public final class MainActivityTest {
                     if (noViewFoundException == null) {
                         final CollapsingToolbarLayout toolbar = (CollapsingToolbarLayout)view;
 
-                        if (toolbar.getTitle() == null) throw new AssertionFailedError("Expected: " + category + "\n     Got: null");
-                        if (category.equals(toolbar.getTitle().toString())) throw new AssertionFailedError("Expected: " + category + "\n     Got: " + toolbar.getTitle());
+                        if (toolbar.getTitle() == null) throw new AssertionFailedError("Expected: " + longCategory + "\n     Got: null");
+                        if (longCategory.equals(toolbar.getTitle().toString())) throw new AssertionFailedError("Expected: " + longCategory + "\n     Got: " + toolbar.getTitle());
                     }
                 });
+
+            Espresso.onView(Matchers.allOf(ViewMatchers.withText(shortCategories[i]), ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.tabLayout))))
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
         }
     }
 

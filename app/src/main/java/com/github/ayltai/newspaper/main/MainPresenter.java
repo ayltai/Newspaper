@@ -124,7 +124,7 @@ public class MainPresenter extends Presenter<MainPresenter.View> {
             final Source source = this.adapter.getSource(this.currentPosition);
 
             if (source != null) {
-                this.view.updateHeaderTitle(this.adapter.getPageTitle(this.currentPosition));
+                this.view.updateHeaderTitle(source.getName());
                 this.view.updateHeaderImages(this.images.get(source.getUrl()));
             }
         }

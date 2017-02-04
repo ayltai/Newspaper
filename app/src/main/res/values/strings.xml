@@ -30,6 +30,29 @@
     <string name="pref_compact_layout">Compact layout</string>
     <string name="pref_dark_theme">Dark theme</string>
     <string name="pref_categories">Categories</string>
+    <string-array name="pref_category_short_entries">
+        <item>Top</item>
+        <item>HK</item>
+        <item>World</item>
+        <item>Int\'l</item>
+        <item>Bilateral</item>
+        <item>Econ</item>
+        <item>Finc</item>
+        <item>Real Est</item>
+        <item>Ent</item>
+        <item>HK Ent</item>
+        <item>Int\'l Ent</item>
+        <item>Sports</item>
+        <item>Basketball</item>
+        <item>Other Sports</item>
+        <item>Supplement</item>
+        <item>Tech</item>
+        <item>Travel</item>
+        <item>Food</item>
+        <item>Lifestyle</item>
+        <item>Health</item>
+        <item>Others</item>
+    </string-array>
     <string-array name="pref_category_entries">
         <item>Top News</item>
         <item>Hong Kong</item>
@@ -43,7 +66,6 @@
         <item>Hong Kong Entertainment</item>
         <item>International Entertainment</item>
         <item>Sports</item>
-        <item>Soccer</item>
         <item>Basketball</item>
         <item>Other Sports</item>
         <item>Supplement</item>
@@ -69,7 +91,6 @@
         <item>https://hk.news.yahoo.com/rss/hongkong-entertainment</item>
         <item>https://hk.news.yahoo.com/rss/international-entertainment</item>
         <item>https://hk.news.yahoo.com/rss/sports</item>
-        <item>https://hk.news.yahoo.com/rss/soccer</item>
         <item>https://hk.news.yahoo.com/rss/basketball</item>
         <item>https://hk.news.yahoo.com/rss/other-sports</item>
         <item>https://hk.news.yahoo.com/rss/supplement</item>
