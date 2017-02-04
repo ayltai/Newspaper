@@ -29,12 +29,12 @@ public class Source extends RealmObject {
     //region Properties
 
     @NonNull
-    public final String getUrl() {
+    public /* final */ String getUrl() {
         return this.url;
     }
 
     @NonNull
-    public final String getName() {
+    public /* final */ String getName() {
         return this.name;
     }
 

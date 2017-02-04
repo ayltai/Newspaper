@@ -92,7 +92,7 @@ public class Feed extends RealmObject {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public final boolean equals(final Object obj) {
         if (this == obj) return true;
 
         if (obj instanceof Feed) {
@@ -113,7 +113,7 @@ public class Feed extends RealmObject {
 
     @SuppressWarnings("checkstyle:magicnumber")
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return 31 * this.url.hashCode() + this.items.hashCode();
     }
 }

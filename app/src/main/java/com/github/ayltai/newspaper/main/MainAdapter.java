@@ -37,7 +37,7 @@ import com.github.ayltai.newspaper.util.LogUtils;
 import io.realm.Realm;
 import rx.subscriptions.CompositeSubscription;
 
-public class MainAdapter extends PagerAdapter implements Closeable {
+public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
     //region Variables
 
     private final Map<String, String>     titles = new HashMap<>();
@@ -80,12 +80,12 @@ public class MainAdapter extends PagerAdapter implements Closeable {
     }
 
     @Nullable
-    public final Source getSource(final int index) {
+    /* final */ Source getSource(final int index) {
         return this.favorite == null ? null : this.favorite.getSources().get(index);
     }
 
     @Override
-    public final int getCount() {
+    public /* final */ int getCount() {
         return this.favorite == null ? 0 : this.favorite.getSources().size();
     }
 
@@ -138,7 +138,7 @@ public class MainAdapter extends PagerAdapter implements Closeable {
     }
 
     @Override
-    public final void close() {
+    public /* final */ void close() {
         for (int i = 0; i < this.views.size(); i++) this.closeView(this.views.get(this.views.keyAt(i)));
 
         if (this.subscriptions != null && this.subscriptions.hasSubscriptions()) {

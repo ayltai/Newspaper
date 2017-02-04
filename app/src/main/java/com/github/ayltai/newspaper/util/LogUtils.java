@@ -7,13 +7,13 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.github.ayltai.newspaper.BuildConfig;
 
 @SuppressWarnings("checkstyle:finalclass")
-public class LogUtils {
+public /* final */ class LogUtils {
     private static LogUtils instance;
 
     public static LogUtils getInstance() {
-        if (instance == null) instance = new LogUtils();
+        if (LogUtils.instance == null) LogUtils.instance = new LogUtils();
 
-        return instance;
+        return LogUtils.instance;
     }
 
     private LogUtils() {

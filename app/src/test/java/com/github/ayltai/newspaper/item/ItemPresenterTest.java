@@ -60,7 +60,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     @Override
     protected ItemPresenter createPresenter() {
         final FeedManager feedManager = Mockito.mock(FeedManager.class);
-        Mockito.when(feedManager.getFeed(ItemPresenterTest.KEY_PARENT_URL)).thenReturn(Observable.just(this.feed));
+        Mockito.doReturn(Observable.just(this.feed)).when(feedManager).getFeed(ItemPresenterTest.KEY_PARENT_URL);
 
         final ItemPresenter presenter = Mockito.spy(new ItemPresenter(null));
         Mockito.doReturn(feedManager).when(presenter).getFeedManager();
@@ -80,10 +80,10 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     protected ItemPresenter.View createView() {
         final ItemPresenter.View view = Mockito.mock(ItemPresenter.View.class);
 
-        Mockito.when(view.clicks()).thenReturn(this.clicks);
-        Mockito.when(view.zooms()).thenReturn(this.zooms);
-        Mockito.when(view.bookmarks()).thenReturn(this.bookmarks);
-        Mockito.when(view.shares()).thenReturn(this.shares);
+        Mockito.doReturn(this.clicks).when(view).clicks();
+        Mockito.doReturn(this.zooms).when(view).zooms();
+        Mockito.doReturn(this.bookmarks).when(view).bookmarks();
+        Mockito.doReturn(this.shares).when(view).shares();
 
         return view;
     }
@@ -93,12 +93,12 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     public void setUp() throws Exception {
         super.setUp();
 
-        Mockito.when(this.item.getTitle()).thenReturn(ItemPresenterTest.ITEM_TITLE);
-        Mockito.when(this.item.getDescription()).thenReturn(ItemPresenterTest.ITEM_DESCRIPTION);
-        Mockito.when(this.item.getSource()).thenReturn(ItemPresenterTest.ITEM_SOURCE);
-        Mockito.when(this.item.getLink()).thenReturn(ItemPresenterTest.ITEM_LINK);
-        Mockito.when(this.item.getMediaUrl()).thenReturn(ItemPresenterTest.ITEM_MEDIA_URL);
-        Mockito.when(this.item.getPublishDate()).thenReturn(ItemPresenterTest.ITEM_PUBLISH_DATE);
+        Mockito.doReturn(ItemPresenterTest.ITEM_TITLE).when(this.item).getTitle();
+        Mockito.doReturn(ItemPresenterTest.ITEM_DESCRIPTION).when(this.item).getDescription();
+        Mockito.doReturn(ItemPresenterTest.ITEM_SOURCE).when(this.item).getSource();
+        Mockito.doReturn(ItemPresenterTest.ITEM_LINK).when(this.item).getLink();
+        Mockito.doReturn(ItemPresenterTest.ITEM_MEDIA_URL).when(this.item).getMediaUrl();
+        Mockito.doReturn(ItemPresenterTest.ITEM_PUBLISH_DATE).when(this.item).getPublishDate();
     }
 
     //region Tests

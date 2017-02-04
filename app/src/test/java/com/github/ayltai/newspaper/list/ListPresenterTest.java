@@ -39,10 +39,10 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
     @Override
     protected ListPresenter createPresenter() {
         final FeedManager feedManager = Mockito.mock(FeedManager.class);
-        Mockito.when(feedManager.getFeed(ListPresenterTest.KEY_PARENT_URL)).thenReturn(Observable.just(this.feed));
+        Mockito.doReturn(Observable.just(this.feed)).when(feedManager).getFeed(ListPresenterTest.KEY_PARENT_URL);
 
         final ListPresenter presenter = Mockito.spy(new ListPresenter());
-        Mockito.when(presenter.getFeedManager()).thenReturn(feedManager);
+        Mockito.doReturn(feedManager).when(presenter).getFeedManager();
 
         final RxBus bus = Mockito.mock(RxBus.class);
         Mockito.doReturn(bus).when(presenter).bus();
@@ -57,9 +57,7 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
     @Override
     protected ListPresenter.View createView() {
         final ListPresenter.View view = Mockito.mock(ListPresenter.View.class);
-
-        Mockito.when(view.refreshes()).thenReturn(this.refreshes);
-
+        Mockito.doReturn(this.refreshes).when(view).refreshes();
         return view;
     }
 

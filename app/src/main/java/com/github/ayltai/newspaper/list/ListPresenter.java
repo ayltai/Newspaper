@@ -33,7 +33,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class ListPresenter extends Presenter<ListPresenter.View> {
+public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     public interface View extends Presenter.View {
         void setItems(@NonNull ListScreen.Key parentKey, @Nullable Feed feed);
 
@@ -209,7 +209,7 @@ public class ListPresenter extends Presenter<ListPresenter.View> {
 
     @VisibleForTesting
     @NonNull
-    FeedManager getFeedManager() {
+    /* private final */ FeedManager getFeedManager() {
         return new FeedManager(this.realm);
     }
 

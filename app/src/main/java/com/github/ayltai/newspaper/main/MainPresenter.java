@@ -19,7 +19,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
 
-public class MainPresenter extends Presenter<MainPresenter.View> {
+public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
     public interface View extends Presenter.View, Closeable {
         void bind(@NonNull MainAdapter adapter);
 
@@ -132,7 +132,7 @@ public class MainPresenter extends Presenter<MainPresenter.View> {
 
     @VisibleForTesting
     @NonNull
-    MainAdapter createMainAdapter() {
+    /* private final */ MainAdapter createMainAdapter() {
         return DaggerMainComponent.builder().mainModule(new MainModule((Activity)this.view.getContext())).build().mainAdapter();
     }
 }
