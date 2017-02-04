@@ -25,6 +25,7 @@ import com.github.ayltai.newspaper.rss.DaggerRssComponent;
 import com.github.ayltai.newspaper.rss.Item;
 import com.github.ayltai.newspaper.rss.RssModule;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
+import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -65,7 +66,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         this.realm = realm;
         this.key   = key;
 
-        if (this.realm.isClosed()) return;
+        if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
         if (this.isViewAttached() && !this.isBound) {
             this.getFeedManager().getFeed(this.key.getUrl())
@@ -95,7 +96,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     private void bindFromRemote(final int timeout) {
         if (this.refreshSubscription != null) this.refreshSubscription.unsubscribe();
 
-        if (this.realm.isClosed()) return;
+        if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
         this.refreshSubscription = this.client.get(this.key.getUrl())
             .doOnNext(data -> {
@@ -148,7 +149,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     private void showUpdateIndicator(final Feed feed) {
         if (BuildConfig.DEBUG) Log.i(this.getClass().getSimpleName(), "Update check finished");
 
-        if (this.realm.isClosed()) return;
+        if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
         if (this.feed != null && !this.feed.getItems().isEmpty() && !feed.getItems().isEmpty()) {
             final Item i = this.feed.getItems().get(0);
