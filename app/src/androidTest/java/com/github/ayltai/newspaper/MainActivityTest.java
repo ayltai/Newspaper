@@ -38,7 +38,26 @@ public final class MainActivityTest {
     }
 
     @Test
-    public void swipeThroughAllTabs() {
+    public void openFirstItemThenSwipeThroughAllTabs() {
+        // Switches to "HK" tab
+        Espresso.onView(ViewMatchers.withId(R.id.navigate_next))
+            .perform(ViewActions.click());
+
+        // Opens first item
+        Espresso.onView(Matchers.allOf(ViewMatchers.withId(R.id.recyclerView), ViewMatchers.isDisplayed()))
+            .perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
+
+        // Asserts that the title is expected
+        Espresso.onView(ViewMatchers.withId(R.id.title))
+            .check(ViewAssertions.matches(ViewMatchers.withText("馬時亨冀3月就票價機制達協議 不覺得有驚天動地改變")));
+
+        Espresso.pressBack();
+
+        // Switches to "Top" tab
+        Espresso.onView(ViewMatchers.withId(R.id.navigate_previous))
+            .perform(ViewActions.click());
+
+        // Swipes through all tabs
         final String[] shortCategories = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.pref_category_short_entries);
         final String[] longCategories  = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.pref_category_entries);
 
@@ -54,20 +73,5 @@ public final class MainActivityTest {
             Espresso.onView(ViewMatchers.withId(R.id.navigate_next))
                 .perform(ViewActions.click());
         }
-    }
-
-    @Test
-    public void openFirstItem() {
-        // Switches to "HK" tab
-        Espresso.onView(ViewMatchers.withId(R.id.navigate_next))
-            .perform(ViewActions.click());
-
-        // Opens first item
-        Espresso.onView(Matchers.allOf(ViewMatchers.withId(R.id.recyclerView), ViewMatchers.isDisplayed()))
-            .perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
-
-        // Asserts that the title is expected
-        Espresso.onView(ViewMatchers.withId(R.id.title))
-            .check(ViewAssertions.matches(ViewMatchers.withText("馬時亨冀3月就票價機制達協議 不覺得有驚天動地改變")));
     }
 }
