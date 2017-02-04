@@ -174,6 +174,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
             }
 
             this.imageLoader.loadImage(Uri.parse(this.images.get(this.imageIndex++)), new ImageLoaderCallback(imageView));
+
+            if (this.imageIndex < this.images.size()) this.imageLoader.prefetch(Uri.parse(this.images.get(this.imageIndex)));
         }
     }
 
