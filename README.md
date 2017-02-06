@@ -30,6 +30,7 @@ This app is made with the support of open source software:
 * [BigImageViewer](https://github.com/Piasy/BigImageViewer)
 * [RecyclerView Animators](https://github.com/wasabeef/recyclerview-animators)
 * [KenBurnsView](https://github.com/flavioarfaria/KenBurnsView)
+* [PanoramaImageView](https://github.com/gjiazhe/PanoramaImageView)
 * [MaterialStyledDialogs](https://github.com/javiersantos/MaterialStyledDialogs)
 * [Guillotine Animation](https://github.com/Yalantis/GuillotineMenu-Android)
 * [SmallBang](https://github.com/hanks-zyh/SmallBang)

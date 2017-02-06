@@ -15,7 +15,6 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,21 +23,22 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.graphics.DaggerGraphicsComponent;
+import com.github.ayltai.newspaper.graphics.GraphicsModule;
+import com.github.ayltai.newspaper.graphics.ImageLoaderCallback;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
-import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.IntentUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
-import com.github.ayltai.newspaper.widget.FaceCenteredImageView;
-import com.github.piasy.biv.indicator.progresspie.ProgressPieIndicator;
-import com.github.piasy.biv.view.BigImageView;
+import com.github.piasy.biv.loader.ImageLoader;
+import com.gjiazhe.panoramaimageview.GyroscopeObserver;
+import com.gjiazhe.panoramaimageview.PanoramaImageView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
@@ -141,7 +141,13 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     //region Variables
 
+    private GyroscopeObserver observer = new GyroscopeObserver();
+
+    @Inject
+    ImageLoader imageLoader;
+
     private CompositeSubscription subscriptions;
+    private ImageLoaderCallback   callback;
     private boolean               isBookmarked;
     private boolean               hasAttached;
 
@@ -149,23 +155,28 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     //region Components
 
-    private AppBarLayout appBarLayout;
-    private TextView     toolbarTitle;
-    private ImageView    bookmark;
-    private View         share;
-    private TextView     title;
-    private TextView     description;
-    private TextView     source;
-    private TextView     publishDate;
-    private ViewGroup    thumbnailContainer;
-    private BigImageView thumbnail;
-    private SmallBang    smallBang;
+    private AppBarLayout      appBarLayout;
+    private TextView          toolbarTitle;
+    private ImageView         bookmark;
+    private View              share;
+    private TextView          title;
+    private TextView          description;
+    private TextView          source;
+    private TextView          publishDate;
+    private ViewGroup         thumbnailContainer;
+    private PanoramaImageView thumbnail;
+    private SmallBang         smallBang;
 
     //endregion
 
     @Inject
     public ItemScreen(@NonNull final Context context) {
         super(context);
+
+        DaggerGraphicsComponent.builder()
+            .graphicsModule(new GraphicsModule(context))
+            .build()
+            .inject(this);
     }
 
     //region Properties
@@ -235,12 +246,12 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     @Override
     public void setThumbnail(@Nullable final String thumbnail, @Constants.ListViewType final int type) {
         if (this.hasAttached) {
-            if (TextUtils.isEmpty(thumbnail)) {
+            if (TextUtils.isEmpty(thumbnail) || !ItemUtils.hasOriginalMediaUrl(thumbnail)) {
                 this.appBarLayout.setExpanded(false, false);
             } else {
                 this.appBarLayout.setExpanded(true, false);
 
-                this.thumbnail.showImage(Uri.parse(thumbnail), Uri.parse(ItemUtils.getOriginalMediaUrl(thumbnail)));
+                this.imageLoader.loadImage(Uri.parse(ItemUtils.getOriginalMediaUrl(thumbnail)), this.callback);
             }
         }
     }
@@ -322,8 +333,6 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
         if (this.hasAttached) {
             this.thumbnailContainer.removeViewAt(0);
-
-            this.initThumbnail();
         } else {
             this.hasAttached = true;
 
@@ -346,12 +355,14 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             toolbar.setNavigationIcon(drawable);
             toolbar.setNavigationOnClickListener(v -> Flow.get(v).goBack());
 
-            this.initThumbnail();
-
             this.addView(view);
         }
 
+        this.initThumbnail();
+
         this.attachEvents();
+
+        this.observer.register(this.getContext());
 
         this.attachedToWindow.onNext(null);
     }
@@ -359,6 +370,8 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+
+        this.observer.unregister();
 
         this.smallBang = null;
 
@@ -391,22 +404,10 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     }
 
     private void initThumbnail() {
-        this.thumbnail = (BigImageView)LayoutInflater.from(this.getContext()).inflate(R.layout.view_image, this.thumbnailContainer, false);
-        this.thumbnail.setProgressIndicator(new ProgressPieIndicator());
+        this.thumbnailContainer.addView(this.thumbnail = (PanoramaImageView)LayoutInflater.from(this.getContext()).inflate(R.layout.view_item_thumbnail, this.thumbnailContainer, false));
 
-        if (this.thumbnail instanceof FaceCenteredImageView) {
-            final Activity activity = ContextUtils.getActivity(this.getContext());
+        this.callback = new ImageLoaderCallback(this.thumbnail);
 
-            if (activity != null) {
-                final DisplayMetrics metrics = new DisplayMetrics();
-                activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-                ((FaceCenteredImageView)this.thumbnail).setScreenWidth(metrics.widthPixels);
-            }
-        }
-
-        this.thumbnailContainer.addView(this.thumbnail);
-
-        ImageUtils.configure((SubsamplingScaleImageView)this.thumbnail.getChildAt(0));
+        this.thumbnail.setGyroscopeObserver(this.observer);
     }
 }
