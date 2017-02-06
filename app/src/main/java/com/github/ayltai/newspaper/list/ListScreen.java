@@ -175,13 +175,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             this.recyclerView.setVisibility(View.GONE);
             this.empty.setVisibility(View.VISIBLE);
         } else {
-            if (this.resetPosition) {
-                this.resetPosition = false;
-
-                Settings.setPosition(this.parentKey.url, 0);
-            } else {
-                this.recyclerView.scrollToPosition(Settings.getPosition(this.parentKey.url));
-            }
+            this.restoreItemPosition();
 
             this.recyclerView.setVisibility(View.VISIBLE);
             this.empty.setVisibility(View.GONE);
@@ -303,6 +297,16 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         }
 
         this.empty.removeAllViews();
+    }
+
+    private void restoreItemPosition() {
+        if (this.resetPosition) {
+            this.resetPosition = false;
+
+            Settings.setPosition(this.parentKey.url, 0);
+        } else {
+            this.recyclerView.scrollToPosition(Settings.getPosition(this.parentKey.url));
+        }
     }
 
     private static final class DummyAdapter extends RecyclerView.Adapter<ListScreen.DummyViewHolder> {
