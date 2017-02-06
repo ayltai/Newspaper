@@ -2,28 +2,29 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/headerContainer"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="@dimen/header_image_height">
     <ViewSwitcher
         android:id="@+id/viewSwitcher"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:inAnimation="@android:anim/fade_in"
         android:outAnimation="@android:anim/fade_out">
         <com.flaviofaria.kenburnsview.KenBurnsView
             android:id="@+id/headerImage0"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/header_image_height"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop" />
         <com.flaviofaria.kenburnsview.KenBurnsView
             android:id="@+id/headerImage1"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/header_image_height"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop" />
     </ViewSwitcher>
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/header_image_height"
+        android:layout_height="match_parent"
         android:background="@drawable/text_protection_scrim" />
     <ImageView
         android:id="@+id/navigate_previous"

@@ -41,6 +41,7 @@ This app is made with the support of open source software:
 * [RxAndroid](https://github.com/ReactiveX/RxAndroid)
 * [RxBinding](https://github.com/JakeWharton/RxBinding)
 * [Dagger 2](https://google.github.io/dagger)
+* [DebugDrawer](https://github.com/palaima/DebugDrawer)
 * [Espresso](https://google.github.io/android-testing-support-library/)
 * [JUnit 4](https://github.com/junit-team/junit4)
 * [Mockito](https://github.com/mockito/mockito)

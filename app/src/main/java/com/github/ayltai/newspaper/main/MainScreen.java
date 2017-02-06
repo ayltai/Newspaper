@@ -19,17 +19,20 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
+import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.graphics.DaggerGraphicsComponent;
 import com.github.ayltai.newspaper.graphics.GraphicsModule;
 import com.github.ayltai.newspaper.graphics.ImageLoaderCallback;
+import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.setting.SettingsActivity;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -100,6 +103,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
     private CollapsingToolbarLayout toolbar;
     private ViewPager               viewPager;
+    private View                    headerContainer;
     private KenBurnsView            headerImage0;
     private KenBurnsView            headerImage1;
     private ViewSwitcher            viewSwitcher;
@@ -268,14 +272,16 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
         if (!this.hasAttached) {
             this.hasAttached = true;
 
-            final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, false);
+            final ViewGroup view = (ViewGroup)LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, false);
+            if (BuildConfig.DEBUG) view.removeView(view.findViewById(R.id.statusBarPadding));
 
             this.toolbar = (CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout);
 
             // Sets up header
-            this.viewSwitcher = (ViewSwitcher)view.findViewById(R.id.viewSwitcher);
-            this.headerImage0 = (KenBurnsView)view.findViewById(R.id.headerImage0);
-            this.headerImage1 = (KenBurnsView)view.findViewById(R.id.headerImage1);
+            this.headerContainer = view.findViewById(R.id.headerContainer);
+            this.viewSwitcher    = (ViewSwitcher)view.findViewById(R.id.viewSwitcher);
+            this.headerImage0    = (KenBurnsView)view.findViewById(R.id.headerImage0);
+            this.headerImage1    = (KenBurnsView)view.findViewById(R.id.headerImage1);
 
             this.headerImage0.setTransitionListener(this);
             this.headerImage1.setTransitionListener(this);
@@ -305,6 +311,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
             this.hasAttached = true;
         }
 
+        this.headerContainer.setVisibility(Settings.isHeaderImageEnabled(this.getContext()) ? View.VISIBLE : View.GONE);
+
         this.attachedToWindow.onNext(null);
     }
 
@@ -328,7 +336,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
     //endregion
 
     private void setUpDrawerMenu(@NonNull final View view) {
-        final View drawerMenu = LayoutInflater.from(this.getContext()).inflate(R.layout.view_drawer_menu, this, false);
+        final ViewGroup drawerMenu = (ViewGroup)LayoutInflater.from(this.getContext()).inflate(R.layout.view_drawer_menu, this, false);
+        if (BuildConfig.DEBUG) drawerMenu.removeView(drawerMenu.findViewById(R.id.statusBarPadding));
 
         this.subscriptions.add(RxView.clicks(drawerMenu).subscribe(dummy -> {
             // Prevent click-through

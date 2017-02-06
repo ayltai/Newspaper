@@ -208,16 +208,26 @@ dependencies {
     compile 'com.flaviofaria:kenburnsview:1.0.7'
     compile 'com.gjiazhe:PanoramaImageView:1.0'
 
-    // Facebook Stetho
+    // Debugging
+    debugCompile 'jp.wasabeef:takt:1.0.3'
+    debugCompile ('io.palaima.debugdrawer:debugdrawer:0.7.0') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
+    debugCompile ('io.palaima.debugdrawer:debugdrawer-commons:0.7.0') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    debugCompile ('io.palaima.debugdrawer:debugdrawer-actions:0.7.0') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    debugCompile ('io.palaima.debugdrawer:debugdrawer-fps:0.7.0') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
     debugCompile 'com.facebook.stetho:stetho:1.4.2'
     debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
-
-    // LeakCanary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     testCompile  'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-
-    // Takt
-    debugCompile 'jp.wasabeef:takt:1.0.3'
 
     // Tests
     testCompile 'junit:junit:4.12'
