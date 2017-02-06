@@ -31,6 +31,7 @@ import com.github.ayltai.newspaper.graphics.GraphicsModule;
 import com.github.ayltai.newspaper.graphics.ImageLoaderCallback;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
+import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.IntentUtils;
@@ -155,17 +156,17 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     //region Components
 
-    private AppBarLayout      appBarLayout;
-    private TextView          toolbarTitle;
-    private ImageView         bookmark;
-    private View              share;
-    private TextView          title;
-    private TextView          description;
-    private TextView          source;
-    private TextView          publishDate;
-    private ViewGroup         thumbnailContainer;
-    private PanoramaImageView thumbnail;
-    private SmallBang         smallBang;
+    private AppBarLayout appBarLayout;
+    private TextView     toolbarTitle;
+    private ImageView    bookmark;
+    private View         share;
+    private TextView     title;
+    private TextView     description;
+    private TextView     source;
+    private TextView     publishDate;
+    private ViewGroup    thumbnailContainer;
+    private ImageView    thumbnail;
+    private SmallBang    smallBang;
 
     //endregion
 
@@ -362,7 +363,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
         this.attachEvents();
 
-        this.observer.register(this.getContext());
+        if (Settings.isPanoramaEnabled(this.getContext())) this.observer.register(this.getContext());
 
         this.attachedToWindow.onNext(null);
     }
@@ -371,7 +372,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        this.observer.unregister();
+        if (Settings.isPanoramaEnabled(this.getContext())) this.observer.unregister();
 
         this.smallBang = null;
 
@@ -390,7 +391,6 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             this.subscriptions = new CompositeSubscription();
 
             this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
-
             this.subscriptions.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
             this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(dummy -> {
@@ -404,10 +404,13 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     }
 
     private void initThumbnail() {
-        this.thumbnailContainer.addView(this.thumbnail = (PanoramaImageView)LayoutInflater.from(this.getContext()).inflate(R.layout.view_item_thumbnail, this.thumbnailContainer, false));
+        final boolean isPanoramaEnabled = Settings.isPanoramaEnabled(this.getContext());
 
-        this.callback = new ImageLoaderCallback(this.thumbnail);
+        this.thumbnail = (ImageView)LayoutInflater.from(this.getContext()).inflate(isPanoramaEnabled ? R.layout.view_item_thumbnail_panorama : R.layout.view_item_thumbnail, this.thumbnailContainer, false);
+        this.callback  = new ImageLoaderCallback(this.thumbnail);
 
-        this.thumbnail.setGyroscopeObserver(this.observer);
+        if (isPanoramaEnabled) ((PanoramaImageView)this.thumbnail).setGyroscopeObserver(this.observer);
+
+        this.thumbnailContainer.addView(this.thumbnail);
     }
 }

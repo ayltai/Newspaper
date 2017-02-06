@@ -12,4 +12,12 @@
         <key>item_animation</key>
         <value>true</value>
     </entry>
+    <entry>
+        <key>header_image_enabled</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>panorama_enabled</key>
+        <value>true</value>
+    </entry>
 </defaultsMap>

@@ -17,5 +17,13 @@
             android:key="PREF_DARK_THEME"
             android:title="@string/pref_dark_theme"
             android:defaultValue="false" />
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:key="PREF_HEADER_IMAGE_ENABLED"
+            android:title="@string/pref_header_image_enabled"
+            android:defaultValue="true" />
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:key="PREF_PANORAMA_ENABLED"
+            android:title="@string/pref_panorama_enabled"
+            android:defaultValue="true" />
     </android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>

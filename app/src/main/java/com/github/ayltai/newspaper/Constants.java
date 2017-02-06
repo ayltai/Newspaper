@@ -18,7 +18,9 @@ public final class Constants {
 
     static final int UPDATE_INTERVAL = 3 * 60;
 
-    static final boolean ITEM_ANIMATION = true;
+    static final boolean ITEM_ANIMATION       = true;
+    static final boolean HEADER_IMAGE_ENABLED = true;
+    static final boolean PANORAMA_ENABLED     = true;
 
     public static final int REQUEST_SETTINGS = 1;
     public static final int REQUEST_FIREBASE = 2;
