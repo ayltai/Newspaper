@@ -175,7 +175,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         super(context);
 
         DaggerGraphicsComponent.builder()
-            .graphicsModule(new GraphicsModule(context))
+            .graphicsModule(new GraphicsModule())
             .build()
             .inject(this);
     }

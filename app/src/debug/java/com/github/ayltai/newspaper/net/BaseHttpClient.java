@@ -15,9 +15,9 @@ public abstract class BaseHttpClient {
 
     //region Constants
 
-    private static final long CONNECT_TIMEOUT = 60;
-    private static final long READ_TIMEOUT    = 60;
-    private static final long WRITE_TIMEOUT   = 60;
+    public static final long CONNECT_TIMEOUT = 60;
+    public static final long READ_TIMEOUT    = 60;
+    public static final long WRITE_TIMEOUT   = 60;
 
     //endregion
 

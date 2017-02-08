@@ -130,7 +130,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
         super(context);
 
         DaggerGraphicsComponent.builder()
-            .graphicsModule(new GraphicsModule(context))
+            .graphicsModule(new GraphicsModule())
             .build()
             .inject(this);
     }

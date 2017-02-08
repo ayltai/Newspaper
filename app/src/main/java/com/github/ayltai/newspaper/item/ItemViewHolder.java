@@ -2,12 +2,14 @@ package com.github.ayltai.newspaper.item;
 
 import java.io.Closeable;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,11 +19,13 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.rss.Item;
+import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.IntentUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
+import com.github.ayltai.newspaper.widget.FaceCenteredImageView;
 import com.github.piasy.biv.view.BigImageView;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -43,13 +47,13 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     //region Components
 
-    private final View             itemView;
-    private final TextView         title;
-    private final TextView         description;
-    private final TextView         source;
-    private final TextView         publishDate;
-    private final BigImageView     thumbnail;
-    private final SimpleDraweeView draweeView;
+    private final View                  itemView;
+    private final TextView              title;
+    private final TextView              description;
+    private final TextView              source;
+    private final TextView              publishDate;
+    private final FaceCenteredImageView thumbnail;
+    private final SimpleDraweeView      draweeView;
 
     //endregion
 
@@ -64,9 +68,18 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
         final View view = itemView.findViewById(R.id.thumbnail);
 
-        if (view instanceof BigImageView) {
-            this.thumbnail  = (BigImageView)view;
+        if (view instanceof FaceCenteredImageView) {
+            this.thumbnail  = (FaceCenteredImageView)view;
             this.draweeView = null;
+
+            final Activity activity = ContextUtils.getActivity(itemView.getContext());
+
+            if (activity != null) {
+                final DisplayMetrics metrics = new DisplayMetrics();
+                activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+                this.thumbnail.setScreenWidth(metrics.widthPixels);
+            }
 
             ImageUtils.configure((SubsamplingScaleImageView)this.thumbnail.getChildAt(0));
         } else if (view instanceof SimpleDraweeView) {
