@@ -71,17 +71,15 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         if (this.isViewAttached() && !this.isBound) {
             this.getFeedManager().getFeed(this.key.getUrl())
                 .subscribe(feed -> {
-                    if (feed == null || feed.getItems().isEmpty()) {
-                        if (feed != null && Constants.SOURCE_BOOKMARK.equals(this.key.getUrl())) {
-                            this.getView().setItems(this.key, feed);
+                    this.feed = feed;
+
+                    if (this.feed == null || this.feed.getItems().isEmpty()) {
+                        if (this.feed != null && Constants.SOURCE_BOOKMARK.equals(this.key.getUrl())) {
+                            this.getView().setItems(this.key, this.feed);
                         } else {
                             this.bindFromRemote(Constants.REFRESH_LOAD_TIMEOUT);
                         }
                     } else {
-                        this.feed = feed;
-
-                        this.getView().setItems(this.key, feed);
-
                         this.checkForUpdate();
 
                         if (!Constants.SOURCE_BOOKMARK.equals(this.key.getUrl())) this.bindFromRemote(Constants.INIT_LOAD_TIMEOUT);

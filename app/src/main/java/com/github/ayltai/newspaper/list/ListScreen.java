@@ -2,8 +2,6 @@ package com.github.ayltai.newspaper.list;
 
 import java.io.Closeable;
 
-import javax.inject.Inject;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -32,8 +30,6 @@ import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 
 import flow.ClassKey;
-import io.realm.FeedRealmProxy;
-import io.realm.Realm;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
@@ -100,7 +96,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     //region Variables
 
-    private final Subscriber<FeedRealmProxy> subscriber = new Subscriber<FeedRealmProxy>() {
+    private final Subscriber<FeedUpdatedEvent> subscriber = new Subscriber<FeedUpdatedEvent>() {
         @Override
         public void onCompleted() {
         }
@@ -111,12 +107,10 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         }
 
         @Override
-        public void onNext(final FeedRealmProxy feed) {
-            if (ListScreen.this.parentKey != null && Constants.SOURCE_BOOKMARK.equals(ListScreen.this.parentKey.url)) ListScreen.this.setItems(ListScreen.this.parentKey, feed);
+        public void onNext(final FeedUpdatedEvent event) {
+            if (ListScreen.this.parentKey != null && Constants.SOURCE_BOOKMARK.equals(ListScreen.this.parentKey.url)) ListScreen.this.setItems(ListScreen.this.parentKey, event.getFeed());
         }
     };
-
-    private final Realm realm;
 
     private ListScreen.Key parentKey;
     private Feed           feed;
@@ -134,26 +128,23 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     //endregion
 
-    @Inject
     public ListScreen(@NonNull final Context context) {
         super(context);
-
-        this.realm = Realm.getDefaultInstance();
 
         RxBus.getInstance().register(FeedUpdatedEvent.class, this.subscriber);
     }
 
     @Override
     public void setItems(@NonNull final ListScreen.Key parentKey, @Nullable final Feed feed) {
-        if (this.realm.isClosed()) return;
+        if (this.hasAttached) {
+            if (feed != null) {
+                feed.updateImages();
 
-        if (feed != null) {
-            feed.updateImages();
+                RxBus.getInstance().send(new ImagesUpdatedEvent(feed.getUrl(), feed.getImages()));
+            }
 
-            RxBus.getInstance().send(new ImagesUpdatedEvent(feed.getUrl(), feed.getImages()));
-        }
+            this.feed = feed;
 
-        if (this.feed == null || !this.feed.equals(feed)) {
             if (this.adapter != null) {
                 // Detaches the adapter from RecyclerView before updating the adapter
                 this.recyclerView.setAdapter(null);
@@ -162,26 +153,28 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
                 this.adapter = null;
             }
 
-            this.adapter = new ListAdapter(this.getContext(), this.parentKey = parentKey, Settings.getListViewType(this.getContext()), this.feed = feed);
+            this.adapter = new ListAdapter(this.getContext(), this.parentKey = parentKey, Settings.getListViewType(this.getContext()), this.feed);
 
             this.setUpRecyclerView();
-        }
 
-        if (this.feed == null || this.feed.getItems().isEmpty()) {
-            this.empty.removeAllViews();
+            if (this.feed == null || this.feed.getItems().isEmpty()) {
+                this.empty.removeAllViews();
 
-            LayoutInflater.from(this.getContext()).inflate(Constants.SOURCE_BOOKMARK.equals(this.parentKey.url) ? R.layout.view_empty_bookmark : R.layout.view_empty_news, this.empty, true);
+                LayoutInflater.from(this.getContext()).inflate(Constants.SOURCE_BOOKMARK.equals(this.parentKey.url) ? R.layout.view_empty_bookmark : R.layout.view_empty_news, this.empty, true);
 
-            this.recyclerView.setVisibility(View.GONE);
-            this.empty.setVisibility(View.VISIBLE);
+                this.recyclerView.setVisibility(View.GONE);
+                this.empty.setVisibility(View.VISIBLE);
+            } else {
+                this.restoreItemPosition();
+
+                this.recyclerView.setVisibility(View.VISIBLE);
+                this.empty.setVisibility(View.GONE);
+            }
+
+            if (this.swipeRefreshLayout.isRefreshing()) this.swipeRefreshLayout.setRefreshing(false);
         } else {
-            this.restoreItemPosition();
-
-            this.recyclerView.setVisibility(View.VISIBLE);
-            this.empty.setVisibility(View.GONE);
+            this.feed = feed;
         }
-
-        if (this.swipeRefreshLayout.isRefreshing()) this.swipeRefreshLayout.setRefreshing(false);
     }
 
     @NonNull
@@ -275,8 +268,6 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             this.adapter.close();
             this.adapter = null;
         }
-
-        if (!this.realm.isClosed()) this.realm.close();
 
         this.detachedFromWindow.onNext(null);
     }
