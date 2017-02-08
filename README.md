@@ -10,6 +10,7 @@ A Yahoo news app clone that is better than the original. Made with ❤
 ## Features
 * Run much faster than the [original app](https://play.google.com/store/apps/details?id=com.yahoo.infohub)
 * [Auto face centering](https://developers.google.com/vision/face-detection-concepts) for image previews. No more weird cropping
+* Fancy showcases - [Ken Burns effect](https://en.wikipedia.org/wiki/Ken_Burns_effect) and [Panoramic effect](https://en.wikipedia.org/wiki/Panoramic_photography)
 * Read news from all available [categories](https://hk.news.yahoo.com/sitemap/)
 * Bookmark any news without the need of a [Yahoo account](https://techcrunch.com/2016/12/14/yahoo-discloses-hack-of-1-billion-accounts/)
 * No ads. We hate ads as much as you do
@@ -42,7 +43,7 @@ This app is made with the support of open source software:
 * [RxBinding](https://github.com/JakeWharton/RxBinding)
 * [Dagger 2](https://google.github.io/dagger)
 * [DebugDrawer](https://github.com/palaima/DebugDrawer)
-* [Espresso](https://google.github.io/android-testing-support-library/)
+* [Espresso](https://google.github.io/android-testing-support-library)
 * [JUnit 4](https://github.com/junit-team/junit4)
 * [Mockito](https://github.com/mockito/mockito)
 * [Robolectric](http://robolectric.org)
