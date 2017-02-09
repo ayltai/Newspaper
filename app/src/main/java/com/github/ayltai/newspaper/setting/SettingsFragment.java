@@ -45,6 +45,8 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
             return true;
         });
 
+        this.findPreference(Settings.PREF_PANORAMA_ENABLED).setEnabled(Settings.canPanoramaBeEnabled(this.getContext()));
+
         this.findPreference(Settings.PREF_CATEGORIES).setOnPreferenceChangeListener((preference, newValue) -> {
             final Set<String> newCategories = (Set<String>)newValue;
 

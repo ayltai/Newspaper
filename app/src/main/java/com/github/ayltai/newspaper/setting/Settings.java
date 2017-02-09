@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -23,11 +25,11 @@ public final class Settings {
 
     static final String PREF_COMPACT_LAYOUT       = "PREF_COMPACT_LAYOUT";
     static final String PREF_DARK_THEME           = "PREF_DARK_THEME";
+    static final String PREF_PANORAMA_ENABLED     = "PREF_PANORAMA_ENABLED";
     static final String PREF_CATEGORIES           = "PREF_CATEGORIES";
 
     private static final String PREF_USER_ID              = "PREF_USER_ID";
     private static final String PREF_HEADER_IMAGE_ENABLED = "PREF_HEADER_IMAGE_ENABLED";
-    private static final String PREF_PANORAMA_ENABLED     = "PREF_PANORAMA_ENABLED";
 
     //endregion
 
@@ -74,12 +76,16 @@ public final class Settings {
     }
 
     public static boolean isPanoramaEnabled(@NonNull final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Settings.PREF_PANORAMA_ENABLED, Configs.isPanoramaEnabled());
+        return Settings.canPanoramaBeEnabled(context) && PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Settings.PREF_PANORAMA_ENABLED, Configs.isPanoramaEnabled());
     }
 
     @SuppressLint("CommitPrefEdits")
     public static void setPanoramaEnabled(@NonNull final Context context, final boolean enabled) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(Settings.PREF_PANORAMA_ENABLED, enabled).commit();
+    }
+
+    public static boolean canPanoramaBeEnabled(@NonNull final Context context) {
+        return ((SensorManager)context.getSystemService(Context.SENSOR_SERVICE)).getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null;
     }
 
     public static int getPosition(@NonNull final String url) {
