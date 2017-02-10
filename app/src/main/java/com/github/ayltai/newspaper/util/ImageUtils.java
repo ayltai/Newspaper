@@ -1,12 +1,20 @@
 package com.github.ayltai.newspaper.util;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
+import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.github.ayltai.newspaper.Constants;
+import com.github.ayltai.newspaper.net.BaseHttpClient;
+
+import okhttp3.OkHttpClient;
 
 public final class ImageUtils {
     private ImageUtils() {
@@ -32,5 +40,16 @@ public final class ImageUtils {
         options.inJustDecodeBounds = false;
 
         return options;
+    }
+
+    public static void initFresco(@NonNull final Context context) {
+        if (!Fresco.hasBeenInitialized()) Fresco.initialize(context, OkHttpImagePipelineConfigFactory.newBuilder(context, new OkHttpClient.Builder()
+            .connectTimeout(BaseHttpClient.CONNECT_TIMEOUT, TimeUnit.SECONDS)
+            .readTimeout(BaseHttpClient.READ_TIMEOUT, TimeUnit.SECONDS)
+            .writeTimeout(BaseHttpClient.WRITE_TIMEOUT, TimeUnit.SECONDS)
+            .build())
+            .setDownsampleEnabled(true)
+            .setExecutorSupplier(new DefaultExecutorSupplier(Runtime.getRuntime().availableProcessors()))
+            .build());
     }
 }

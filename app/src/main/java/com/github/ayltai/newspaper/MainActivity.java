@@ -1,7 +1,5 @@
 package com.github.ayltai.newspaper;
 
-import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
 
 import android.app.Activity;
@@ -21,12 +19,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
-import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.graphics.FrescoImageLoader;
-import com.github.ayltai.newspaper.net.BaseHttpClient;
 import com.github.ayltai.newspaper.net.ConnectivityChangeReceiver;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
@@ -34,7 +28,6 @@ import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.BigImageViewer;
 
-import okhttp3.OkHttpClient;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -64,15 +57,6 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         ContextUtils.setAppTheme(this);
 
-        Fresco.initialize(this, OkHttpImagePipelineConfigFactory.newBuilder(this, new OkHttpClient.Builder()
-            .connectTimeout(BaseHttpClient.CONNECT_TIMEOUT, TimeUnit.SECONDS)
-            .readTimeout(BaseHttpClient.READ_TIMEOUT, TimeUnit.SECONDS)
-            .writeTimeout(BaseHttpClient.WRITE_TIMEOUT, TimeUnit.SECONDS)
-            .build())
-            .setDownsampleEnabled(true)
-            .setExecutorSupplier(new DefaultExecutorSupplier(Runtime.getRuntime().availableProcessors()))
-            .build());
-
         FrescoImageLoader.initialize(this.getCacheDir().getAbsolutePath());
         BigImageViewer.initialize(FrescoImageLoader.getInstance());
 
@@ -96,15 +80,17 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     protected void onDestroy() {
         super.onDestroy();
 
-        FrescoImageLoader.shutDown();
-        Fresco.shutDown();
-
         if (!this.rememberPosition) Settings.resetPosition();
 
         this.controller.onDestroy();
         this.controller = null;
 
-        FaceDetectorFactory.release();
+        // Releases resources only if the app really quits
+        // The app instances lifecycle may overlap when the app restarts
+        if (this.isFinishing()) {
+            FrescoImageLoader.shutDown();
+            FaceDetectorFactory.release();
+        }
     }
 
     @Override
