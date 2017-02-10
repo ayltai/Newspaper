@@ -88,6 +88,7 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
         // Releases resources only if the app really quits
         // The app instances lifecycle may overlap when the app restarts
         if (this.isFinishing()) {
+            RxBus.getInstance().unregisterAll();
             FrescoImageLoader.shutDown();
             FaceDetectorFactory.release();
         }

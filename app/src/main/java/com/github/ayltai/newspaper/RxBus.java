@@ -15,28 +15,36 @@ import rx.subjects.SerializedSubject;
 import rx.subjects.Subject;
 
 public class RxBus {
-    private static final RxBus INSTANCE = new RxBus();
+    private static ThreadLocal<RxBus> INSTANCE = new ThreadLocal<>();
 
     private final Map<Pair<Class, Subscriber>, Subscription> subscriptions = new HashMap<>();
     private final Subject<Object, ?>                         bus           = new SerializedSubject<>(PublishSubject.create());
 
     public static RxBus getInstance() {
-        return RxBus.INSTANCE;
+        final RxBus instance = RxBus.INSTANCE.get();
+
+        if (instance == null) {
+            RxBus.INSTANCE.set(new RxBus());
+
+            return RxBus.INSTANCE.get();
+        }
+
+        return instance;
     }
 
     @VisibleForTesting
     RxBus() {
     }
 
-    public void register(@NonNull final Class eventType, @NonNull final Subscriber subscriber) {
+    public <T> void register(@NonNull final Class<T> eventType, @NonNull final Subscriber<T> subscriber) {
         final Pair<Class, Subscriber> key = Pair.create(eventType, subscriber);
 
         if (this.subscriptions.containsKey(key)) throw new IllegalArgumentException("The given subscriber is already registered");
 
-        this.subscriptions.put(key, this.bus.filter(event -> event != null && event.getClass().equals(eventType)).subscribe(subscriber::onNext));
+        this.subscriptions.put(key, this.bus.filter(event -> event != null && event.getClass().equals(eventType)).subscribe(value -> subscriber.onNext((T)value)));
     }
 
-    public void unregister(@NonNull final Class eventType, @NonNull final Subscriber subscriber) {
+    public <T> void unregister(@NonNull final Class<T> eventType, @NonNull final Subscriber<T> subscriber) {
         final Pair<Class, Subscriber> key = Pair.create(eventType, subscriber);
 
         if (this.subscriptions.containsKey(key)) this.subscriptions.remove(key).unsubscribe();
@@ -48,7 +56,7 @@ public class RxBus {
         }
     }
 
-    public void send(@NonNull final Object event) {
+    public <T> void send(@NonNull final T event) {
         if (!this.subscriptions.isEmpty()) this.bus.onNext(event);
     }
 }

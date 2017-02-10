@@ -160,8 +160,6 @@ final class FlowController {
             }
         }
 
-        RxBus.getInstance().unregisterAll();
-
         if (!this.realm.isClosed()) this.realm.close();
     }
 
