@@ -227,7 +227,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
             this.recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
             this.recyclerView.setLayoutManager(layoutManager);
-            this.recyclerView.setAdapter(new ListScreen.DummyAdapter());
+            this.recyclerView.setAdapter(new DummyAdapter());
 
             this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
@@ -297,47 +297,6 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             Settings.setPosition(this.parentKey.url, 0);
         } else {
             this.recyclerView.scrollToPosition(Settings.getPosition(this.parentKey.url));
-        }
-    }
-
-    private static final class DummyAdapter extends RecyclerView.Adapter<ListScreen.DummyViewHolder> {
-        @Override
-        public int getItemCount() {
-            return Constants.INIT_LOAD_ITEM_COUNT;
-        }
-
-        @NonNull
-        @Override
-        public ListScreen.DummyViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
-            return new ListScreen.DummyViewHolder(LayoutInflater.from(parent.getContext()).inflate(Settings.getListViewType(parent.getContext()) == Constants.LIST_VIEW_TYPE_COMPACT ? R.layout.view_item_compact : R.layout.view_item_cozy, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull final ListScreen.DummyViewHolder holder, final int position) {
-        }
-    }
-
-    private static final class DummyViewHolder extends RecyclerView.ViewHolder {
-        DummyViewHolder(@NonNull final View itemView) {
-            super(itemView);
-
-            final int textColor = ContextUtils.getColor(itemView.getContext(), R.attr.textColorHint);
-
-            final TextView title = (TextView)itemView.findViewById(R.id.title);
-            title.setTextColor(textColor);
-            title.setText("██████████");
-
-            final TextView description = (TextView)itemView.findViewById(R.id.description);
-            description.setTextColor(textColor);
-            description.setText("████████████████████████████████████████████████████████████████████████████████████████████████████");
-
-            final TextView source = (TextView)itemView.findViewById(R.id.source);
-            source.setTextColor(textColor);
-            source.setText("█████");
-
-            final TextView publishDate = (TextView)itemView.findViewById(R.id.publishDate);
-            publishDate.setTextColor(textColor);
-            publishDate.setText("███████");
         }
     }
 }
