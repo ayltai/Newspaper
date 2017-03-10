@@ -38,7 +38,8 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     public interface View extends Presenter.View {
         void setItems(@NonNull ListScreen.Key parentKey, @Nullable Feed feed);
 
-        @NonNull Observable<Void> refreshes();
+        @NonNull
+        Observable<Void> refreshes();
 
         void showUpdateIndicator();
     }

@@ -30,7 +30,4 @@
     <attr
         name="indicatorColor"
         format="color" />
-    <attr
-        name="swipeMenuBackground"
-        format="color" />
 </resources>

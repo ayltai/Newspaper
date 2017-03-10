@@ -9,7 +9,6 @@
     <color name="windowBackgroundLight">#eeeeee</color>
     <color name="cardBackgroundLight">#fafafa</color>
     <color name="indicatorColorLight">#ffffff</color>
-    <color name="swipeMenuBackgroundLight">#656d78</color>
     <color name="primaryColorDark">#263238</color>
     <color name="primaryColorDarkDark">#1c282e</color>
     <color name="accentColorDark">#e04a19</color>
@@ -19,7 +18,6 @@
     <color name="windowBackgroundDark">#1f242c</color>
     <color name="cardBackgroundDark">#3f4b5c</color>
     <color name="indicatorColorDark">#ffffff</color>
-    <color name="swipeMenuBackgroundDark">#656d78</color>
     <color name="textProtectionScrimTop">#00000000</color>
     <color name="textProtectionScrimCenter">#44000000</color>
     <color name="textProtectionScrimBottom">#99000000</color>

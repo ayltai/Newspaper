@@ -75,8 +75,7 @@ final class FlowController {
                 }
             })
             .dispatcher(KeyDispatcher.configure(this.activity, (outgoingState, incomingState, direction, incomingContexts, callback) -> {
-                if (outgoingState != null)
-                    outgoingState.save(((ViewGroup)this.activity.findViewById(android.R.id.content)).getChildAt(0));
+                if (outgoingState != null) outgoingState.save(((ViewGroup)this.activity.findViewById(android.R.id.content)).getChildAt(0));
 
                 final Presenter.View view;
                 final Presenter      presenter;

@@ -21,7 +21,6 @@
         <item name="windowBackground">@color/windowBackgroundLight</item>
         <item name="cardBackground">@color/cardBackgroundLight</item>
         <item name="indicatorColor">@color/indicatorColorLight</item>
-        <item name="swipeMenuBackground">@color/swipeMenuBackgroundLight</item>
     </style>
     <style name="AppTheme.Dark">
         <item name="primaryColor">@color/primaryColorDark</item>
@@ -33,7 +32,6 @@
         <item name="windowBackground">@color/windowBackgroundDark</item>
         <item name="cardBackground">@color/cardBackgroundDark</item>
         <item name="indicatorColor">@color/indicatorColorDark</item>
-        <item name="swipeMenuBackground">@color/swipeMenuBackgroundDark</item>
     </style>
     <style
         name="SettingsTheme"
