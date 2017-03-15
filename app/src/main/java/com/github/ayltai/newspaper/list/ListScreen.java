@@ -136,7 +136,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @Override
     public void setItems(@NonNull final ListScreen.Key parentKey, @Nullable final Feed feed) {
-        if (this.hasAttached) {
+        if (this.hasAttached && parentKey != null) {
             if (feed != null) {
                 feed.updateImages();
 
@@ -218,7 +218,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         super.onAttachedToWindow();
 
         if (this.hasAttached) {
-            this.setItems(this.parentKey, this.feed);
+            if (this.parentKey != null) this.setItems(this.parentKey, this.feed);
         } else {
             this.hasAttached = true;
 
