@@ -83,7 +83,7 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
     //endregion
 
     ListAdapter(@NonNull final Context context, @NonNull final ListScreen.Key parentKey, @Constants.ListViewType final int listViewType, @Nullable final Feed feed) {
-        super(context, feed == null ? new RealmList<>() : feed.getItems(), false);
+        super(feed == null ? new RealmList<>() : feed.getItems(), false);
 
         this.context      = context;
         this.parentKey    = parentKey;
