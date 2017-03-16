@@ -23,8 +23,8 @@ android {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    16
         targetSdkVersion 25
-        versionCode      10
-        versionName      '1.2.4r' + VERSION_REVISION + '-' + VERSION_HASH
+        versionCode      11
+        versionName      '1.2.5r' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'

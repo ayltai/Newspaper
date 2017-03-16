@@ -7,6 +7,7 @@ import java.util.Map;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +20,14 @@ import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.item.ItemPresenter;
 import com.github.ayltai.newspaper.item.ItemUpdatedEvent;
 import com.github.ayltai.newspaper.item.ItemViewHolder;
-import com.github.ayltai.newspaper.rss.Item;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.jakewharton.rxbinding.view.RxView;
 
 import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmRecyclerViewAdapter;
 import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
 
-final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> implements Closeable {
+final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements Closeable {
     //region Variables
 
     private final Map<ItemViewHolder, ItemPresenter> map           = new HashMap<>();
@@ -83,8 +81,6 @@ final class ListAdapter extends RealmRecyclerViewAdapter<Item, ItemViewHolder> i
     //endregion
 
     ListAdapter(@NonNull final Context context, @NonNull final ListScreen.Key parentKey, @Constants.ListViewType final int listViewType, @Nullable final Feed feed) {
-        super(feed == null ? new RealmList<>() : feed.getItems(), false);
-
         this.context      = context;
         this.parentKey    = parentKey;
         this.listViewType = listViewType;
