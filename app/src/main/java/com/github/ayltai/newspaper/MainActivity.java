@@ -43,11 +43,11 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
 
     private boolean rememberPosition;
 
+    //endregion
+
     @Inject
     public MainActivity() {
     }
-
-    //endregion
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
