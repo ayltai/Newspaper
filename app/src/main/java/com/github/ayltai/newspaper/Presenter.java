@@ -48,12 +48,12 @@ public abstract class Presenter<V extends Presenter.View> extends BasePresenter<
     }
 
     @NonNull
-    protected RxBus bus() {
+    public RxBus bus() {
         return RxBus.getInstance();
     }
 
     @NonNull
-    protected LogUtils log() {
+    public LogUtils log() {
         return LogUtils.getInstance();
     }
 }

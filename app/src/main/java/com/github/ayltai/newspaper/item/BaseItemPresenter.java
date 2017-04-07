@@ -136,11 +136,11 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     //endregion
 
     @NonNull
-    /* public final */ FeedManager getFeedManager() {
+    /* protected final */ FeedManager getFeedManager() {
         return new FeedManager(this.realm);
     }
 
-    /* public final */ void updateFeed(@NonNull final Feed feed, final boolean bookmark) {
+    /* protected final */ void updateFeed(@NonNull final Feed feed, final boolean bookmark) {
         final int index = feed.indexOf(this.item);
 
         this.realm.beginTransaction();

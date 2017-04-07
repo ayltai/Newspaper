@@ -65,6 +65,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         final ItemPresenter presenter = Mockito.spy(new ItemPresenter(null));
         Mockito.doReturn(feedManager).when(presenter).getFeedManager();
         Mockito.doNothing().when(presenter).updateFeed(Mockito.any(Feed.class), Mockito.anyBoolean());
+        Mockito.doNothing().when(presenter).updateItemDescription(Mockito.anyString());
 
         final RxBus bus = Mockito.mock(RxBus.class);
         Mockito.doReturn(bus).when(presenter).bus();
@@ -155,6 +156,6 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     //endregion
 
     private void bind() {
-        this.getPresenter().bind(ItemPresenterTest.KEY_PARENT, this.item, Constants.LIST_VIEW_TYPE_DEFAULT);
+        this.getPresenter().bind(ItemPresenterTest.KEY_PARENT, this.item, Constants.LIST_VIEW_TYPE_DEFAULT, false);
     }
 }
