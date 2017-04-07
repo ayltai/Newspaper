@@ -2,6 +2,7 @@ package com.github.ayltai.newspaper.graphics;
 
 import java.io.File;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,7 +11,12 @@ import android.widget.ImageView;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.util.ImageUtils;
+import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.piasy.biv.loader.ImageLoader;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public final class ImageLoaderCallback implements ImageLoader.Callback {
     private static Handler HANDLER = new Handler(Looper.getMainLooper());
@@ -55,7 +61,18 @@ public final class ImageLoaderCallback implements ImageLoader.Callback {
 
         @Override
         public void run() {
-            this.imageView.setImageBitmap(BitmapFactory.decodeFile(this.image.getAbsolutePath(), ImageUtils.createOptions(this.image, Constants.MAX_IMAGE_WIDTH, Constants.MAX_IMAGE_HEIGHT)));
+            Observable.<Bitmap>create(subscriber -> subscriber.onNext(BitmapFactory.decodeFile(this.image.getAbsolutePath(), ImageUtils.createOptions(this.image, Constants.MAX_IMAGE_WIDTH, Constants.MAX_IMAGE_HEIGHT))))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    bitmap -> {
+                        try {
+                            this.imageView.setImageBitmap(bitmap);
+                        } catch (final Exception e) {
+                            LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
+                        }
+                    },
+                    error -> LogUtils.getInstance().w(this.getClass().getSimpleName(), error.getMessage(), error));
         }
     }
 }
