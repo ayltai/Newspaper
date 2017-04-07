@@ -54,6 +54,7 @@
 -keep class com.firebase.** { *; }
 -keep class com.google.firebase.** { *; }
 -keep class com.google.android.** { *; }
+-dontnote com.google.android.**
 
 ### Google Play Services
 -keep class com.google.android.gms.common.api.GoogleApiClient {
@@ -99,7 +100,12 @@
 }
 
 -keep class com.facebook.** { *; }
+-keep interface com.facebook.** { *; }
 -dontnote com.facebook.**
+
+# Fresco v1.2.0
+-dontwarn com.facebook.infer.annotation.ReturnsOwnership
+-dontwarn com.facebook.infer.annotation.Functional
 
 # Keep native methods
 -keepclassmembers class * {
@@ -127,6 +133,9 @@
 ### Retrolambda
 -dontwarn java.lang.invoke.*
 
+### Robolectric
+-dontnote org.robolectric.**
+
 ### Apache Legacy HTTP Client
 -keep public class org.apache.http.**
 -keepclassmembers public class org.apache.http.** { *; }
@@ -135,6 +144,7 @@
 ### RxJava
 -keep class sun.misc.Unsafe { *; }
 -dontwarn sun.misc.Unsafe
+-dontnote sun.misc.Unsafe
 -dontwarn java.lang.invoke.*
 -keep class rx.internal.util.unsafe.** { *; }
 -dontwarn rx.internal.util.unsafe.**
