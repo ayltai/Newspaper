@@ -63,7 +63,6 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     protected Item                  item;
 
     private int     type = Configs.getDefaultListViewType();
-    private boolean isBound;
     private boolean showFullDescription;
 
     //endregion
@@ -78,11 +77,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         this.type                = type;
         this.showFullDescription = showFullDescription;
 
-        if (this.isViewAttached() && !this.isBound) {
-            // Needs to bind again for items in RecyclerView
-            // But no need for item screen
-            this.isBound = this.showFullDescription;
-
+        if (this.isViewAttached()) {
             if (BuildConfig.DEBUG) this.log().d(this.getClass().getName(), "guid = " + this.item.getGuid());
 
             this.getView().setTitle(this.item.getTitle());
