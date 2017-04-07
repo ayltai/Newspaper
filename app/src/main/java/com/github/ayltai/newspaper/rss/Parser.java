@@ -85,7 +85,7 @@ final class Parser {
 
                 if (ItemUtils.filter(item)) continue;
 
-                items.add(item);
+                if (!items.contains(item)) items.add(item);
             } else {
                 Parser.skipTags(parser);
             }
@@ -131,7 +131,15 @@ final class Parser {
                     break;
 
                 case Item.TAG_GUID:
-                    item.guid = Parser.readTag(parser, name);
+                    String guid = Parser.readTag(parser, name);
+
+                    // GUID prefix is the same for duplicate news items but the suffix is different
+                    if (guid != null) {
+                        final int index = guid.lastIndexOf("-");
+                        if (index > 0) guid = guid.substring(0, index);
+                    }
+
+                    item.guid = guid;
                     break;
 
                 default:
