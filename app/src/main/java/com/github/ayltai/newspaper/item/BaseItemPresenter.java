@@ -81,7 +81,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
             if (BuildConfig.DEBUG) this.log().d(this.getClass().getName(), "guid = " + this.item.getGuid());
 
             this.getView().setTitle(this.item.getTitle());
-            this.getView().setDescription(this.showFullDescription ? this.getView().getContext().getString(R.string.loading_indicator) : this.item.getDescription());
+            this.getView().setDescription(this.showFullDescription && !this.item.isFullDescription() ? this.getView().getContext().getString(R.string.loading_indicator) : this.item.getDescription());
             this.getView().setSource(this.item.getSource());
             this.getView().setLink(this.item.getLink());
             this.getView().setThumbnail(this.item.getMediaUrl(), this.type);
@@ -99,11 +99,15 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
             if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
-            if (this.showFullDescription) this.subscriptions.add(ItemUtils.getFullDescription(this.getView().getContext(), this.item)
+            if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ItemUtils.getFullDescription(this.getView().getContext(), this.item)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(
-                    description -> this.getView().setDescription(description),
+                    description -> {
+                        this.getView().setDescription(description);
+
+                        this.updateItemDescription(description);
+                    },
                     error -> this.log().w(this.getClass().getSimpleName(), error.getMessage(), error)));
         }
     }
@@ -152,6 +156,17 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
         this.realm.copyToRealmOrUpdate(feed);
         this.realm.commitTransaction();
+    }
+
+    /* private */ void updateItemDescription(@Nullable final String description) {
+        final Realm realm = Realm.getDefaultInstance();
+
+        realm.beginTransaction();
+
+        this.item.setDescription(description);
+
+        realm.copyToRealmOrUpdate(this.item);
+        realm.commitTransaction();
     }
 
     //region Event handlers

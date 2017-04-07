@@ -7,6 +7,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 public final class MainApplication extends BaseApplication {
+    private static final int DATABASE_SCHEMA_UPGRADE_11 = 11;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -16,8 +17,11 @@ public final class MainApplication extends BaseApplication {
         if (!TestUtils.isRunningUnitTest()) {
             Realm.init(this);
             Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
-                .migration((realm, oldVersion, newVersion) -> { })
-                .schemaVersion(BuildConfig.VERSION_CODE).build());
+                .migration((realm, oldVersion, newVersion) -> {
+                    if (oldVersion == MainApplication.DATABASE_SCHEMA_UPGRADE_11) realm.getSchema().get("Item").addField("isFullDescription", boolean.class);
+                })
+                .schemaVersion(BuildConfig.VERSION_CODE)
+                .build());
         }
     }
 }

@@ -29,7 +29,8 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
 
     String title;
 
-    String description;
+    String  description;
+    boolean isFullDescription;
 
     String link;
 
@@ -57,6 +58,15 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     @Nullable
     public String getDescription() {
         return this.description;
+    }
+
+    public void setDescription(@Nullable final String description) {
+        this.description       = description;
+        this.isFullDescription = true;
+    }
+
+    public boolean isFullDescription() {
+        return this.isFullDescription;
     }
 
     @Nullable
@@ -126,6 +136,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     public final void writeToParcel(@NonNull final Parcel dest, final int flags) {
         dest.writeString(this.title);
         dest.writeString(this.description);
+        dest.writeInt(this.isFullDescription ? 1 : 0);
         dest.writeString(this.link);
         dest.writeLong(this.publishDate);
         dest.writeString(this.source);
@@ -134,13 +145,14 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     }
 
     protected Item(@NonNull final Parcel in) {
-        this.title       = in.readString();
-        this.description = in.readString();
-        this.link        = in.readString();
-        this.publishDate = in.readLong();
-        this.source      = in.readString();
-        this.mediaUrl    = in.readString();
-        this.guid        = in.readString();
+        this.title             = in.readString();
+        this.description       = in.readString();
+        this.isFullDescription = in.readInt() == 1;
+        this.link              = in.readString();
+        this.publishDate       = in.readLong();
+        this.source            = in.readString();
+        this.mediaUrl          = in.readString();
+        this.guid              = in.readString();
     }
 
     public static final Parcelable.Creator<Item> CREATOR = new Parcelable.Creator<Item>() {
