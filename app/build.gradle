@@ -3,6 +3,7 @@ apply plugin: 'com.google.firebase.firebase-crash'
 apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
+apply plugin: 'blockcanaryex'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
@@ -229,6 +230,8 @@ dependencies {
     debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     testCompile  'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    debugCompile 'com.letv.sarrsdesktop:BlockCanaryExJRT:0.9.5.2'
+    testCompile  'com.letv.sarrsdesktop:BlockCanaryExJRTNoOp:0.9.5.2'
 
     // Tests
     testCompile 'junit:junit:4.12'

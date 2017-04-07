@@ -49,6 +49,7 @@ This app is made with the support of open source software:
 * [Robolectric](http://robolectric.org)
 * [Facebook Stetho](http://facebook.github.io/stetho)
 * [LeakCanary](https://github.com/square/leakcanary)
+* [BlockCanaryEx](https://github.com/seiginonakama/BlockCanaryEx)
 * [Takt](https://github.com/wasabeef/Takt)
 
 … and closed source software:
