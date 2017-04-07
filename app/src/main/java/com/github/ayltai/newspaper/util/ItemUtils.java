@@ -31,6 +31,9 @@ public final class ItemUtils {
 
     private static final String IDEOGRAPHIC_SPACE          = new String(new byte[] { (byte)227, (byte)128, (byte)128 }); // E3 80 80
     private static final String ELLIPSIS                   = Pattern.quote(" ...");
+    private static final String PHISHING_TITLE_1           = "【熱門搜尋】";
+    private static final String PHISHING_TITLE_2           = "【人氣搜尋】";
+    private static final String PHISHING_TITLE_3           = "【搜尋熱選】";
     private static final String PROMOTIONS                 = "promotions";
     private static final String UNIFIED                    = "unified";
     private static final String ORIGINAL_MEDIA_URL_TOKEN   = "http://media.zenfs.com/";
@@ -43,8 +46,9 @@ public final class ItemUtils {
     }
 
     public static boolean filter(@NonNull final Item item) {
-        if (!TextUtils.isEmpty(item.getLink()) && item.getLink().contains(ItemUtils.PROMOTIONS) && item.getLink().contains(ItemUtils.UNIFIED)) return true;
-        if (!TextUtils.isEmpty(item.getDescription()) && item.getDescription().contains(ItemUtils.PROMOTIONS) && item.getDescription().contains(ItemUtils.UNIFIED)) return true;
+        if (!TextUtils.isEmpty(item.getLink()) && (item.getLink().contains(ItemUtils.PROMOTIONS) || item.getLink().contains(ItemUtils.UNIFIED))) return true;
+        if (!TextUtils.isEmpty(item.getDescription()) && (item.getDescription().contains(ItemUtils.PROMOTIONS) || item.getDescription().contains(ItemUtils.UNIFIED))) return true;
+        if (!TextUtils.isEmpty(item.getTitle()) && (item.getTitle().contains(ItemUtils.PHISHING_TITLE_1) || item.getTitle().contains(ItemUtils.PHISHING_TITLE_2) || item.getTitle().contains(ItemUtils.PHISHING_TITLE_3))) return true;
 
         return false;
     }
