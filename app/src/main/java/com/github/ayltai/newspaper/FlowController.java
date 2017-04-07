@@ -115,7 +115,7 @@ final class FlowController {
                 if (incomingState.getKey() instanceof ItemScreen.Key) {
                     final ItemScreen.Key key = incomingState.getKey();
 
-                    ((ItemPresenter)presenter).bind((ListScreen.Key)key.getParentKey(), key.getItem(), Settings.getListViewType(this.activity));
+                    ((ItemPresenter)presenter).bind((ListScreen.Key)key.getParentKey(), key.getItem(), Settings.getListViewType(this.activity), true);
                 }
 
                 this.dispatch((View)view, incomingState, callback);

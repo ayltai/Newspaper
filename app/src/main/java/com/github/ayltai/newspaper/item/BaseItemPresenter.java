@@ -11,6 +11,7 @@ import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
+import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.data.Feed;
 import com.github.ayltai.newspaper.data.FeedManager;
 import com.github.ayltai.newspaper.list.ListScreen;
@@ -19,6 +20,8 @@ import com.github.ayltai.newspaper.util.ItemUtils;
 
 import io.realm.Realm;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View> {
@@ -60,7 +63,9 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     protected ListScreen.Key        parentKey;
     protected Item                  item;
 
-    private int type = Configs.getDefaultListViewType();
+    private int     type = Configs.getDefaultListViewType();
+    private boolean isBound;
+    private boolean showFullDescription;
 
     //endregion
 
@@ -68,27 +73,42 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         this.realm = realm;
     }
 
-    public final void bind(@Nullable final ListScreen.Key parentKey, @NonNull final Item item, @Constants.ListViewType final int type) {
-        this.parentKey = parentKey;
-        this.item      = item;
-        this.type      = type;
+    public final void bind(@Nullable final ListScreen.Key parentKey, @NonNull final Item item, @Constants.ListViewType final int type, final boolean showFullDescription) {
+        this.parentKey           = parentKey;
+        this.item                = item;
+        this.type                = type;
+        this.showFullDescription = showFullDescription;
 
-        if (this.isViewAttached()) {
+        if (this.isViewAttached() && !this.isBound) {
+            this.isBound = true;
+
             if (BuildConfig.DEBUG) this.log().d(this.getClass().getName(), "guid = " + this.item.getGuid());
 
             this.getView().setTitle(this.item.getTitle());
-            this.getView().setDescription(this.item.getDescription());
+            this.getView().setDescription(this.showFullDescription ? this.getView().getContext().getString(R.string.loading_indicator) : this.item.getDescription());
             this.getView().setSource(this.item.getSource());
             this.getView().setLink(this.item.getLink());
             this.getView().setThumbnail(this.item.getMediaUrl(), this.type);
 
             if (this.getView().bookmarks() != null) {
-                this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK)
-                    .subscribe(feed -> this.getView().setIsBookmarked(feed.contains(this.item)), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error));
+                this.getFeedManager()
+                    .getFeed(Constants.SOURCE_BOOKMARK)
+                    .subscribe(
+                        feed -> this.getView().setIsBookmarked(feed.contains(this.item)),
+                        error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error));
             }
 
             final Date publishDate = this.item.getPublishDate();
             this.getView().setPublishDate(publishDate == null ? 0 : publishDate.getTime());
+
+            if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
+
+            if (this.showFullDescription) this.subscriptions.add(ItemUtils.getFullDescription(this.getView().getContext(), this.item)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    description -> this.getView().setDescription(description),
+                    error -> this.log().w(this.getClass().getSimpleName(), error.getMessage(), error)));
         }
     }
 
@@ -98,7 +118,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     public final void onViewAttached(@NonNull final BaseItemPresenter.View view) {
         super.onViewAttached(view);
 
-        if (this.item != null) this.bind(this.parentKey, this.item, this.type);
+        if (this.item != null && !this.isBound) this.bind(this.parentKey, this.item, this.type, this.showFullDescription);
 
         this.attachEvents();
     }

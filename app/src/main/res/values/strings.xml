@@ -10,6 +10,7 @@
     <string name="share_to">Share to…</string>
     <string name="rate_app">Rate 5 stars</string>
     <string name="update_indicator">New news available</string>
+    <string name="loading_indicator">Loading…</string>
     <string name="time_ago_now">Just now</string>
     <string name="time_ago_minute">A minute ago</string>
     <string name="time_ago_minutes">%s minutes ago</string>

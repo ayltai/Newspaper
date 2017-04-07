@@ -116,7 +116,7 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
     public void onBindViewHolder(@NonNull final ItemViewHolder holder, final int position) {
         if (this.realm.isClosed()) return;
 
-        this.map.get(holder).bind(this.parentKey, this.feed.getItems().get(position), this.listViewType);
+        this.map.get(holder).bind(this.parentKey, this.feed.getItems().get(position), this.listViewType, false);
     }
 
     @Override
