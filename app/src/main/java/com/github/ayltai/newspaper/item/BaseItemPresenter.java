@@ -79,7 +79,9 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         this.showFullDescription = showFullDescription;
 
         if (this.isViewAttached() && !this.isBound) {
-            this.isBound = true;
+            // Needs to bind again for items in RecyclerView
+            // But no need for item screen
+            this.isBound = this.showFullDescription;
 
             if (BuildConfig.DEBUG) this.log().d(this.getClass().getName(), "guid = " + this.item.getGuid());
 
@@ -117,7 +119,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     public final void onViewAttached(@NonNull final BaseItemPresenter.View view) {
         super.onViewAttached(view);
 
-        if (this.item != null && !this.isBound) this.bind(this.parentKey, this.item, this.type, this.showFullDescription);
+        if (this.item != null) this.bind(this.parentKey, this.item, this.type, this.showFullDescription);
 
         this.attachEvents();
     }
