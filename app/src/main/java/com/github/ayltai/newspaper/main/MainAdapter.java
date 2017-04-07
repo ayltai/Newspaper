@@ -73,11 +73,13 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
 
         //noinspection InstanceVariableUsedBeforeInitialized
         this.favoriteManager.getFavorite()
-            .subscribe(favorite -> {
-                this.favorite = favorite;
+            .subscribe(
+                favorite -> {
+                    this.favorite = favorite;
 
-                this.notifyDataSetChanged();
-            }, error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error));
+                    this.notifyDataSetChanged();
+                },
+                error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error));
     }
 
     @Nullable
@@ -114,10 +116,12 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
 
         if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
-        this.subscriptions.add(view.attachments().subscribe(dummy -> {
-            presenter.onViewAttached(view);
-            presenter.bind(this.realm, new ListScreen.Key(this.favorite.getSources().get(position).getUrl()));
-        }, error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+        this.subscriptions.add(view.attachments().subscribe(
+            dummy -> {
+                presenter.onViewAttached(view);
+                presenter.bind(this.realm, new ListScreen.Key(this.favorite.getSources().get(position).getUrl()));
+            },
+            error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
         this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 

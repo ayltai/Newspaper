@@ -5,7 +5,6 @@ import java.util.Date;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Configs;
@@ -135,13 +134,11 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
     //endregion
 
-    @VisibleForTesting
     @NonNull
     /* public final */ FeedManager getFeedManager() {
         return new FeedManager(this.realm);
     }
 
-    @VisibleForTesting
     /* public final */ void updateFeed(@NonNull final Feed feed, final boolean bookmark) {
         final int index = feed.indexOf(this.item);
 

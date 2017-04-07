@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 
 import com.github.ayltai.newspaper.util.LogUtils;
 
@@ -48,15 +47,13 @@ public abstract class Presenter<V extends Presenter.View> extends BasePresenter<
         this.isViewAttached = false;
     }
 
-    @VisibleForTesting
     @NonNull
-    public RxBus bus() {
+    protected RxBus bus() {
         return RxBus.getInstance();
     }
 
-    @VisibleForTesting
     @NonNull
-    public LogUtils log() {
+    protected LogUtils log() {
         return LogUtils.getInstance();
     }
 }
