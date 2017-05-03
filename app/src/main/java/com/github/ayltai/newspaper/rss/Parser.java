@@ -126,20 +126,8 @@ final class Parser {
                     item.publishDate = Parser.readPublishDate(parser);
                     break;
 
-                case Item.TAG_MEDIA_CONTENT:
+                case Item.TAG_CONTENT:
                     item.mediaUrl = Parser.readMediaUrl(parser);
-                    break;
-
-                case Item.TAG_GUID:
-                    String guid = Parser.readTag(parser, name);
-
-                    // GUID prefix is the same for duplicate news items but the suffix is different
-                    if (guid != null) {
-                        final int index = guid.lastIndexOf("-");
-                        if (index > 0) guid = guid.substring(0, index);
-                    }
-
-                    item.guid = guid;
                     break;
 
                 default:
@@ -165,12 +153,12 @@ final class Parser {
 
     @NonNull
     private static String readMediaUrl(@NonNull final XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, null, Item.TAG_MEDIA_CONTENT);
+        parser.require(XmlPullParser.START_TAG, null, Item.TAG_CONTENT);
 
         final String value = parser.getAttributeValue(null, Item.ATTR_URL);
         parser.nextTag();
 
-        parser.require(XmlPullParser.END_TAG, null, Item.TAG_MEDIA_CONTENT);
+        parser.require(XmlPullParser.END_TAG, null, Item.TAG_CONTENT);
 
         return value;
     }
@@ -187,6 +175,8 @@ final class Parser {
         }
 
         parser.require(XmlPullParser.END_TAG, null, tag);
+
+        if (value != null) value = value.trim().replaceAll("\n", "");
 
         return value;
     }

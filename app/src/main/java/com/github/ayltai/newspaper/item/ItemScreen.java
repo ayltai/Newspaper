@@ -80,7 +80,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             if (!super.equals(o)) return false;
 
             final ItemScreen.Key that = (ItemScreen.Key)o;
-            return this.item.getGuid() == null ? that.item.getGuid() == null : this.item.getGuid().equals(that.item.getGuid());
+            return this.item.getLink().equals(that.item.getLink());
 
         }
 
@@ -89,9 +89,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         public int hashCode() {
             final int hashCode = super.hashCode();
 
-            if (this.item.getGuid() == null) return hashCode;
-
-            return 31 * hashCode + this.item.getGuid().hashCode();
+            return 31 * hashCode + this.item.getLink().hashCode();
         }
 
         //region Parcelable
@@ -247,12 +245,12 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     @Override
     public void setThumbnail(@Nullable final String thumbnail, @Constants.ListViewType final int type) {
         if (this.hasAttached) {
-            if (TextUtils.isEmpty(thumbnail) || !ItemUtils.hasOriginalMediaUrl(thumbnail)) {
+            if (TextUtils.isEmpty(thumbnail)) {
                 this.appBarLayout.setExpanded(false, false);
             } else {
                 this.appBarLayout.setExpanded(true, false);
 
-                this.imageLoader.loadImage(Uri.parse(ItemUtils.getOriginalMediaUrl(thumbnail)), this.callback);
+                this.imageLoader.loadImage(Uri.parse(thumbnail), this.callback);
             }
         }
     }
@@ -300,7 +298,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     }
 
     @Override
-    public void showOriginalMedia(@NonNull final String url) {
+    public void showMedia(@NonNull final String url) {
         new ImageViewer.Builder(this.getContext(), new String[] { url }).show();
     }
 

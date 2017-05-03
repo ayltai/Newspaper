@@ -178,7 +178,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
     }
 
     @Override
-    public void showOriginalMedia(@NonNull final String url) {
+    public void showMedia(@NonNull final String url) {
     }
 
     @Override
@@ -215,11 +215,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
         } else {
             imageView.setVisibility(View.VISIBLE);
 
-            if (type == Constants.LIST_VIEW_TYPE_COZY) {
-                imageView.showImage(Uri.parse(url), Uri.parse(ItemUtils.getOriginalMediaUrl(url)));
-            } else {
-                imageView.showImage(Uri.parse(url));
-            }
+            imageView.showImage(Uri.parse(url));
         }
     }
 

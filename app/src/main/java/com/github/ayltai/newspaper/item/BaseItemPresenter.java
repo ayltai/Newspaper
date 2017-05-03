@@ -49,7 +49,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
         void showItem(@NonNull ListScreen.Key parentKey, @NonNull Item item);
 
-        void showOriginalMedia(@NonNull String url);
+        void showMedia(@NonNull String url);
 
         void share(@NonNull String url);
     }
@@ -78,7 +78,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         this.showFullDescription = showFullDescription;
 
         if (this.isViewAttached()) {
-            if (BuildConfig.DEBUG) this.log().d(this.getClass().getName(), "guid = " + this.item.getGuid());
+            if (BuildConfig.DEBUG) this.log().d(this.getClass().getName(), "link = " + this.item.getLink());
 
             this.getView().setTitle(this.item.getTitle());
             this.getView().setDescription(this.showFullDescription && !this.item.isFullDescription() ? this.getView().getContext().getString(R.string.loading_indicator) : this.item.getDescription());
@@ -184,7 +184,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
     private void attachZooms() {
         if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(dummy -> {
-            if (this.item != null && this.item.getMediaUrl() != null) this.getView().showOriginalMedia(ItemUtils.getOriginalMediaUrl(this.item.getMediaUrl()));
+            if (this.item != null && this.item.getMediaUrl() != null && !this.item.getMediaUrl().isEmpty()) this.getView().showMedia(this.item.getMediaUrl());
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 

@@ -61,10 +61,6 @@ public final class ItemUtils {
             .replaceAll(ItemUtils.ELLIPSIS, Constants.EMPTY));
     }
 
-    public static boolean hasOriginalMediaUrl(@NonNull final String url) {
-        return url.lastIndexOf(ItemUtils.ORIGINAL_MEDIA_URL_TOKEN) > -1;
-    }
-
     @NonNull
     public static String getOriginalMediaUrl(@NonNull final String url) {
         final int index = url.lastIndexOf(ItemUtils.ORIGINAL_MEDIA_URL_TOKEN);
@@ -77,10 +73,8 @@ public final class ItemUtils {
     @SuppressFBWarnings("CSI_CHAR_SET_ISSUES_USE_STANDARD_CHARSET_NAME")
     @Nullable
     public static String getId(@NonNull final Item item) {
-        if (item.getGuid() == null) return item.getTitle();
-
         try {
-            return URLDecoder.decode(item.getGuid(), Constants.ENCODING_UTF8);
+            return URLDecoder.decode(item.getLink(), Constants.ENCODING_UTF8);
         } catch (final UnsupportedEncodingException e) {
             Log.w(ItemUtils.class.getSimpleName(), e.getMessage(), e);
         }
@@ -102,8 +96,8 @@ public final class ItemUtils {
                 InputStream inputStream = null;
 
                 try {
-                    final String html = IOUtils.toString(inputStream = client.download(item.getLink()), Constants.ENCODING_UTF8);
-                    final int start = html.indexOf(ItemUtils.FULL_DESCRIPTION_TAG_START);
+                    final String html  = IOUtils.toString(inputStream = client.download(item.getLink()), Constants.ENCODING_UTF8);
+                    final int    start = html.indexOf(ItemUtils.FULL_DESCRIPTION_TAG_START);
 
                     if (start >= 0) {
                         final int end = html.indexOf(ItemUtils.FULL_DESCRIPTION_TAG_END);

@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.rss.Item;
-import com.github.ayltai.newspaper.util.ItemUtils;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -63,7 +62,7 @@ public class Feed extends RealmObject {
         this.images.clear();
 
         for (final Item item : this.items) {
-            if (item.getMediaUrl() != null && ItemUtils.hasOriginalMediaUrl(item.getMediaUrl())) this.images.add(ItemUtils.getOriginalMediaUrl(item.getMediaUrl()));
+            if (item.getMediaUrl() != null && !item.getMediaUrl().isEmpty()) this.images.add(item.getMediaUrl());
         }
     }
 
@@ -71,7 +70,7 @@ public class Feed extends RealmObject {
         if (item == null) return false;
 
         for (final Item i : this.items) {
-            if (i.getGuid() != null && item.getGuid() != null && i.getGuid().equals(item.getGuid())) return true;
+            if (i.getLink().equals(item.getLink())) return true;
             if (item.equals(i)) return true;
         }
 
@@ -84,7 +83,7 @@ public class Feed extends RealmObject {
         for (int i = 0; i < this.items.size(); i++) {
             final Item j = this.items.get(i);
 
-            if (j.getGuid() != null && item.getGuid() != null && j.getGuid().equals(item.getGuid())) return i;
+            if ( j.getLink().equals(item.getLink())) return i;
             if (item.equals(j)) return i;
         }
 

@@ -18,8 +18,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     static final String TAG_LINK          = "link";
     static final String TAG_PUBLISH_DATE  = "pubDate";
     static final String TAG_SOURCE        = "source";
-    static final String TAG_MEDIA_CONTENT = "media:content";
-    static final String TAG_GUID          = "guid";
+    static final String TAG_CONTENT       = "content";
 
     static final String ATTR_URL = "url";
 
@@ -32,6 +31,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     String  description;
     boolean isFullDescription;
 
+    @PrimaryKey
     String link;
 
     long publishDate;
@@ -39,9 +39,6 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     String source;
 
     String mediaUrl;
-
-    @PrimaryKey
-    String guid;
 
     //endregion
 
@@ -69,7 +66,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         return this.isFullDescription;
     }
 
-    @Nullable
+    @NonNull
     public String getLink() {
         return this.link;
     }
@@ -91,11 +88,6 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         return this.mediaUrl;
     }
 
-    @Nullable
-    public String getGuid() {
-        return this.guid;
-    }
-
     //endregion
 
     @Override
@@ -114,7 +106,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         if (obj instanceof Item) {
             final Item item = (Item)obj;
 
-            return this.guid == null ? item.guid == null : this.guid.equals(item.guid);
+            return this.link.equals(item.link);
         }
 
         return false;
@@ -122,7 +114,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
 
     @Override
     public final int hashCode() {
-        return this.guid == null ? 0 : this.guid.hashCode();
+        return this.link.hashCode();
     }
 
     //region Parcelable
@@ -141,7 +133,6 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         dest.writeLong(this.publishDate);
         dest.writeString(this.source);
         dest.writeString(this.mediaUrl);
-        dest.writeString(this.guid);
     }
 
     protected Item(@NonNull final Parcel in) {
@@ -152,7 +143,6 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         this.publishDate       = in.readLong();
         this.source            = in.readString();
         this.mediaUrl          = in.readString();
-        this.guid              = in.readString();
     }
 
     public static final Parcelable.Creator<Item> CREATOR = new Parcelable.Creator<Item>() {
