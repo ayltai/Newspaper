@@ -35,7 +35,7 @@ public final class Constants {
 
     public static final String EMPTY = "";
 
-    public static final String SOURCE_BOOKMARK = "BOOKMARK";
+    public static final String CATEGORY_BOOKMARK = "BOOKMARK";
 
     public static final String ANALYTICS_BOOKMARK_ADD    = "Bookmark (Add)";
     public static final String ANALYTICS_BOOKMARK_REMOVE = "Bookmark (Remove)";

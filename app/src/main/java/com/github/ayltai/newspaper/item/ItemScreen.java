@@ -30,7 +30,7 @@ import com.github.ayltai.newspaper.graphics.DaggerGraphicsComponent;
 import com.github.ayltai.newspaper.graphics.GraphicsModule;
 import com.github.ayltai.newspaper.graphics.ImageLoaderCallback;
 import com.github.ayltai.newspaper.list.ListScreen;
-import com.github.ayltai.newspaper.rss.Item;
+import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
@@ -110,7 +110,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             this.item      = in.readParcelable(Item.class.getClassLoader());
         }
 
-        public static final Parcelable.Creator<ItemScreen.Key> CREATOR = new Parcelable.Creator<ItemScreen.Key>() {
+        public static final Creator<Key> CREATOR = new Creator<Key>() {
             @NonNull
             @Override
             public ItemScreen.Key createFromParcel(@NonNull final Parcel source) {

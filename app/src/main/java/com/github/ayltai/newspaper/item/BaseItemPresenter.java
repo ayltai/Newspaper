@@ -1,6 +1,5 @@
 package com.github.ayltai.newspaper.item;
 
-import java.util.Collections;
 import java.util.Date;
 
 import android.support.annotation.NonNull;
@@ -11,11 +10,10 @@ import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.data.Feed;
-import com.github.ayltai.newspaper.data.FeedManager;
+import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.list.ListScreen;
-import com.github.ayltai.newspaper.rss.Item;
-import com.github.ayltai.newspaper.util.ItemUtils;
+import com.github.ayltai.newspaper.model.ClientFactory;
+import com.github.ayltai.newspaper.model.Item;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -80,15 +78,17 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         if (this.isViewAttached()) {
             if (BuildConfig.DEBUG) this.log().d(this.getClass().getName(), "link = " + this.item.getLink());
 
+            if (this.getView() == null) throw new NullPointerException("View is null");
+
             this.getView().setTitle(this.item.getTitle());
             this.getView().setDescription(this.showFullDescription && !this.item.isFullDescription() ? this.getView().getContext().getString(R.string.loading_indicator) : this.item.getDescription());
             this.getView().setSource(this.item.getSource());
             this.getView().setLink(this.item.getLink());
-            this.getView().setThumbnail(this.item.getMediaUrl(), this.type);
+            this.getView().setThumbnail(this.item.getMediaUrls().isEmpty() ? null : this.item.getMediaUrls().first().getValue(), this.type);
 
             if (this.getView().bookmarks() != null) {
-                this.getFeedManager()
-                    .getFeed(Constants.SOURCE_BOOKMARK)
+                this.getItemManager()
+                    .getItems(null, parentKey == null ? new String[0] : new String[] { parentKey.getCategory() })
                     .subscribe(
                         feed -> this.getView().setIsBookmarked(feed.contains(this.item)),
                         error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error));
@@ -99,7 +99,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
             if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
-            if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ItemUtils.getFullDescription(this.getView().getContext(), this.item)
+            if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ClientFactory.createClient(this.item.getSource()).getFullDescription(this.item.getLink())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(
@@ -136,25 +136,16 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     //endregion
 
     @NonNull
-    /* protected final */ FeedManager getFeedManager() {
-        return new FeedManager(this.realm);
+    /* protected final */ ItemManager getItemManager() {
+        return new ItemManager(this.realm);
     }
 
-    /* protected final */ void updateFeed(@NonNull final Feed feed, final boolean bookmark) {
-        final int index = feed.indexOf(this.item);
-
+    /* protected final */ void updateFeed(@NonNull final Item item, final boolean bookmark) {
         this.realm.beginTransaction();
 
-        if (bookmark) {
-            if (index == -1) {
-                feed.getItems().add(this.item);
-                Collections.sort(feed.getItems());
-            }
-        } else {
-            if (index > -1) feed.getItems().remove(index);
-        }
+        item.setBookmarked(bookmark);
 
-        this.realm.copyToRealmOrUpdate(feed);
+        this.realm.copyToRealmOrUpdate(item);
         this.realm.commitTransaction();
     }
 
@@ -184,7 +175,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
     private void attachZooms() {
         if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(dummy -> {
-            if (this.item != null && this.item.getMediaUrl() != null && !this.item.getMediaUrl().isEmpty()) this.getView().showMedia(this.item.getMediaUrl());
+            if (this.item != null && !this.item.getMediaUrls().isEmpty()) this.getView().showMedia(this.item.getMediaUrls().first().getValue());
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 

@@ -1,44 +1,47 @@
-package com.github.ayltai.newspaper.rss;
+package com.github.ayltai.newspaper.model;
 
 import java.util.Date;
+import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.ayltai.newspaper.data.RealmString;
+
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     //region Constants
 
-    static final String TAG_TITLE         = "title";
-    static final String TAG_DESCRIPTION   = "description";
-    static final String TAG_LINK          = "link";
-    static final String TAG_PUBLISH_DATE  = "pubDate";
-    static final String TAG_SOURCE        = "source";
-    static final String TAG_CONTENT       = "content";
-
-    static final String ATTR_URL = "url";
+    public static final String FIELD_SOURCE       = "source";
+    public static final String FIELD_CATEGORY     = "category";
+    public static final String FIELD_PUBLISH_DATE = "publishDate";
+    public static final String FIELD_BOOKMARKED   = "bookmarked";
 
     //endregion
 
     //region Fields
 
-    String title;
+    private String title;
 
-    String  description;
-    boolean isFullDescription;
+    private String  description;
+    private boolean isFullDescription;
 
     @PrimaryKey
-    String link;
+    private String link;
 
-    long publishDate;
+    private long publishDate;
 
-    String source;
+    private String source;
+    private String category;
 
-    String mediaUrl;
+    private RealmList<RealmString> mediaUrls;
+
+    private Boolean bookmarked;
 
     //endregion
 
@@ -47,17 +50,17 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
 
     //region Properties
 
-    @Nullable
+    @NonNull
     public String getTitle() {
         return this.title;
     }
 
-    @Nullable
+    @NonNull
     public String getDescription() {
         return this.description;
     }
 
-    public void setDescription(@Nullable final String description) {
+    public void setDescription(@NonNull final String description) {
         this.description       = description;
         this.isFullDescription = true;
     }
@@ -78,14 +81,28 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         return new Date(this.publishDate);
     }
 
-    @Nullable
+    @NonNull
     public String getSource() {
         return this.source;
     }
 
+    @NonNull
+    public String getCategory() {
+        return this.category;
+    }
+
+    @NonNull
+    public RealmList<RealmString> getMediaUrls() {
+        return this.mediaUrls;
+    }
+
     @Nullable
-    public String getMediaUrl() {
-        return this.mediaUrl;
+    public Boolean isBookmarked() {
+        return this.bookmarked;
+    }
+
+    public void setBookmarked(final boolean bookmarked) {
+        this.bookmarked = bookmarked;
     }
 
     //endregion
@@ -94,9 +111,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     public final int compareTo(@NonNull final Item item) {
         if (this.publishDate != 0 && item.publishDate != 0) return (int)(item.publishDate - this.publishDate);
 
-        if (this.title != null && item.title != null) return this.title.compareTo(item.title);
-
-        return 0;
+        return this.title.compareTo(item.title);
     }
 
     @Override
@@ -120,19 +135,21 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     //region Parcelable
 
     @Override
-    public final int describeContents() {
+    public int describeContents() {
         return 0;
     }
 
     @Override
-    public final void writeToParcel(@NonNull final Parcel dest, final int flags) {
+    public void writeToParcel(@NonNull final Parcel dest, final int flags) {
         dest.writeString(this.title);
         dest.writeString(this.description);
         dest.writeInt(this.isFullDescription ? 1 : 0);
         dest.writeString(this.link);
         dest.writeLong(this.publishDate);
         dest.writeString(this.source);
-        dest.writeString(this.mediaUrl);
+        dest.writeString(this.category);
+        dest.writeTypedList(this.mediaUrls);
+        dest.writeInt(this.bookmarked ? 1 : 0);
     }
 
     protected Item(@NonNull final Parcel in) {
@@ -142,15 +159,22 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         this.link              = in.readString();
         this.publishDate       = in.readLong();
         this.source            = in.readString();
-        this.mediaUrl          = in.readString();
+        this.category          = in.readString();
+        this.mediaUrls         = new RealmList<>();
+        this.bookmarked        = in.readInt() == 1;
+
+        final List<RealmString> mediaUrls = in.createTypedArrayList(RealmString.CREATOR);
+        for (final RealmString mediaUrl : mediaUrls) this.mediaUrls.add(mediaUrl);
     }
 
     public static final Parcelable.Creator<Item> CREATOR = new Parcelable.Creator<Item>() {
+        @NonNull
         @Override
         public Item createFromParcel(@NonNull final Parcel source) {
             return new Item(source);
         }
 
+        @NonNull
         @Override
         public Item[] newArray(final int size) {
             return new Item[size];

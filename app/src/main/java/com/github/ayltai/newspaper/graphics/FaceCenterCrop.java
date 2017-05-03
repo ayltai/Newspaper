@@ -79,7 +79,7 @@ public final class FaceCenterCrop {
 
     private static void detectFace(@NonNull final Bitmap bitmap, @NonNull final PointF centerOfAllFaces) {
         if (FaceDetectorFactory.isValid()) {
-            final FaceDetector      faceDetector = FaceDetectorFactory.getDetector();
+            final FaceDetector faceDetector = FaceDetectorFactory.getDetector();
             final SparseArray<Face> faces        = faceDetector.detect(new Frame.Builder().setBitmap(bitmap).build());
             final int               totalFaces   = faces.size();
 

@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper.list;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -15,15 +16,10 @@ import android.util.Log;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
-import com.github.ayltai.newspaper.ContextModule;
 import com.github.ayltai.newspaper.Presenter;
-import com.github.ayltai.newspaper.data.Feed;
-import com.github.ayltai.newspaper.data.FeedManager;
-import com.github.ayltai.newspaper.net.NetModule;
-import com.github.ayltai.newspaper.rss.Client;
-import com.github.ayltai.newspaper.rss.DaggerRssComponent;
-import com.github.ayltai.newspaper.rss.Item;
-import com.github.ayltai.newspaper.rss.RssModule;
+import com.github.ayltai.newspaper.data.ItemManager;
+import com.github.ayltai.newspaper.model.Client;
+import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.ayltai.newspaper.util.TestUtils;
 
@@ -36,7 +32,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     public interface View extends Presenter.View {
-        void setItems(@NonNull ListScreen.Key parentKey, @Nullable Feed feed);
+        void setItems(@NonNull ListScreen.Key parentKey, @Nullable List<Item> items);
 
         @NonNull
         Observable<Void> refreshes();
@@ -54,7 +50,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     private Subscription          updateSubscription;
     private Realm                 realm;
     private ListScreen.Key        key;
-    private Feed                  feed;
+    private List<Item>            items;
     private boolean               isBound;
 
     //endregion
@@ -70,20 +66,20 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
         if (this.isViewAttached() && !this.isBound) {
-            this.getFeedManager().getFeed(this.key.getUrl())
-                .subscribe(feed -> {
-                    this.feed = feed;
+            this.getItemManager().getItems(null, new String[] { this.key.getCategory() })
+                .subscribe(items -> {
+                    this.items = items;
 
-                    if (this.feed == null || this.feed.getItems().isEmpty()) {
-                        if (this.feed != null && Constants.SOURCE_BOOKMARK.equals(this.key.getUrl())) {
-                            this.getView().setItems(this.key, this.feed);
+                    if (this.items.isEmpty()) {
+                        if (Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {
+                            this.getView().setItems(this.key, this.items);
                         } else {
                             this.bindFromRemote(Constants.REFRESH_LOAD_TIMEOUT);
                         }
                     } else {
                         this.checkForUpdate();
 
-                        if (!Constants.SOURCE_BOOKMARK.equals(this.key.getUrl())) this.bindFromRemote(Constants.INIT_LOAD_TIMEOUT);
+                        if (!Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) this.bindFromRemote(Constants.INIT_LOAD_TIMEOUT);
                     }
 
                     this.isBound = true;
@@ -97,9 +93,10 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
-        this.refreshSubscription = this.client.get(this.key.getUrl())
-            .doOnNext(data -> {
-                this.copyToRealmOrUpdate(data);
+        // TODO: Maps category to URL
+        this.refreshSubscription = this.client.getItems(this.key.getCategory())
+            .doOnNext(items -> {
+                this.copyToRealmOrUpdate(items);
 
                 this.checkForUpdate();
             })
@@ -107,13 +104,13 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(
-                feed -> {
-                    this.feed = feed;
+                items -> {
+                    this.items = items;
 
-                    this.getView().setItems(this.key, feed);
+                    this.getView().setItems(this.key, items);
                 },
                 error -> {
-                    this.getView().setItems(this.key, this.feed);
+                    this.getView().setItems(this.key, this.items);
 
                     if (error instanceof TimeoutException) {
                         this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
@@ -129,7 +126,8 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
         if (this.updateSubscription != null) this.updateSubscription.unsubscribe();
 
-        this.updateSubscription = this.client.get(this.key.getUrl())
+        // TODO: Maps category to URL
+        this.updateSubscription = this.client.getItems(this.key.getCategory())
             .delaySubscription(Configs.getUpdateInterval(), TimeUnit.SECONDS)
             .timeout(Configs.getUpdateInterval() + Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
@@ -145,14 +143,14 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
             });
     }
 
-    private void showUpdateIndicator(final Feed feed) {
+    private void showUpdateIndicator(final List<Item> items) {
         if (BuildConfig.DEBUG) Log.i(this.getClass().getSimpleName(), "Update check finished");
 
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
-        if (this.feed != null && !this.feed.getItems().isEmpty() && !feed.getItems().isEmpty()) {
-            final Item i = this.feed.getItems().get(0);
-            final Item j = feed.getItems().get(0);
+        if (!this.items.isEmpty() && !items.isEmpty()) {
+            final Item i = this.items.get(0);
+            final Item j = items.get(0);
 
             if (i.getPublishDate() != null && j.getPublishDate() != null && i.getPublishDate().compareTo(j.getPublishDate()) < 0) this.getView().showUpdateIndicator();
 
@@ -160,11 +158,11 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         }
     }
 
-    private void copyToRealmOrUpdate(@NonNull final Feed feed) {
+    private void copyToRealmOrUpdate(@NonNull final List<Item> items) {
         new Handler(Looper.getMainLooper()).post(() -> {
             if (!this.realm.isClosed()) {
                 this.realm.beginTransaction();
-                this.realm.copyToRealmOrUpdate(feed);
+                this.realm.copyToRealmOrUpdate(items);
                 this.realm.commitTransaction();
             }
         });
@@ -176,12 +174,8 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     public void onViewAttached(@NonNull final ListPresenter.View view) {
         super.onViewAttached(view);
 
-        if (this.client == null) this.client = DaggerRssComponent.builder()
-            .contextModule(new ContextModule(view.getContext()))
-            .netModule(new NetModule())
-            .rssModule(new RssModule())
-            .build()
-            .client();
+        // TODO: Creates client of selected sources
+        if (this.client == null) this.client = null;
 
         this.attachEvents();
     }
@@ -215,8 +209,8 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
     @VisibleForTesting
     @NonNull
-    /* private final */ FeedManager getFeedManager() {
-        return new FeedManager(this.realm);
+    /* private final */ ItemManager getItemManager() {
+        return new ItemManager(this.realm);
     }
 
     private void attachEvents() {
@@ -224,7 +218,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
         this.subscriptions.add(this.getView().refreshes().subscribe(dummy -> {
             if (this.key != null) {
-                if (Constants.SOURCE_BOOKMARK.equals(this.key.getUrl())) {
+                if (Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {
                     this.isBound = false;
 
                     this.bind(this.realm, this.key);

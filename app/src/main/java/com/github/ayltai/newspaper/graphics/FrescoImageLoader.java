@@ -36,7 +36,7 @@ public final class FrescoImageLoader implements ImageLoader {
     //region Variables
 
     private static String           cachePath;
-    private static ImageLoader      instance;
+    private static ImageLoader instance;
     private static ExecutorSupplier executorSupplier;
 
     //endregion

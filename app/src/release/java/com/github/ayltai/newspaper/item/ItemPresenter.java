@@ -36,10 +36,10 @@ public class ItemPresenter extends BaseItemPresenter {
     @Override
     protected void attachBookmarks() {
         if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks()
-            .subscribe(bookmark -> this.getFeedManager().getFeed(Constants.SOURCE_BOOKMARK)
-                .subscribe(feed -> {
-                    final int index = feed.indexOf(this.item);
-                    this.updateFeed(feed, bookmark);
+            .subscribe(bookmark -> this.getItemManager().getItems(null, this.parentKey == null ? new String[0] : new String[] { Constants.CATEGORY_BOOKMARK })
+                .subscribe(items -> {
+                    final int index = items.indexOf(this.item);
+                    this.updateFeed(items, bookmark);
                     this.bus().send(Pair.create(index, this.item));
 
                     this.answers().logCustom(AnalyticsUtils.applyAttributes(new CustomEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE), this.item));

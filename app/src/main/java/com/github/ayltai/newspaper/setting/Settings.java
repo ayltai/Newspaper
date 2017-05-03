@@ -2,7 +2,6 @@ package com.github.ayltai.newspaper.setting;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import android.annotation.SuppressLint;
@@ -13,10 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import com.facebook.common.internal.Sets;
 import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
-import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
 @SuppressFBWarnings("PMB_POSSIBLE_MEMORY_BLOAT")
@@ -59,11 +56,6 @@ public final class Settings {
 
     public static boolean isDarkTheme(@NonNull final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Settings.PREF_DARK_THEME, false);
-    }
-
-    @NonNull
-    public static Set<String> getCategories(@NonNull final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, Sets.newHashSet(context.getResources().getStringArray(R.array.pref_category_values)));
     }
 
     public static boolean isHeaderImageEnabled(@NonNull final Context context) {

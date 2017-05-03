@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.list;
 
 import java.io.Closeable;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -22,33 +23,30 @@ import android.widget.TextView;
 import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.RxBus;
-import com.github.ayltai.newspaper.data.Feed;
-import com.github.ayltai.newspaper.main.ImagesUpdatedEvent;
+import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
-import com.github.ayltai.newspaper.util.LogUtils;
 
 import flow.ClassKey;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import rx.Observable;
-import rx.Subscriber;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 
 @SuppressLint("ViewConstructor")
 public final class ListScreen extends FrameLayout implements ListPresenter.View, Closeable {
     public static final class Key extends ClassKey implements Parcelable {
-        private final String url;
+        private final String category;
 
-        public Key(@NonNull final String url) {
-            this.url = url;
+        public Key(@NonNull final String category) {
+            this.category = category;
         }
 
-        public String getUrl() {
-            return this.url;
+        @NonNull
+        public String getCategory() {
+            return this.category;
         }
 
         //region Parcelable
@@ -60,14 +58,14 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
         @Override
         public void writeToParcel(@NonNull final Parcel dest, final int flags) {
-            dest.writeString(this.url);
+            dest.writeString(this.category);
         }
 
         protected Key(@NonNull final Parcel in) {
-            this.url = in.readString();
+            this.category = in.readString();
         }
 
-        public static final Parcelable.Creator<ListScreen.Key> CREATOR = new Parcelable.Creator<ListScreen.Key>() {
+        public static final Creator<Key> CREATOR = new Creator<Key>() {
             @NonNull
             @Override
             public ListScreen.Key createFromParcel(@NonNull final Parcel source) {
@@ -96,24 +94,8 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     //region Variables
 
-    private final Subscriber<FeedUpdatedEvent> subscriber = new Subscriber<FeedUpdatedEvent>() {
-        @Override
-        public void onCompleted() {
-        }
-
-        @Override
-        public void onError(final Throwable e) {
-            LogUtils.getInstance().e(this.getClass().getSimpleName(), e.getMessage(), e);
-        }
-
-        @Override
-        public void onNext(final FeedUpdatedEvent event) {
-            if (ListScreen.this.parentKey != null && Constants.SOURCE_BOOKMARK.equals(ListScreen.this.parentKey.url)) ListScreen.this.setItems(ListScreen.this.parentKey, event.getFeed());
-        }
-    };
-
     private ListScreen.Key parentKey;
-    private Feed           feed;
+    private List<Item>     items;
     private boolean        hasAttached;
     private boolean        resetPosition;
 
@@ -130,20 +112,12 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     public ListScreen(@NonNull final Context context) {
         super(context);
-
-        RxBus.getInstance().register(FeedUpdatedEvent.class, this.subscriber);
     }
 
     @Override
-    public void setItems(@NonNull final ListScreen.Key parentKey, @Nullable final Feed feed) {
-        if (this.hasAttached && parentKey != null) {
-            if (feed != null) {
-                feed.updateImages();
-
-                RxBus.getInstance().send(new ImagesUpdatedEvent(feed.getUrl(), feed.getImages()));
-            }
-
-            this.feed = feed;
+    public void setItems(@NonNull final ListScreen.Key parentKey, @Nullable final List<Item> items) {
+        if (this.hasAttached) {
+            this.items = items;
 
             if (this.adapter != null) {
                 // Detaches the adapter from RecyclerView before updating the adapter
@@ -153,14 +127,14 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
                 this.adapter = null;
             }
 
-            this.adapter = new ListAdapter(this.getContext(), this.parentKey = parentKey, Settings.getListViewType(this.getContext()), this.feed);
+            this.adapter = new ListAdapter(this.getContext(), this.parentKey = parentKey, Settings.getListViewType(this.getContext()), this.items);
 
             this.setUpRecyclerView();
 
-            if (this.feed == null || this.feed.getItems().isEmpty()) {
+            if (this.items.isEmpty()) {
                 this.empty.removeAllViews();
 
-                LayoutInflater.from(this.getContext()).inflate(Constants.SOURCE_BOOKMARK.equals(this.parentKey.url) ? R.layout.view_empty_bookmark : R.layout.view_empty_news, this.empty, true);
+                LayoutInflater.from(this.getContext()).inflate(Constants.CATEGORY_BOOKMARK.equals(this.parentKey.category) ? R.layout.view_empty_bookmark : R.layout.view_empty_news, this.empty, true);
 
                 this.recyclerView.setVisibility(View.GONE);
                 this.empty.setVisibility(View.VISIBLE);
@@ -173,7 +147,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
             if (this.swipeRefreshLayout.isRefreshing()) this.swipeRefreshLayout.setRefreshing(false);
         } else {
-            this.feed = feed;
+            this.items = items;
         }
     }
 
@@ -218,7 +192,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         super.onAttachedToWindow();
 
         if (this.hasAttached) {
-            if (this.parentKey != null) this.setItems(this.parentKey, this.feed);
+            if (this.parentKey != null) this.setItems(this.parentKey, this.items);
         } else {
             this.hasAttached = true;
 
@@ -234,7 +208,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
                 public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
                     if (ListScreen.this.parentKey != null) {
                         final int position = layoutManager.findFirstCompletelyVisibleItemPosition();
-                        Settings.setPosition(ListScreen.this.parentKey.url, position == RecyclerView.NO_POSITION ? layoutManager.findFirstVisibleItemPosition() : position);
+                        Settings.setPosition(ListScreen.this.parentKey.category, position == RecyclerView.NO_POSITION ? layoutManager.findFirstVisibleItemPosition() : position);
                     }
                 }
             });
@@ -255,15 +229,13 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        if (this.parentKey != null && !((Activity)this.getContext()).isFinishing()) Settings.setPosition(this.parentKey.getUrl(), ((LinearLayoutManager)this.recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
+        if (this.parentKey != null && !((Activity)this.getContext()).isFinishing()) Settings.setPosition(this.parentKey.getCategory(), ((LinearLayoutManager)this.recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
 
         this.detachedFromWindow.onNext(null);
     }
 
     @Override
     public void close() {
-        RxBus.getInstance().unregister(FeedUpdatedEvent.class, this.subscriber);
-
         if (this.adapter != null) {
             this.adapter.close();
             this.adapter = null;
@@ -294,9 +266,9 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
         if (this.resetPosition) {
             this.resetPosition = false;
 
-            Settings.setPosition(this.parentKey.url, 0);
+            Settings.setPosition(this.parentKey.category, 0);
         } else {
-            this.recyclerView.scrollToPosition(Settings.getPosition(this.parentKey.url));
+            this.recyclerView.scrollToPosition(Settings.getPosition(this.parentKey.category));
         }
     }
 }

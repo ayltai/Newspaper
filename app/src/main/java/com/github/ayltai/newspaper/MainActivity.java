@@ -34,10 +34,11 @@ import rx.schedulers.Schedulers;
 public final class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
     //region Variables
 
-    @Inject FlowController controller;
+    @Inject
+    FlowController controller;
 
-    private FirebaseRemoteConfig       config;
-    private GoogleApiClient            client;
+    private FirebaseRemoteConfig config;
+    private GoogleApiClient client;
     private ConnectivityChangeReceiver receiver;
     private Snackbar                   snackbar;
 

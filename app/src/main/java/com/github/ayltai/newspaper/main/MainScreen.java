@@ -33,7 +33,6 @@ import com.github.ayltai.newspaper.graphics.DaggerGraphicsComponent;
 import com.github.ayltai.newspaper.graphics.GraphicsModule;
 import com.github.ayltai.newspaper.graphics.ImageLoaderCallback;
 import com.github.ayltai.newspaper.setting.Settings;
-import com.github.ayltai.newspaper.setting.SettingsActivity;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.loader.ImageLoader;
@@ -67,7 +66,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
         protected Key(@NonNull final Parcel in) {
         }
 
-        public static final Parcelable.Creator<MainScreen.Key> CREATOR = new Parcelable.Creator<MainScreen.Key>() {
+        public static final Creator<Key> CREATOR = new Creator<Key>() {
             @NonNull
             @Override
             public MainScreen.Key createFromParcel(@NonNull final Parcel source) {
@@ -114,7 +113,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
     //region Variables
 
-    private MainAdapter         adapter;
+    private MainAdapter adapter;
     private boolean             hasAttached;
     private boolean             isBound;
     private boolean             isDrawerOpened;
@@ -345,7 +344,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
         this.subscriptions.add(RxView.clicks(drawerMenu.findViewById(R.id.action_settings)).subscribe(dummy -> {
             this.animation.close();
-            ((Activity)this.getContext()).startActivityForResult(new Intent(this.getContext(), SettingsActivity.class), Constants.REQUEST_SETTINGS);
+            // TODO: Shows settings
+            //((Activity)this.getContext()).startActivityForResult(new Intent(this.getContext(), SettingsActivity.class), Constants.REQUEST_SETTINGS);
         }));
 
         this.subscriptions.add(RxView.clicks(drawerMenu.findViewById(R.id.action_about)).subscribe(dummy -> {

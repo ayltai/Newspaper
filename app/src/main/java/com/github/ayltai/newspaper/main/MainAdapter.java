@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.ayltai.newspaper.Constants;
-import com.github.ayltai.newspaper.ContextModule;
 import com.github.ayltai.newspaper.DaggerMainComponent;
 import com.github.ayltai.newspaper.MainComponent;
 import com.github.ayltai.newspaper.MainModule;
@@ -26,12 +25,9 @@ import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataModule;
 import com.github.ayltai.newspaper.data.Favorite;
 import com.github.ayltai.newspaper.data.FavoriteManager;
-import com.github.ayltai.newspaper.data.Source;
 import com.github.ayltai.newspaper.list.ListPresenter;
 import com.github.ayltai.newspaper.list.ListScreen;
-import com.github.ayltai.newspaper.net.NetModule;
-import com.github.ayltai.newspaper.rss.DaggerRssComponent;
-import com.github.ayltai.newspaper.rss.RssModule;
+import com.github.ayltai.newspaper.model.Category;
 import com.github.ayltai.newspaper.util.LogUtils;
 
 import io.realm.Realm;
@@ -60,16 +56,17 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
         this.component = DaggerMainComponent.builder().mainModule(new MainModule((Activity)this.context)).build();
 
         DaggerDataComponent.builder()
-            .dataModule(new DataModule(this.context))
+            .dataModule(new DataModule())
             .build()
             .inject(this);
 
-        final String[] titles = this.context.getResources().getStringArray(R.array.pref_category_short_entries);
-        final String[] urls   = this.context.getResources().getStringArray(R.array.pref_category_values);
+        // TODO: Do we need to hard-code categories
+        final String[] titles = this.context.getResources().getStringArray(0/*R.array.pref_category_short_entries*/);
+        final String[] urls   = this.context.getResources().getStringArray(0/*R.array.pref_category_values*/);
 
         for (int i = 0; i < titles.length; i++) this.titles.put(urls[i], titles[i]);
 
-        this.titles.put(Constants.SOURCE_BOOKMARK, this.context.getString(R.string.title_bookmark));
+        this.titles.put(Constants.CATEGORY_BOOKMARK, this.context.getString(R.string.title_bookmark));
 
         //noinspection InstanceVariableUsedBeforeInitialized
         this.favoriteManager.getFavorite()
@@ -83,10 +80,11 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
     }
 
     @Nullable
-    /* final */ Source getSource(final int index) {
+    /* final */ Category getCategory(final int index) {
         if (this.realm.isClosed()) return null;
 
-        return this.favorite == null ? null : this.favorite.getSources().get(index);
+        //return this.favorite == null ? null : this.favorite.getSources().get(index);
+        return null;
     }
 
     @Override
@@ -107,19 +105,12 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
         final ListPresenter presenter = this.component.listPresenter();
         final ListScreen    view      = (ListScreen)this.component.listView();
 
-        DaggerRssComponent.builder()
-            .contextModule(new ContextModule(this.context))
-            .netModule(new NetModule())
-            .rssModule(new RssModule())
-            .build()
-            .inject(presenter);
-
         if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
         this.subscriptions.add(view.attachments().subscribe(
             dummy -> {
                 presenter.onViewAttached(view);
-                presenter.bind(this.realm, new ListScreen.Key(this.favorite.getSources().get(position).getUrl()));
+                //presenter.bind(this.realm, new ListScreen.Key(this.favorite.getSources().get(position).getUrl()));
             },
             error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
@@ -145,7 +136,9 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
     public final CharSequence getPageTitle(final int position) {
         if (this.realm.isClosed()) return Constants.EMPTY;
 
-        return this.titles.get(this.favorite.getSources().get(position).getUrl());
+        //return this.titles.get(this.favorite.getSources().get(position).getUrl());
+        // TODO
+        return null;
     }
 
     @Override
