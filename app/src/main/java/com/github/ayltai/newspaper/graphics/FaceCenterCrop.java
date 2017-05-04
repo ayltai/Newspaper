@@ -17,7 +17,7 @@ import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 public final class FaceCenterCrop {
     //region Constants
 
-    private static final int MAX_WIDTH = 720;
+    private static final int MAX_WIDTH  = 720;
     private static final int MAX_HEIGHT = 720;
 
     private static final float MAX_DELTA = 0.05f;
@@ -79,7 +79,7 @@ public final class FaceCenterCrop {
 
     private static void detectFace(@NonNull final Bitmap bitmap, @NonNull final PointF centerOfAllFaces) {
         if (FaceDetectorFactory.isValid()) {
-            final FaceDetector faceDetector = FaceDetectorFactory.getDetector();
+            final FaceDetector      faceDetector = FaceDetectorFactory.getDetector();
             final SparseArray<Face> faces        = faceDetector.detect(new Frame.Builder().setBitmap(bitmap).build());
             final int               totalFaces   = faces.size();
 

@@ -46,7 +46,7 @@ final class FlowController {
     //region Variables
 
     private final Activity      activity;
-    private final Realm realm;
+    private final Realm         realm;
     private final MainComponent component;
 
     //endregion
@@ -78,7 +78,7 @@ final class FlowController {
                 if (outgoingState != null) outgoingState.save(((ViewGroup)this.activity.findViewById(android.R.id.content)).getChildAt(0));
 
                 final Presenter.View view;
-                final Presenter presenter;
+                final Presenter      presenter;
 
                 if (this.screens.containsKey(incomingState.getKey().getClass())) {
                     view      = this.screens.get(incomingState.getKey().getClass());

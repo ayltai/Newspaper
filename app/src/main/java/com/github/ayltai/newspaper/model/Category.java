@@ -45,7 +45,7 @@ public class Category extends RealmObject implements Parcelable {
     }
 
     protected Category(final Parcel in) {
-        this.url = in.readString();
+        this.url  = in.readString();
         this.name = in.readString();
     }
 

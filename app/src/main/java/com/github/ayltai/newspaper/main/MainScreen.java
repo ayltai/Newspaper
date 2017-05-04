@@ -6,9 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -113,7 +111,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
     //region Variables
 
-    private MainAdapter adapter;
+    private MainAdapter         adapter;
     private boolean             hasAttached;
     private boolean             isBound;
     private boolean             isDrawerOpened;

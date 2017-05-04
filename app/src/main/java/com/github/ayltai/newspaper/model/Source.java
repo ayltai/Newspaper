@@ -41,6 +41,8 @@ public class Source extends RealmObject implements Parcelable {
 
     //endregion
 
+    //region Parcelable
+
     @Override
     public int describeContents() {
         return 0;
@@ -73,4 +75,6 @@ public class Source extends RealmObject implements Parcelable {
             return new Source[size];
         }
     };
+
+    //endregion
 }

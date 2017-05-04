@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatDelegate;
 import android.widget.TextView;
 
 import com.google.android.gms.appinvite.AppInvite;
-import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -28,6 +27,7 @@ import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.BigImageViewer;
 
+import rx.Emitter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -37,8 +37,8 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     @Inject
     FlowController controller;
 
-    private FirebaseRemoteConfig config;
-    private GoogleApiClient client;
+    private FirebaseRemoteConfig       config;
+    private GoogleApiClient            client;
     private ConnectivityChangeReceiver receiver;
     private Snackbar                   snackbar;
 
@@ -46,12 +46,12 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
 
     //endregion
 
-    @Inject
-    public MainActivity() {
-    }
-
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
+    @Inject
+    public MainActivity() {
     }
 
     @Override
@@ -73,8 +73,6 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
         }
 
         this.setUpConnectivityChangeReceiver();
-
-        this.onNewIntent(this.getIntent());
     }
 
     @Override
@@ -134,24 +132,6 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     }
 
     @Override
-    protected void onNewIntent(@NonNull final Intent intent) {
-        if (Intent.ACTION_VIEW.equals(intent.getAction()) && intent.getDataString() != null) {
-            // TODO: Parse the data URL
-
-            // TODO: Handle the deep link
-
-            AppInvite.AppInviteApi.getInvitation(this.client, this, true)
-                .setResultCallback(result -> {
-                    if (result.getStatus().isSuccess()) {
-                        final String deepLink = AppInviteReferral.getDeepLink(result.getInvitationIntent());
-
-                        // TODO: Handle the deep link
-                    }
-                });
-        }
-    }
-
-    @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -198,7 +178,7 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     }
 
     private void setUpRemoteConfig() {
-        Observable.<FirebaseRemoteConfig>create(subscriber -> subscriber.onNext(FirebaseRemoteConfig.getInstance()))
+        Observable.<FirebaseRemoteConfig>create(emitter -> emitter.onNext(FirebaseRemoteConfig.getInstance()), Emitter.BackpressureMode.BUFFER)
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
             .subscribe(config -> {

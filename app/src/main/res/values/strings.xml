@@ -32,4 +32,39 @@
     <string name="pref_dark_theme">Dark theme</string>
     <string name="pref_header_image_enabled">Show header image</string>
     <string name="pref_panorama_enabled">Enable panorama effect</string>
+    <string-array name="sources">
+        <item>蘋果日報</item>
+        <item>東方日報</item>
+        <item>星島日報</item>
+        <item>經濟日報</item>
+        <item>成報</item>
+        <item>明報</item>
+        <item>頭條日報</item>
+        <item>晴報</item>
+        <item>信報</item>
+        <item>香港電台</item>
+    </string-array>
+    <string-array name="categories">
+        <item>焦點</item>
+        <item>港聞</item>
+        <item>國際</item>
+        <item>兩岸</item>
+        <item>經濟</item>
+        <item>地產</item>
+        <item>娛樂</item>
+        <item>體育</item>
+        <item>副刊</item>
+        <item>科技</item>
+        <item>教育</item>
+        <item>社論</item>
+        <item>即時港聞</item>
+        <item>即時國際</item>
+        <item>即時兩岸</item>
+        <item>即時經濟</item>
+        <item>即時地產</item>
+        <item>即時娛樂</item>
+        <item>即時體育</item>
+        <item>即時副刊</item>
+        <item>即時科技</item>
+    </string-array>
 </resources>
