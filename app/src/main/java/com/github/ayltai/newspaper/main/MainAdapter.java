@@ -13,13 +13,11 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.ayltai.newspaper.ContextModule;
 import com.github.ayltai.newspaper.DaggerMainComponent;
 import com.github.ayltai.newspaper.MainComponent;
 import com.github.ayltai.newspaper.MainModule;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
-import com.github.ayltai.newspaper.data.DataModule;
 import com.github.ayltai.newspaper.list.ListPresenter;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.setting.Settings;
@@ -48,8 +46,6 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
         this.component = DaggerMainComponent.builder().mainModule(new MainModule((Activity)this.context)).build();
 
         DaggerDataComponent.builder()
-            .contextModule(new ContextModule(this.context))
-            .dataModule(new DataModule(this.context))
             .build()
             .inject(this);
 
@@ -105,7 +101,7 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
 
     @NonNull
     @Override
-    public final CharSequence getPageTitle(final int position) {
+    public CharSequence getPageTitle(final int position) {
         return this.categories.get(position);
     }
 

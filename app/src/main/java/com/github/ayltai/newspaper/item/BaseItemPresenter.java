@@ -90,7 +90,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
                 this.getItemManager()
                     .getItems(null, parentKey == null ? new String[0] : new String[] { parentKey.getCategory() })
                     .subscribe(
-                        feed -> this.getView().setIsBookmarked(feed.contains(this.item)),
+                        items -> this.getView().setIsBookmarked(items.contains(this.item)),
                         error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error));
             }
 
@@ -142,7 +142,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         return new ItemManager(this.realm);
     }
 
-    /* protected final */ void updateFeed(@NonNull final Item item, final boolean bookmark) {
+    /* protected final */ void updateItem(@NonNull final Item item, final boolean bookmark) {
         this.realm.beginTransaction();
 
         item.setBookmarked(bookmark);

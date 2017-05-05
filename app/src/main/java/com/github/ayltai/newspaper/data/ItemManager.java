@@ -17,7 +17,7 @@ import io.realm.Sort;
 import rx.Emitter;
 import rx.Observable;
 
-public final class ItemManager {
+public class ItemManager {
     private static final String ERROR_REALM = "Realm is closed";
 
     //region Variables

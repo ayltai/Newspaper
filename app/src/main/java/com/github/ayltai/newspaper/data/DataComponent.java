@@ -5,7 +5,7 @@ import com.github.ayltai.newspaper.main.MainAdapter;
 
 import dagger.Component;
 
-@Component(modules = { ContextModule.class, DataModule.class })
+@Component(modules = { DataModule.class })
 public interface DataComponent {
     void inject(MainAdapter mainAdapter);
 }

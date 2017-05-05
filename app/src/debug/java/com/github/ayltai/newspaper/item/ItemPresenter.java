@@ -31,7 +31,7 @@ public class ItemPresenter extends BaseItemPresenter {
                     .subscribe(
                         items -> {
                             final int index = items.indexOf(this.item);
-                            this.updateFeed(items.get(index), bookmark);
+                            this.updateItem(items.get(index), bookmark);
                             this.bus().send(new ItemUpdatedEvent(index, this.item));
                         },
                         error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)),
