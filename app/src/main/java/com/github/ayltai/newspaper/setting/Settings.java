@@ -2,9 +2,9 @@ package com.github.ayltai.newspaper.setting;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.UUID;
 
 import android.annotation.SuppressLint;
@@ -64,12 +64,28 @@ public final class Settings {
 
     @NonNull
     public static Set<String> getSources(@NonNull final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_SOURCES, new TreeSet<>(Arrays.asList(context.getResources().getStringArray(R.array.sources))));
+        final LinkedHashSet<String> allSources  = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.sources)));
+        final Set<String>           userSources = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_SOURCES, allSources);
+        final LinkedHashSet<String> sources     = new LinkedHashSet<>();
+
+        for (final String source : allSources) {
+            if (userSources.contains(source)) sources.add(source);
+        }
+
+        return sources;
     }
 
     @NonNull
     public static Set<String> getCategories(@NonNull final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, new TreeSet<>(Arrays.asList(context.getResources().getStringArray(R.array.categories))));
+        final LinkedHashSet<String> allCategories  = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.categories)));
+        final Set<String>           userCategories = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, allCategories);
+        final LinkedHashSet<String> categories     = new LinkedHashSet<>();
+
+        for (final String category : allCategories) {
+            if (userCategories.contains(category)) categories.add(category);
+        }
+
+        return categories;
     }
 
     public static boolean isHeaderImageEnabled(@NonNull final Context context) {

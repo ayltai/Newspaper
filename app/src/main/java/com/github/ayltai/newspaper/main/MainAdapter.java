@@ -59,7 +59,7 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
 
     @Override
     public /* final */ int getCount() {
-        return Settings.getCategories(this.context).size();
+        return this.categories.size();
     }
 
     @Override

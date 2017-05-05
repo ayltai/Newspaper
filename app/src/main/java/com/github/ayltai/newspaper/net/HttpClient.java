@@ -63,6 +63,10 @@ public final class HttpClient extends BaseHttpClient implements Closeable {
     private InputStream mockDownload(@NonNull final String url) throws IOException {
         if (this.context == null) return null;
 
-        return this.context.getResources().openRawResource(BaseHttpClient.ASSETS.get(url));
+        final Integer asset = BaseHttpClient.ASSETS.get(url);
+
+        if (asset == null) return null;
+
+        return this.context.getResources().openRawResource(asset);
     }
 }

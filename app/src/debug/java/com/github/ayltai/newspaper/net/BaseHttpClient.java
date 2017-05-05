@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.TestUtils;
 
 import okhttp3.OkHttpClient;
@@ -31,7 +32,10 @@ public abstract class BaseHttpClient {
             .build();
 
         if (TestUtils.isRunningInstrumentalTest() && HttpClient.ASSETS.isEmpty()) {
-            // Puts mock responses into ASSETS
+            BaseHttpClient.ASSETS.put("http://skypost.ulifestyle.com.hk/rss/sras001", R.raw.rss_hk);
+            BaseHttpClient.ASSETS.put("http://rthk.hk/rthk/news/rss/c_expressnews_cinternational.xml", R.raw.rss_intl);
+            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00013.xml", R.raw.rss_china);
+            BaseHttpClient.ASSETS.put("http://skypost.ulifestyle.com.hk/rss/sras002", R.raw.rss_entertainment);
         }
     }
 }

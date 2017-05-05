@@ -149,6 +149,8 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
         if (this.getView() == null) return;
 
+        if (this.updateSubscription != null) this.updateSubscription.unsubscribe();
+
         new FavoriteManager(this.getView().getContext(), this.realm).getFavorite()
             .subscribe(
                 favorite -> {
