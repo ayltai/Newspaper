@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -115,7 +114,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     }
 
     @Override
-    public void setItems(@NonNull final ListScreen.Key parentKey, @Nullable final List<Item> items) {
+    public void setItems(@NonNull final ListScreen.Key parentKey, @NonNull final List<Item> items) {
         if (this.hasAttached) {
             this.items = items;
 

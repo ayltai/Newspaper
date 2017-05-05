@@ -13,7 +13,6 @@ import android.support.annotation.VisibleForTesting;
 import com.github.ayltai.newspaper.DaggerMainComponent;
 import com.github.ayltai.newspaper.MainModule;
 import com.github.ayltai.newspaper.Presenter;
-import com.github.ayltai.newspaper.model.Category;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -72,7 +71,7 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
     //region Variables
 
     private CompositeSubscription subscriptions;
-    private MainAdapter adapter;
+    private MainAdapter           adapter;
     private int                   currentPosition;
     private int                   lastUpdatedPosition = -1;
 
@@ -121,12 +120,7 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
 
     private void updateHeader() {
         if (this.adapter.getCount() > 0) {
-            final Category category = this.adapter.getCategory(this.currentPosition);
-
-            if (category != null) {
-                this.view.updateHeaderTitle(category.getName());
-                this.view.updateHeaderImages(this.images.get(category.getUrl()));
-            }
+            this.view.updateHeaderTitle(this.adapter.getPageTitle(this.currentPosition));
         }
     }
 

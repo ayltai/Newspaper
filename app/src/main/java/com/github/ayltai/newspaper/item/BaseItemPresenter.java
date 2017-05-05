@@ -12,7 +12,7 @@ import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.list.ListScreen;
-import com.github.ayltai.newspaper.model.ClientFactory;
+import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.model.Item;
 
 import io.realm.Realm;
@@ -99,14 +99,16 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
             if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
-            if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ClientFactory.createClient(this.item.getSource()).getFullDescription(this.item.getLink())
+            if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ClientFactory.getInstance(this.getView().getContext()).getClient(this.item.getSource()).getFullDescription(this.item.getLink())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     description -> {
-                        this.getView().setDescription(description);
+                        if (description != null) {
+                            this.getView().setDescription(description);
 
-                        this.updateItemDescription(description);
+                            this.updateItemDescription(description);
+                        }
                     },
                     error -> this.log().w(this.getClass().getSimpleName(), error.getMessage(), error)));
         }

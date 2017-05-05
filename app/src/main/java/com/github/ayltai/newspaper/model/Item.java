@@ -39,7 +39,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     private String source;
     private String category;
 
-    private RealmList<RealmString> mediaUrls;
+    private RealmList<RealmString> mediaUrls = new RealmList<>();
 
     private Boolean bookmarked;
 
@@ -55,12 +55,16 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         return this.title;
     }
 
+    public void setTitle(@Nullable final String title) {
+        this.title = title;
+    }
+
     @NonNull
     public String getDescription() {
         return this.description;
     }
 
-    public void setDescription(@NonNull final String description) {
+    public void setDescription(@Nullable final String description) {
         this.description       = description;
         this.isFullDescription = true;
     }
@@ -74,6 +78,10 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         return this.link;
     }
 
+    public void setLink(@Nullable final String link) {
+        this.link = link;
+    }
+
     @Nullable
     public Date getPublishDate() {
         if (this.publishDate == 0) return null;
@@ -81,14 +89,26 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         return new Date(this.publishDate);
     }
 
+    public void setPublishDate(@Nullable final Date publishDate) {
+        this.publishDate = publishDate == null ? 0 : publishDate.getTime();
+    }
+
     @NonNull
     public String getSource() {
         return this.source;
     }
 
+    public void setSource(@NonNull final String source) {
+        this.source = source;
+    }
+
     @NonNull
     public String getCategory() {
         return this.category;
+    }
+
+    public void setCategory(@NonNull final String category) {
+        this.category = category;
     }
 
     @NonNull

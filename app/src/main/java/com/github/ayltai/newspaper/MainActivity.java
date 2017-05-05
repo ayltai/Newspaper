@@ -18,6 +18,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
+import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.graphics.FaceDetectorFactory;
 import com.github.ayltai.newspaper.graphics.FrescoImageLoader;
 import com.github.ayltai.newspaper.net.ConnectivityChangeReceiver;
@@ -90,6 +91,7 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
             RxBus.getInstance().unregisterAll();
             FrescoImageLoader.shutDown();
             FaceDetectorFactory.release();
+            ClientFactory.getInstance(this).close();
         }
     }
 

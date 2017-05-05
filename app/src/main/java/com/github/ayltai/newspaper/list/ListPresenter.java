@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper.list;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -9,7 +11,6 @@ import javax.inject.Inject;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
@@ -17,9 +18,13 @@ import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
+import com.github.ayltai.newspaper.client.Client;
+import com.github.ayltai.newspaper.client.ClientFactory;
+import com.github.ayltai.newspaper.data.FavoriteManager;
 import com.github.ayltai.newspaper.data.ItemManager;
-import com.github.ayltai.newspaper.model.Client;
+import com.github.ayltai.newspaper.model.Category;
 import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.ayltai.newspaper.util.TestUtils;
 
@@ -32,7 +37,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     public interface View extends Presenter.View {
-        void setItems(@NonNull ListScreen.Key parentKey, @Nullable List<Item> items);
+        void setItems(@NonNull ListScreen.Key parentKey, @NonNull List<Item> items);
 
         @NonNull
         Observable<Void> refreshes();
@@ -42,15 +47,12 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
     //region Variables
 
-    @Inject
-    Client client;
-
     private CompositeSubscription subscriptions;
     private Subscription          refreshSubscription;
     private Subscription          updateSubscription;
     private Realm                 realm;
-    private ListScreen.Key        key;
     private List<Item>            items;
+    private ListScreen.Key        key;
     private boolean               isBound;
 
     //endregion
@@ -89,63 +91,106 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private void bindFromRemote(final int timeout) {
+        if (this.getView() == null) return;
+
         if (this.refreshSubscription != null) this.refreshSubscription.unsubscribe();
 
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
-        // TODO: Maps category to URL
-        this.refreshSubscription = this.client.getItems(this.key.getCategory())
-            .doOnNext(items -> {
-                this.copyToRealmOrUpdate(items);
-
-                this.checkForUpdate();
-            })
-            .timeout(timeout, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
+        new FavoriteManager(this.getView().getContext(), this.realm).getFavorite()
             .subscribe(
-                items -> {
-                    this.items = items;
+                favorite -> {
+                    final List<Observable<List<Item>>> observables = new ArrayList<>();
 
-                    this.getView().setItems(this.key, items);
-                },
-                error -> {
-                    this.getView().setItems(this.key, this.items);
+                    for (final Source source : favorite.getSources()) {
+                        for (final Category category : source.getCategories()) {
+                            if (category.getName().equals(this.key.getCategory())) {
+                                final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(source.getName());
 
-                    if (error instanceof TimeoutException) {
-                        this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
-                    } else {
-                        this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                if (client != null) {
+                                    observables.add(client.getItems(category.getUrl())
+                                        .timeout(timeout, TimeUnit.SECONDS)
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribeOn(Schedulers.io()));
+                                }
+                            }
+                        }
                     }
-                });
+
+                    this.refreshSubscription = ListPresenter.zip(observables).doOnNext(items -> {
+                        this.copyToRealmOrUpdate(items);
+
+                        this.checkForUpdate();
+                    })
+                    .subscribe(
+                        items -> {
+                            this.items = items;
+
+                            this.getView().setItems(this.key, items);
+                        },
+                        error -> {
+                            this.getView().setItems(this.key, this.items);
+
+                            if (error instanceof TimeoutException) {
+                                this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
+                            } else {
+                                this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            }
+                        }
+                    );
+                },
+                error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
+            );
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private void checkForUpdate() {
         if (BuildConfig.DEBUG) Log.i(this.getClass().getSimpleName(), "Scheduled update check");
 
-        if (this.updateSubscription != null) this.updateSubscription.unsubscribe();
+        if (this.getView() == null) return;
 
-        // TODO: Maps category to URL
-        this.updateSubscription = this.client.getItems(this.key.getCategory())
-            .delaySubscription(Configs.getUpdateInterval(), TimeUnit.SECONDS)
-            .timeout(Configs.getUpdateInterval() + Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::showUpdateIndicator, error -> {
-                if (error instanceof TimeoutException) {
-                    this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
-                } else {
-                    this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
-                }
+        new FavoriteManager(this.getView().getContext(), this.realm).getFavorite()
+            .subscribe(
+                favorite -> {
+                    final List<Observable<List<Item>>> observables = new ArrayList<>();
 
-                this.checkForUpdate();
-            });
+                    for (final Source source : favorite.getSources()) {
+                        for (final Category category : source.getCategories()) {
+                            if (category.getName().equals(this.key.getCategory())) {
+                                final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(source.getName());
+
+                                if (client != null) {
+                                    observables.add(client
+                                        .getItems(category.getUrl())
+                                        .delaySubscription(Configs.getUpdateInterval(), TimeUnit.SECONDS)
+                                        .timeout(Configs.getUpdateInterval() + Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribeOn(Schedulers.io()));
+                                }
+                            }
+                        }
+                    }
+
+                    this.updateSubscription = ListPresenter.zip(observables).subscribe(
+                        this::showUpdateIndicator,
+                        error -> {
+                            if (error instanceof TimeoutException) {
+                                this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
+                            } else {
+                                this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            }
+
+                            this.checkForUpdate();
+                        });
+                },
+                error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
+            );
     }
 
     private void showUpdateIndicator(final List<Item> items) {
         if (BuildConfig.DEBUG) Log.i(this.getClass().getSimpleName(), "Update check finished");
 
+        if (this.getView() == null) return;
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
         if (!this.items.isEmpty() && !items.isEmpty()) {
@@ -174,9 +219,6 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     public void onViewAttached(@NonNull final ListPresenter.View view) {
         super.onViewAttached(view);
 
-        // TODO: Creates client of selected sources
-        if (this.client == null) this.client = null;
-
         this.attachEvents();
     }
 
@@ -198,11 +240,6 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
             this.updateSubscription.unsubscribe();
             this.updateSubscription = null;
         }
-
-        if (this.client != null) {
-            this.client.close();
-            this.client = null;
-        }
     }
 
     //endregion
@@ -214,6 +251,8 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     }
 
     private void attachEvents() {
+        if (this.getView() == null) return;
+
         if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
         this.subscriptions.add(this.getView().refreshes().subscribe(dummy -> {
@@ -227,5 +266,16 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                 }
             }
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+    }
+
+    private static Observable<List<Item>> zip(@NonNull final Iterable<Observable<List<Item>>> observables) {
+        return Observable.zip(observables, lists -> {
+            final List<Item> items = new ArrayList<>();
+
+            for (final Object list : lists) items.addAll((List<Item>)list);
+            Collections.sort(items);
+
+            return items;
+        });
     }
 }

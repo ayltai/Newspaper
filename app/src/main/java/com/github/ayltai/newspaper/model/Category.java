@@ -16,8 +16,17 @@ public class Category extends RealmObject implements Parcelable {
 
     //endregion
 
+    //region Constructors
+
     public Category() {
     }
+
+    public Category(@NonNull final String url, @NonNull final String name) {
+        this.url  = url;
+        this.name = name;
+    }
+
+    //endregion
 
     //region Properties
 

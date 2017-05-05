@@ -2,9 +2,14 @@ package com.github.ayltai.newspaper.data;
 
 import javax.inject.Inject;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.github.ayltai.newspaper.model.SourceFactory;
+import com.github.ayltai.newspaper.setting.Settings;
+
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import rx.Emitter;
 import rx.Observable;
@@ -12,13 +17,15 @@ import rx.Observable;
 public final class FavoriteManager {
     //region Variables
 
-    private final Realm realm;
+    private final Context context;
+    private final Realm   realm;
 
     //endregion
 
     @Inject
-    public FavoriteManager(@NonNull final Realm realm) {
-        this.realm = realm;
+    public FavoriteManager(@NonNull final Context context, @NonNull final Realm realm) {
+        this.context = context;
+        this.realm   = realm;
     }
 
     @NonNull
@@ -34,7 +41,10 @@ public final class FavoriteManager {
 
     @NonNull
     private Favorite createFromSettings() {
-        // TODO
-        return null;
+        final Favorite favorite = new Favorite(new RealmList<>());
+
+        for (final String source : Settings.getSources(this.context)) favorite.getSources().add(SourceFactory.getInstance(this.context).getSource(source));
+
+        return favorite;
     }
 }

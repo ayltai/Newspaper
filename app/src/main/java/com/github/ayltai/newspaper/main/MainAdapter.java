@@ -2,32 +2,27 @@ package com.github.ayltai.newspaper.main;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.ayltai.newspaper.Constants;
+import com.github.ayltai.newspaper.ContextModule;
 import com.github.ayltai.newspaper.DaggerMainComponent;
 import com.github.ayltai.newspaper.MainComponent;
 import com.github.ayltai.newspaper.MainModule;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataModule;
-import com.github.ayltai.newspaper.data.Favorite;
-import com.github.ayltai.newspaper.data.FavoriteManager;
 import com.github.ayltai.newspaper.list.ListPresenter;
 import com.github.ayltai.newspaper.list.ListScreen;
-import com.github.ayltai.newspaper.model.Category;
+import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.LogUtils;
 
 import io.realm.Realm;
@@ -36,17 +31,14 @@ import rx.subscriptions.CompositeSubscription;
 public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
     //region Variables
 
-    private final Map<String, String>     titles = new HashMap<>();
-    private final SparseArrayCompat<View> views  = new SparseArrayCompat<>();
-    private final Context                 context;
-    private final MainComponent           component;
+    private final SparseArrayCompat<String> categories = new SparseArrayCompat<>();
+    private final SparseArrayCompat<View>   views      = new SparseArrayCompat<>();
+    private final Context                   context;
+    private final MainComponent             component;
 
-    @Inject Realm           realm;
-    @Inject FavoriteManager favoriteManager;
+    @Inject Realm realm;
 
     private CompositeSubscription subscriptions;
-    private Favorite              favorite;
-    private int                   fakeCount;
 
     //endregion
 
@@ -56,42 +48,22 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
         this.component = DaggerMainComponent.builder().mainModule(new MainModule((Activity)this.context)).build();
 
         DaggerDataComponent.builder()
-            .dataModule(new DataModule())
+            .contextModule(new ContextModule(this.context))
+            .dataModule(new DataModule(this.context))
             .build()
             .inject(this);
 
         // TODO: Do we need to hard-code categories
-        final String[] titles = this.context.getResources().getStringArray(0/*R.array.pref_category_short_entries*/);
-        final String[] urls   = this.context.getResources().getStringArray(0/*R.array.pref_category_values*/);
+        final String[] categories = Settings.getCategories(this.context).toArray(new String[0]);
 
-        for (int i = 0; i < titles.length; i++) this.titles.put(urls[i], titles[i]);
-
-        this.titles.put(Constants.CATEGORY_BOOKMARK, this.context.getString(R.string.title_bookmark));
-
-        //noinspection InstanceVariableUsedBeforeInitialized
-        this.favoriteManager.getFavorite()
-            .subscribe(
-                favorite -> {
-                    this.favorite = favorite;
-
-                    this.notifyDataSetChanged();
-                },
-                error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error));
-    }
-
-    @Nullable
-    /* final */ Category getCategory(final int index) {
-        if (this.realm.isClosed()) return null;
-
-        //return this.favorite == null ? null : this.favorite.getSources().get(index);
-        return null;
+        int i;
+        for (i = 0; i < categories.length; i++) this.categories.put(i, categories[i]);
+        this.categories.put(i, this.context.getString(R.string.title_bookmark));
     }
 
     @Override
     public /* final */ int getCount() {
-        if (this.realm.isClosed()) return this.fakeCount;
-
-        return this.fakeCount = this.favorite == null ? 0 : this.favorite.getSources().size();
+        return Settings.getCategories(this.context).size();
     }
 
     @Override
@@ -110,7 +82,7 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
         this.subscriptions.add(view.attachments().subscribe(
             dummy -> {
                 presenter.onViewAttached(view);
-                //presenter.bind(this.realm, new ListScreen.Key(this.favorite.getSources().get(position).getUrl()));
+                presenter.bind(this.realm, new ListScreen.Key(this.categories.get(position)));
             },
             error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
@@ -134,11 +106,7 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
     @NonNull
     @Override
     public final CharSequence getPageTitle(final int position) {
-        if (this.realm.isClosed()) return Constants.EMPTY;
-
-        //return this.titles.get(this.favorite.getSources().get(position).getUrl());
-        // TODO
-        return null;
+        return this.categories.get(position);
     }
 
     @Override
