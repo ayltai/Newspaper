@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
 
@@ -22,7 +23,7 @@ import rx.Observable;
 
 public abstract class RssClient extends Client {
     //@Inject
-    protected RssClient(@NonNull final HttpClient client, @NonNull final Source source) {
+    protected RssClient(@NonNull final HttpClient client, @Nullable final Source source) {
         super(client, source);
     }
 
@@ -30,19 +31,23 @@ public abstract class RssClient extends Client {
     @Override
     public final Observable<List<Item>> getItems(@NonNull final String url) {
         return Observable.create(emitter -> {
-            InputStream inputStream = null;
+            if (this.source == null) {
+                emitter.onCompleted();
+            } else {
+                InputStream inputStream = null;
 
-            try {
-                final RealmList<Item> items = new RealmList<>(Parser.parse(inputStream = this.client.download(url)).toArray(new Item[0]));
+                try {
+                    final RealmList<Item> items = new RealmList<>(Parser.parse(inputStream = this.client.download(url)).toArray(new Item[0]));
 
-                for (final Item item : items) item.setSource(this.source.getName());
-                Collections.sort(items);
+                    for (final Item item : items) item.setSource(this.source.getName());
+                    Collections.sort(items);
 
-                emitter.onNext(items);
-            } catch (final XmlPullParserException | IOException e) {
-                emitter.onError(e);
-            } finally {
-                IOUtils.closeQuietly(inputStream);
+                    emitter.onNext(items);
+                } catch (final XmlPullParserException | IOException e) {
+                    emitter.onError(e);
+                } finally {
+                    IOUtils.closeQuietly(inputStream);
+                }
             }
         }, Emitter.BackpressureMode.BUFFER);
     }
