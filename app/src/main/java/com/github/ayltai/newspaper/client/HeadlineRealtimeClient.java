@@ -24,7 +24,7 @@ import com.github.ayltai.newspaper.util.StringUtils;
 import rx.Emitter;
 import rx.Observable;
 
-public final class HeadlineRealtimeClient extends Client {
+final class HeadlineRealtimeClient extends Client {
     //region Constants
 
     private static final String BASE_URI  = "http://hd.stheadline.com";
@@ -39,7 +39,7 @@ public final class HeadlineRealtimeClient extends Client {
         }
     };
 
-    protected HeadlineRealtimeClient(@NonNull final HttpClient client, @Nullable final Source source) {
+    HeadlineRealtimeClient(@NonNull final HttpClient client, @Nullable final Source source) {
         super(client, source);
     }
 
@@ -74,7 +74,7 @@ public final class HeadlineRealtimeClient extends Client {
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
 
                     final String image = StringUtils.substringBetween(section, "<img src=\"", "\"/>");
-                    if (image != null) item.getMediaUrls().add(new RealmString("http" + image));
+                    if (image != null) item.getMediaUrls().add(new RealmString("http:" + image));
 
                     try {
                         item.setPublishDate(HeadlineRealtimeClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o\"></i>", "</span>")));

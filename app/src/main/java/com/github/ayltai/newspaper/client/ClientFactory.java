@@ -18,7 +18,7 @@ import com.github.ayltai.newspaper.net.NetModule;
 public final class ClientFactory implements Closeable {
     private static ClientFactory instance;
 
-    private final Map<String, Client> clients = new HashMap<>(10);
+    private final Map<String, Client> clients = new HashMap<>(12);
     private final HttpClient          client;
 
     @NonNull
@@ -36,14 +36,15 @@ public final class ClientFactory implements Closeable {
         this.clients.put(sources[0], new AppleDailyClient(this.client, SourceFactory.getInstance(context).getSource(sources[0])));
         this.clients.put(sources[1], new OrientalDailyClient(this.client, SourceFactory.getInstance(context).getSource(sources[1])));
         this.clients.put(sources[2], new SingTaoClient(this.client, SourceFactory.getInstance(context).getSource(sources[2])));
-        this.clients.put(sources[3], new HketClient(this.client, SourceFactory.getInstance(context).getSource(sources[3])));
-        this.clients.put(sources[4], new SingPaoClient(this.client, SourceFactory.getInstance(context).getSource(sources[4])));
-        this.clients.put(sources[5], new MingPaoClient(this.client, SourceFactory.getInstance(context).getSource(sources[5])));
-        this.clients.put(sources[6], new HeadlineClient(this.client, SourceFactory.getInstance(context).getSource(sources[6])));
-        this.clients.put(sources[7], new HeadlineRealtimeClient(this.client, SourceFactory.getInstance(context).getSource(sources[6])));
-        this.clients.put(sources[8], new SkyPostClient(this.client, SourceFactory.getInstance(context).getSource(sources[7])));
-        this.clients.put(sources[9], new HkejClient(this.client, SourceFactory.getInstance(context).getSource(sources[8])));
-        this.clients.put(sources[10], new RthkClient(this.client, SourceFactory.getInstance(context).getSource(sources[9])));
+        this.clients.put(sources[3], new SingTaoRealtimeClient(this.client, SourceFactory.getInstance(context).getSource(sources[3])));
+        this.clients.put(sources[4], new HketClient(this.client, SourceFactory.getInstance(context).getSource(sources[4])));
+        this.clients.put(sources[5], new SingPaoClient(this.client, SourceFactory.getInstance(context).getSource(sources[5])));
+        this.clients.put(sources[6], new MingPaoClient(this.client, SourceFactory.getInstance(context).getSource(sources[6])));
+        this.clients.put(sources[7], new HeadlineClient(this.client, SourceFactory.getInstance(context).getSource(sources[7])));
+        this.clients.put(sources[8], new HeadlineRealtimeClient(this.client, SourceFactory.getInstance(context).getSource(sources[8])));
+        this.clients.put(sources[9], new SkyPostClient(this.client, SourceFactory.getInstance(context).getSource(sources[9])));
+        this.clients.put(sources[10], new HkejClient(this.client, SourceFactory.getInstance(context).getSource(sources[10])));
+        this.clients.put(sources[11], new RthkClient(this.client, SourceFactory.getInstance(context).getSource(sources[11])));
     }
 
     @Nullable

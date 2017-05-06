@@ -41,7 +41,7 @@ public abstract class Client implements Closeable {
     }
 
     @Nullable
-    protected String getCategoryName(@NonNull final String url) {
+    protected final String getCategoryName(@NonNull final String url) {
         for (final Category category : this.source.getCategories()) {
             if (category.getUrl().equals(url)) return category.getName();
         }

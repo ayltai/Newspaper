@@ -59,7 +59,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         this.title = title;
     }
 
-    @NonNull
+    @Nullable
     public String getDescription() {
         return this.description;
     }

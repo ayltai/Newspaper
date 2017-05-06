@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Inject;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -26,23 +24,22 @@ import com.github.ayltai.newspaper.util.StringUtils;
 import rx.Emitter;
 import rx.Observable;
 
-final class SingTaoClient extends Client {
+final class SingTaoRealtimeClient extends Client {
     //region Constants
 
-    private static final String BASE_URI  = "http://std.stheadline.com/daily/";
     private static final String TAG_CLOSE = "</div>";
+    private static final String TAG_QUOTE = "\"";
 
     //endregion
 
     private static final ThreadLocal<DateFormat> DATE_FORMAT = new ThreadLocal<DateFormat>() {
         @Override
         protected DateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
         }
     };
 
-    @Inject
-    SingTaoClient(@NonNull final HttpClient client, @Nullable final Source source) {
+    SingTaoRealtimeClient(@NonNull final HttpClient client, @Nullable final Source source) {
         super(client, source);
     }
 
@@ -56,7 +53,7 @@ final class SingTaoClient extends Client {
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + url);
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "HTML = " + html);
 
-                final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"main list\">", "<input type=\"hidden\" id=\"totalnews\" value=\"20\">"), "underline\">", "</a>\n</div>");
+                final String[]   sections     = StringUtils.substringsBetween(html, "<div class=\"news-wrap\">", "</a>\n</div>");
                 final List<Item> items        = new ArrayList<>(sections.length);
                 final String     categoryName = this.getCategoryName(url);
 
@@ -65,13 +62,12 @@ final class SingTaoClient extends Client {
 
                     final Item item = new Item();
 
-                    item.setTitle(StringUtils.substringBetween(section, "<div class=\"title\">", SingTaoClient.TAG_CLOSE));
-                    item.setLink(SingTaoClient.BASE_URI + StringUtils.substringBetween(section, "<a href=\"", "\">"));
-                    item.setDescription(StringUtils.substringBetween(section, "<div class=\"des\">　　(星島日報報道)", SingTaoClient.TAG_CLOSE));
+                    item.setTitle(StringUtils.substringBetween(section, "<div class=\"title\">", SingTaoRealtimeClient.TAG_CLOSE));
+                    item.setLink(StringUtils.substringBetween(section, "<a href=\"", SingTaoRealtimeClient.TAG_QUOTE));
                     item.setSource(this.source.getName());
                     item.setCategory(categoryName);
 
-                    final String image = StringUtils.substringBetween(section, "<img src=\"", "\"");
+                    final String image = StringUtils.substringBetween(section, "<img src=\"", SingTaoRealtimeClient.TAG_QUOTE);
                     if (image != null) item.getMediaUrls().add(new RealmString(image));
 
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
@@ -79,7 +75,7 @@ final class SingTaoClient extends Client {
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
 
                     try {
-                        item.setPublishDate(SingTaoClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o\"></i>", SingTaoClient.TAG_CLOSE)));
+                        item.setPublishDate(SingTaoRealtimeClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o mr5\"></i>", SingTaoRealtimeClient.TAG_CLOSE)));
 
                         items.add(item);
                     } catch (final ParseException e) {
