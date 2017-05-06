@@ -34,7 +34,7 @@ public final class HttpClient extends BaseHttpClient implements Closeable {
     public void close() {
         synchronized (this.calls) {
             for (final Call call : this.calls) {
-                if (!call.isCanceled()) call.cancel();
+                if (call != null && !call.isCanceled()) call.cancel();
             }
 
             this.calls.clear();

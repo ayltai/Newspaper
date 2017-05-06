@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Inject;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -26,23 +24,22 @@ import com.github.ayltai.newspaper.util.StringUtils;
 import rx.Emitter;
 import rx.Observable;
 
-final class SingPaoClient extends Client {
+public final class HeadlineRealtimeClient extends Client {
     //region Constants
 
-    private static final String BASE_URI = "https://www.singpao.com.hk/";
-    private static final String TAG      = "'";
+    private static final String BASE_URI  = "http://hd.stheadline.com";
+    private static final String TAG_CLOSE = "\">";
 
     //endregion
 
     private static final ThreadLocal<DateFormat> DATE_FORMAT = new ThreadLocal<DateFormat>() {
         @Override
         protected DateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
         }
     };
 
-    @Inject
-    SingPaoClient(@NonNull final HttpClient client, @Nullable final Source source) {
+    protected HeadlineRealtimeClient(@NonNull final HttpClient client, @Nullable final Source source) {
         super(client, source);
     }
 
@@ -56,28 +53,31 @@ final class SingPaoClient extends Client {
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + url);
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "HTML = " + html);
 
-                final String[]   sections     = StringUtils.substringsBetween(html, "<tr valign='top'><td width='220'>", "</td></tr>");
+                final String[]   sections     = StringUtils.substringsBetween(html, "<div class=\"topic\">", "<div class=\"col-xs-12 instantnews-list-1\">");
                 final List<Item> items        = new ArrayList<>(sections.length);
                 final String     categoryName = this.getCategoryName(url);
 
                 for (final String section : sections) {
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
 
-                    final Item item = new Item();
+                    final Item   item  = new Item();
+                    final String title = StringUtils.substringBetween(section, "<h4>", "</h4>");
 
-                    item.setTitle(StringUtils.substringBetween(section, "class='list_title'> ", "</a>"));
-                    item.setLink(SingPaoClient.BASE_URI + StringUtils.substringBetween(section, "<td><a href='", SingPaoClient.TAG));
-                    item.setDescription(StringUtils.substringBetween(section, "<br><br>\n", "</font>"));
+                    item.setTitle(StringUtils.substringBetween(title, HeadlineRealtimeClient.TAG_CLOSE, "</a>"));
+                    item.setLink(HeadlineRealtimeClient.BASE_URI + StringUtils.substringBetween(title, "<a href=\"", HeadlineRealtimeClient.TAG_CLOSE));
+                    item.setDescription(StringUtils.substringBetween(section, "<p class=\"text\">", "</p>"));
                     item.setSource(this.source.getName());
                     item.setCategory(categoryName);
-                    item.getMediaUrls().add(new RealmString(SingPaoClient.BASE_URI + StringUtils.substringBetween(section, "<img src='", SingPaoClient.TAG)));
 
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
 
+                    final String image = StringUtils.substringBetween(section, "<img src=\"", "\"/>");
+                    if (image != null) item.getMediaUrls().add(new RealmString("http" + image));
+
                     try {
-                        item.setPublishDate(SingPaoClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<font class='list_date'>", "<br>")));
+                        item.setPublishDate(HeadlineRealtimeClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o\"></i>", "</span>")));
 
                         items.add(item);
                     } catch (final ParseException e) {

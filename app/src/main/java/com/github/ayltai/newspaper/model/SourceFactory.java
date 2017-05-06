@@ -8,13 +8,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.client.HeadlineClient;
 
 import io.realm.RealmList;
 
 public final class SourceFactory {
     private static SourceFactory instance;
 
-    private final Map<String, Source> sources = new HashMap<>(10);
+    private final Map<String, Source> sources = new HashMap<>(11);
 
     @NonNull
     public static SourceFactory getInstance(@NonNull final Context context) {
@@ -27,16 +28,17 @@ public final class SourceFactory {
         final String[] sources    = context.getResources().getStringArray(R.array.sources);
         final String[] categories = context.getResources().getStringArray(R.array.categories);
 
-        this.sources.put(sources[0], this.createAppleDailySource(sources, categories));
-        this.sources.put(sources[1], this.createOrientalDailySource(sources, categories));
-        this.sources.put(sources[2], this.createSingTaoDailySource(sources, categories));
-        this.sources.put(sources[3], this.createEconomicTimesSource(sources, categories));
-        this.sources.put(sources[4], this.createSingPaoDailySource(sources, categories));
-        this.sources.put(sources[5], this.createMingPaoSource(sources, categories));
-        this.sources.put(sources[6], this.createHeadlineSource(sources, categories));
-        this.sources.put(sources[7], this.createSkyPostSource(sources, categories));
-        this.sources.put(sources[8], this.createEconomicJournalSource(sources, categories));
-        this.sources.put(sources[9], this.createRadioTelevisionSource(sources, categories));
+        this.sources.put(sources[0], SourceFactory.createAppleDailySource(sources, categories));
+        this.sources.put(sources[1], SourceFactory.createOrientalDailySource(sources, categories));
+        this.sources.put(sources[2], SourceFactory.createSingTaoDailySource(sources, categories));
+        this.sources.put(sources[3], SourceFactory.createEconomicTimesSource(sources, categories));
+        this.sources.put(sources[4], SourceFactory.createSingPaoDailySource(sources, categories));
+        this.sources.put(sources[5], SourceFactory.createMingPaoSource(sources, categories));
+        this.sources.put(sources[6], SourceFactory.createHeadlineSource(sources, categories));
+        this.sources.put(sources[7], SourceFactory.createHeadlineRealtimeSource(sources, categories));
+        this.sources.put(sources[8], SourceFactory.createSkyPostSource(sources, categories));
+        this.sources.put(sources[9], SourceFactory.createEconomicJournalSource(sources, categories));
+        this.sources.put(sources[10], SourceFactory.createRadioTelevisionSource(sources, categories));
     }
 
     @Nullable
@@ -45,28 +47,28 @@ public final class SourceFactory {
     }
 
     @NonNull
-    private Source createAppleDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
+    private static Source createAppleDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[0], new RealmList<>());
     }
 
     @NonNull
-    private Source createOrientalDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
+    private static Source createOrientalDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[1], new RealmList<>(
             new Category("http://orientaldaily.on.cc/rss/news.xml", categories[1]),
             new Category("http://orientaldaily.on.cc/rss/china_world.xml", categories[2]),
             new Category("http://orientaldaily.on.cc/rss/finance.xml", categories[4]),
             new Category("http://orientaldaily.on.cc/rss/entertainment.xml", categories[6]),
             new Category("http://orientaldaily.on.cc/rss/lifestyle.xml", categories[8]),
-            new Category("http://orientaldaily.on.cc/rss/sport.xml", categories[10])));
+            new Category("http://orientaldaily.on.cc/rss/sport.xml", categories[7])));
     }
 
     @NonNull
-    private Source createSingTaoDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
+    private static Source createSingTaoDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[2], new RealmList<>());
     }
 
     @NonNull
-    private Source createEconomicTimesSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+    private static Source createEconomicTimesSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[3], new RealmList<>(
             new Category("http://www.hket.com/rss/headlines", categories[0]),
             new Category("http://www.hket.com/rss/hongkong", categories[1]),
@@ -78,12 +80,18 @@ public final class SourceFactory {
     }
 
     @NonNull
-    private Source createSingPaoDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
-        return new Source(sources[4], new RealmList<>());
+    private static Source createSingPaoDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
+        return new Source(sources[4], new RealmList<>(
+            new Category("https://www.singpao.com.hk/index.php?fi=news1", categories[1]),
+            new Category("https://www.singpao.com.hk/index.php?fi=news8", categories[2]),
+            new Category("https://www.singpao.com.hk/index.php?fi=news3", categories[4]),
+            new Category("https://www.singpao.com.hk/index.php?fi=news4", categories[6]),
+            new Category("https://www.singpao.com.hk/index.php?fi=news5", categories[7]),
+            new Category("https://www.singpao.com.hk/index.php?fi=news7", categories[8])));
     }
 
     @NonNull
-    private Source createMingPaoSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+    private static Source createMingPaoSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[5], new RealmList<>(
             new Category("https://news.mingpao.com/rss/pns/s00001.xml", categories[0]),
             new Category("https://news.mingpao.com/rss/pns/s00002.xml", categories[1]),
@@ -105,19 +113,33 @@ public final class SourceFactory {
     }
 
     @NonNull
-    private Source createHeadlineSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+    private static Source createHeadlineSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[6], new RealmList<>(
-            new Category("http://www.feed43.com/5652083487268223.xml", categories[12]),
-            new Category("http://www.feed43.com/8334601303067526.xml", categories[13]),
-            new Category("http://www.feed43.com/1650212611678040.xml", categories[14]),
-            new Category("http://www.feed43.com/6861325447714757.xml", categories[16]),
-            new Category("http://www.feed43.com/1074704207872608.xml", categories[17]),
-            new Category("http://www.feed43.com/6835046601035184.xml", categories[18])));
+            new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_HONG_KONG, categories[1]),
+            new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_INTERNATIONAL, categories[2]),
+            new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_CHINA, categories[3]),
+            new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_FINANCE, categories[4]),
+            new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_PROPERTY, categories[5]),
+            new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_ENTERTAINMENT, categories[6]),
+            new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_SUPPLEMENT, categories[8]),
+            new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_SPORTS, categories[7])));
     }
 
     @NonNull
-    private Source createSkyPostSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+    private static Source createHeadlineRealtimeSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[7], new RealmList<>(
+            new Category("http://hd.stheadline.com/news/realtime/hk/", categories[12]),
+            new Category("http://hd.stheadline.com/news/realtime/wo/", categories[13]),
+            new Category("http://hd.stheadline.com/news/realtime/chi/", categories[14]),
+            new Category("http://hd.stheadline.com/news/realtime/fin/", categories[15]),
+            new Category("http://hd.stheadline.com/news/realtime/pp/", categories[16]),
+            new Category("http://hd.stheadline.com/news/realtime/ent/", categories[17]),
+            new Category("http://hd.stheadline.com/news/realtime/spt/", categories[18])));
+    }
+
+    @NonNull
+    private static Source createSkyPostSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+        return new Source(sources[8], new RealmList<>(
             new Category("http://skypost.ulifestyle.com.hk/rss/sras001", categories[1]),
             new Category("http://skypost.ulifestyle.com.hk/rss/sras004", categories[2]),
             new Category("http://skypost.ulifestyle.com.hk/rss/sras003", categories[4]),
@@ -128,29 +150,22 @@ public final class SourceFactory {
     }
 
     @NonNull
-    private Source createEconomicJournalSource(@NonNull final String[] sources, @NonNull final String[] categories) {
-        return new Source(sources[8], new RealmList<>(
-            new Category("http://www.feed43.com/8115574211567336.xml", categories[1]),
-            new Category("http://www.feed43.com/4411814127482753.xml", categories[2]),
-            new Category("http://www.feed43.com/7220621531762083.xml", categories[3]),
-            new Category("http://www.feed43.com/0875012577044427.xml", categories[4]),
-            new Category("http://www.feed43.com/2720672460258087.xml", categories[5]),
-            new Category("http://www.feed43.com/1632345172705331.xml", categories[8]),
-            new Category("http://www.feed43.com/2135755628716870.xml", categories[11])));
+    private static Source createEconomicJournalSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+        return new Source(sources[9], new RealmList<>(
+            new Category("http://www1.hkej.com/dailynews/international", categories[2]),
+            new Category("http://www1.hkej.com/dailynews/cntw", categories[3]),
+            new Category("http://www1.hkej.com/dailynews/finnews", categories[4]),
+            new Category("http://www1.hkej.com/dailynews/property", categories[5]),
+            new Category("http://www1.hkej.com/dailynews/culture", categories[8])));
     }
 
     @NonNull
-    private Source createRadioTelevisionSource(@NonNull final String[] sources, @NonNull final String[] categories) {
-        return new Source(sources[9], new RealmList<>(
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml", categories[1]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cinternational.xml", categories[2]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_greaterchina.xml", categories[3]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cfinance.xml", categories[4]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_csport.xml", categories[7]),
-            new Category("http://feeds.feedburner.com/rthk/irFT", categories[12]),
-            new Category("http://feeds.feedburner.com/rthk/Lpzl", categories[13]),
-            new Category("http://feeds.feedburner.com/rthk/Tumf", categories[14]),
-            new Category("http://feeds.feedburner.com/rthk/ksHf", categories[15]),
-            new Category("http://feeds.feedburner.com/rthk/bkob", categories[18])));
+    private static Source createRadioTelevisionSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+        return new Source(sources[10], new RealmList<>(
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml", categories[12]),
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cinternational.xml", categories[13]),
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_greaterchina.xml", categories[14]),
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cfinance.xml", categories[15]),
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_csport.xml", categories[18])));
     }
 }

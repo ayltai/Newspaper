@@ -29,20 +29,21 @@ public final class ClientFactory implements Closeable {
     }
 
     public ClientFactory(@NonNull final Context context) {
-        this.client = this.createHttpClient(context);
+        this.client = ClientFactory.createHttpClient(context);
 
         final String[] sources = context.getResources().getStringArray(R.array.sources);
 
-        this.clients.put(sources[0], new AppleDailyClient(client, SourceFactory.getInstance(context).getSource(sources[0])));
-        this.clients.put(sources[1], new OrientalDailyClient(client, SourceFactory.getInstance(context).getSource(sources[1])));
-        this.clients.put(sources[2], new SingTaoClient(client, SourceFactory.getInstance(context).getSource(sources[2])));
-        this.clients.put(sources[3], new HketClient(client, SourceFactory.getInstance(context).getSource(sources[3])));
-        this.clients.put(sources[4], new SingPaoClient(client, SourceFactory.getInstance(context).getSource(sources[4])));
-        this.clients.put(sources[5], new MingPaoClient(client, SourceFactory.getInstance(context).getSource(sources[5])));
-        this.clients.put(sources[6], new HeadlineClient(client, SourceFactory.getInstance(context).getSource(sources[6])));
-        this.clients.put(sources[7], new SkyPostClient(client, SourceFactory.getInstance(context).getSource(sources[7])));
-        this.clients.put(sources[8], new HkejClient(client, SourceFactory.getInstance(context).getSource(sources[8])));
-        this.clients.put(sources[9], new RthkClient(client, SourceFactory.getInstance(context).getSource(sources[9])));
+        this.clients.put(sources[0], new AppleDailyClient(this.client, SourceFactory.getInstance(context).getSource(sources[0])));
+        this.clients.put(sources[1], new OrientalDailyClient(this.client, SourceFactory.getInstance(context).getSource(sources[1])));
+        this.clients.put(sources[2], new SingTaoClient(this.client, SourceFactory.getInstance(context).getSource(sources[2])));
+        this.clients.put(sources[3], new HketClient(this.client, SourceFactory.getInstance(context).getSource(sources[3])));
+        this.clients.put(sources[4], new SingPaoClient(this.client, SourceFactory.getInstance(context).getSource(sources[4])));
+        this.clients.put(sources[5], new MingPaoClient(this.client, SourceFactory.getInstance(context).getSource(sources[5])));
+        this.clients.put(sources[6], new HeadlineClient(this.client, SourceFactory.getInstance(context).getSource(sources[6])));
+        this.clients.put(sources[7], new HeadlineRealtimeClient(this.client, SourceFactory.getInstance(context).getSource(sources[6])));
+        this.clients.put(sources[8], new SkyPostClient(this.client, SourceFactory.getInstance(context).getSource(sources[7])));
+        this.clients.put(sources[9], new HkejClient(this.client, SourceFactory.getInstance(context).getSource(sources[8])));
+        this.clients.put(sources[10], new RthkClient(this.client, SourceFactory.getInstance(context).getSource(sources[9])));
     }
 
     @Nullable
@@ -51,7 +52,7 @@ public final class ClientFactory implements Closeable {
     }
 
     @NonNull
-    private HttpClient createHttpClient(@NonNull final Context context) {
+    private static HttpClient createHttpClient(@NonNull final Context context) {
         return DaggerNetComponent.builder()
             .contextModule(new ContextModule(context))
             .netModule(new NetModule())

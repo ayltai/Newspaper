@@ -6,6 +6,7 @@ import java.util.List;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.ayltai.newspaper.model.Category;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
@@ -13,6 +14,8 @@ import com.github.ayltai.newspaper.net.HttpClient;
 import rx.Observable;
 
 public abstract class Client implements Closeable {
+    protected static final String ENCODING = "UTF-8";
+
     //region Variables
 
     protected final HttpClient client;
@@ -35,5 +38,14 @@ public abstract class Client implements Closeable {
     @Override
     public void close() {
         this.client.close();
+    }
+
+    @Nullable
+    protected String getCategoryName(@NonNull final String url) {
+        for (final Category category : this.source.getCategories()) {
+            if (category.getUrl().equals(url)) return category.getName();
+        }
+
+        return null;
     }
 }

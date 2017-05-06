@@ -30,6 +30,8 @@ public abstract class RssClient extends Client {
     @NonNull
     @Override
     public final Observable<List<Item>> getItems(@NonNull final String url) {
+        final String categoryName = this.getCategoryName(url);
+
         return Observable.create(emitter -> {
             if (this.source == null) {
                 emitter.onCompleted();
@@ -37,9 +39,13 @@ public abstract class RssClient extends Client {
                 InputStream inputStream = null;
 
                 try {
-                    final RealmList<Item> items = new RealmList<>(Parser.parse(inputStream = this.client.download(url)).toArray(new Item[0]));
+                    final RealmList<Item> items = new RealmList<>(this.filters(url, Parser.parse(inputStream = this.client.download(url))).toArray(new Item[0]));
 
-                    for (final Item item : items) item.setSource(this.source.getName());
+                    for (final Item item : items) {
+                        item.setSource(this.source.getName());
+                        item.setCategory(categoryName);
+                    }
+
                     Collections.sort(items);
 
                     emitter.onNext(items);
@@ -50,5 +56,10 @@ public abstract class RssClient extends Client {
                 }
             }
         }, Emitter.BackpressureMode.BUFFER);
+    }
+
+    @NonNull
+    protected List<Item> filters(@NonNull final String url, @NonNull final List<Item> items) {
+        return items;
     }
 }
