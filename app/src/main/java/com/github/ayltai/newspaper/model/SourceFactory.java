@@ -172,11 +172,7 @@ public final class SourceFactory {
     @NonNull
     private static Source createEconomicJournalSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[10], new RealmList<>(
-            new Category("http://www1.hkej.com/dailynews/international", categories[2]),
-            new Category("http://www1.hkej.com/dailynews/cntw", categories[3]),
-            new Category("http://www1.hkej.com/dailynews/finnews", categories[4]),
-            new Category("http://www1.hkej.com/dailynews/property", categories[5]),
-            new Category("http://www1.hkej.com/dailynews/culture", categories[8])));
+            new Category("http://www.hkej.com/rss/onlinenews.xml", categories[15])));
     }
 
     @NonNull
