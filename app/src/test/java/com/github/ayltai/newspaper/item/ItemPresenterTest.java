@@ -13,7 +13,7 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.PresenterTest;
 import com.github.ayltai.newspaper.RxBus;
 import com.github.ayltai.newspaper.data.ItemManager;
-import com.github.ayltai.newspaper.data.RealmString;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.util.LogUtils;
@@ -31,7 +31,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     private static final String                 ITEM_DESCRIPTION  = "description";
     private static final String                 ITEM_SOURCE       = "source";
     private static final String                 ITEM_LINK         = "link";
-    private static final RealmList<RealmString> ITEM_MEDIA_URLS   = new RealmList<>(new RealmString("media url"));
+    private static final RealmList<Image>       ITEM_MEDIA_URLS   = new RealmList<>(new Image("media url"));
     private static final Date                   ITEM_PUBLISH_DATE = new Date();
 
     private static final ListScreen.Key KEY_PARENT = new ListScreen.Key(ItemPresenterTest.KEY_PARENT_URL);
@@ -67,7 +67,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         final ItemPresenter presenter = Mockito.spy(new ItemPresenter(null));
         Mockito.doReturn(feedManager).when(presenter).getItemManager();
         Mockito.doNothing().when(presenter).updateItem(Mockito.any(Item.class), Mockito.anyBoolean());
-        Mockito.doNothing().when(presenter).updateItemDescription(Mockito.anyString());
+        Mockito.doNothing().when(presenter).update();
 
         final RxBus bus = Mockito.mock(RxBus.class);
         Mockito.doReturn(bus).when(presenter).bus();
@@ -100,7 +100,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         Mockito.doReturn(ItemPresenterTest.ITEM_DESCRIPTION).when(this.item).getDescription();
         Mockito.doReturn(ItemPresenterTest.ITEM_SOURCE).when(this.item).getSource();
         Mockito.doReturn(ItemPresenterTest.ITEM_LINK).when(this.item).getLink();
-        Mockito.doReturn(ItemPresenterTest.ITEM_MEDIA_URLS).when(this.item).getMediaUrls();
+        Mockito.doReturn(ItemPresenterTest.ITEM_MEDIA_URLS).when(this.item).getImages();
         Mockito.doReturn(ItemPresenterTest.ITEM_PUBLISH_DATE).when(this.item).getPublishDate();
     }
 
@@ -114,7 +114,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         Mockito.verify(this.getView(), Mockito.times(1)).setDescription(this.item.getDescription());
         Mockito.verify(this.getView(), Mockito.times(1)).setSource(this.item.getSource());
         Mockito.verify(this.getView(), Mockito.times(1)).setLink(this.item.getLink());
-        Mockito.verify(this.getView(), Mockito.times(1)).setThumbnail(this.item.getMediaUrls().first().getValue(), Constants.LIST_VIEW_TYPE_DEFAULT);
+        Mockito.verify(this.getView(), Mockito.times(1)).setThumbnail(this.item.getImages().first().getUrl(), Constants.LIST_VIEW_TYPE_DEFAULT);
         Mockito.verify(this.getView(), Mockito.times(1)).setIsBookmarked(true);
         Mockito.verify(this.getView(), Mockito.times(1)).setPublishDate(this.item.getPublishDate().getTime());
     }
@@ -134,7 +134,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
 
         this.zooms.onNext(null);
 
-        Mockito.verify(this.getView(), Mockito.times(1)).showMedia(this.item.getMediaUrls().first().getValue());
+        Mockito.verify(this.getView(), Mockito.times(1)).showMedia(this.item.getImages().first().getUrl());
     }
 
     @Test

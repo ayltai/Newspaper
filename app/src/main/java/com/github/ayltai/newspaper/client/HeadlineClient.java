@@ -72,7 +72,7 @@ public final class HeadlineClient extends RssClient {
 
     @NonNull
     @Override
-    public Observable<String> getFullDescription(@NonNull final String url) {
+    public Observable<Item> updateItem(@NonNull final Item item) {
         return null;
     }
 }

@@ -33,7 +33,7 @@ public abstract class Client implements Closeable {
     public abstract Observable<List<Item>> getItems(@NonNull String url);
 
     @NonNull
-    public abstract Observable<String> getFullDescription(@NonNull String url);
+    public abstract Observable<Item> updateItem(@NonNull Item item);
 
     @Override
     public void close() {

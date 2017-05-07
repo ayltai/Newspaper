@@ -77,10 +77,10 @@ public final class StringUtils {
 
         final int start = str.indexOf(open);
 
-        if (start != INDEX_NOT_FOUND) {
+        if (start != StringUtils.INDEX_NOT_FOUND) {
             final int end = str.indexOf(close, start + open.length());
 
-            if (end != INDEX_NOT_FOUND) return str.substring(start + open.length(), end);
+            if (end != StringUtils.INDEX_NOT_FOUND) return str.substring(start + open.length(), end);
         }
 
         return null;
@@ -91,20 +91,20 @@ public final class StringUtils {
      * <p>A {@code null} input String returns {@code null}. A {@code null} open/close returns {@code null} (no match). An empty ("") open/close returns {@code null} (no match).</p>
      * <pre>
      * StringUtils.substringsBetween("[a][b][c]", "[", "]") = ["a","b","c"]
-     * StringUtils.substringsBetween(null, *, *)            = null
-     * StringUtils.substringsBetween(*, null, *)            = null
-     * StringUtils.substringsBetween(*, *, null)            = null
+     * StringUtils.substringsBetween(null, *, *)            = []
+     * StringUtils.substringsBetween(*, null, *)            = []
+     * StringUtils.substringsBetween(*, *, null)            = []
      * StringUtils.substringsBetween("", "[", "]")          = []
      * </pre>
-     * @param str The String containing the substrings, null returns null, empty returns empty
-     * @param open The String identifying the start of the substring, empty returns null
-     * @param close The String identifying the end of the substring, empty returns null
-     * @return A String Array of substrings, or {@code null} if no match
+     * @param str The String containing the substrings, null returns [], empty returns empty
+     * @param open The String identifying the start of the substring, empty returns []
+     * @param close The String identifying the end of the substring, empty returns []
+     * @return A String Array of substrings, or {@code []} if no match
      * @since 2.3
      */
     @NonNull
     public static String[] substringsBetween(final String str, final String open, final String close) {
-        if (str == null || TextUtils.isEmpty(open) || TextUtils.isEmpty(close)) return null;
+        if (str == null || TextUtils.isEmpty(open) || TextUtils.isEmpty(close)) return new String[0];
 
         final int strLen = str.length();
 
@@ -130,7 +130,7 @@ public final class StringUtils {
             pos = end + closeLen;
         }
 
-        if (list.isEmpty()) return null;
+        if (list.isEmpty()) return new String[0];
 
         return list.toArray(new String [list.size()]);
     }

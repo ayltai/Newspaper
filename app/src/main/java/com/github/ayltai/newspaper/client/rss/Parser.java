@@ -19,7 +19,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.github.ayltai.newspaper.Constants;
-import com.github.ayltai.newspaper.data.RealmString;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 
 final class Parser {
@@ -134,7 +134,7 @@ final class Parser {
                     break;
 
                 case Parser.TAG_ENCLOSURE:
-                    item.getMediaUrls().add(new RealmString(Parser.readMediaUrl(parser)));
+                    item.getImages().add(new Image(Parser.readMediaUrl(parser)));
                     break;
 
                 default:

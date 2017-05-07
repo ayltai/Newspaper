@@ -27,7 +27,7 @@ final class AppleDailyClient extends Client {
 
     @NonNull
     @Override
-    public Observable<String> getFullDescription(@NonNull final String url) {
+    public Observable<Item> updateItem(@NonNull final Item item) {
         return null;
     }
 }

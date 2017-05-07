@@ -84,7 +84,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
             this.getView().setDescription(this.showFullDescription && !this.item.isFullDescription() ? this.getView().getContext().getString(R.string.loading_indicator) : this.item.getDescription());
             this.getView().setSource(this.item.getSource());
             this.getView().setLink(this.item.getLink());
-            this.getView().setThumbnail(this.item.getMediaUrls().isEmpty() ? null : this.item.getMediaUrls().first().getValue(), this.type);
+            this.getView().setThumbnail(this.item.getImages().isEmpty() ? null : this.item.getImages().first().getUrl(), this.type);
 
             if (this.getView().bookmarks() != null) {
                 this.getItemManager()
@@ -99,15 +99,19 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
             if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
-            if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ClientFactory.getInstance(this.getView().getContext()).getClient(this.item.getSource()).getFullDescription(this.item.getLink())
+            if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ClientFactory.getInstance(this.getView().getContext()).getClient(this.item.getSource()).updateItem(this.item)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(
-                    description -> {
-                        if (description != null) {
-                            this.getView().setDescription(description);
+                    updatedItem -> {
+                        if (updatedItem != null) {
+                            this.item = updatedItem;
 
-                            this.updateItemDescription(description);
+                            this.getView().setDescription(this.item.getDescription());
+
+                            // TODO: Updates images
+
+                            this.update();
                         }
                     },
                     error -> this.log().w(this.getClass().getSimpleName(), error.getMessage(), error)));
@@ -151,13 +155,10 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         this.realm.commitTransaction();
     }
 
-    /* private */ void updateItemDescription(@Nullable final String description) {
+    /* private */ void update() {
         final Realm realm = Realm.getDefaultInstance();
 
         realm.beginTransaction();
-
-        this.item.setDescription(description);
-
         realm.copyToRealmOrUpdate(this.item);
         realm.commitTransaction();
     }
@@ -177,7 +178,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
     private void attachZooms() {
         if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(dummy -> {
-            if (this.item != null && !this.item.getMediaUrls().isEmpty()) this.getView().showMedia(this.item.getMediaUrls().first().getValue());
+            if (this.item != null && !this.item.getImages().isEmpty()) this.getView().showMedia(this.item.getImages().first().getUrl());
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 

@@ -16,7 +16,7 @@ import android.support.annotation.Nullable;
 import org.apache.commons.io.IOUtils;
 
 import com.github.ayltai.newspaper.BuildConfig;
-import com.github.ayltai.newspaper.data.RealmString;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
@@ -54,7 +54,6 @@ final class SingPaoClient extends Client {
                 final String html = IOUtils.toString(this.client.download(url), Client.ENCODING);
 
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + url);
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "HTML = " + html);
 
                 final String[]   sections     = StringUtils.substringsBetween(html, "<tr valign='top'><td width='220'>", "</td></tr>");
                 final List<Item> items        = new ArrayList<>(sections.length);
@@ -70,7 +69,7 @@ final class SingPaoClient extends Client {
                     item.setDescription(StringUtils.substringBetween(section, "<br><br>\n", "</font>"));
                     item.setSource(this.source.getName());
                     item.setCategory(categoryName);
-                    item.getMediaUrls().add(new RealmString(SingPaoClient.BASE_URI + StringUtils.substringBetween(section, "<img src='", SingPaoClient.TAG)));
+                    item.getImages().add(new Image(SingPaoClient.BASE_URI + StringUtils.substringBetween(section, "<img src='", SingPaoClient.TAG)));
 
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
@@ -94,7 +93,7 @@ final class SingPaoClient extends Client {
 
     @NonNull
     @Override
-    public Observable<String> getFullDescription(@NonNull final String url) {
+    public Observable<Item> updateItem(@NonNull final Item item) {
         return null;
     }
 }

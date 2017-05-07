@@ -14,7 +14,7 @@ import android.support.annotation.Nullable;
 import org.apache.commons.io.IOUtils;
 
 import com.github.ayltai.newspaper.BuildConfig;
-import com.github.ayltai.newspaper.data.RealmString;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
@@ -46,7 +46,6 @@ final class HkejClient extends Client {
                 final String html = IOUtils.toString(this.client.download(url), Client.ENCODING);
 
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + url);
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "HTML = " + html);
 
                 final String[]   sections = StringUtils.substringsBetween(html, "<div class=\"news", "全文</a></p>");
                 final List<Item> items    = new ArrayList<>(sections.length);
@@ -79,7 +78,7 @@ final class HkejClient extends Client {
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
 
                     final String image = StringUtils.substringBetween(section, "<img src=\"", "\" />");
-                    if (image != null) item.getMediaUrls().add(new RealmString(image));
+                    if (image != null) item.getImages().add(new Image(image));
 
                     items.add(item);
                 }
@@ -93,7 +92,7 @@ final class HkejClient extends Client {
 
     @NonNull
     @Override
-    public Observable<String> getFullDescription(@NonNull final String url) {
+    public Observable<Item> updateItem(@NonNull final Item item) {
         return null;
     }
 }

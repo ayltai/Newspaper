@@ -12,8 +12,13 @@ public final class ItemUtils {
     }
 
     @NonNull
-    public static CharSequence removeHtml(@NonNull final String value) {
+    public static CharSequence removeImages(@NonNull final String value) {
         //noinspection deprecation
         return Html.fromHtml(value.replaceAll("(<(/)img>)|(<img.+?>)", Constants.EMPTY));
+    }
+
+    @NonNull
+    public static String removeHtml(@NonNull final String value) {
+        return value.replaceAll("<h3>", "").replaceAll("</h3>", Constants.SPACE).replaceAll("<h4>", "").replaceAll("</h4>", Constants.SPACE).replaceAll("<br>", "\n");
     }
 }

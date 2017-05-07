@@ -14,7 +14,7 @@ import android.support.annotation.Nullable;
 import org.apache.commons.io.IOUtils;
 
 import com.github.ayltai.newspaper.BuildConfig;
-import com.github.ayltai.newspaper.data.RealmString;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
@@ -51,7 +51,6 @@ final class HeadlineRealtimeClient extends Client {
                 final String html = IOUtils.toString(this.client.download(url), Client.ENCODING);
 
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + url);
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "HTML = " + html);
 
                 final String[]   sections     = StringUtils.substringsBetween(html, "<div class=\"topic\">", "<div class=\"col-xs-12 instantnews-list-1\">");
                 final List<Item> items        = new ArrayList<>(sections.length);
@@ -74,7 +73,7 @@ final class HeadlineRealtimeClient extends Client {
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
 
                     final String image = StringUtils.substringBetween(section, "<img src=\"", "\"/>");
-                    if (image != null) item.getMediaUrls().add(new RealmString("http:" + image));
+                    if (image != null) item.getImages().add(new Image("http:" + image));
 
                     try {
                         item.setPublishDate(HeadlineRealtimeClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o\"></i>", "</span>")));
@@ -94,7 +93,7 @@ final class HeadlineRealtimeClient extends Client {
 
     @NonNull
     @Override
-    public Observable<String> getFullDescription(@NonNull final String url) {
+    public Observable<Item> updateItem(@NonNull final Item item) {
         return null;
     }
 }

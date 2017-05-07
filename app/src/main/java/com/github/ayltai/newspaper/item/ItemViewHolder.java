@@ -105,17 +105,17 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Override
     public void setTitle(@Nullable final String title) {
-        ItemViewHolder.setText(this.title, title, true);
+        ItemViewHolder.setText(this.title, title, true, true);
     }
 
     @Override
     public void setDescription(@Nullable final String description) {
-        ItemViewHolder.setText(this.description, description, true);
+        ItemViewHolder.setText(this.description, description, true, true);
     }
 
     @Override
     public void setSource(@Nullable final String source) {
-        ItemViewHolder.setText(this.source, source, true);
+        ItemViewHolder.setText(this.source, source, true, false);
     }
 
     @Override
@@ -124,7 +124,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Override
     public void setPublishDate(final long publishDate) {
-        ItemViewHolder.setText(this.publishDate, publishDate == 0 ? null : DateUtils.getTimeAgo(this.itemView.getContext(), publishDate), false);
+        ItemViewHolder.setText(this.publishDate, publishDate == 0 ? null : DateUtils.getTimeAgo(this.itemView.getContext(), publishDate), false, false);
     }
 
     @Override
@@ -228,12 +228,14 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
         }
     }
 
-    private static void setText(@NonNull final TextView textView, @Nullable final String value, final boolean removeHtml) {
+    private static void setText(@NonNull final TextView textView, @Nullable final String value, final boolean removeImages, final boolean removeHtml) {
         if (TextUtils.isEmpty(value)) {
             textView.setVisibility(View.GONE);
         } else {
             textView.setVisibility(View.VISIBLE);
-            textView.setText(removeHtml ? ItemUtils.removeHtml(value) : value);
+
+            final String text = removeHtml ? ItemUtils.removeHtml(value) : value;
+            textView.setText(removeImages ? ItemUtils.removeImages(text) : text);
         }
     }
 }

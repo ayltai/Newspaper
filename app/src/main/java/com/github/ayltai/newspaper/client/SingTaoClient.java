@@ -16,7 +16,7 @@ import android.support.annotation.Nullable;
 import org.apache.commons.io.IOUtils;
 
 import com.github.ayltai.newspaper.BuildConfig;
-import com.github.ayltai.newspaper.data.RealmString;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
@@ -54,7 +54,6 @@ final class SingTaoClient extends Client {
                 final String html = IOUtils.toString(this.client.download(url), Client.ENCODING);
 
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + url);
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "HTML = " + html);
 
                 final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"main list\">", "<input type=\"hidden\" id=\"totalnews\" value=\"20\">"), "underline\">", "</a>\n</div>");
                 final List<Item> items        = new ArrayList<>(sections.length);
@@ -72,7 +71,7 @@ final class SingTaoClient extends Client {
                     item.setCategory(categoryName);
 
                     final String image = StringUtils.substringBetween(section, "<img src=\"", "\"");
-                    if (image != null) item.getMediaUrls().add(new RealmString(image));
+                    if (image != null) item.getImages().add(new Image(image));
 
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
@@ -96,7 +95,7 @@ final class SingTaoClient extends Client {
 
     @NonNull
     @Override
-    public Observable<String> getFullDescription(@NonNull final String url) {
+    public Observable<Item> updateItem(@NonNull final Item item) {
         return null;
     }
 }

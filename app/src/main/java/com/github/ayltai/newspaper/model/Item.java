@@ -8,8 +8,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.github.ayltai.newspaper.data.RealmString;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -39,7 +37,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     private String source;
     private String category;
 
-    private RealmList<RealmString> mediaUrls = new RealmList<>();
+    private RealmList<Image> images = new RealmList<>();
 
     private Boolean bookmarked;
 
@@ -65,12 +63,15 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     }
 
     public void setDescription(@Nullable final String description) {
-        this.description       = description;
-        this.isFullDescription = true;
+        this.description = description;
     }
 
     public boolean isFullDescription() {
         return this.isFullDescription;
+    }
+
+    public void setIsFullDescription(final boolean isFullDescription) {
+        this.isFullDescription = isFullDescription;
     }
 
     @NonNull
@@ -112,8 +113,8 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     }
 
     @NonNull
-    public RealmList<RealmString> getMediaUrls() {
-        return this.mediaUrls;
+    public RealmList<Image> getImages() {
+        return this.images;
     }
 
     @Nullable
@@ -168,7 +169,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         dest.writeLong(this.publishDate);
         dest.writeString(this.source);
         dest.writeString(this.category);
-        dest.writeTypedList(this.mediaUrls);
+        dest.writeTypedList(this.images);
         dest.writeInt(this.bookmarked ? 1 : 0);
     }
 
@@ -180,11 +181,11 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         this.publishDate       = in.readLong();
         this.source            = in.readString();
         this.category          = in.readString();
-        this.mediaUrls         = new RealmList<>();
+        this.images            = new RealmList<>();
         this.bookmarked        = in.readInt() == 1;
 
-        final List<RealmString> mediaUrls = in.createTypedArrayList(RealmString.CREATOR);
-        for (final RealmString mediaUrl : mediaUrls) this.mediaUrls.add(mediaUrl);
+        final List<Image> images = in.createTypedArrayList(Image.CREATOR);
+        for (final Image image : images) this.images.add(image);
     }
 
     public static final Parcelable.Creator<Item> CREATOR = new Parcelable.Creator<Item>() {

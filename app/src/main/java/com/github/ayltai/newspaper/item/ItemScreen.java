@@ -188,7 +188,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                 this.toolbarTitle.setText(this.getResources().getText(R.string.app_name));
             } else {
                 if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "title (before) = " + title);
-                final CharSequence value = ItemUtils.removeHtml(title);
+                final CharSequence value = ItemUtils.removeImages(title);
                 if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "title (after) = " + value);
 
                 this.title.setVisibility(View.VISIBLE);
@@ -205,7 +205,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                 this.description.setVisibility(View.GONE);
             } else {
                 if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "description (before) = " + description);
-                final CharSequence value = ItemUtils.removeHtml(description);
+                final CharSequence value = ItemUtils.removeImages(description);
                 if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "description (after) = " + value);
 
                 this.description.setVisibility(View.VISIBLE);
@@ -221,7 +221,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                 this.source.setVisibility(View.GONE);
             } else {
                 this.source.setVisibility(View.VISIBLE);
-                this.source.setText(ItemUtils.removeHtml(source));
+                this.source.setText(ItemUtils.removeImages(source));
             }
         }
     }
