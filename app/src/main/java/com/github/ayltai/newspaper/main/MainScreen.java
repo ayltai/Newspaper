@@ -6,7 +6,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -31,6 +33,7 @@ import com.github.ayltai.newspaper.graphics.DaggerGraphicsComponent;
 import com.github.ayltai.newspaper.graphics.GraphicsModule;
 import com.github.ayltai.newspaper.graphics.ImageLoaderCallback;
 import com.github.ayltai.newspaper.setting.Settings;
+import com.github.ayltai.newspaper.setting.SettingsActivity;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.loader.ImageLoader;
@@ -342,8 +345,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
         this.subscriptions.add(RxView.clicks(drawerMenu.findViewById(R.id.action_settings)).subscribe(dummy -> {
             this.animation.close();
-            // TODO: Shows settings
-            //((Activity)this.getContext()).startActivityForResult(new Intent(this.getContext(), SettingsActivity.class), Constants.REQUEST_SETTINGS);
+            ((Activity)this.getContext()).startActivityForResult(new Intent(this.getContext(), SettingsActivity.class), Constants.REQUEST_SETTINGS);
         }));
 
         this.subscriptions.add(RxView.clicks(drawerMenu.findViewById(R.id.action_about)).subscribe(dummy -> {

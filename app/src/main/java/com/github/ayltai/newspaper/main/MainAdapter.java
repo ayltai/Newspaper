@@ -49,7 +49,6 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
             .build()
             .inject(this);
 
-        // TODO: Do we need to hard-code categories
         final String[] categories = Settings.getCategories(this.context).toArray(new String[0]);
 
         int i;

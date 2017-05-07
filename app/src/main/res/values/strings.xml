@@ -32,6 +32,7 @@
     <string name="pref_dark_theme">Dark theme</string>
     <string name="pref_header_image_enabled">Show header image</string>
     <string name="pref_panorama_enabled">Enable panorama effect</string>
+    <string name="pref_sources">Sources</string>
     <string-array name="sources">
         <item>蘋果日報</item>
         <item>東方日報</item>
@@ -46,6 +47,7 @@
         <item>信報</item>
         <item>香港電台</item>
     </string-array>
+    <string name="pref_categories">Categories</string>
     <string-array name="categories">
         <item>焦點</item>
         <item>港聞</item>
