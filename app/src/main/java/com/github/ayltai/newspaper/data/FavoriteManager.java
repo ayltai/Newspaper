@@ -36,6 +36,8 @@ public final class FavoriteManager {
             final RealmResults<Favorite> favorites = this.realm.where(Favorite.class).findAll();
 
             emitter.onNext(favorites.isEmpty() ? this.createFromSettings() : favorites.first());
+
+            // TODO: Do we need to save Favorite object?
         }, Emitter.BackpressureMode.BUFFER);
     }
 
