@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,7 +20,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public final class HttpClient extends BaseHttpClient implements Closeable {
-    private final List<Call> calls = new ArrayList<>();
+    private final List<Call> calls = Collections.synchronizedList(new ArrayList<>());
 
     private Context context;
 

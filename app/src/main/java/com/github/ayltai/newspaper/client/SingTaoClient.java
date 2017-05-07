@@ -31,6 +31,7 @@ final class SingTaoClient extends Client {
 
     private static final String BASE_URI  = "http://std.stheadline.com/daily/";
     private static final String TAG_CLOSE = "</div>";
+    private static final String TAG_QUOTE = "\"";
 
     //endregion
 
@@ -55,7 +56,7 @@ final class SingTaoClient extends Client {
 
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + url);
 
-                final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"main list\">", "<input type=\"hidden\" id=\"totalnews\" value=\"20\">"), "underline\">", "</a>\n</div>");
+                final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"main list\">", "<input type=\"hidden\" id=\"totalnews\""), "underline\">", "</a>\n</div>");
                 final List<Item> items        = new ArrayList<>(sections.length);
                 final String     categoryName = this.getCategoryName(url);
 
@@ -70,7 +71,7 @@ final class SingTaoClient extends Client {
                     item.setSource(this.source.getName());
                     item.setCategory(categoryName);
 
-                    final String image = StringUtils.substringBetween(section, "<img src=\"", "\"");
+                    final String image = StringUtils.substringBetween(section, "<img src=\"", SingTaoClient.TAG_QUOTE);
                     if (image != null) item.getImages().add(new Image(image));
 
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
@@ -96,6 +97,30 @@ final class SingTaoClient extends Client {
     @NonNull
     @Override
     public Observable<Item> updateItem(@NonNull final Item item) {
-        return null;
+        return Observable.create(emitter -> {
+            try {
+                final String   html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"post-content\">", "<div class=\"post-sharing\">");
+                final String[] imageContainers = StringUtils.substringsBetween(html, "<a class=\"fancybox-thumb\"", ">");
+
+                for (final String imageContainer : imageContainers) {
+                    final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", SingTaoClient.TAG_QUOTE);
+                    final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"", SingTaoClient.TAG_QUOTE);
+
+                    if (imageUrl != null) item.getImages().add(new Image(imageUrl, imageDescription));
+                }
+
+                final String[]      contents = StringUtils.substringsBetween(html, "<p>", "</p>");
+                final StringBuilder builder  = new StringBuilder();
+
+                for (final String content : contents) builder.append(content).append("<br>");
+
+                item.setDescription(builder.toString());
+                item.setIsFullDescription(true);
+
+                emitter.onNext(item);
+            } catch (final IOException e) {
+                emitter.onError(e);
+            }
+        }, Emitter.BackpressureMode.BUFFER);
     }
 }

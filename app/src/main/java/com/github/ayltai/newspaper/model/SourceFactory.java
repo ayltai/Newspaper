@@ -66,13 +66,13 @@ public final class SourceFactory {
     @NonNull
     private static Source createSingTaoDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[2], new RealmList<>(
-            new Category("http://std.stheadline.com/daily/section-list.php?cat=12", categories[2]),
-            new Category("http://std.stheadline.com/daily/section-list.php?cat=13", categories[3]),
-            new Category("http://std.stheadline.com/daily/section-list.php?cat=16", categories[4]),
-            new Category("http://std.stheadline.com/daily/section-list.php?cat=15", categories[5]),
-            new Category("http://std.stheadline.com/daily/section-list.php?cat=20", categories[6]),
-            new Category("http://std.stheadline.com/daily/section-list.php?cat=17", categories[7]),
-            new Category("http://std.stheadline.com/daily/section-list.php?cat=14", categories[8])));
+            new Category("http://std.stheadline.com/daily/section-list.php?cat=12", categories[1]),
+            new Category("http://std.stheadline.com/daily/section-list.php?cat=13", categories[2]),
+            new Category("http://std.stheadline.com/daily/section-list.php?cat=16", categories[3]),
+            new Category("http://std.stheadline.com/daily/section-list.php?cat=15", categories[4]),
+            new Category("http://std.stheadline.com/daily/section-list.php?cat=20", categories[5]),
+            new Category("http://std.stheadline.com/daily/section-list.php?cat=17", categories[6]),
+            new Category("http://std.stheadline.com/daily/section-list.php?cat=14", categories[7])));
     }
 
     @NonNull
