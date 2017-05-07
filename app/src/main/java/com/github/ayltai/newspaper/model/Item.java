@@ -54,7 +54,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     }
 
     public void setTitle(@Nullable final String title) {
-        this.title = title;
+        this.title = title == null ? null : title.trim();
     }
 
     @Nullable
@@ -63,7 +63,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     }
 
     public void setDescription(@Nullable final String description) {
-        this.description = description;
+        this.description = description == null ? null : description.trim();
     }
 
     public boolean isFullDescription() {
@@ -100,7 +100,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     }
 
     public void setSource(@NonNull final String source) {
-        this.source = source;
+        this.source = source == null ? null : source.trim();
     }
 
     @NonNull

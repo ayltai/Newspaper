@@ -64,7 +64,7 @@ final class SingPaoClient extends Client {
 
                     final Item item = new Item();
 
-                    item.setTitle(StringUtils.substringBetween(section, "class='list_title'> ", "</a>"));
+                    item.setTitle(StringUtils.substringBetween(section, "class='list_title'>", "</a>"));
                     item.setLink(SingPaoClient.BASE_URI + StringUtils.substringBetween(section, "<td><a href='", SingPaoClient.TAG));
                     item.setDescription(StringUtils.substringBetween(section, "<br><br>\n", "</font>"));
                     item.setSource(this.source.getName());
@@ -94,6 +94,34 @@ final class SingPaoClient extends Client {
     @NonNull
     @Override
     public Observable<Item> updateItem(@NonNull final Item item) {
-        return null;
+        return Observable.create(emitter -> {
+            try {
+                final String html = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<td class='news_title'>", "您可能有興趣:");
+
+                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
+
+                final List<Image> images            = new ArrayList<>();
+                final String[]    imageUrls         = StringUtils.substringsBetween(html, "target='_blank'><img src='", "'");
+                final String[]    imageDescriptions = StringUtils.substringsBetween(html, "<font size='4'>", "</font>");
+
+                for (int i = 0; i < imageUrls.length; i++) {
+                    final Image image = new Image(imageUrls[0], imageDescriptions[0]);
+
+                    if (!images.contains(image)) images.add(image);
+                }
+
+                final String[]      contents = StringUtils.substringsBetween(html, "<p>", "</p>");
+                final StringBuilder builder  = new StringBuilder();
+
+                for (final String content : contents) builder.append(content).append("<br><br>");
+
+                item.setDescription(builder.toString());
+                item.setIsFullDescription(true);
+
+                emitter.onNext(item);
+            } catch (final IOException e) {
+                emitter.onError(e);
+            }
+        }, Emitter.BackpressureMode.BUFFER);
     }
 }
