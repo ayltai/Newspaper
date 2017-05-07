@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper.client;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,11 +11,18 @@ import javax.inject.Inject;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.apache.commons.io.IOUtils;
+
+import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.client.rss.RssClient;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
+import com.github.ayltai.newspaper.util.LogUtils;
+import com.github.ayltai.newspaper.util.StringUtils;
 
+import rx.Emitter;
 import rx.Observable;
 
 public final class HeadlineClient extends RssClient {
@@ -73,6 +81,33 @@ public final class HeadlineClient extends RssClient {
     @NonNull
     @Override
     public Observable<Item> updateItem(@NonNull final Item item) {
-        return null;
+        return Observable.create(emitter -> {
+            try {
+                final String html = IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING);
+
+                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
+
+                final String[] imageContainers = StringUtils.substringsBetween(html, "<a class=\"fancybox\" rel=\"gallery\"", "</a>");
+
+                for (final String imageContainer : imageContainers) {
+                    final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", "\"");
+                    final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"■", "\">");
+
+                    if (imageUrl != null) item.getImages().add(new Image("http:" + imageUrl, imageDescription));
+                }
+
+                final String[]      contents = StringUtils.substringsBetween(html, "<div id=\"news-content\" class=\"set-font-aera\" style=\"visibility: visible;\">", "</div>");
+                final StringBuilder builder  = new StringBuilder();
+
+                for (final String content : contents) builder.append(content);
+
+                item.setDescription(builder.toString());
+                item.setIsFullDescription(true);
+
+                emitter.onNext(item);
+            } catch (final IOException e) {
+                emitter.onError(e);
+            }
+        }, Emitter.BackpressureMode.BUFFER);
     }
 }

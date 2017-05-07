@@ -94,6 +94,31 @@ final class HeadlineRealtimeClient extends Client {
     @NonNull
     @Override
     public Observable<Item> updateItem(@NonNull final Item item) {
-        return null;
+        return Observable.create(emitter -> {
+            try {
+                final String html = IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING);
+
+                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
+
+                HeadlineRealtimeClient.extractImages(StringUtils.substringsBetween(html, "<a class=\"fancybox\" rel=\"gallery\"", "</a>"), item);
+                HeadlineRealtimeClient.extractImages(StringUtils.substringsBetween(html, "<figure ", "</figure>"), item);
+
+                item.setDescription(StringUtils.substringBetween(html, "<div id=\"news-content\" class=\"set-font-aera\" style=\"visibility: visible;\">", "</div>"));
+                item.setIsFullDescription(true);
+
+                emitter.onNext(item);
+            } catch (final IOException e) {
+                emitter.onError(e);
+            }
+        }, Emitter.BackpressureMode.BUFFER);
+    }
+
+    private static void extractImages(@NonNull final String[] imageContainers, @NonNull final Item item) {
+        for (final String imageContainer : imageContainers) {
+            final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", "\"");
+            final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"", "\">");
+
+            if (imageUrl != null) item.getImages().add(new Image("http:" + imageUrl, imageDescription));
+        }
     }
 }
