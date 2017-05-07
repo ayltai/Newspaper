@@ -21,8 +21,6 @@ import com.github.ayltai.newspaper.util.StringUtils;
 import rx.Emitter;
 import rx.Observable;
 
-import static com.github.ayltai.newspaper.util.StringUtils.substringBetween;
-
 final class SkyPostClient extends RssClient {
     //region Constants
 
@@ -44,7 +42,7 @@ final class SkyPostClient extends RssClient {
     public Observable<Item> updateItem(@NonNull final Item item) {
         return Observable.create(emitter -> {
             try {
-                final String html = substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"article-title-widget\">", "<div class=\"article-detail_extra-info\">");
+                final String html = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"article-title-widget\">", "<div class=\"article-detail_extra-info\">");
 
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
 

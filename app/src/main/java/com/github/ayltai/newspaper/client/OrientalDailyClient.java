@@ -21,8 +21,6 @@ import com.github.ayltai.newspaper.util.StringUtils;
 import rx.Emitter;
 import rx.Observable;
 
-import static com.github.ayltai.newspaper.util.StringUtils.substringBetween;
-
 final class OrientalDailyClient extends RssClient {
     //region Constants
 
@@ -41,7 +39,7 @@ final class OrientalDailyClient extends RssClient {
     public Observable<Item> updateItem(@NonNull final Item item) {
         return Observable.create(emitter -> {
             try {
-                final String html = substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div id=\"contentCTN-top\"", "<p><!--AD-->");
+                final String html = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div id=\"contentCTN-top\"", "<p><!--AD-->");
 
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
 
