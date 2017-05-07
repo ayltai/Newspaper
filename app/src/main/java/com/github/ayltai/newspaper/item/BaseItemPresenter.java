@@ -99,15 +99,19 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
             if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
-            if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ClientFactory.getInstance(this.getView().getContext()).getClient(this.item.getSource()).updateItem(this.item)
+            if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ClientFactory.getInstance(this.getView().getContext()).getClient(this.item.getSource()).updateItem(this.item.clone())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     updatedItem -> {
                         if (updatedItem != null) {
-                            this.item = updatedItem;
+                            this.item.setDescription(updatedItem.getDescription());
+                            this.item.setIsFullDescription(updatedItem.isFullDescription());
+                            this.item.getImages().clear();
+                            this.item.getImages().addAll(updatedItem.getImages());
 
                             this.getView().setDescription(this.item.getDescription());
+                            if (!this.item.getImages().isEmpty()) this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
 
                             // TODO: Updates images
 

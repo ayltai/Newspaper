@@ -110,6 +110,8 @@ final class SingPaoClient extends Client {
                     if (!images.contains(image)) images.add(image);
                 }
 
+                if (!images.isEmpty()) item.getImages().addAll(images);
+
                 final String[]      contents = StringUtils.substringsBetween(html, "<p>", "</p>");
                 final StringBuilder builder  = new StringBuilder();
 

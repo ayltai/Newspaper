@@ -1,7 +1,6 @@
 package com.github.ayltai.newspaper.model;
 
 import java.util.Date;
-import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,7 +11,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Item extends RealmObject implements Comparable<Item>, Parcelable {
+public class Item extends RealmObject implements Cloneable, Comparable<Item>, Parcelable {
     //region Constants
 
     public static final String FIELD_SOURCE       = "source";
@@ -100,7 +99,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
     }
 
     public void setSource(@NonNull final String source) {
-        this.source = source == null ? null : source.trim();
+        this.source = source.trim();
     }
 
     @NonNull
@@ -122,7 +121,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         return this.bookmarked;
     }
 
-    public void setBookmarked(final boolean bookmarked) {
+    public void setBookmarked(final Boolean bookmarked) {
         this.bookmarked = bookmarked;
     }
 
@@ -146,6 +145,23 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         }
 
         return false;
+    }
+
+    @Override
+    public Item clone() {
+        final Item item = new Item();
+
+        item.setTitle(this.title);
+        item.setDescription(this.description);
+        item.setIsFullDescription(this.isFullDescription);
+        item.setLink(this.link);
+        item.setPublishDate(new Date(this.publishDate));
+        item.getImages().addAll(this.images);
+        item.setBookmarked(this.bookmarked);
+        item.setSource(this.source);
+        item.setCategory(this.category);
+
+        return item;
     }
 
     @Override
@@ -184,8 +200,7 @@ public class Item extends RealmObject implements Comparable<Item>, Parcelable {
         this.images            = new RealmList<>();
         this.bookmarked        = in.readInt() == 1;
 
-        final List<Image> images = in.createTypedArrayList(Image.CREATOR);
-        for (final Image image : images) this.images.add(image);
+        this.images.addAll(in.createTypedArrayList(Image.CREATOR));
     }
 
     public static final Parcelable.Creator<Item> CREATOR = new Parcelable.Creator<Item>() {
