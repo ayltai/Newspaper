@@ -129,6 +129,8 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
 
     @Override
     public final int compareTo(@NonNull final Item item) {
+        if (this.link.equals(item.link)) return 0;
+
         if (this.publishDate != 0 && item.publishDate != 0) return (int)(item.publishDate - this.publishDate);
 
         return this.title.compareTo(item.title);
@@ -197,10 +199,11 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
         this.publishDate       = in.readLong();
         this.source            = in.readString();
         this.category          = in.readString();
-        this.images            = new RealmList<>();
-        this.bookmarked        = in.readInt() == 1;
 
+        this.images = new RealmList<>();
         this.images.addAll(in.createTypedArrayList(Image.CREATOR));
+
+        this.bookmarked = in.readInt() == 1;
     }
 
     public static final Parcelable.Creator<Item> CREATOR = new Parcelable.Creator<Item>() {
