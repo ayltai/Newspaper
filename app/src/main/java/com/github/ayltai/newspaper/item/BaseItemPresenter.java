@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.item;
 
 import java.util.Date;
+import java.util.List;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,9 +11,10 @@ import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.list.ListScreen;
-import com.github.ayltai.newspaper.client.ClientFactory;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 
 import io.realm.Realm;
@@ -35,11 +37,13 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
         void setThumbnail(@Nullable String thumbnail, @Constants.ListViewType int type);
 
+        void setThumbnails(@NonNull List<Image> images);
+
         void setIsBookmarked(boolean isBookmarked);
 
         @Nullable Observable<Void> clicks();
 
-        @Nullable Observable<Void> zooms();
+        @Nullable Observable<Integer> zooms();
 
         @Nullable Observable<Boolean> bookmarks();
 
@@ -85,6 +89,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
             this.getView().setSource(this.item.getSource());
             this.getView().setLink(this.item.getLink());
             this.getView().setThumbnail(this.item.getImages().isEmpty() ? null : this.item.getImages().first().getUrl(), this.type);
+            this.getView().setThumbnails(this.item.getImages());
 
             if (this.getView().bookmarks() != null) {
                 this.getItemManager()
@@ -111,9 +116,13 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
                             this.item.getImages().addAll(updatedItem.getImages());
 
                             this.getView().setDescription(this.item.getDescription());
-                            if (!this.item.getImages().isEmpty()) this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
 
-                            // TODO: Updates images
+                            if (!this.item.getImages().isEmpty()) {
+                                this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
+                                this.getView().setThumbnails(this.item.getImages());
+                            }
+
+                            // TODO: Updates header images
 
                             this.update();
                         }
@@ -181,8 +190,10 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     protected abstract void attachClicks();
 
     private void attachZooms() {
-        if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(dummy -> {
-            if (this.item != null && !this.item.getImages().isEmpty()) this.getView().showMedia(this.item.getImages().first().getUrl());
+        if (this.getView() == null) return;
+
+        if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(index -> {
+            if (this.item != null && !this.item.getImages().isEmpty() && this.item.getImages().size() > index) this.getView().showMedia(this.item.getImages().get(index).getUrl());
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 

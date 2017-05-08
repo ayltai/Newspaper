@@ -1,6 +1,8 @@
 package com.github.ayltai.newspaper.client;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -46,16 +48,22 @@ final class SkyPostClient extends RssClient {
 
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
 
-                final String   headline        = StringUtils.substringBetween(html, "<h3 class=\"article-details__main-headline\">", SkyPostClient.TAG_CLOSE_HEADER);
-                final String   subHeadline     = StringUtils.substringBetween(html, "<h3 class=\"article-details__lower-headline\">", SkyPostClient.TAG_CLOSE_HEADER);
-                final String[] contents        = StringUtils.substringsBetween(html, "<P>", "</P>");
-                final String[] imageContainers = StringUtils.substringsBetween(html, "<div class=\"article-detail__img-container\">", "</div>");
+                final String      headline        = StringUtils.substringBetween(html, "<h3 class=\"article-details__main-headline\">", SkyPostClient.TAG_CLOSE_HEADER);
+                final String      subHeadline     = StringUtils.substringBetween(html, "<h3 class=\"article-details__lower-headline\">", SkyPostClient.TAG_CLOSE_HEADER);
+                final String[]    contents        = StringUtils.substringsBetween(html, "<P>", "</P>");
+                final String[]    imageContainers = StringUtils.substringsBetween(html, "<div class=\"article-detail__img-container\">", "</div>");
+                final List<Image> images          = new ArrayList<>();
 
                 for (final String imageContainer : imageContainers) {
                     final String imageUrl         = StringUtils.substringBetween(imageContainer, "data-src=\"", "\"");
                     final String imageDescription = StringUtils.substringBetween(imageContainer, "<p class=\"article-detail__img-caption\">", "</p>");
 
-                    if (imageUrl != null) item.getImages().add(new Image(imageUrl, imageDescription));
+                    if (imageUrl != null) images.add(new Image(imageUrl, imageDescription));
+                }
+
+                if (!images.isEmpty()) {
+                    item.getImages().clear();
+                    item.getImages().addAll(images);
                 }
 
                 final StringBuilder builder = new StringBuilder();

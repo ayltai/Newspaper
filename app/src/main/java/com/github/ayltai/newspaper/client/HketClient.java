@@ -1,6 +1,8 @@
 package com.github.ayltai.newspaper.client;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -34,13 +36,19 @@ final class HketClient extends RssClient {
             try {
                 final String html = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"article-detail\">", "<div class=\"article-detail_facebook-like\">");
 
-                final String[] imageContainers = StringUtils.substringsBetween(html, "<img ", "/>");
+                final String[]    imageContainers = StringUtils.substringsBetween(html, "<img ", "/>");
+                final List<Image> images          = new ArrayList<>();
 
                 for (final String imageContainer : imageContainers) {
                     final String imageUrl         = StringUtils.substringBetween(imageContainer, "data-src=\"",HketClient. TAG_QUOTE);
                     final String imageDescription = StringUtils.substringBetween(imageContainer, "alt=\"", HketClient.TAG_QUOTE);
 
-                    if (imageUrl != null) item.getImages().add(new Image(imageUrl, imageDescription));
+                    if (imageUrl != null) images.add(new Image(imageUrl, imageDescription));
+                }
+
+                if (!images.isEmpty()) {
+                    item.getImages().clear();
+                    item.getImages().addAll(images);
                 }
 
                 final String[]      contents = StringUtils.substringsBetween(html, "<p>", "</p>");

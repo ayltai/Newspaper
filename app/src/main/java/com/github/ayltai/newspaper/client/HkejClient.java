@@ -49,7 +49,10 @@ final class HkejClient extends RssClient {
                 final String imageUrl         = StringUtils.substringBetween(imageContainer, "<a href=\"", HkejClient.TAG_QUOTE);
                 final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"", HkejClient.TAG_QUOTE);
 
-                if (imageUrl != null) item.getImages().add(new Image(imageUrl, imageDescription));
+                if (imageUrl != null) {
+                    item.getImages().clear();
+                    item.getImages().add(new Image(imageUrl, imageDescription));
+                }
 
                 final String[]      contents = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div id='article-content'>", "</div>"), ">", "<");
                 final StringBuilder builder  = new StringBuilder();

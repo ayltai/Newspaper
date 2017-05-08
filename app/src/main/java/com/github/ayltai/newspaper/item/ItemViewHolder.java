@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.item;
 
 import java.io.Closeable;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +19,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.list.ListScreen;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
@@ -134,6 +136,11 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
     }
 
     @Override
+    public void setThumbnails(@NonNull final List<Image> images) {
+        // Ignored
+    }
+
+    @Override
     public void setIsBookmarked(final boolean isBookmarked) {
         // Ignored
     }
@@ -156,7 +163,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Nullable
     @Override
-    public Observable<Void> zooms() {
+    public Observable<Integer> zooms() {
         return null;
     }
 

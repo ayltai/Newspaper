@@ -1,6 +1,8 @@
 package com.github.ayltai.newspaper.client;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -43,7 +45,8 @@ final class OrientalDailyClient extends RssClient {
 
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
 
-                final String[] imageContainers = StringUtils.substringsBetween(html, "<div class=\"photo", "</div>");
+                final String[]    imageContainers = StringUtils.substringsBetween(html, "<div class=\"photo", "</div>");
+                final List<Image> images          = new ArrayList<>();
 
                 for (final String imageContainer : imageContainers) {
                     final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", OrientalDailyClient.TAG_CLOSE);
@@ -52,7 +55,12 @@ final class OrientalDailyClient extends RssClient {
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Image URL = " + imageUrl);
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Image Description = " + imageDescription);
 
-                    if (imageUrl != null) item.getImages().add(new Image(OrientalDailyClient.BASE_URI + imageUrl, imageDescription));
+                    if (imageUrl != null) images.add(new Image(OrientalDailyClient.BASE_URI + imageUrl, imageDescription));
+                }
+
+                if (!images.isEmpty()) {
+                    item.getImages().clear();
+                    item.getImages().addAll(images);
                 }
 
                 final String[]      contents = StringUtils.substringsBetween(html, "<p>", "</p>");

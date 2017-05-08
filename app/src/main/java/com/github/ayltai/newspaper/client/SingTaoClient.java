@@ -99,14 +99,20 @@ final class SingTaoClient extends Client {
     public Observable<Item> updateItem(@NonNull final Item item) {
         return Observable.create(emitter -> {
             try {
-                final String   html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"post-content\">", "<div class=\"post-sharing\">");
-                final String[] imageContainers = StringUtils.substringsBetween(html, "<a class=\"fancybox-thumb\"", ">");
+                final String      html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"post-content\">", "<div class=\"post-sharing\">");
+                final String[]    imageContainers = StringUtils.substringsBetween(html, "<a class=\"fancybox-thumb\"", ">");
+                final List<Image> images          = new ArrayList<>();
 
                 for (final String imageContainer : imageContainers) {
                     final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", SingTaoClient.TAG_QUOTE);
                     final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"", SingTaoClient.TAG_QUOTE);
 
-                    if (imageUrl != null) item.getImages().add(new Image(imageUrl, imageDescription));
+                    if (imageUrl != null) images.add(new Image(imageUrl, imageDescription));
+                }
+
+                if (!images.isEmpty()) {
+                    item.getImages().clear();
+                    item.getImages().addAll(images);
                 }
 
                 final String[]      contents = StringUtils.substringsBetween(html, "<p>", "</p>");

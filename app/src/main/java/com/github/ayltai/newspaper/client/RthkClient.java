@@ -49,7 +49,10 @@ final class RthkClient extends RssClient {
                     final String imageUrl         = StringUtils.substringBetween(imageContainer, "<a href=\"", RthkClient.TAG_QUOTE);
                     final String imageDescription = StringUtils.substringBetween(imageContainer, "alt=\"", RthkClient.TAG_QUOTE);
 
-                    if (imageUrl != null) item.getImages().add(new Image(imageUrl, imageDescription));
+                    if (imageUrl != null) {
+                        item.getImages().clear();
+                        item.getImages().add(new Image(imageUrl, imageDescription));
+                    }
 
                     final String videoUrl         = StringUtils.substringBetween(imageContainer, "var videoThumbnail\t\t= '", "'");
                     final String videoDescription = StringUtils.substringBetween(imageContainer, "div class='detailNewsSlideTitleText'>", RthkClient.TAG_CLOSE);

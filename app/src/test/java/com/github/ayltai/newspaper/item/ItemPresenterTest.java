@@ -41,7 +41,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     //region Events
 
     private final PublishSubject<Void>    clicks    = PublishSubject.create();
-    private final PublishSubject<Void>    zooms     = PublishSubject.create();
+    private final PublishSubject<Integer> zooms     = PublishSubject.create();
     private final PublishSubject<Boolean> bookmarks = PublishSubject.create();
     private final PublishSubject<Void>    shares    = PublishSubject.create();
 
@@ -115,6 +115,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         Mockito.verify(this.getView(), Mockito.times(1)).setSource(this.item.getSource());
         Mockito.verify(this.getView(), Mockito.times(1)).setLink(this.item.getLink());
         Mockito.verify(this.getView(), Mockito.times(1)).setThumbnail(this.item.getImages().first().getUrl(), Constants.LIST_VIEW_TYPE_DEFAULT);
+        Mockito.verify(this.getView(), Mockito.times(1)).setThumbnails(this.item.getImages());
         Mockito.verify(this.getView(), Mockito.times(1)).setIsBookmarked(true);
         Mockito.verify(this.getView(), Mockito.times(1)).setPublishDate(this.item.getPublishDate().getTime());
     }
@@ -132,7 +133,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     public void testWhenZoomedThenShowOriginalMedia() throws Exception {
         this.bind();
 
-        this.zooms.onNext(null);
+        this.zooms.onNext(0);
 
         Mockito.verify(this.getView(), Mockito.times(1)).showMedia(this.item.getImages().first().getUrl());
     }

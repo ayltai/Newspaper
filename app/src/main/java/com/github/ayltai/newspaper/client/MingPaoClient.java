@@ -1,6 +1,8 @@
 package com.github.ayltai.newspaper.client;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -54,6 +56,8 @@ final class MingPaoClient extends RssClient {
                 final JSONArray  images = json.getJSONArray("media:group");
 
                 if (images != null) {
+                    final List<Image> fullImages = new ArrayList<>();
+
                     for (int i = 0; i < images.length(); i++) {
                         final JSONObject image            = images.getJSONObject(i);
                         final String     imageDescription = image.getString("media:title");
@@ -73,8 +77,13 @@ final class MingPaoClient extends RssClient {
                                 }
                             }
 
-                            if (img != null) item.getImages().add(img);
+                            if (img != null) fullImages.add(img);
                         }
+                    }
+
+                    if (!fullImages.isEmpty()) {
+                        item.getImages().clear();
+                        item.getImages().addAll(fullImages);
                     }
                 }
 

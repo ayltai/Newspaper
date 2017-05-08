@@ -1,5 +1,8 @@
 package com.github.ayltai.newspaper.item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import android.app.Activity;
@@ -30,6 +33,7 @@ import com.github.ayltai.newspaper.graphics.DaggerGraphicsComponent;
 import com.github.ayltai.newspaper.graphics.GraphicsModule;
 import com.github.ayltai.newspaper.graphics.ImageLoaderCallback;
 import com.github.ayltai.newspaper.list.ListScreen;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
@@ -38,6 +42,7 @@ import com.github.ayltai.newspaper.util.IntentUtils;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.piasy.biv.loader.ImageLoader;
+import com.github.piasy.biv.view.BigImageView;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
 import com.gjiazhe.panoramaimageview.PanoramaImageView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -132,7 +137,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     private final BehaviorSubject<Void> attachedToWindow   = BehaviorSubject.create();
     private final BehaviorSubject<Void> detachedFromWindow = BehaviorSubject.create();
 
-    private final PublishSubject<Void>    zooms     = PublishSubject.create();
+    private final PublishSubject<Integer> zooms     = PublishSubject.create();
     private final PublishSubject<Boolean> bookmarks = PublishSubject.create();
     private final PublishSubject<Void>    shares    = PublishSubject.create();
 
@@ -154,6 +159,8 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     //region Components
 
+    private final List<ImageView> thumbnails = new ArrayList<>();
+
     private AppBarLayout appBarLayout;
     private TextView     toolbarTitle;
     private ImageView    bookmark;
@@ -164,6 +171,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     private TextView     publishDate;
     private ViewGroup    thumbnailContainer;
     private ImageView    thumbnail;
+    private ViewGroup    thumbnailsContainer;
     private SmallBang    smallBang;
 
     //endregion
@@ -256,6 +264,30 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     }
 
     @Override
+    public void setThumbnails(@NonNull final List<Image> images) {
+        if (this.hasAttached) {
+            this.thumbnailsContainer.removeAllViews();
+
+            if (images.size() > 1) {
+                for (int i = 1; i < images.size(); i++) {
+                    final ViewGroup    container = (ViewGroup)LayoutInflater.from(this.getContext()).inflate(R.layout.view_item_image, this.thumbnailsContainer, false);
+                    final BigImageView imageView = (BigImageView)container.findViewById(R.id.thumbnail);
+                    final TextView     textView  = (TextView)container.findViewById(R.id.thumbnailDescription);
+                    final int          index     = i;
+
+                    imageView.showImage(Uri.parse(images.get(i).getUrl()));
+                    textView.setText(images.get(i).getDescription());
+
+                    if (this.subscriptions != null)
+                        this.subscriptions.add(RxView.clicks(imageView).takeUntil(RxView.detaches(container)).subscribe(dummy -> this.zooms.onNext(index), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+
+                    this.thumbnailsContainer.addView(container);
+                }
+            }
+        }
+    }
+
+    @Override
     public void setIsBookmarked(final boolean isBookmarked) {
         this.isBookmarked = isBookmarked;
 
@@ -277,7 +309,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     @Nullable
     @Override
-    public Observable<Void> zooms() {
+    public Observable<Integer> zooms() {
         return this.zooms;
     }
 
@@ -337,15 +369,16 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
             final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_item, this, false);
 
-            this.appBarLayout       = (AppBarLayout)view.findViewById(R.id.appBarLayout);
-            this.toolbarTitle       = (TextView)view.findViewById(R.id.toolbar_title);
-            this.bookmark           = (ImageView)view.findViewById(R.id.bookmark);
-            this.share              = view.findViewById(R.id.share);
-            this.title              = (TextView)view.findViewById(R.id.title);
-            this.description        = (TextView)view.findViewById(R.id.description);
-            this.source             = (TextView)view.findViewById(R.id.source);
-            this.publishDate        = (TextView)view.findViewById(R.id.publishDate);
-            this.thumbnailContainer = (ViewGroup)view.findViewById(R.id.thumbnailContainer);
+            this.appBarLayout        = (AppBarLayout)view.findViewById(R.id.appBarLayout);
+            this.toolbarTitle        = (TextView)view.findViewById(R.id.toolbar_title);
+            this.bookmark            = (ImageView)view.findViewById(R.id.bookmark);
+            this.share               = view.findViewById(R.id.share);
+            this.title               = (TextView)view.findViewById(R.id.title);
+            this.description         = (TextView)view.findViewById(R.id.description);
+            this.source              = (TextView)view.findViewById(R.id.source);
+            this.publishDate         = (TextView)view.findViewById(R.id.publishDate);
+            this.thumbnailContainer  = (ViewGroup)view.findViewById(R.id.thumbnailContainer);
+            this.thumbnailsContainer = (ViewGroup)view.findViewById(R.id.thumbnailsContainer);
 
             final Drawable drawable = AppCompatDrawableManager.get().getDrawable(this.getContext(), R.drawable.ic_arrow_back);
             DrawableCompat.setTint(drawable, ContextUtils.getColor(this.getContext(), R.attr.indicatorColor));
@@ -388,7 +421,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         if (this.subscriptions == null) {
             this.subscriptions = new CompositeSubscription();
 
-            this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+            this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(0), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
             this.subscriptions.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
             this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(dummy -> {

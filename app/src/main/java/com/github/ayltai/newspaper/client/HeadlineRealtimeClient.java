@@ -114,11 +114,18 @@ final class HeadlineRealtimeClient extends Client {
     }
 
     private static void extractImages(@NonNull final String[] imageContainers, @NonNull final Item item) {
+        final List<Image> images = new ArrayList<>();
+
         for (final String imageContainer : imageContainers) {
             final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", "\"");
             final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"", "\">");
 
-            if (imageUrl != null) item.getImages().add(new Image("http:" + imageUrl, imageDescription));
+            if (imageUrl != null) images.add(new Image("http:" + imageUrl, imageDescription));
+        }
+
+        if (!images.isEmpty()) {
+            item.getImages().clear();
+            item.getImages().addAll(images);
         }
     }
 }
