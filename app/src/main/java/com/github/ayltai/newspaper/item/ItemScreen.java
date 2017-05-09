@@ -15,7 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.AppCompatDrawableManager;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -291,10 +291,13 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     public void setIsBookmarked(final boolean isBookmarked) {
         this.isBookmarked = isBookmarked;
 
-        final Drawable drawable = AppCompatDrawableManager.get().getDrawable(this.getContext(), this.isBookmarked ? R.drawable.ic_bookmark : R.drawable.ic_bookmark_border);
-        DrawableCompat.setTint(drawable, ContextUtils.getColor(this.getContext(), R.attr.indicatorColor));
+        final Drawable drawable = AppCompatResources.getDrawable(this.getContext(), this.isBookmarked ? R.drawable.ic_bookmark : R.drawable.ic_bookmark_border);
 
-        this.bookmark.setImageDrawable(drawable);
+        if (drawable != null) {
+            DrawableCompat.setTint(drawable, ContextUtils.getColor(this.getContext(), R.attr.indicatorColor));
+
+            this.bookmark.setImageDrawable(drawable);
+        }
     }
 
     //endregion
@@ -380,7 +383,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             this.thumbnailContainer  = (ViewGroup)view.findViewById(R.id.thumbnailContainer);
             this.thumbnailsContainer = (ViewGroup)view.findViewById(R.id.thumbnailsContainer);
 
-            final Drawable drawable = AppCompatDrawableManager.get().getDrawable(this.getContext(), R.drawable.ic_arrow_back);
+            final Drawable drawable = AppCompatResources.getDrawable(this.getContext(), R.drawable.ic_arrow_back);
             DrawableCompat.setTint(drawable, ContextUtils.getColor(this.getContext(), R.attr.indicatorColor));
 
             final Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);
