@@ -8,37 +8,21 @@ import android.support.annotation.NonNull;
 import com.github.ayltai.newspaper.model.SourceFactory;
 import com.github.ayltai.newspaper.setting.Settings;
 
-import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmResults;
 import rx.Emitter;
 import rx.Observable;
 
 public final class FavoriteManager {
-    //region Variables
-
     private final Context context;
-    private final Realm   realm;
-
-    //endregion
 
     @Inject
-    public FavoriteManager(@NonNull final Context context, @NonNull final Realm realm) {
+    public FavoriteManager(@NonNull final Context context) {
         this.context = context;
-        this.realm   = realm;
     }
 
     @NonNull
     public Observable<Favorite> getFavorite() {
-        if (this.realm.isClosed()) throw new IllegalStateException("Realm is closed");
-
-        return Observable.create(emitter -> {
-            final RealmResults<Favorite> favorites = this.realm.where(Favorite.class).findAll();
-
-            emitter.onNext(favorites.isEmpty() ? this.createFromSettings() : favorites.first());
-
-            // TODO: Saves to database
-        }, Emitter.BackpressureMode.BUFFER);
+        return Observable.create(emitter -> emitter.onNext(this.createFromSettings()), Emitter.BackpressureMode.BUFFER);
     }
 
     @NonNull

@@ -39,7 +39,7 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
     @Override
     protected ListPresenter createPresenter() {
         final ItemManager itemManager = Mockito.mock(ItemManager.class);
-        Mockito.doReturn(Observable.just(this.items)).when(itemManager).getItems(null, new String[] { ListPresenterTest.KEY_PARENT_URL });
+        Mockito.doReturn(Observable.just(this.items)).when(itemManager).getItemsObservable(null, new String[] { ListPresenterTest.KEY_PARENT_URL });
 
         final ListPresenter presenter = Mockito.spy(new ListPresenter());
         Mockito.doReturn(itemManager).when(presenter).getItemManager();

@@ -1,12 +1,17 @@
 package com.github.ayltai.newspaper.main;
 
+import java.util.ArrayList;
+
 import android.support.annotation.NonNull;
 
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 import com.github.ayltai.newspaper.PresenterTest;
+import com.github.ayltai.newspaper.model.Item;
 
+import rx.Observable;
 import rx.subjects.PublishSubject;
 
 public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPresenter.View> {
@@ -33,6 +38,8 @@ public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPr
         final MainPresenter presenter = Mockito.spy(new MainPresenter());
         Mockito.doReturn(this.mainAdapter).when(presenter).createMainAdapter();
 
+        Mockito.doReturn(Observable.just(new ArrayList<Item>())).when(presenter).getHeaderImages(ArgumentMatchers.anyString());
+
         return presenter;
     }
 
@@ -52,7 +59,7 @@ public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPr
     public void setUp() throws Exception {
         this.mainAdapter = Mockito.mock(MainAdapter.class);
         Mockito.doReturn(MainPresenterTest.FAVORITE_COUNT).when(this.mainAdapter).getCount();
-        Mockito.doReturn(MainPresenterTest.CATEGORY_NAME).when(this.mainAdapter).getPageTitle(Mockito.anyInt());
+        Mockito.doReturn(MainPresenterTest.CATEGORY_NAME).when(this.mainAdapter).getPageTitle(ArgumentMatchers.anyInt());
 
         super.setUp();
     }
@@ -78,8 +85,8 @@ public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPr
     public void testWhenBoundThenUpdateHeader() throws Exception {
         this.bind();
 
-        //Mockito.verify(this.getView(), Mockito.times(1)).updateHeaderImages(Mockito.anyList());
         Mockito.verify(this.getView(), Mockito.times(1)).updateHeaderTitle(MainPresenterTest.CATEGORY_NAME);
+        Mockito.verify(this.getView(), Mockito.times(1)).updateHeaderImages(ArgumentMatchers.anyList());
         Mockito.verify(this.getView(), Mockito.times(1)).enablePrevious(false);
         Mockito.verify(this.getView(), Mockito.times(1)).enableNext(true);
     }

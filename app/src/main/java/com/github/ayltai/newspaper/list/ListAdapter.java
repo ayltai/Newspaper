@@ -52,7 +52,7 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
 
         @Override
         public void onNext(final ItemUpdatedEvent itemUpdatedEvent) {
-            new ItemManager(ListAdapter.this.realm).getItems(null, new String[] { ListAdapter.this.parentKey.getCategory() })
+            new ItemManager(ListAdapter.this.realm).getItemsObservable(null, new String[] { ListAdapter.this.parentKey.getCategory() })
                 .subscribe(items -> {
                     if (Constants.CATEGORY_BOOKMARK.equals(ListAdapter.this.parentKey.getCategory())) {
                         if (itemUpdatedEvent.getIndex() < 0) {

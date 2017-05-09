@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -62,11 +63,11 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         this.items.add(this.item);
 
         final ItemManager feedManager = Mockito.mock(ItemManager.class);
-        Mockito.doReturn(Observable.just(this.items)).when(feedManager).getItems(null, new String[] { ItemPresenterTest.KEY_PARENT_URL });
+        Mockito.doReturn(Observable.just(this.items)).when(feedManager).getItemsObservable(null, new String[] { ItemPresenterTest.KEY_PARENT_URL });
 
         final ItemPresenter presenter = Mockito.spy(new ItemPresenter(null));
         Mockito.doReturn(feedManager).when(presenter).getItemManager();
-        Mockito.doNothing().when(presenter).update();
+        Mockito.doNothing().when(presenter).update(ArgumentMatchers.any(Item.class));
 
         final RxBus bus = Mockito.mock(RxBus.class);
         Mockito.doReturn(bus).when(presenter).bus();
@@ -115,7 +116,6 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         Mockito.verify(this.getView(), Mockito.times(1)).setLink(this.item.getLink());
         Mockito.verify(this.getView(), Mockito.times(1)).setThumbnail(this.item.getImages().first().getUrl(), Constants.LIST_VIEW_TYPE_DEFAULT);
         Mockito.verify(this.getView(), Mockito.times(1)).setThumbnails(this.item.getImages());
-        Mockito.verify(this.getView(), Mockito.times(1)).setIsBookmarked(true);
         Mockito.verify(this.getView(), Mockito.times(1)).setPublishDate(this.item.getPublishDate().getTime());
     }
 
@@ -138,12 +138,12 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     }
 
     @Test
-    public void testWhenBookmarkedThenUpdateFeed() throws Exception {
+    public void testWhenBookmarkedThenUpdateItem() throws Exception {
         this.bind();
 
         this.bookmarks.onNext(Boolean.TRUE);
 
-        Mockito.verify(this.getPresenter(), Mockito.times(1)).update();
+        Mockito.verify(this.getPresenter(), Mockito.times(1)).update(true);
     }
 
     @Test

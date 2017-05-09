@@ -16,6 +16,7 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
 
     public static final String FIELD_SOURCE       = "source";
     public static final String FIELD_CATEGORY     = "category";
+    public static final String FIELD_LINK         = "link";
     public static final String FIELD_PUBLISH_DATE = "publishDate";
     public static final String FIELD_BOOKMARKED   = "bookmarked";
 
@@ -38,7 +39,7 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
 
     private RealmList<Image> images = new RealmList<>();
 
-    private Boolean bookmarked;
+    private boolean bookmarked;
 
     //endregion
 
@@ -116,12 +117,11 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
         return this.images;
     }
 
-    @Nullable
-    public Boolean isBookmarked() {
+    public boolean isBookmarked() {
         return this.bookmarked;
     }
 
-    public void setBookmarked(final Boolean bookmarked) {
+    public void setBookmarked(final boolean bookmarked) {
         this.bookmarked = bookmarked;
     }
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Configs;
@@ -17,7 +18,6 @@ import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.main.ImagesUpdatedEvent;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
-import com.github.ayltai.newspaper.util.ItemUtils;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -92,14 +92,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
             this.getView().setLink(this.item.getLink());
             this.getView().setThumbnail(this.item.getImages().isEmpty() ? null : this.item.getImages().first().getUrl(), this.type);
             this.getView().setThumbnails(this.item.getImages());
-
-            if (this.getView().bookmarks() != null) {
-                this.getItemManager()
-                    .getBookmarkedItems()
-                    .subscribe(
-                        items -> this.getView().setIsBookmarked(ItemUtils.contains(items, this.item)),
-                        error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error));
-            }
+            if (this.getView().bookmarks() != null) this.getView().setIsBookmarked(this.item.isBookmarked());
 
             final Date publishDate = this.item.getPublishDate();
             this.getView().setPublishDate(publishDate == null ? 0 : publishDate.getTime());
@@ -112,10 +105,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
                 .subscribe(
                     updatedItem -> {
                         if (updatedItem != null) {
-                            this.item.setDescription(updatedItem.getDescription());
-                            this.item.setIsFullDescription(updatedItem.isFullDescription());
-                            this.item.getImages().clear();
-                            this.item.getImages().addAll(updatedItem.getImages());
+                            this.update(updatedItem);
 
                             this.getView().setDescription(this.item.getDescription());
 
@@ -123,8 +113,6 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
                                 this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
                                 this.getView().setThumbnails(this.item.getImages());
                             }
-
-                            this.update();
 
                             this.bus().send(new ImagesUpdatedEvent());
                         }
@@ -161,12 +149,38 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         return new ItemManager(this.realm);
     }
 
-    /* private */ void update() {
+    /* private */ void update(@NonNull final Item item) {
         final Realm realm = Realm.getDefaultInstance();
 
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(this.item);
-        realm.commitTransaction();
+        try {
+            realm.beginTransaction();
+
+            this.item.setDescription(item.getDescription());
+            this.item.setIsFullDescription(item.isFullDescription());
+            this.item.getImages().clear();
+            this.item.getImages().addAll(item.getImages());
+
+            realm.insertOrUpdate(this.item);
+            realm.commitTransaction();
+        } finally {
+            realm.close();
+        }
+    }
+
+    @VisibleForTesting
+    /* private */ void update(final boolean isBookmarked) {
+        final Realm realm = Realm.getDefaultInstance();
+
+        try {
+            realm.beginTransaction();
+
+            this.item.setBookmarked(isBookmarked);
+
+            realm.insertOrUpdate(this.item);
+            realm.commitTransaction();
+        } finally {
+            realm.close();
+        }
     }
 
     //region Event handlers

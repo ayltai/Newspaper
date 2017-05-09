@@ -29,15 +29,12 @@ public class ItemPresenter extends BaseItemPresenter {
     protected void attachBookmarks() {
         if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks()
             .subscribe(
-                bookmark -> this.getItemManager().getItems(null, this.parentKey == null ? null : new String[] { this.parentKey.getCategory() })
+                bookmark -> this.getItemManager().getItemsObservable(null, this.parentKey == null ? null : new String[] { this.parentKey.getCategory() })
                     .subscribe(
                         items -> {
-                            final int index = ItemUtils.indexOf(items, this.item);
+                            this.update(bookmark);
 
-                            this.item.setBookmarked(bookmark);
-                            this.update();
-
-                            this.bus().send(new ItemUpdatedEvent(index, this.item));
+                            this.bus().send(new ItemUpdatedEvent(ItemUtils.indexOf(items, this.item), this.item));
                         },
                         error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)),
                 error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));

@@ -8,8 +8,6 @@ import java.util.concurrent.TimeoutException;
 
 import javax.inject.Inject;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
@@ -51,6 +49,8 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     private Subscription          refreshSubscription;
     private Subscription          updateSubscription;
     private Realm                 realm;
+    private FavoriteManager       favoriteManager;
+    private ItemManager           itemManager;
     private List<Item>            items;
     private ListScreen.Key        key;
     private boolean               isBound;
@@ -68,22 +68,17 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
         if (this.isViewAttached() && !this.isBound) {
-            this.getItemManager().getItems(null, new String[] { this.key.getCategory() })
+            this.getItemManager().getItemsObservable(null, new String[] { this.key.getCategory() })
                 .subscribe(items -> {
                     this.items = items;
-
-                    if (this.items.isEmpty()) {
-                        if (Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {
-                            this.getView().setItems(this.key, this.items);
-                        } else {
-                            this.bindFromRemote(Constants.REFRESH_LOAD_TIMEOUT);
-                        }
+                    if (Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {
+                        this.getView().setItems(this.key, this.items);
                     } else {
-                        this.checkForUpdate();
-
-                        if (Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {
-                            this.getView().setItems(this.key, this.items);
+                        if (this.items.isEmpty()) {
+                            this.bindFromRemote(Constants.REFRESH_LOAD_TIMEOUT);
                         } else {
+                            this.checkForUpdate();
+
                             this.bindFromRemote(Constants.INIT_LOAD_TIMEOUT);
                         }
                     }
@@ -101,7 +96,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
-        new FavoriteManager(this.getView().getContext(), this.realm).getFavorite()
+        this.getFavoriteManager().getFavorite()
             .subscribe(
                 favorite -> {
                     final List<Observable<List<Item>>> observables = new ArrayList<>();
@@ -121,30 +116,28 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                         }
                     }
 
-                    this.refreshSubscription = ListPresenter.zip(observables).doOnNext(items -> {
-                        this.copyToRealmOrUpdate(items);
+                    this.refreshSubscription = ListPresenter.zip(observables)
+                        .subscribe(
+                            items -> {
+                                this.items = this.partialUpdate(items);
 
-                        this.checkForUpdate();
-                    })
-                    .subscribe(
-                        items -> {
-                            this.items = items;
+                                this.getView().setItems(this.key, this.items);
 
-                            this.getView().setItems(this.key, items);
-                        },
-                        error -> {
-                            this.getView().setItems(this.key, this.items);
+                                this.checkForUpdate();
+                            },
+                            error -> {
+                                this.getView().setItems(this.key, this.items);
 
-                            if (error instanceof TimeoutException) {
-                                this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
-                            } else {
-                                this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                if (error instanceof TimeoutException) {
+                                    this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
+                                } else {
+                                    this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                }
                             }
-                        }
-                    );
+                        );
                 },
                 error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
-            );
+        );
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
@@ -155,7 +148,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
         if (this.updateSubscription != null) this.updateSubscription.unsubscribe();
 
-        new FavoriteManager(this.getView().getContext(), this.realm).getFavorite()
+        this.getFavoriteManager().getFavorite()
             .subscribe(
                 favorite -> {
                     final List<Observable<List<Item>>> observables = new ArrayList<>();
@@ -209,14 +202,37 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         }
     }
 
-    private void copyToRealmOrUpdate(@NonNull final List<Item> items) {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            if (!this.realm.isClosed()) {
-                this.realm.beginTransaction();
-                this.realm.copyToRealmOrUpdate(items);
-                this.realm.commitTransaction();
+    private List<Item> partialUpdate(@NonNull final List<Item> items) {
+        if (!this.realm.isClosed()) {
+            this.realm.beginTransaction();
+
+            for (final Item item : items) {
+                final Item realmItem = this.getItemManager().getItem(item.getLink());
+
+                if (realmItem == null) {
+                    this.realm.insert(item);
+                } else {
+                    item.setIsFullDescription(realmItem.isFullDescription());
+                    if (!realmItem.isFullDescription()) realmItem.setDescription(item.getDescription());
+
+                    realmItem.setTitle(item.getTitle());
+                    realmItem.setPublishDate(item.getPublishDate());
+                    realmItem.setSource(item.getSource());
+                    realmItem.setCategory(item.getCategory());
+
+                    realmItem.getImages().clear();
+                    realmItem.getImages().addAll(item.getImages());
+
+                    item.setBookmarked(realmItem.isBookmarked());
+
+                    this.realm.insertOrUpdate(item);
+                }
             }
-        });
+
+            this.realm.commitTransaction();
+        }
+
+        return items;
     }
 
     //region Lifecycle
@@ -250,10 +266,19 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
     //endregion
 
+    @NonNull
+    private FavoriteManager getFavoriteManager() {
+        if (this.favoriteManager == null) this.favoriteManager = new FavoriteManager(this.getView().getContext());
+
+        return this.favoriteManager;
+    }
+
     @VisibleForTesting
     @NonNull
     /* private final */ ItemManager getItemManager() {
-        return new ItemManager(this.realm);
+        if (this.itemManager == null) this.itemManager = new ItemManager(this.realm);
+
+        return this.itemManager;
     }
 
     private void attachEvents() {

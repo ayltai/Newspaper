@@ -41,6 +41,8 @@ import android.text.TextUtils;
  */
 //@Immutable
 public final class StringUtils {
+    public static final String[] EMPTY_ARRAY = new String[0];
+
     /**
      * Represents a failed index search.
      * @since 2.1

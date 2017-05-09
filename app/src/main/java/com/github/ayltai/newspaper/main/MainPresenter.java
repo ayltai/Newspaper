@@ -16,8 +16,10 @@ import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.setting.Settings;
+import com.github.ayltai.newspaper.util.StringUtils;
 
 import io.realm.Realm;
+import rx.Emitter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
@@ -73,7 +75,7 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
     //endregion
 
     public final void bind() {
-        this.view.bind(this.adapter);
+        this.getView().bind(this.adapter);
     }
 
     @Override
@@ -86,17 +88,17 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
 
         this.subscriptions = new CompositeSubscription();
 
-        this.subscriptions.add(this.view.pageChanges().subscribe(position -> {
+        this.subscriptions.add(this.getView().pageChanges().subscribe(position -> {
             this.currentPosition = position;
 
             this.updateHeader();
 
-            this.view.enablePrevious(this.currentPosition > 0);
-            this.view.enableNext(this.currentPosition < this.adapter.getCount() - 1);
+            this.getView().enablePrevious(this.currentPosition > 0);
+            this.getView().enableNext(this.currentPosition < this.adapter.getCount() - 1);
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
-        this.subscriptions.add(this.view.previousClicks().subscribe(dummy -> this.view.navigatePrevious(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
-        this.subscriptions.add(this.view.nextClicks().subscribe(dummy -> this.view.navigateNext(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+        this.subscriptions.add(this.getView().previousClicks().subscribe(dummy -> this.getView().navigatePrevious(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+        this.subscriptions.add(this.getView().nextClicks().subscribe(dummy -> this.getView().navigateNext(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
         this.bus().register(ImagesUpdatedEvent.class, this.subscriber);
     }
@@ -119,32 +121,44 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
         if (this.adapter.getCount() > 0) {
             final CharSequence category = this.adapter.getPageTitle(this.currentPosition);
 
-            this.view.updateHeaderTitle(category);
+            this.getView().updateHeaderTitle(category);
 
-            final Realm realm = Realm.getDefaultInstance();
-
-            try {
-                new ItemManager(realm).getItems(Settings.getSources(this.getView().getContext()).toArray(new String[0]), new String[] { category.toString() })
-                    .subscribe(
-                        items -> {
-                            final List<String> images = new ArrayList<>();
-                            for (final Item item : items) {
-                                for (final Image image : item.getImages()) images.add(image.getUrl());
-                            }
-
-                            this.view.updateHeaderImages(images);
-                        },
-                        error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
-                    );
-            } finally {
-                realm.close();
-            }
+            this.getHeaderImages(category)
+                .subscribe(
+                    images -> this.getView().updateHeaderImages(images),
+                    error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
+                );
         }
     }
 
     @VisibleForTesting
     @NonNull
     /* private final */ MainAdapter createMainAdapter() {
-        return DaggerMainComponent.builder().mainModule(new MainModule((Activity)this.view.getContext())).build().mainAdapter();
+        return DaggerMainComponent.builder().mainModule(new MainModule((Activity)this.getView().getContext())).build().mainAdapter();
+    }
+
+    @VisibleForTesting
+    @NonNull
+    /* private */ Observable<List<String>> getHeaderImages(@NonNull final CharSequence category) {
+        return Observable.create(emitter -> {
+            final List<String> images = new ArrayList<>();
+            final Realm        realm  = Realm.getDefaultInstance();
+
+            try {
+                new ItemManager(realm).getItemsObservable(Settings.getSources(this.getView().getContext()).toArray(StringUtils.EMPTY_ARRAY), new String[] { category.toString() })
+                    .subscribe(
+                        items -> {
+                            for (final Item item : items) {
+                                for (final Image image : item.getImages()) images.add(image.getUrl());
+                            }
+
+                            emitter.onNext(images);
+                        },
+                        error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
+                    );
+            } finally {
+                realm.close();
+            }
+        }, Emitter.BackpressureMode.BUFFER);
     }
 }
