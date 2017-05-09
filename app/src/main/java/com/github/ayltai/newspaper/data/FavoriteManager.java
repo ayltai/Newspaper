@@ -37,7 +37,7 @@ public final class FavoriteManager {
 
             emitter.onNext(favorites.isEmpty() ? this.createFromSettings() : favorites.first());
 
-            // TODO: Do we need to save Favorite object?
+            // TODO: Saves to database
         }, Emitter.BackpressureMode.BUFFER);
     }
 

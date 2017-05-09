@@ -81,7 +81,11 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                     } else {
                         this.checkForUpdate();
 
-                        if (!Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) this.bindFromRemote(Constants.INIT_LOAD_TIMEOUT);
+                        if (Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {
+                            this.getView().setItems(this.key, this.items);
+                        } else {
+                            this.bindFromRemote(Constants.INIT_LOAD_TIMEOUT);
+                        }
                     }
 
                     this.isBound = true;

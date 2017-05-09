@@ -22,15 +22,19 @@ import android.widget.TextView;
 import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.RxBus;
+import com.github.ayltai.newspaper.item.ItemsUpdatedEvent;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
+import com.github.ayltai.newspaper.util.LogUtils;
 
 import flow.ClassKey;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import rx.Observable;
+import rx.Subscriber;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 
@@ -93,6 +97,22 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     //region Variables
 
+    private final Subscriber<ItemsUpdatedEvent> subscriber = new Subscriber<ItemsUpdatedEvent>() {
+        @Override
+        public void onCompleted() {
+        }
+
+        @Override
+        public void onError(final Throwable e) {
+            LogUtils.getInstance().e(this.getClass().getSimpleName(), e.getMessage(), e);
+        }
+
+        @Override
+        public void onNext(final ItemsUpdatedEvent event) {
+            if (ListScreen.this.parentKey != null && Constants.CATEGORY_BOOKMARK.equals(ListScreen.this.parentKey.category)) ListScreen.this.setItems(ListScreen.this.parentKey, event.getItems());
+        }
+    };
+
     private ListScreen.Key parentKey;
     private List<Item>     items;
     private boolean        hasAttached;
@@ -111,6 +131,8 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     public ListScreen(@NonNull final Context context) {
         super(context);
+
+        RxBus.getInstance().register(ItemsUpdatedEvent.class, this.subscriber);
     }
 
     @Override
@@ -235,6 +257,8 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @Override
     public void close() {
+        RxBus.getInstance().unregister(ItemsUpdatedEvent.class, this.subscriber);
+
         if (this.adapter != null) {
             this.adapter.close();
             this.adapter = null;

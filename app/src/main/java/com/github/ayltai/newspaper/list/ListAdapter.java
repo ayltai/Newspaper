@@ -20,6 +20,7 @@ import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.item.ItemPresenter;
 import com.github.ayltai.newspaper.item.ItemUpdatedEvent;
 import com.github.ayltai.newspaper.item.ItemViewHolder;
+import com.github.ayltai.newspaper.item.ItemsUpdatedEvent;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.jakewharton.rxbinding.view.RxView;
@@ -56,15 +57,13 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
                     if (Constants.CATEGORY_BOOKMARK.equals(ListAdapter.this.parentKey.getCategory())) {
                         if (itemUpdatedEvent.getIndex() < 0) {
                             if (items.size() == 1) {
-                                // TODO: Hides empty view
-                                //RxBus.getInstance().send(new FeedUpdatedEvent(feed));
+                                RxBus.getInstance().send(new ItemsUpdatedEvent(items));
                             } else {
                                 ListAdapter.this.notifyItemInserted(items.indexOf(itemUpdatedEvent.getItem()));
                             }
                         } else {
                             if (items.isEmpty()) {
-                                // TODO: Shows empty view
-                                //RxBus.getInstance().send(new FeedUpdatedEvent(feed));
+                                RxBus.getInstance().send(new ItemsUpdatedEvent(items));
                             } else {
                                 ListAdapter.this.notifyItemRemoved(itemUpdatedEvent.getIndex());
                             }

@@ -17,6 +17,7 @@ import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.main.ImagesUpdatedEvent;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.util.ItemUtils;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -94,9 +95,9 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
             if (this.getView().bookmarks() != null) {
                 this.getItemManager()
-                    .getItems(null, parentKey == null ? new String[0] : new String[] { parentKey.getCategory() })
+                    .getBookmarkedItems()
                     .subscribe(
-                        items -> this.getView().setIsBookmarked(items.contains(this.item)),
+                        items -> this.getView().setIsBookmarked(ItemUtils.contains(items, this.item)),
                         error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error));
             }
 
@@ -158,15 +159,6 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     @NonNull
     /* protected final */ ItemManager getItemManager() {
         return new ItemManager(this.realm);
-    }
-
-    /* protected final */ void updateItem(@NonNull final Item item, final boolean bookmark) {
-        this.realm.beginTransaction();
-
-        item.setBookmarked(bookmark);
-
-        this.realm.copyToRealmOrUpdate(item);
-        this.realm.commitTransaction();
     }
 
     /* private */ void update() {

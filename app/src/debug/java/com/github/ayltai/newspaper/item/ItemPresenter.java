@@ -4,6 +4,8 @@ import javax.inject.Inject;
 
 import android.support.annotation.NonNull;
 
+import com.github.ayltai.newspaper.util.ItemUtils;
+
 import io.realm.Realm;
 
 public class ItemPresenter extends BaseItemPresenter {
@@ -27,11 +29,14 @@ public class ItemPresenter extends BaseItemPresenter {
     protected void attachBookmarks() {
         if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks()
             .subscribe(
-                bookmark -> this.getItemManager().getItems(null, this.parentKey == null ? new String[0] : new String[] { this.parentKey.getCategory() })
+                bookmark -> this.getItemManager().getItems(null, this.parentKey == null ? null : new String[] { this.parentKey.getCategory() })
                     .subscribe(
                         items -> {
-                            final int index = items.indexOf(this.item);
-                            this.updateItem(items.get(index), bookmark);
+                            final int index = ItemUtils.indexOf(items, this.item);
+
+                            this.item.setBookmarked(bookmark);
+                            this.update();
+
                             this.bus().send(new ItemUpdatedEvent(index, this.item));
                         },
                         error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)),

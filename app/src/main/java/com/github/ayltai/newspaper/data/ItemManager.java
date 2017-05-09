@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.model.Item;
 
 import io.realm.Realm;
@@ -32,11 +33,20 @@ public class ItemManager {
     }
 
     @NonNull
-    public Observable<List<Item>> getItems(@Nullable final String[] sources, @NonNull final String[] categories) {
+    public Observable<List<Item>> getItems(@Nullable final String[] sources, @Nullable final String[] categories) {
         if (this.realm.isClosed()) throw new IllegalStateException(ItemManager.ERROR_REALM);
 
         return Observable.create(emitter -> {
-            RealmQuery<Item> query = this.realm.where(Item.class).in(Item.FIELD_CATEGORY, categories);
+            RealmQuery<Item> query = this.realm.where(Item.class);
+
+            if (categories != null) {
+                if (categories.length == 1 && Constants.CATEGORY_BOOKMARK.equals(categories[0])) {
+                    query = query.equalTo(Item.FIELD_BOOKMARKED, true);
+                } else {
+                    query = query.in(Item.FIELD_CATEGORY, categories);
+                }
+            }
+
             if (sources != null) query = query.in(Item.FIELD_SOURCE, sources);
 
             final RealmResults<Item> items = query.findAllSorted(Item.FIELD_PUBLISH_DATE, Sort.DESCENDING);

@@ -13,6 +13,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.DaggerMainComponent;
 import com.github.ayltai.newspaper.MainComponent;
 import com.github.ayltai.newspaper.MainModule;
@@ -77,7 +78,7 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
         this.subscriptions.add(view.attachments().subscribe(
             dummy -> {
                 presenter.onViewAttached(view);
-                presenter.bind(this.realm, new ListScreen.Key(this.categories.get(position)));
+                presenter.bind(this.realm, new ListScreen.Key(position == this.categories.size() - 1 ? Constants.CATEGORY_BOOKMARK : this.categories.get(position)));
             },
             error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
