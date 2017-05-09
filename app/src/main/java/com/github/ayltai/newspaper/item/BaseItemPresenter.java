@@ -14,6 +14,7 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.list.ListScreen;
+import com.github.ayltai.newspaper.main.ImagesUpdatedEvent;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 
@@ -122,9 +123,9 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
                                 this.getView().setThumbnails(this.item.getImages());
                             }
 
-                            // TODO: Updates header images
-
                             this.update();
+
+                            this.bus().send(new ImagesUpdatedEvent());
                         }
                     },
                     error -> this.log().w(this.getClass().getSimpleName(), error.getMessage(), error)));

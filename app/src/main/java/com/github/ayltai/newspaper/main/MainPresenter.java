@@ -1,9 +1,8 @@
 package com.github.ayltai.newspaper.main;
 
 import java.io.Closeable;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -13,7 +12,12 @@ import android.support.annotation.VisibleForTesting;
 import com.github.ayltai.newspaper.DaggerMainComponent;
 import com.github.ayltai.newspaper.MainModule;
 import com.github.ayltai.newspaper.Presenter;
+import com.github.ayltai.newspaper.data.ItemManager;
+import com.github.ayltai.newspaper.model.Image;
+import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.setting.Settings;
 
+import io.realm.Realm;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
@@ -56,24 +60,15 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
 
         @Override
         public void onNext(final ImagesUpdatedEvent imagesUpdatedEvent) {
-            MainPresenter.this.images.put(imagesUpdatedEvent.getUrl(), imagesUpdatedEvent.getImages());
-
-            if (MainPresenter.this.lastUpdatedPosition != MainPresenter.this.currentPosition) {
-                MainPresenter.this.lastUpdatedPosition = MainPresenter.this.currentPosition;
-
-                MainPresenter.this.updateHeader();
-            }
+            MainPresenter.this.updateHeader();
         }
     };
-
-    private final Map<String, List<String>> images = new HashMap<>();
 
     //region Variables
 
     private CompositeSubscription subscriptions;
     private MainAdapter           adapter;
     private int                   currentPosition;
-    private int                   lastUpdatedPosition = -1;
 
     //endregion
 
@@ -119,8 +114,31 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
     }
 
     private void updateHeader() {
+        if (this.getView() == null) return;
+
         if (this.adapter.getCount() > 0) {
-            this.view.updateHeaderTitle(this.adapter.getPageTitle(this.currentPosition));
+            final CharSequence category = this.adapter.getPageTitle(this.currentPosition);
+
+            this.view.updateHeaderTitle(category);
+
+            final Realm realm = Realm.getDefaultInstance();
+
+            try {
+                new ItemManager(realm).getItems(Settings.getSources(this.getView().getContext()).toArray(new String[0]), new String[] { category.toString() })
+                    .subscribe(
+                        items -> {
+                            final List<String> images = new ArrayList<>();
+                            for (final Item item : items) {
+                                for (final Image image : item.getImages()) images.add(image.getUrl());
+                            }
+
+                            this.view.updateHeaderImages(images);
+                        },
+                        error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
+                    );
+            } finally {
+                realm.close();
+            }
         }
     }
 
