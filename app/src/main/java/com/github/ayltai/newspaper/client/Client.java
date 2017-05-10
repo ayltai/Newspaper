@@ -11,7 +11,8 @@ import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
 
-import rx.Observable;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 public abstract class Client implements Closeable {
     protected static final String ENCODING = "UTF-8";
@@ -30,10 +31,10 @@ public abstract class Client implements Closeable {
     }
 
     @NonNull
-    public abstract Observable<List<Item>> getItems(@NonNull String url);
+    public abstract Maybe<List<Item>> getItems(@NonNull String url);
 
     @NonNull
-    public abstract Observable<Item> updateItem(@NonNull Item item);
+    public abstract Single<Item> updateItem(@NonNull Item item);
 
     @Override
     public void close() {

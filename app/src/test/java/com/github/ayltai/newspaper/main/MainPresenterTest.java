@@ -11,8 +11,8 @@ import org.mockito.Mockito;
 import com.github.ayltai.newspaper.PresenterTest;
 import com.github.ayltai.newspaper.model.Item;
 
-import rx.Observable;
-import rx.subjects.PublishSubject;
+import io.reactivex.Flowable;
+import io.reactivex.processors.PublishProcessor;
 
 public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPresenter.View> {
     //region Constants
@@ -24,9 +24,9 @@ public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPr
 
     //region Events
 
-    private final PublishSubject<Integer> pageChanges    = PublishSubject.create();
-    private final PublishSubject<Void>    previousClicks = PublishSubject.create();
-    private final PublishSubject<Void>    nextClicks     = PublishSubject.create();
+    private final PublishProcessor<Integer> pageChanges    = PublishProcessor.create();
+    private final PublishProcessor<Void>    previousClicks = PublishProcessor.create();
+    private final PublishProcessor<Void>    nextClicks     = PublishProcessor.create();
 
     //endregion
 
@@ -38,7 +38,7 @@ public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPr
         final MainPresenter presenter = Mockito.spy(new MainPresenter());
         Mockito.doReturn(this.mainAdapter).when(presenter).createMainAdapter();
 
-        Mockito.doReturn(Observable.just(new ArrayList<Item>())).when(presenter).getHeaderImages(ArgumentMatchers.anyString());
+        Mockito.doReturn(Flowable.just(new ArrayList<Item>())).when(presenter).getHeaderImages(ArgumentMatchers.anyString());
 
         return presenter;
     }

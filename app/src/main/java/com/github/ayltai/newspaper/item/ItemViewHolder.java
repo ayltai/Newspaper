@@ -29,23 +29,23 @@ import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.widget.FaceCenteredImageView;
 import com.github.piasy.biv.view.BigImageView;
-import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding2.view.RxView;
 
 import flow.Flow;
-import rx.Observable;
-import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Flowable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.processors.PublishProcessor;
 
 public final class ItemViewHolder extends RecyclerView.ViewHolder implements ItemPresenter.View, Closeable {
     //region Events
 
-    private final PublishSubject<Void>    clicks    = PublishSubject.create();
-    private final PublishSubject<Boolean> bookmarks = PublishSubject.create();
-    private final PublishSubject<Void>    shares    = PublishSubject.create();
+    private final PublishProcessor<Void>    clicks    = PublishProcessor.create();
+    private final PublishProcessor<Boolean> bookmarks = PublishProcessor.create();
+    private final PublishProcessor<Void>    shares    = PublishProcessor.create();
 
     //endregion
 
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     //region Components
 
@@ -92,12 +92,12 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
             this.draweeView = null;
         }
 
-        this.subscriptions.add(RxView.clicks(this.itemView)
+        this.disposables.add(RxView.clicks(this.itemView)
             .subscribe(
                 v -> this.clicks.onNext(null),
                 error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
-        if (this.thumbnail != null) this.subscriptions.add(RxView.clicks(this.thumbnail)
+        if (this.thumbnail != null) this.disposables.add(RxView.clicks(this.thumbnail)
             .subscribe(
                 v -> this.clicks.onNext(null),
                 error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
@@ -157,25 +157,25 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @NonNull
     @Override
-    public Observable<Void> clicks() {
+    public Flowable<Void> clicks() {
         return this.clicks;
     }
 
     @Nullable
     @Override
-    public Observable<Integer> zooms() {
+    public Flowable<Integer> zooms() {
         return null;
     }
 
     @Nullable
     @Override
-    public Observable<Boolean> bookmarks() {
+    public Flowable<Boolean> bookmarks() {
         return this.bookmarks;
     }
 
     @Nullable
     @Override
-    public Observable<Void> shares() {
+    public Flowable<Void> shares() {
         return this.shares;
     }
 
@@ -199,19 +199,19 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Nullable
     @Override
-    public Observable<Void> attachments() {
+    public Flowable<Void> attachments() {
         return null;
     }
 
     @Nullable
     @Override
-    public Observable<Void> detachments() {
+    public Flowable<Void> detachments() {
         return null;
     }
 
     @Override
     public void close() {
-        this.subscriptions.unsubscribe();
+        this.disposables.dispose();
     }
 
     //endregion

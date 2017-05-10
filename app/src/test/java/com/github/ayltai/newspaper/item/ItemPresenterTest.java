@@ -15,15 +15,15 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.PresenterTest;
 import com.github.ayltai.newspaper.RxBus;
 import com.github.ayltai.newspaper.data.ItemManager;
-import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.list.ListScreen;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
+import io.reactivex.Observable;
+import io.reactivex.processors.PublishProcessor;
 import io.realm.RealmList;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 
 public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPresenter.View> {
     //region Constants
@@ -42,10 +42,10 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
 
     //region Events
 
-    private final PublishSubject<Void>    clicks    = PublishSubject.create();
-    private final PublishSubject<Integer> zooms     = PublishSubject.create();
-    private final PublishSubject<Boolean> bookmarks = PublishSubject.create();
-    private final PublishSubject<Void>    shares    = PublishSubject.create();
+    private final PublishProcessor<Void>    clicks    = PublishProcessor.create();
+    private final PublishProcessor<Integer> zooms     = PublishProcessor.create();
+    private final PublishProcessor<Boolean> bookmarks = PublishProcessor.create();
+    private final PublishProcessor<Void>    shares    = PublishProcessor.create();
 
     //endregion
 

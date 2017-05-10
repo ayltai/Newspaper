@@ -37,15 +37,15 @@ import com.github.ayltai.newspaper.setting.SettingsActivity;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.loader.ImageLoader;
-import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 
 import flow.ClassKey;
-import rx.Observable;
-import rx.subjects.BehaviorSubject;
-import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Flowable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.processors.BehaviorProcessor;
+import io.reactivex.processors.PublishProcessor;
 
 @SuppressLint("ViewConstructor")
 public final class MainScreen extends FrameLayout implements MainPresenter.View, KenBurnsView.TransitionListener {
@@ -86,18 +86,18 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
     //region Events
 
-    private final BehaviorSubject<Void>    attachedToWindow   = BehaviorSubject.create();
-    private final BehaviorSubject<Void>    detachedFromWindow = BehaviorSubject.create();
-    private final BehaviorSubject<Integer> pageChanges        = BehaviorSubject.create();
-    private final PublishSubject<Void>     previousClicks     = PublishSubject.create();
-    private final PublishSubject<Void>     nextClicks         = PublishSubject.create();
+    private final BehaviorProcessor<Void>    attachedToWindow   = BehaviorProcessor.create();
+    private final BehaviorProcessor<Void>    detachedFromWindow = BehaviorProcessor.create();
+    private final BehaviorProcessor<Integer> pageChanges        = BehaviorProcessor.create();
+    private final PublishProcessor<Void>     previousClicks     = PublishProcessor.create();
+    private final PublishProcessor<Void>     nextClicks         = PublishProcessor.create();
 
     //endregion
 
     @Inject
     ImageLoader imageLoader;
 
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     //region Components
 
@@ -196,12 +196,12 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
     }
 
     @Override
-    public Observable<Void> previousClicks() {
+    public Flowable<Void> previousClicks() {
         return this.previousClicks;
     }
 
     @Override
-    public Observable<Void> nextClicks() {
+    public Flowable<Void> nextClicks() {
         return this.nextClicks;
     }
 
@@ -230,7 +230,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
     @NonNull
     @Override
-    public Observable<Integer> pageChanges() {
+    public Flowable<Integer> pageChanges() {
         return this.pageChanges;
     }
 
@@ -255,13 +255,13 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
     @NonNull
     @Override
-    public Observable<Void> attachments() {
+    public Flowable<Void> attachments() {
         return this.attachedToWindow;
     }
 
     @NonNull
     @Override
-    public Observable<Void> detachments() {
+    public Flowable<Void> detachments() {
         return this.detachedFromWindow;
     }
 
@@ -290,8 +290,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
             this.previousButton = view.findViewById(R.id.navigate_previous);
             this.nextButton     = view.findViewById(R.id.navigate_next);
 
-            this.subscriptions.add(RxView.clicks(this.previousButton).subscribe(dummy -> this.previousClicks.onNext(null)));
-            this.subscriptions.add(RxView.clicks(this.nextButton).subscribe(dummy -> this.nextClicks.onNext(null)));
+            this.disposable.add(RxView.clicks(this.previousButton).subscribe(dummy -> this.previousClicks.onNext(null)));
+            this.disposable.add(RxView.clicks(this.nextButton).subscribe(dummy -> this.nextClicks.onNext(null)));
 
             // Sets up ViewPager
             this.viewPager = (ViewPager)view.findViewById(R.id.viewPager);
@@ -330,7 +330,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
             this.adapter = null;
         }
 
-        if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
+        if (!this.disposable.isDisposed()) this.disposable.dispose();
     }
 
     //endregion
@@ -339,16 +339,16 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
         final ViewGroup drawerMenu = (ViewGroup)LayoutInflater.from(this.getContext()).inflate(R.layout.view_drawer_menu, this, false);
         if (BuildConfig.DEBUG) drawerMenu.removeView(drawerMenu.findViewById(R.id.statusBarPadding));
 
-        this.subscriptions.add(RxView.clicks(drawerMenu).subscribe(dummy -> {
+        this.disposable.add(RxView.clicks(drawerMenu).subscribe(dummy -> {
             // Prevent click-through
         }));
 
-        this.subscriptions.add(RxView.clicks(drawerMenu.findViewById(R.id.action_settings)).subscribe(dummy -> {
+        this.disposable.add(RxView.clicks(drawerMenu.findViewById(R.id.action_settings)).subscribe(dummy -> {
             this.animation.close();
             ((Activity)this.getContext()).startActivityForResult(new Intent(this.getContext(), SettingsActivity.class), Constants.REQUEST_SETTINGS);
         }));
 
-        this.subscriptions.add(RxView.clicks(drawerMenu.findViewById(R.id.action_about)).subscribe(dummy -> {
+        this.disposable.add(RxView.clicks(drawerMenu.findViewById(R.id.action_about)).subscribe(dummy -> {
             this.animation.close();
             ContextUtils.showAbout(this.getContext());
         }));

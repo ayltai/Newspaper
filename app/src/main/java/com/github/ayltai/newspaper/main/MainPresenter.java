@@ -10,6 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
 import com.github.ayltai.newspaper.DaggerMainComponent;
 import com.github.ayltai.newspaper.MainModule;
 import com.github.ayltai.newspaper.Presenter;
@@ -18,11 +21,10 @@ import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.setting.Settings;
 
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.disposables.CompositeDisposable;
 import io.realm.Realm;
-import rx.Emitter;
-import rx.Observable;
-import rx.Subscriber;
-import rx.subscriptions.CompositeSubscription;
 
 public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
     public interface View extends Presenter.View, Closeable {
@@ -36,9 +38,9 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
 
         void enableNext(boolean enabled);
 
-        Observable<Void> previousClicks();
+        Flowable<Void> previousClicks();
 
-        Observable<Void> nextClicks();
+        Flowable<Void> nextClicks();
 
         void navigatePrevious();
 
@@ -47,12 +49,16 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
         boolean goBack();
 
         @NonNull
-        Observable<Integer> pageChanges();
+        Flowable<Integer> pageChanges();
     }
 
     private final Subscriber<ImagesUpdatedEvent> subscriber = new Subscriber<ImagesUpdatedEvent>() {
         @Override
-        public void onCompleted() {
+        public void onComplete() {
+        }
+
+        @Override
+        public void onSubscribe(final Subscription subscription) {
         }
 
         @Override
@@ -68,9 +74,9 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
 
     //region Variables
 
-    private CompositeSubscription subscriptions;
-    private MainAdapter           adapter;
-    private int                   currentPosition;
+    private CompositeDisposable disposable;
+    private MainAdapter         adapter;
+    private int                 currentPosition;
 
     //endregion
 
@@ -84,11 +90,11 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
 
         this.adapter = this.createMainAdapter();
 
-        if (this.subscriptions != null && this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
+        if (this.disposable != null && !this.disposable.isDisposed() && this.disposable.size() > 0) this.disposable.dispose();
 
-        this.subscriptions = new CompositeSubscription();
+        this.disposable = new CompositeDisposable();
 
-        this.subscriptions.add(this.getView().pageChanges().subscribe(position -> {
+        this.disposable.add(this.getView().pageChanges().subscribe(position -> {
             this.currentPosition = position;
 
             this.updateHeader();
@@ -97,8 +103,8 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
             this.getView().enableNext(this.currentPosition < this.adapter.getCount() - 1);
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
-        this.subscriptions.add(this.getView().previousClicks().subscribe(dummy -> this.getView().navigatePrevious(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
-        this.subscriptions.add(this.getView().nextClicks().subscribe(dummy -> this.getView().navigateNext(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+        this.disposable.add(this.getView().previousClicks().subscribe(dummy -> this.getView().navigatePrevious(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+        this.disposable.add(this.getView().nextClicks().subscribe(dummy -> this.getView().navigateNext(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
         this.bus().register(ImagesUpdatedEvent.class, this.subscriber);
     }
@@ -107,9 +113,9 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
     public final void onViewDetached() {
         super.onViewDetached();
 
-        if (this.subscriptions != null && this.subscriptions.hasSubscriptions()) {
-            this.subscriptions.unsubscribe();
-            this.subscriptions = null;
+        if (this.disposable != null && !this.disposable.isDisposed() && this.disposable.size() > 0) {
+            this.disposable.dispose();
+            this.disposable = null;
         }
 
         this.bus().unregister(ImagesUpdatedEvent.class, this.subscriber);
@@ -139,8 +145,8 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
 
     @VisibleForTesting
     @NonNull
-    /* private */ Observable<List<String>> getHeaderImages(@NonNull final CharSequence category) {
-        return Observable.create(emitter -> {
+    /* private */ Single<List<String>> getHeaderImages(@NonNull final CharSequence category) {
+        return Single.create(emitter -> {
             final List<String> images = new ArrayList<>();
             final Realm        realm  = Realm.getDefaultInstance();
 
@@ -152,13 +158,13 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
                                 for (final Image image : item.getImages()) images.add(image.getUrl());
                             }
 
-                            emitter.onNext(images);
+                            emitter.onSuccess(images);
                         },
                         error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
                     );
             } finally {
                 realm.close();
             }
-        }, Emitter.BackpressureMode.BUFFER);
+        });
     }
 }

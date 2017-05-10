@@ -20,8 +20,7 @@ import com.github.ayltai.newspaper.net.HttpClient;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
-import rx.Emitter;
-import rx.Observable;
+import io.reactivex.Single;
 
 final class SkyPostClient extends RssClient {
     //region Constants
@@ -41,8 +40,8 @@ final class SkyPostClient extends RssClient {
 
     @NonNull
     @Override
-    public Observable<Item> updateItem(@NonNull final Item item) {
-        return Observable.create(emitter -> {
+    public Single<Item> updateItem(@NonNull final Item item) {
+        return Single.create(emitter -> {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
 
             try {
@@ -83,10 +82,10 @@ final class SkyPostClient extends RssClient {
                 item.setDescription(builder.toString());
                 item.setIsFullDescription(true);
 
-                emitter.onNext(item);
+                emitter.onSuccess(item);
             } catch (final IOException e) {
                 emitter.onError(e);
             }
-        }, Emitter.BackpressureMode.BUFFER);
+        });
     }
 }

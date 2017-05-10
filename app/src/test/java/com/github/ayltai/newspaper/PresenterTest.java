@@ -12,16 +12,16 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.processors.PublishProcessor;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public abstract class PresenterTest<P extends Presenter, V extends Presenter.View> {
-    private final PublishSubject<Void> attachments = PublishSubject.create();
-    private final PublishSubject<Void> detachments = PublishSubject.create();
+    private final PublishProcessor<Void> attachments = PublishProcessor.create();
+    private final PublishProcessor<Void> detachments = PublishProcessor.create();
 
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
+    private final CompositeDisposable subscriptions = new CompositeDisposable();
 
     private P presenter;
     private V view;
@@ -65,6 +65,6 @@ public abstract class PresenterTest<P extends Presenter, V extends Presenter.Vie
     public void tearDown() throws Exception {
         this.detachments.onNext(null);
 
-        this.subscriptions.unsubscribe();
+        this.subscriptions.dispose();
     }
 }

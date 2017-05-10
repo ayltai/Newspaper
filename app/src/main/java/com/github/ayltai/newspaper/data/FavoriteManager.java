@@ -8,9 +8,8 @@ import android.support.annotation.NonNull;
 import com.github.ayltai.newspaper.model.SourceFactory;
 import com.github.ayltai.newspaper.setting.Settings;
 
+import io.reactivex.Single;
 import io.realm.RealmList;
-import rx.Emitter;
-import rx.Observable;
 
 public final class FavoriteManager {
     private final Context context;
@@ -21,8 +20,8 @@ public final class FavoriteManager {
     }
 
     @NonNull
-    public Observable<Favorite> getFavorite() {
-        return Observable.create(emitter -> emitter.onNext(this.createFromSettings()), Emitter.BackpressureMode.BUFFER);
+    public Single<Favorite> getFavorite() {
+        return Single.create(emitter -> emitter.onSuccess(this.createFromSettings()));
     }
 
     @NonNull

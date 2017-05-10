@@ -45,16 +45,16 @@ import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
 import com.gjiazhe.panoramaimageview.PanoramaImageView;
-import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import flow.ClassKey;
 import flow.Flow;
 import flow.TreeKey;
-import rx.Observable;
-import rx.subjects.BehaviorSubject;
-import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Flowable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.processors.BehaviorProcessor;
+import io.reactivex.processors.PublishProcessor;
 import xyz.hanks.library.SmallBang;
 
 public final class ItemScreen extends FrameLayout implements ItemPresenter.View {
@@ -134,12 +134,12 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     //region Events
 
-    private final BehaviorSubject<Void> attachedToWindow   = BehaviorSubject.create();
-    private final BehaviorSubject<Void> detachedFromWindow = BehaviorSubject.create();
+    private final BehaviorProcessor<Void> attachedToWindow   = BehaviorProcessor.create();
+    private final BehaviorProcessor<Void> detachedFromWindow = BehaviorProcessor.create();
 
-    private final PublishSubject<Integer> zooms     = PublishSubject.create();
-    private final PublishSubject<Boolean> bookmarks = PublishSubject.create();
-    private final PublishSubject<Void>    shares    = PublishSubject.create();
+    private final PublishProcessor<Integer> zooms     = PublishProcessor.create();
+    private final PublishProcessor<Boolean> bookmarks = PublishProcessor.create();
+    private final PublishProcessor<Void>    shares    = PublishProcessor.create();
 
     //endregion
 
@@ -150,10 +150,10 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     @Inject
     ImageLoader imageLoader;
 
-    private CompositeSubscription subscriptions;
-    private ImageLoaderCallback   callback;
-    private boolean               isBookmarked;
-    private boolean               hasAttached;
+    private CompositeDisposable disposables;
+    private ImageLoaderCallback callback;
+    private boolean             isBookmarked;
+    private boolean             hasAttached;
 
     //endregion
 
@@ -278,8 +278,8 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                     imageView.showImage(Uri.parse(images.get(i).getUrl()));
                     textView.setText(images.get(i).getDescription());
 
-                    if (this.subscriptions != null)
-                        this.subscriptions.add(RxView.clicks(imageView).takeUntil(RxView.detaches(container)).subscribe(dummy -> this.zooms.onNext(index), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+                    if (this.disposables != null)
+                        this.disposables.add(RxView.clicks(imageView).takeUntil(RxView.detaches(container)).subscribe(dummy -> this.zooms.onNext(index), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
                     this.thumbnailsContainer.addView(container);
                 }
@@ -306,25 +306,25 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     @Nullable
     @Override
-    public Observable<Void> clicks() {
+    public Flowable<Void> clicks() {
         return null;
     }
 
     @Nullable
     @Override
-    public Observable<Integer> zooms() {
+    public Flowable<Integer> zooms() {
         return this.zooms;
     }
 
     @Nullable
     @Override
-    public Observable<Boolean> bookmarks() {
+    public Flowable<Boolean> bookmarks() {
         return this.bookmarks;
     }
 
     @Nullable
     @Override
-    public Observable<Void> shares() {
+    public Flowable<Void> shares() {
         return this.shares;
     }
 
@@ -348,13 +348,13 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     @NonNull
     @Override
-    public Observable<Void> attachments() {
+    public Flowable<Void> attachments() {
         return this.attachedToWindow;
     }
 
     @NonNull
     @Override
-    public Observable<Void> detachments() {
+    public Flowable<Void> detachments() {
         return this.detachedFromWindow;
     }
 
@@ -410,9 +410,9 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
         this.smallBang = null;
 
-        if (this.subscriptions != null && this.subscriptions.hasSubscriptions()) {
-            this.subscriptions.unsubscribe();
-            this.subscriptions = null;
+        if (this.disposables != null && !this.disposables.isDisposed() && this.disposables.size() > 0) {
+            this.disposables.dispose();
+            this.disposables = null;
         }
 
         this.detachedFromWindow.onNext(null);
@@ -421,13 +421,13 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     //endregion
 
     private void attachEvents() {
-        if (this.subscriptions == null) {
-            this.subscriptions = new CompositeSubscription();
+        if (this.disposables == null) {
+            this.disposables = new CompositeDisposable();
 
-            this.subscriptions.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(0), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
-            this.subscriptions.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+            this.disposables.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(0), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+            this.disposables.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
-            this.subscriptions.add(RxView.clicks(this.bookmark).subscribe(dummy -> {
+            this.disposables.add(RxView.clicks(this.bookmark).subscribe(dummy -> {
                 this.setIsBookmarked(!this.isBookmarked);
 
                 if (this.smallBang != null && this.isBookmarked) this.smallBang.bang(this.bookmark);

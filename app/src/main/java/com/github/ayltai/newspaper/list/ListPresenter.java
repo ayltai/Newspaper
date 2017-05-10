@@ -26,34 +26,35 @@ import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.ayltai.newspaper.util.TestUtils;
 
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     public interface View extends Presenter.View {
         void setItems(@NonNull ListScreen.Key parentKey, @NonNull List<Item> items);
 
         @NonNull
-        Observable<Void> refreshes();
+        Flowable<Void> refreshes();
 
         void showUpdateIndicator();
     }
 
     //region Variables
 
-    private CompositeSubscription subscriptions;
-    private Subscription          refreshSubscription;
-    private Subscription          updateSubscription;
-    private Realm                 realm;
-    private FavoriteManager       favoriteManager;
-    private ItemManager           itemManager;
-    private List<Item>            items;
-    private ListScreen.Key        key;
-    private boolean               isBound;
+    private CompositeDisposable disposables;
+    private Disposable          refreshDisposable;
+    private Disposable          updateDisposable;
+    private Realm               realm;
+    private FavoriteManager     favoriteManager;
+    private ItemManager         itemManager;
+    private List<Item>          items;
+    private ListScreen.Key      key;
+    private boolean             isBound;
 
     //endregion
 
@@ -92,14 +93,14 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     private void bindFromRemote(final int timeout) {
         if (this.getView() == null) return;
 
-        if (this.refreshSubscription != null) this.refreshSubscription.unsubscribe();
+        if (this.refreshDisposable != null) this.refreshDisposable.dispose();
 
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
         this.getFavoriteManager().getFavorite()
             .subscribe(
                 favorite -> {
-                    final List<Observable<List<Item>>> observables = new ArrayList<>();
+                    final List<Maybe<List<Item>>> observables = new ArrayList<>();
 
                     for (final Source source : favorite.getSources()) {
                         for (final Category category : source.getCategories()) {
@@ -116,7 +117,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                         }
                     }
 
-                    this.refreshSubscription = ListPresenter.zip(observables)
+                    this.refreshDisposable = ListPresenter.zip(observables)
                         .subscribe(
                             items -> {
                                 this.items = this.partialUpdate(items);
@@ -146,12 +147,12 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
         if (this.getView() == null) return;
 
-        if (this.updateSubscription != null) this.updateSubscription.unsubscribe();
+        if (this.updateDisposable != null) this.updateDisposable.dispose();
 
         this.getFavoriteManager().getFavorite()
             .subscribe(
                 favorite -> {
-                    final List<Observable<List<Item>>> observables = new ArrayList<>();
+                    final List<Maybe<List<Item>>> observables = new ArrayList<>();
 
                     for (final Source source : favorite.getSources()) {
                         for (final Category category : source.getCategories()) {
@@ -170,7 +171,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                         }
                     }
 
-                    this.updateSubscription = ListPresenter.zip(observables).subscribe(
+                    this.updateDisposable = ListPresenter.zip(observables).subscribe(
                         this::showUpdateIndicator,
                         error -> {
                             if (error instanceof TimeoutException) {
@@ -248,19 +249,19 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     public void onViewDetached() {
         super.onViewDetached();
 
-        if (this.subscriptions != null && this.subscriptions.hasSubscriptions()) {
-            this.subscriptions.unsubscribe();
-            this.subscriptions = null;
+        if (this.disposables != null && !this.disposables.isDisposed() && this.disposables.size() > 0) {
+            this.disposables.dispose();
+            this.disposables = null;
         }
 
-        if (this.refreshSubscription != null) {
-            this.refreshSubscription.unsubscribe();
-            this.refreshSubscription = null;
+        if (this.refreshDisposable != null) {
+            this.refreshDisposable.dispose();
+            this.refreshDisposable = null;
         }
 
-        if (this.updateSubscription != null) {
-            this.updateSubscription.unsubscribe();
-            this.updateSubscription = null;
+        if (this.updateDisposable != null) {
+            this.updateDisposable.dispose();
+            this.updateDisposable = null;
         }
     }
 
@@ -284,9 +285,9 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     private void attachEvents() {
         if (this.getView() == null) return;
 
-        if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
+        if (this.disposables == null) this.disposables = new CompositeDisposable();
 
-        this.subscriptions.add(this.getView().refreshes().subscribe(dummy -> {
+        this.disposables.add(this.getView().refreshes().subscribe(dummy -> {
             if (this.key != null) {
                 if (Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {
                     this.isBound = false;
@@ -299,8 +300,8 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 
-    private static Observable<List<Item>> zip(@NonNull final Iterable<Observable<List<Item>>> observables) {
-        return Observable.zip(observables, lists -> {
+    private static Maybe<List<Item>> zip(@NonNull final Iterable<Maybe<List<Item>>> maybes) {
+        return Maybe.zip(maybes, lists -> {
             final List<Item> items = new ArrayList<>();
 
             for (final Object list : lists) items.addAll((List<Item>)list);

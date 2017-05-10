@@ -21,19 +21,18 @@ import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.piasy.biv.view.BigImageView;
 
-import rx.Emitter;
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public final class FaceCenteredImageView extends BigImageView {
     //region Variables
 
-    private Subscription subscription;
-    private int          screenWidth;
-    private Field        mCurrentImageFile;
-    private Field        mTempImages;
+    private Disposable disposable;
+    private int        screenWidth;
+    private Field      mCurrentImageFile;
+    private Field      mTempImages;
 
     //endregion
 
@@ -62,9 +61,9 @@ public final class FaceCenteredImageView extends BigImageView {
     public void onCacheHit(final File image) {
         this.setCurrentImageFile(image);
 
-        if (this.subscription != null) this.subscription.unsubscribe();
+        if (this.disposable != null) this.disposable.dispose();
 
-        this.subscription = this.translate(image);
+        this.disposable = this.translate(image);
     }
 
     @SuppressWarnings("WrongThread")
@@ -74,9 +73,9 @@ public final class FaceCenteredImageView extends BigImageView {
         this.setCurrentImageFile(image);
         this.getTempImages().add(image);
 
-        if (this.subscription != null) this.subscription.unsubscribe();
+        if (this.disposable != null) this.disposable.dispose();
 
-        this.subscription = this.translate(image);
+        this.disposable = this.translate(image);
     }
 
     @Override
@@ -90,13 +89,13 @@ public final class FaceCenteredImageView extends BigImageView {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        if (this.subscription != null) {
-            this.subscription.unsubscribe();
-            this.subscription = null;
+        if (this.disposable != null) {
+            this.disposable.dispose();
+            this.disposable = null;
         }
     }
 
-    private Subscription translate(@NonNull final File image) {
+    private Disposable translate(@NonNull final File image) {
         FaceDetectorFactory.initialize(this.getContext());
 
         return FaceCenteredImageView.translate(image, this.screenWidth, this.getContext().getResources().getDimensionPixelSize(R.dimen.thumbnail_cozy))
@@ -113,8 +112,8 @@ public final class FaceCenteredImageView extends BigImageView {
 
     @SuppressFBWarnings("MOM_MISLEADING_OVERLOAD_MODEL")
     @NonNull
-    private static Observable<ScaleCenter> translate(@NonNull final File image, final int width, final int height) {
-        return Observable.create(emitter -> emitter.onNext(new FaceCenterCrop(width, height).findCroppedCenter(image)), Emitter.BackpressureMode.BUFFER);
+    private static Single<ScaleCenter> translate(@NonNull final File image, final int width, final int height) {
+        return Single.create(emitter -> emitter.onSuccess(new FaceCenterCrop(width, height).findCroppedCenter(image)));
     }
 
     //region Reflected methods

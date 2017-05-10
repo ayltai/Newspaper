@@ -28,9 +28,8 @@ import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.BigImageViewer;
 
-import rx.Emitter;
-import rx.Observable;
-import rx.schedulers.Schedulers;
+import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
 public final class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
     //region Variables
@@ -180,7 +179,7 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     }
 
     private void setUpRemoteConfig() {
-        Observable.<FirebaseRemoteConfig>create(emitter -> emitter.onNext(FirebaseRemoteConfig.getInstance()), Emitter.BackpressureMode.BUFFER)
+        Single.<FirebaseRemoteConfig>create(emitter -> emitter.onSuccess(FirebaseRemoteConfig.getInstance()))
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
             .subscribe(config -> {

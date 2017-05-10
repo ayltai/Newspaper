@@ -15,9 +15,9 @@ import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
+import io.reactivex.Flowable;
+import io.reactivex.processors.PublishProcessor;
 import io.realm.RealmList;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 
 public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPresenter.View> {
     //region Constants
@@ -30,7 +30,7 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
 
     //region Events
 
-    private final PublishSubject<Void> refreshes = PublishSubject.create();
+    private final PublishProcessor<Void> refreshes = PublishProcessor.create();
 
     //endregion
 
@@ -41,7 +41,7 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
     @Override
     protected ListPresenter createPresenter() {
         final ItemManager itemManager = Mockito.mock(ItemManager.class);
-        Mockito.doReturn(Observable.just(this.items)).when(itemManager).getItemsObservable(Collections.emptyList(), Collections.singletonList(ListPresenterTest.KEY_PARENT_URL));
+        Mockito.doReturn(Flowable.just(this.items)).when(itemManager).getItemsObservable(Collections.emptyList(), Collections.singletonList(ListPresenterTest.KEY_PARENT_URL));
 
         final ListPresenter presenter = Mockito.spy(new ListPresenter());
         Mockito.doReturn(itemManager).when(presenter).getItemManager();

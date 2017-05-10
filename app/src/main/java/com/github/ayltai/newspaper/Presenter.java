@@ -7,15 +7,15 @@ import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.util.LogUtils;
 
-import rx.Observable;
+import io.reactivex.Flowable;
 
 public abstract class Presenter<V extends Presenter.View> extends BasePresenter<V> {
     public interface View {
         @Nullable
-        Observable<Void> attachments();
+        Flowable<Void> attachments();
 
         @Nullable
-        Observable<Void> detachments();
+        Flowable<Void> detachments();
 
         @NonNull
         Context getContext();

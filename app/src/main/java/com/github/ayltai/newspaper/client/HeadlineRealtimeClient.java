@@ -21,8 +21,8 @@ import com.github.ayltai.newspaper.net.HttpClient;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
-import rx.Emitter;
-import rx.Observable;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 final class HeadlineRealtimeClient extends Client {
     //region Constants
@@ -48,8 +48,8 @@ final class HeadlineRealtimeClient extends Client {
 
     @NonNull
     @Override
-    public Observable<List<Item>> getItems(@NonNull final String url) {
-        return Observable.create(emitter -> {
+    public Maybe<List<Item>> getItems(@NonNull final String url) {
+        return Maybe.create(emitter -> {
             try {
                 final String html = IOUtils.toString(this.client.download(url), Client.ENCODING);
 
@@ -87,17 +87,17 @@ final class HeadlineRealtimeClient extends Client {
                     }
                 }
 
-                emitter.onNext(items);
+                emitter.onSuccess(items);
             } catch (final IOException e) {
                 emitter.onError(e);
             }
-        }, Emitter.BackpressureMode.BUFFER);
+        });
     }
 
     @NonNull
     @Override
-    public Observable<Item> updateItem(@NonNull final Item item) {
-        return Observable.create(emitter -> {
+    public Single<Item> updateItem(@NonNull final Item item) {
+        return Single.create(emitter -> {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
 
             try {
@@ -109,11 +109,11 @@ final class HeadlineRealtimeClient extends Client {
                 item.setDescription(StringUtils.substringBetween(html, "<div id=\"news-content\" class=\"set-font-aera\" style=\"visibility: visible;\">", "</div>"));
                 item.setIsFullDescription(true);
 
-                emitter.onNext(item);
+                emitter.onSuccess(item);
             } catch (final IOException e) {
                 emitter.onError(e);
             }
-        }, Emitter.BackpressureMode.BUFFER);
+        });
     }
 
     private static void extractImages(@NonNull final String[] imageContainers, @NonNull final Item item) {

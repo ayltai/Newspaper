@@ -23,8 +23,8 @@ import com.github.ayltai.newspaper.net.HttpClient;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
-import rx.Emitter;
-import rx.Observable;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 final class SingTaoClient extends Client {
     //region Constants
@@ -49,8 +49,8 @@ final class SingTaoClient extends Client {
 
     @NonNull
     @Override
-    public Observable<List<Item>> getItems(@NonNull final String url) {
-        return Observable.create(emitter -> {
+    public Maybe<List<Item>> getItems(@NonNull final String url) {
+        return Maybe.create(emitter -> {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
 
             try {
@@ -86,17 +86,17 @@ final class SingTaoClient extends Client {
                     }
                 }
 
-                emitter.onNext(items);
+                emitter.onSuccess(items);
             } catch (final IOException e) {
                 emitter.onError(e);
             }
-        }, Emitter.BackpressureMode.BUFFER);
+        });
     }
 
     @NonNull
     @Override
-    public Observable<Item> updateItem(@NonNull final Item item) {
-        return Observable.create(emitter -> {
+    public Single<Item> updateItem(@NonNull final Item item) {
+        return Single.create(emitter -> {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
 
             try {
@@ -124,10 +124,10 @@ final class SingTaoClient extends Client {
                 item.setDescription(builder.toString());
                 item.setIsFullDescription(true);
 
-                emitter.onNext(item);
+                emitter.onSuccess(item);
             } catch (final IOException e) {
                 emitter.onError(e);
             }
-        }, Emitter.BackpressureMode.BUFFER);
+        });
     }
 }
