@@ -41,6 +41,7 @@ final class MingPaoClient extends RssClient {
         super(client, source);
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     @Override
     public Observable<Item> updateItem(@NonNull final Item item) {
@@ -56,30 +57,7 @@ final class MingPaoClient extends RssClient {
                 final JSONArray  images = json.getJSONArray("media:group");
 
                 if (images != null) {
-                    final List<Image> fullImages = new ArrayList<>();
-
-                    for (int i = 0; i < images.length(); i++) {
-                        final JSONObject image            = images.getJSONObject(i);
-                        final String     imageDescription = image.getString("media:title");
-                        final JSONArray  array            = image.getJSONArray("media:content");
-
-                        if (array != null && array.length() > 0) {
-                            Image img = null;
-                            int   max = 0;
-
-                            for (int j = 0; j < array.length(); j++) {
-                                final JSONObject obj    = array.getJSONObject(j).getJSONObject("ATTRIBUTES");
-                                final int        height = obj.getInt("HEIGHT");
-
-                                if (height > max) {
-                                    img = new Image(MingPaoClient.BASE_IMAGE + obj.getString("URL"), imageDescription);
-                                    max = height;
-                                }
-                            }
-
-                            if (img != null) fullImages.add(img);
-                        }
-                    }
+                    final List<Image> fullImages = MingPaoClient.extractImages(images);
 
                     if (!fullImages.isEmpty()) {
                         item.getImages().clear();
@@ -95,5 +73,38 @@ final class MingPaoClient extends RssClient {
                 emitter.onError(e);
             }
         }, Emitter.BackpressureMode.BUFFER);
+    }
+
+    private static List<Image> extractImages(@NonNull final JSONArray images) {
+        final List<Image> fullImages = new ArrayList<>();
+
+        for (int i = 0; i < images.length(); i++) {
+            try {
+                final JSONObject image            = images.getJSONObject(i);
+                final String     imageDescription = image.getString("media:title");
+                final JSONArray  array            = image.getJSONArray("media:content");
+
+                if (array != null && array.length() > 0) {
+                    Image img = null;
+                    int   max = 0;
+
+                    for (int j = 0; j < array.length(); j++) {
+                        final JSONObject obj    = array.getJSONObject(j).getJSONObject("ATTRIBUTES");
+                        final int        height = obj.getInt("HEIGHT");
+
+                        if (height > max) {
+                            img = new Image(MingPaoClient.BASE_IMAGE + obj.getString("URL"), imageDescription);
+                            max = height;
+                        }
+                    }
+
+                    if (img != null) fullImages.add(img);
+                }
+            } catch (final JSONException e) {
+                LogUtils.getInstance().e(MingPaoClient.class.getSimpleName(), e.getMessage(), e);
+            }
+        }
+
+        return fullImages;
     }
 }

@@ -28,18 +28,20 @@ public final class SourceFactory {
         final String[] sources    = context.getResources().getStringArray(R.array.sources);
         final String[] categories = context.getResources().getStringArray(R.array.categories);
 
-        this.sources.put(sources[0], SourceFactory.createAppleDailySource(sources, categories));
-        this.sources.put(sources[1], SourceFactory.createOrientalDailySource(sources, categories));
-        this.sources.put(sources[2], SourceFactory.createSingTaoDailySource(sources, categories));
-        this.sources.put(sources[3], SourceFactory.createSingTaoRealtimeSource(sources, categories));
-        this.sources.put(sources[4], SourceFactory.createEconomicTimesSource(sources, categories));
-        this.sources.put(sources[5], SourceFactory.createSingPaoDailySource(sources, categories));
-        this.sources.put(sources[6], SourceFactory.createMingPaoSource(sources, categories));
-        this.sources.put(sources[7], SourceFactory.createHeadlineSource(sources, categories));
-        this.sources.put(sources[8], SourceFactory.createHeadlineRealtimeSource(sources, categories));
-        this.sources.put(sources[9], SourceFactory.createSkyPostSource(sources, categories));
-        this.sources.put(sources[10], SourceFactory.createEconomicJournalSource(sources, categories));
-        this.sources.put(sources[11], SourceFactory.createRadioTelevisionSource(sources, categories));
+        int i = 0;
+
+        this.sources.put(sources[i++], SourceFactory.createAppleDailySource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createOrientalDailySource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createSingTaoDailySource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createSingTaoRealtimeSource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createEconomicTimesSource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createSingPaoDailySource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createMingPaoSource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createHeadlineSource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createHeadlineRealtimeSource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createSkyPostSource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createEconomicJournalSource(sources, categories));
+        this.sources.put(sources[i], SourceFactory.createRadioTelevisionSource(sources, categories));
     }
 
     @Nullable
@@ -52,6 +54,7 @@ public final class SourceFactory {
         return new Source(sources[0], new RealmList<>());
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createOrientalDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[1], new RealmList<>(
@@ -63,6 +66,7 @@ public final class SourceFactory {
             new Category("http://orientaldaily.on.cc/rss/sport.xml", categories[7])));
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createSingTaoDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[2], new RealmList<>(
@@ -75,6 +79,7 @@ public final class SourceFactory {
             new Category("http://std.stheadline.com/daily/section-list.php?cat=14", categories[7])));
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createSingTaoRealtimeSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[3], new RealmList<>(
@@ -87,6 +92,7 @@ public final class SourceFactory {
             new Category("http://std.stheadline.com/instant/articles/listview/%E9%AB%94%E8%82%B2/", categories[18])));
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createEconomicTimesSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[4], new RealmList<>(
@@ -99,6 +105,7 @@ public final class SourceFactory {
             new Category("http://www.hket.com/rss/technology", categories[9])));
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createSingPaoDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[5], new RealmList<>(
@@ -110,6 +117,7 @@ public final class SourceFactory {
             new Category("https://www.singpao.com.hk/index.php?fi=news7", categories[8])));
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createMingPaoSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[6], new RealmList<>(
@@ -132,6 +140,7 @@ public final class SourceFactory {
             new Category("https://news.mingpao.com/rss/ins/s00006.xml", categories[18])));
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createHeadlineSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[7], new RealmList<>(
@@ -145,6 +154,7 @@ public final class SourceFactory {
             new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_SPORTS, categories[7])));
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createHeadlineRealtimeSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[8], new RealmList<>(
@@ -157,6 +167,7 @@ public final class SourceFactory {
             new Category("http://hd.stheadline.com/news/realtime/spt/", categories[18])));
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createSkyPostSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[9], new RealmList<>(
@@ -169,12 +180,14 @@ public final class SourceFactory {
             new Category("http://skypost.ulifestyle.com.hk/rss/sras007", categories[10])));
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createEconomicJournalSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[10], new RealmList<>(
             new Category("http://www.hkej.com/rss/onlinenews.xml", categories[15])));
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createRadioTelevisionSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[11], new RealmList<>(

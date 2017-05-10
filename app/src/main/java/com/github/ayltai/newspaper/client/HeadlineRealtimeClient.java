@@ -28,7 +28,9 @@ final class HeadlineRealtimeClient extends Client {
     //region Constants
 
     private static final String BASE_URI  = "http://hd.stheadline.com";
-    private static final String TAG_CLOSE = "\">";
+    private static final String TAG_LINK  = "</a>";
+    private static final String TAG_QUOTE = "\">";
+    private static final String HTTP      = "http:";
 
     //endregion
 
@@ -62,8 +64,8 @@ final class HeadlineRealtimeClient extends Client {
                     final Item   item  = new Item();
                     final String title = StringUtils.substringBetween(section, "<h4>", "</h4>");
 
-                    item.setTitle(StringUtils.substringBetween(title, HeadlineRealtimeClient.TAG_CLOSE, "</a>"));
-                    item.setLink(HeadlineRealtimeClient.BASE_URI + StringUtils.substringBetween(title, "<a href=\"", HeadlineRealtimeClient.TAG_CLOSE));
+                    item.setTitle(StringUtils.substringBetween(title, HeadlineRealtimeClient.TAG_QUOTE, HeadlineRealtimeClient.TAG_LINK));
+                    item.setLink(HeadlineRealtimeClient.BASE_URI + StringUtils.substringBetween(title, "<a href=\"", HeadlineRealtimeClient.TAG_QUOTE));
                     item.setDescription(StringUtils.substringBetween(section, "<p class=\"text\">", "</p>"));
                     item.setSource(this.source.getName());
                     item.setCategory(categoryName);
@@ -72,8 +74,8 @@ final class HeadlineRealtimeClient extends Client {
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
 
-                    final String image = StringUtils.substringBetween(section, "<img src=\"", "\"/>");
-                    if (image != null) item.getImages().add(new Image("http:" + image));
+                    final String image = StringUtils.substringBetween(section, "<img src=\"", HeadlineRealtimeClient.TAG_QUOTE);
+                    if (image != null) item.getImages().add(new Image(HeadlineRealtimeClient.HTTP + image));
 
                     try {
                         item.setPublishDate(HeadlineRealtimeClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o\"></i>", "</span>")));
@@ -100,7 +102,7 @@ final class HeadlineRealtimeClient extends Client {
 
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
 
-                HeadlineRealtimeClient.extractImages(StringUtils.substringsBetween(html, "<a class=\"fancybox\" rel=\"gallery\"", "</a>"), item);
+                HeadlineRealtimeClient.extractImages(StringUtils.substringsBetween(html, "<a class=\"fancybox\" rel=\"gallery\"", HeadlineRealtimeClient.TAG_LINK), item);
                 HeadlineRealtimeClient.extractImages(StringUtils.substringsBetween(html, "<figure ", "</figure>"), item);
 
                 item.setDescription(StringUtils.substringBetween(html, "<div id=\"news-content\" class=\"set-font-aera\" style=\"visibility: visible;\">", "</div>"));
@@ -117,10 +119,10 @@ final class HeadlineRealtimeClient extends Client {
         final List<Image> images = new ArrayList<>();
 
         for (final String imageContainer : imageContainers) {
-            final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", "\"");
-            final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"", "\">");
+            final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", HeadlineRealtimeClient.TAG_QUOTE);
+            final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"", HeadlineRealtimeClient.TAG_QUOTE);
 
-            if (imageUrl != null) images.add(new Image("http:" + imageUrl, imageDescription));
+            if (imageUrl != null) images.add(new Image(HeadlineRealtimeClient.HTTP + imageUrl, imageDescription));
         }
 
         if (!images.isEmpty()) {

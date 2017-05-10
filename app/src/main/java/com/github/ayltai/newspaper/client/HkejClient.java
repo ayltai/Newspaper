@@ -24,9 +24,7 @@ import rx.Observable;
 final class HkejClient extends RssClient {
     //region Constants
 
-    private static final String BASE_URI  = "http://www1.hkej.com";
     private static final String TAG_OPEN  = "<a href=\"";
-    private static final String TAG_CLOSE = "\">";
     private static final String TAG_QUOTE = "\"";
 
     //endregion
@@ -46,7 +44,7 @@ final class HkejClient extends RssClient {
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
 
                 final String imageContainer   = StringUtils.substringBetween(html, "<span class='enlargeImg'>", "</span>");
-                final String imageUrl         = StringUtils.substringBetween(imageContainer, "<a href=\"", HkejClient.TAG_QUOTE);
+                final String imageUrl         = StringUtils.substringBetween(imageContainer, HkejClient.TAG_OPEN, HkejClient.TAG_QUOTE);
                 final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"", HkejClient.TAG_QUOTE);
 
                 if (imageUrl != null) {

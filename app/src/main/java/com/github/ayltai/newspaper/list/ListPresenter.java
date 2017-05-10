@@ -183,7 +183,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                         });
                 },
                 error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
-            );
+        );
     }
 
     private void showUpdateIndicator(final List<Item> items) {

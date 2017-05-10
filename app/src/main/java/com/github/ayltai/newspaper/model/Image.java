@@ -80,7 +80,7 @@ public class Image extends RealmObject implements Parcelable {
 
         @NonNull
         @Override
-        public Image[] newArray(int size) {
+        public Image[] newArray(final int size) {
             return new Image[size];
         }
     };

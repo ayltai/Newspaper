@@ -31,6 +31,7 @@ final class SingPaoClient extends Client {
 
     private static final String BASE_URI = "https://www.singpao.com.hk/";
     private static final String TAG      = "'";
+    private static final String FONT     = "</font>";
 
     //endregion
 
@@ -66,7 +67,7 @@ final class SingPaoClient extends Client {
 
                     item.setTitle(StringUtils.substringBetween(section, "class='list_title'>", "</a>"));
                     item.setLink(SingPaoClient.BASE_URI + StringUtils.substringBetween(section, "<td><a href='", SingPaoClient.TAG));
-                    item.setDescription(StringUtils.substringBetween(section, "<br><br>\n", "</font>"));
+                    item.setDescription(StringUtils.substringBetween(section, "<br><br>\n", SingPaoClient.FONT));
                     item.setSource(this.source.getName());
                     item.setCategory(categoryName);
                     item.getImages().add(new Image(SingPaoClient.BASE_URI + StringUtils.substringBetween(section, "<img src='", SingPaoClient.TAG)));
@@ -101,8 +102,8 @@ final class SingPaoClient extends Client {
                 if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
 
                 final List<Image> images            = new ArrayList<>();
-                final String[]    imageUrls         = StringUtils.substringsBetween(html, "target='_blank'><img src='", "'");
-                final String[]    imageDescriptions = StringUtils.substringsBetween(html, "<font size='4'>", "</font>");
+                final String[]    imageUrls         = StringUtils.substringsBetween(html, "target='_blank'><img src='", SingPaoClient.TAG);
+                final String[]    imageDescriptions = StringUtils.substringsBetween(html, "<font size='4'>", SingPaoClient.FONT);
 
                 for (int i = 0; i < imageUrls.length; i++) {
                     final Image image = new Image(imageUrls[0], imageDescriptions[0]);

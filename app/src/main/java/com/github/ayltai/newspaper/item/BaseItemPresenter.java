@@ -84,41 +84,44 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         if (this.isViewAttached()) {
             if (BuildConfig.DEBUG) this.log().d(this.getClass().getName(), "link = " + this.item.getLink());
 
-            if (this.getView() == null) throw new NullPointerException("View is null");
-
-            this.getView().setTitle(this.item.getTitle());
-            this.getView().setDescription(this.showFullDescription && !this.item.isFullDescription() ? this.getView().getContext().getString(R.string.loading_indicator) : this.item.getDescription());
-            this.getView().setSource(this.item.getSource());
-            this.getView().setLink(this.item.getLink());
-            this.getView().setThumbnail(this.item.getImages().isEmpty() ? null : this.item.getImages().first().getUrl(), this.type);
-            this.getView().setThumbnails(this.item.getImages());
-            if (this.getView().bookmarks() != null) this.getView().setIsBookmarked(this.item.isBookmarked());
-
-            final Date publishDate = this.item.getPublishDate();
-            this.getView().setPublishDate(publishDate == null ? 0 : publishDate.getTime());
+            this.bindView();
 
             if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
             if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ClientFactory.getInstance(this.getView().getContext()).getClient(this.item.getSource()).updateItem(this.item.clone())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
+                .filter(updatedItem -> updatedItem != null)
                 .subscribe(
                     updatedItem -> {
-                        if (updatedItem != null) {
-                            this.update(updatedItem);
+                        this.update(updatedItem);
 
-                            this.getView().setDescription(this.item.getDescription());
+                        this.getView().setDescription(this.item.getDescription());
 
-                            if (!this.item.getImages().isEmpty()) {
-                                this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
-                                this.getView().setThumbnails(this.item.getImages());
-                            }
-
-                            this.bus().send(new ImagesUpdatedEvent());
+                        if (!this.item.getImages().isEmpty()) {
+                            this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
+                            this.getView().setThumbnails(this.item.getImages());
                         }
+
+                        this.bus().send(new ImagesUpdatedEvent());
                     },
                     error -> this.log().w(this.getClass().getSimpleName(), error.getMessage(), error)));
         }
+    }
+
+    private void bindView() {
+        if (this.getView() == null) throw new NullPointerException("View is null");
+
+        this.getView().setTitle(this.item.getTitle());
+        this.getView().setDescription(this.showFullDescription && !this.item.isFullDescription() ? this.getView().getContext().getString(R.string.loading_indicator) : this.item.getDescription());
+        this.getView().setSource(this.item.getSource());
+        this.getView().setLink(this.item.getLink());
+        this.getView().setThumbnail(this.item.getImages().isEmpty() ? null : this.item.getImages().first().getUrl(), this.type);
+        this.getView().setThumbnails(this.item.getImages());
+        if (this.getView().bookmarks() != null) this.getView().setIsBookmarked(this.item.isBookmarked());
+
+        final Date publishDate = this.item.getPublishDate();
+        this.getView().setPublishDate(publishDate == null ? 0 : publishDate.getTime());
     }
 
     //region Lifecycle
@@ -144,11 +147,13 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
     //endregion
 
+    @VisibleForTesting
     @NonNull
     /* protected final */ ItemManager getItemManager() {
         return new ItemManager(this.realm);
     }
 
+    @VisibleForTesting
     /* private */ void update(@NonNull final Item item) {
         final Realm realm = Realm.getDefaultInstance();
 

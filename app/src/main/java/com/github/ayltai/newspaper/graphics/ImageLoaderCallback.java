@@ -60,6 +60,7 @@ public final class ImageLoaderCallback implements ImageLoader.Callback {
             this.image     = image;
         }
 
+        @SuppressWarnings("checkstyle:illegalcatch")
         @Override
         public void run() {
             Observable.<Bitmap>create(emitter -> emitter.onNext(BitmapFactory.decodeFile(this.image.getAbsolutePath(), ImageUtils.createOptions(this.image, Constants.MAX_IMAGE_WIDTH, Constants.MAX_IMAGE_HEIGHT))), Emitter.BackpressureMode.BUFFER)
