@@ -29,7 +29,8 @@ final class HeadlineRealtimeClient extends Client {
 
     private static final String BASE_URI  = "http://hd.stheadline.com";
     private static final String TAG_LINK  = "</a>";
-    private static final String TAG_QUOTE = "\">";
+    private static final String TAG_QUOTE = "\"";
+    private static final String TAG_CLOSE = "\">";
     private static final String HTTP      = "http:";
 
     //endregion
@@ -64,8 +65,8 @@ final class HeadlineRealtimeClient extends Client {
                     final Item   item  = new Item();
                     final String title = StringUtils.substringBetween(section, "<h4>", "</h4>");
 
-                    item.setTitle(StringUtils.substringBetween(title, HeadlineRealtimeClient.TAG_QUOTE, HeadlineRealtimeClient.TAG_LINK));
-                    item.setLink(HeadlineRealtimeClient.BASE_URI + StringUtils.substringBetween(title, "<a href=\"", HeadlineRealtimeClient.TAG_QUOTE));
+                    item.setTitle(StringUtils.substringBetween(title, HeadlineRealtimeClient.TAG_CLOSE, HeadlineRealtimeClient.TAG_LINK));
+                    item.setLink(HeadlineRealtimeClient.BASE_URI + StringUtils.substringBetween(title, "<a href=\"", HeadlineRealtimeClient.TAG_CLOSE));
                     item.setDescription(StringUtils.substringBetween(section, "<p class=\"text\">", "</p>"));
                     item.setSource(this.source.getName());
                     item.setCategory(categoryName);
