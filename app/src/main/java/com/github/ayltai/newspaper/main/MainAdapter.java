@@ -2,6 +2,8 @@ package com.github.ayltai.newspaper.main;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -50,10 +52,10 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
             .build()
             .inject(this);
 
-        final String[] categories = Settings.getCategories(this.context).toArray(new String[0]);
+        final List<String> categories = new ArrayList<>(Settings.getCategories(this.context));
 
         int i;
-        for (i = 0; i < categories.length; i++) this.categories.put(i, categories[i]);
+        for (i = 0; i < Constants.CATEGORY_COUNT; i++) this.categories.put(i, categories.get(i));
         this.categories.put(i, this.context.getString(R.string.title_bookmark));
     }
 

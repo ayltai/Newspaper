@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Configs;
@@ -147,14 +146,12 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
     //endregion
 
-    @VisibleForTesting
     @NonNull
     /* protected final */ ItemManager getItemManager() {
         return new ItemManager(this.realm);
     }
 
-    @VisibleForTesting
-    /* private */ void update(@NonNull final Item item) {
+    /* protected final */ void update(@NonNull final Item item) {
         final Realm realm = Realm.getDefaultInstance();
 
         try {
@@ -172,8 +169,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         }
     }
 
-    @VisibleForTesting
-    /* private */ void update(final boolean isBookmarked) {
+    /* protected final */ void update(final boolean isBookmarked) {
         final Realm realm = Realm.getDefaultInstance();
 
         try {

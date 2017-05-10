@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper.item;
 
+import java.util.Collections;
+
 import javax.inject.Inject;
 
 import android.support.annotation.NonNull;
@@ -27,9 +29,10 @@ public class ItemPresenter extends BaseItemPresenter {
 
     @Override
     protected void attachBookmarks() {
-        if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView().bookmarks()
+        if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView()
+            .bookmarks()
             .subscribe(
-                bookmark -> this.getItemManager().getItemsObservable(null, this.parentKey == null ? null : new String[] { this.parentKey.getCategory() })
+                bookmark -> this.getItemManager().getItemsObservable(Collections.emptyList(), this.parentKey == null ? Collections.emptyList() : Collections.singletonList(this.parentKey.getCategory()))
                     .subscribe(
                         items -> {
                             this.update(bookmark);
@@ -46,7 +49,7 @@ public class ItemPresenter extends BaseItemPresenter {
             .shares()
             .subscribe(
                 dummy -> {
-                    if (this.item != null && this.item.getLink() != null) this.getView().share(this.item.getLink());
+                    if (this.item != null) this.getView().share(this.item.getLink());
                 },
                 error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }

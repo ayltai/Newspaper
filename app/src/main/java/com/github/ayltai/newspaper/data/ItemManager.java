@@ -40,18 +40,22 @@ public class ItemManager {
     }
 
     @NonNull
-    public List<Item> getItems(@Nullable final String[] sources, @Nullable final String[] categories) {
+    public List<Item> getItems(@NonNull final List<String> sources, @NonNull final List<String> categories) {
         RealmQuery<Item> query = this.realm.where(Item.class);
 
-        if (categories != null) {
-            if (categories.length == 1 && Constants.CATEGORY_BOOKMARK.equals(categories[0])) {
+        if (!categories.isEmpty()) {
+            if (categories.size() == 1 && Constants.CATEGORY_BOOKMARK.equals(categories.get(0))) {
                 query = query.equalTo(Item.FIELD_BOOKMARKED, true);
             } else {
-                query = query.in(Item.FIELD_CATEGORY, categories);
+                final List<String> instantCategories = new ArrayList<>(categories.size());
+                for (final String category : categories) instantCategories.add(Constants.CATEGORY_INSTANT + category);
+                instantCategories.addAll(categories);
+
+                query = query.in(Item.FIELD_CATEGORY, instantCategories.toArray(new String[instantCategories.size()]));
             }
         }
 
-        if (sources != null) query = query.in(Item.FIELD_SOURCE, sources);
+        if (!sources.isEmpty()) query = query.in(Item.FIELD_SOURCE, sources.toArray(new String[sources.size()]));
 
         final RealmResults<Item> items = query.findAllSorted(Item.FIELD_PUBLISH_DATE, Sort.DESCENDING);
 
@@ -59,7 +63,7 @@ public class ItemManager {
     }
 
     @NonNull
-    public Observable<List<Item>> getItemsObservable(@Nullable final String[] sources, @Nullable final String[] categories) {
+    public Observable<List<Item>> getItemsObservable(@NonNull final List<String> sources, @NonNull final List<String> categories) {
         if (this.realm.isClosed()) throw new IllegalStateException(ItemManager.ERROR_REALM);
 
         return Observable.create(emitter -> {

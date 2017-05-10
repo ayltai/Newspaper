@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.list;
 
 import java.io.Closeable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,7 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
 
         @Override
         public void onNext(final ItemUpdatedEvent itemUpdatedEvent) {
-            new ItemManager(ListAdapter.this.realm).getItemsObservable(null, new String[] { ListAdapter.this.parentKey.getCategory() })
+            new ItemManager(ListAdapter.this.realm).getItemsObservable(Collections.emptyList(), Collections.singletonList(ListAdapter.this.parentKey.getCategory()))
                 .subscribe(items -> {
                     if (Constants.CATEGORY_BOOKMARK.equals(ListAdapter.this.parentKey.getCategory())) {
                         if (itemUpdatedEvent.getIndex() < 0) {

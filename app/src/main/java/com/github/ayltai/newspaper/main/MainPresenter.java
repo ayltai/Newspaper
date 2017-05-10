@@ -2,6 +2,7 @@ package com.github.ayltai.newspaper.main;
 
 import java.io.Closeable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
@@ -16,7 +17,6 @@ import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.setting.Settings;
-import com.github.ayltai.newspaper.util.StringUtils;
 
 import io.realm.Realm;
 import rx.Emitter;
@@ -145,7 +145,7 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
             final Realm        realm  = Realm.getDefaultInstance();
 
             try {
-                new ItemManager(realm).getItemsObservable(Settings.getSources(this.getView().getContext()).toArray(StringUtils.EMPTY_ARRAY), new String[] { category.toString() })
+                new ItemManager(realm).getItemsObservable(new ArrayList<>(Settings.getSources(this.getView().getContext())), Collections.singletonList(category.toString()))
                     .subscribe(
                         items -> {
                             for (final Item item : items) {

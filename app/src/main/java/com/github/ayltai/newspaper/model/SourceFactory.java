@@ -149,7 +149,6 @@ public final class SourceFactory {
             new Category("https://news.mingpao.com/rss/pns/s00015.xml", categories[7]),
             new Category("https://news.mingpao.com/rss/pns/s00005.xml", categories[8]),
             new Category("https://news.mingpao.com/rss/pns/s00011.xml", categories[10]),
-            new Category("https://news.mingpao.com/rss/pns/s00003.xml", categories[11]),
             new Category("https://news.mingpao.com/rss/ins/s00001.xml", categories[12]),
             new Category("https://news.mingpao.com/rss/ins/s00005.xml", categories[13]),
             new Category("https://news.mingpao.com/rss/ins/s00004.xml", categories[14]),

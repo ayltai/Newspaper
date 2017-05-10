@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper.item;
 
+import java.util.Collections;
 import java.util.Date;
 
 import android.support.annotation.NonNull;
@@ -62,11 +63,11 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     protected ItemPresenter createPresenter() {
         this.items.add(this.item);
 
-        final ItemManager feedManager = Mockito.mock(ItemManager.class);
-        Mockito.doReturn(Observable.just(this.items)).when(feedManager).getItemsObservable(null, new String[] { ItemPresenterTest.KEY_PARENT_URL });
+        final ItemManager itemManager = Mockito.mock(ItemManager.class);
+        Mockito.doReturn(Observable.just(this.items)).when(itemManager).getItemsObservable(Collections.emptyList(), Collections.singletonList(ItemPresenterTest.KEY_PARENT_URL));
 
         final ItemPresenter presenter = Mockito.spy(new ItemPresenter(null));
-        Mockito.doReturn(feedManager).when(presenter).getItemManager();
+        Mockito.doReturn(itemManager).when(presenter).getItemManager();
         Mockito.doNothing().when(presenter).update(ArgumentMatchers.any(Item.class));
 
         final RxBus bus = Mockito.mock(RxBus.class);
