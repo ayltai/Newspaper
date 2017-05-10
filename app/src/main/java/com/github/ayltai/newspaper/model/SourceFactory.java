@@ -1,6 +1,10 @@
 package com.github.ayltai.newspaper.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import android.content.Context;
@@ -13,6 +17,13 @@ import com.github.ayltai.newspaper.client.HeadlineClient;
 import io.realm.RealmList;
 
 public final class SourceFactory {
+    private static final ThreadLocal<DateFormat> DATE_FORMAT = new ThreadLocal<DateFormat>() {
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
+        }
+    };
+
     private static SourceFactory instance;
 
     private final Map<String, Source> sources = new HashMap<>(12);
@@ -51,7 +62,15 @@ public final class SourceFactory {
 
     @NonNull
     private static Source createAppleDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
-        return new Source(sources[0], new RealmList<>());
+        final String date = DATE_FORMAT.get().format(new Date());
+
+        return new Source(sources[0], new RealmList<>(
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/local/home/0", date), categories[12]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/chinainternational/home/0", date), categories[13]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/finance/home/0", date), categories[15]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/entertainmnt/home/0", date), categories[17]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[18])
+        ));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
