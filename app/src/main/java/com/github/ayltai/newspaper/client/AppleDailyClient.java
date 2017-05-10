@@ -28,7 +28,12 @@ final class AppleDailyClient extends Client {
 
     private static final long SECOND = 1000;
 
+    private static final String ARTICLE = "art";
+
     private static final String TAG_QUOTE    = "\"";
+    private static final String TAG_HREF     = "href=\"";
+    private static final String TAG_TITLE    = "title=\"";
+    private static final String TAG_DIV      = "</div>";
     private static final String TAG_OPEN_H2  = "<h2>";
     private static final String TAG_CLOSE_H2 = "</h2>";
     private static final String TAG_OPEN_H3  = "<h3>";
@@ -48,9 +53,9 @@ final class AppleDailyClient extends Client {
             try {
                 final String html = IOUtils.toString(this.client.download(url), Client.ENCODING);
 
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + url);
+                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
 
-                final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"itemContainer\">", "<div class=\"clear\"></div>"), "div class=\"item\">", "</div>");
+                final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"itemContainer\">", "<div class=\"clear\"></div>"), "div class=\"item\">", AppleDailyClient.TAG_DIV);
                 final List<Item> items        = new ArrayList<>(sections.length);
                 final String     categoryName = this.getCategoryName(url);
 
@@ -58,11 +63,11 @@ final class AppleDailyClient extends Client {
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
 
                     final Item   item = new Item();
-                    final String link = StringUtils.substringBetween(section, "href=\"", AppleDailyClient.TAG_QUOTE);
+                    final String link = StringUtils.substringBetween(section, AppleDailyClient.TAG_HREF, AppleDailyClient.TAG_QUOTE);
 
                     if (link != null) {
-                        item.setTitle(StringUtils.substringBetween(section, "title=\"", AppleDailyClient.TAG_QUOTE));
-                        item.setLink(link.substring(0, link.lastIndexOf("/")).replace("dv", "apple").replace("actionnews", "news").replace("local", "art").replace("chinainternational", "art").replace("finance", "art").replace("entertainmnt", "art").replace("sports", "art"));
+                        item.setTitle(StringUtils.substringBetween(section, AppleDailyClient.TAG_TITLE, AppleDailyClient.TAG_QUOTE));
+                        item.setLink(link.substring(0, link.lastIndexOf("/")).replace("dv", "apple").replace("actionnews", "news").replace("local", AppleDailyClient.ARTICLE).replace("chinainternational", AppleDailyClient.ARTICLE).replace("finance", AppleDailyClient.ARTICLE).replace("entertainmnt", AppleDailyClient.ARTICLE).replace("sports", AppleDailyClient.ARTICLE));
                         item.setSource(this.source.getName());
                         item.setCategory(categoryName);
 
@@ -87,17 +92,16 @@ final class AppleDailyClient extends Client {
     @Override
     public Observable<Item> updateItem(@NonNull final Item item) {
         return Observable.create(emitter -> {
+            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
+
             try {
-                final String html = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "!-- START ARTILCLE CONTENT -->", "<!-- END ARTILCLE CONTENT -->");
-
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
-
+                final String      html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "!-- START ARTILCLE CONTENT -->", "<!-- END ARTILCLE CONTENT -->");
                 final String[]    imageContainers = StringUtils.substringsBetween(html, "rel=\"fancybox-button\"", "/>");
                 final List<Image> images          = new ArrayList<>();
 
                 for (final String imageContainer : imageContainers) {
-                    final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", AppleDailyClient.TAG_QUOTE);
-                    final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"", AppleDailyClient.TAG_QUOTE);
+                    final String imageUrl         = StringUtils.substringBetween(imageContainer, AppleDailyClient.TAG_HREF, AppleDailyClient.TAG_QUOTE);
+                    final String imageDescription = StringUtils.substringBetween(imageContainer, AppleDailyClient.TAG_TITLE, AppleDailyClient.TAG_QUOTE);
 
                     if (imageUrl != null) images.add(new Image(imageUrl, imageDescription));
                 }
@@ -107,7 +111,7 @@ final class AppleDailyClient extends Client {
                     item.getImages().addAll(images);
                 }
 
-                final String[]      contents = StringUtils.substringsBetween(html, "<div class=\"ArticleContent_Inner\">", "</div>");
+                final String[]      contents = StringUtils.substringsBetween(html, "<div class=\"ArticleContent_Inner\">", AppleDailyClient.TAG_DIV);
                 final StringBuilder builder  = new StringBuilder();
 
                 for (final String content : contents) builder.append(content.replace(TAG_OPEN_H2, TAG_OPEN_H3).replace(TAG_CLOSE_H2, TAG_CLOSE_H3));

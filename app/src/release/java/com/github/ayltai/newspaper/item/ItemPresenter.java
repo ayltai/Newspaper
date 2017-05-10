@@ -65,7 +65,7 @@ public class ItemPresenter extends BaseItemPresenter {
             .shares()
             .subscribe(
                 dummy -> {
-                    if (this.item != null ) {
+                    if (this.item != null) {
                         this.getView().share(this.item.getLink());
 
                         this.answers().logShare(AnalyticsUtils.applyAttributes(new ShareEvent(), this.item));

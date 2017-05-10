@@ -33,6 +33,7 @@ final class MingPaoClient extends RssClient {
     private static final String BASE_IMAGE = "https://fs.mingpao.com/";
     private static final String SLASH      = "/";
     private static final String UNDERSCORE = "_";
+    private static final String DATA       = "dat/";
 
     //endregion
 
@@ -49,9 +50,9 @@ final class MingPaoClient extends RssClient {
             final String[] tokens = item.getLink().substring(MingPaoClient.BASE_URI.length()).split(MingPaoClient.SLASH);
 
             try {
-                final String url = MingPaoClient.BASE_URI + "dat/" + tokens[0] + MingPaoClient.SLASH + tokens[0] + MingPaoClient.UNDERSCORE + tokens[2] + MingPaoClient.SLASH + tokens[3] + "1/" + tokens[4] + new JSONObject(IOUtils.toString(this.client.download(MingPaoClient.BASE_URI + "dat/" + tokens[0] + "/issuelist.js"), Client.ENCODING)).getJSONObject((tokens[0] + MingPaoClient.UNDERSCORE + tokens[2]).toUpperCase()).getJSONObject("1 " + tokens[4]).getString("E").toLowerCase() + "/todaycontent_" + tokens[6] + ".js";
+                final String url = MingPaoClient.BASE_URI + MingPaoClient.DATA + tokens[0] + MingPaoClient.SLASH + tokens[0] + MingPaoClient.UNDERSCORE + tokens[2] + MingPaoClient.SLASH + tokens[3] + "1/" + tokens[4] + new JSONObject(IOUtils.toString(this.client.download(MingPaoClient.BASE_URI + MingPaoClient.DATA + tokens[0] + "/issuelist.js"), Client.ENCODING)).getJSONObject((tokens[0] + MingPaoClient.UNDERSCORE + tokens[2]).toUpperCase()).getJSONObject("1 " + tokens[4]).getString("E").toLowerCase() + "/todaycontent_" + tokens[6] + ".js";
 
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + url);
+                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
 
                 final JSONObject json   = new JSONObject(IOUtils.toString(this.client.download(url), Client.ENCODING));
                 final JSONArray  images = json.getJSONArray("media:group");

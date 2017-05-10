@@ -53,7 +53,7 @@ final class HeadlineRealtimeClient extends Client {
             try {
                 final String html = IOUtils.toString(this.client.download(url), Client.ENCODING);
 
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + url);
+                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
 
                 final String[]   sections     = StringUtils.substringsBetween(html, "<div class=\"topic\">", "<div class=\"col-xs-12 instantnews-list-1\">");
                 final List<Item> items        = new ArrayList<>(sections.length);
@@ -98,10 +98,10 @@ final class HeadlineRealtimeClient extends Client {
     @Override
     public Observable<Item> updateItem(@NonNull final Item item) {
         return Observable.create(emitter -> {
+            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
+
             try {
                 final String html = IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING);
-
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
 
                 HeadlineRealtimeClient.extractImages(StringUtils.substringsBetween(html, "<a class=\"fancybox\" rel=\"gallery\"", HeadlineRealtimeClient.TAG_LINK), item);
                 HeadlineRealtimeClient.extractImages(StringUtils.substringsBetween(html, "<figure ", "</figure>"), item);

@@ -38,11 +38,10 @@ final class HkejClient extends RssClient {
     @Override
     public Observable<Item> updateItem(@NonNull final Item item) {
         return Observable.create(emitter -> {
+            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
+
             try {
-                final String html = IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING);
-
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
-
+                final String html             = IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING);
                 final String imageContainer   = StringUtils.substringBetween(html, "<span class='enlargeImg'>", "</span>");
                 final String imageUrl         = StringUtils.substringBetween(imageContainer, HkejClient.TAG_OPEN, HkejClient.TAG_QUOTE);
                 final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"", HkejClient.TAG_QUOTE);

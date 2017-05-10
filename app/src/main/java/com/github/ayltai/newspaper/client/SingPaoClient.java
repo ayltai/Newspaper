@@ -51,11 +51,10 @@ final class SingPaoClient extends Client {
     @Override
     public Observable<List<Item>> getItems(@NonNull final String url) {
         return Observable.create(emitter -> {
+            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
+
             try {
-                final String html = IOUtils.toString(this.client.download(url), Client.ENCODING);
-
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + url);
-
+                final String     html         = IOUtils.toString(this.client.download(url), Client.ENCODING);
                 final String[]   sections     = StringUtils.substringsBetween(html, "<tr valign='top'><td width='220'>", "</td></tr>");
                 final List<Item> items        = new ArrayList<>(sections.length);
                 final String     categoryName = this.getCategoryName(url);
@@ -96,11 +95,10 @@ final class SingPaoClient extends Client {
     @Override
     public Observable<Item> updateItem(@NonNull final Item item) {
         return Observable.create(emitter -> {
+            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
+
             try {
-                final String html = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<td class='news_title'>", "您可能有興趣:");
-
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
-
+                final String      html              = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<td class='news_title'>", "您可能有興趣:");
                 final List<Image> images            = new ArrayList<>();
                 final String[]    imageUrls         = StringUtils.substringsBetween(html, "target='_blank'><img src='", SingPaoClient.TAG);
                 final String[]    imageDescriptions = StringUtils.substringsBetween(html, "<font size='4'>", SingPaoClient.FONT);

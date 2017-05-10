@@ -60,6 +60,7 @@ public final class SourceFactory {
         return this.sources.get(name);
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createAppleDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
         final String date = DATE_FORMAT.get().format(new Date());

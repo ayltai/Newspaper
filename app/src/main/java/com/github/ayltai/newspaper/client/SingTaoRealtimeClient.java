@@ -50,7 +50,7 @@ final class SingTaoRealtimeClient extends Client {
             try {
                 final String html = IOUtils.toString(this.client.download(url), Client.ENCODING);
 
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + url);
+                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
 
                 final String[]   sections     = StringUtils.substringsBetween(html, "<div class=\"news-wrap\">", "</a>\n</div>");
                 final List<Item> items        = new ArrayList<>(sections.length);
@@ -93,6 +93,8 @@ final class SingTaoRealtimeClient extends Client {
     @Override
     public Observable<Item> updateItem(@NonNull final Item item) {
         return Observable.create(emitter -> {
+            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
+
             try {
                 final String      html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"post-content\">", "<div class=\"post-sharing\">");
                 final String[]    imageContainers = StringUtils.substringsBetween(html, "<a class=\"fancybox-thumb\"", ">");

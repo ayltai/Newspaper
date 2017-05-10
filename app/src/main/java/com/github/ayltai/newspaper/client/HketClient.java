@@ -11,11 +11,13 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
 
+import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.client.rss.RssClient;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
+import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
 import rx.Emitter;
@@ -33,9 +35,10 @@ final class HketClient extends RssClient {
     @Override
     public Observable<Item> updateItem(@NonNull final Item item) {
         return Observable.create(emitter -> {
-            try {
-                final String html = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"article-detail\">", "<div class=\"article-detail_facebook-like\">");
+            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
 
+            try {
+                final String      html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"article-detail\">", "<div class=\"article-detail_facebook-like\">");
                 final String[]    imageContainers = StringUtils.substringsBetween(html, "<img ", "/>");
                 final List<Image> images          = new ArrayList<>();
 

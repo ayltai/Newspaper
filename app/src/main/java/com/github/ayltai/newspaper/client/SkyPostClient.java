@@ -43,11 +43,10 @@ final class SkyPostClient extends RssClient {
     @Override
     public Observable<Item> updateItem(@NonNull final Item item) {
         return Observable.create(emitter -> {
+            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
+
             try {
-                final String html = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"article-title-widget\">", "<div class=\"article-detail_extra-info\">");
-
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "URL = " + item.getLink());
-
+                final String      html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"article-title-widget\">", "<div class=\"article-detail_extra-info\">");
                 final String      headline        = StringUtils.substringBetween(html, "<h3 class=\"article-details__main-headline\">", SkyPostClient.TAG_CLOSE_HEADER);
                 final String      subHeadline     = StringUtils.substringBetween(html, "<h3 class=\"article-details__lower-headline\">", SkyPostClient.TAG_CLOSE_HEADER);
                 final String[]    contents        = StringUtils.substringsBetween(html, "<P>", "</P>");
