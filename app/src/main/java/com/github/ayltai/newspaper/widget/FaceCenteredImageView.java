@@ -21,6 +21,7 @@ import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.piasy.biv.view.BigImageView;
 
+import rx.Emitter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -113,7 +114,7 @@ public final class FaceCenteredImageView extends BigImageView {
     @SuppressFBWarnings("MOM_MISLEADING_OVERLOAD_MODEL")
     @NonNull
     private static Observable<ScaleCenter> translate(@NonNull final File image, final int width, final int height) {
-        return Observable.create(subscriber -> subscriber.onNext(new FaceCenterCrop(width, height).findCroppedCenter(image)));
+        return Observable.create(emitter -> emitter.onNext(new FaceCenterCrop(width, height).findCroppedCenter(image)), Emitter.BackpressureMode.BUFFER);
     }
 
     //region Reflected methods

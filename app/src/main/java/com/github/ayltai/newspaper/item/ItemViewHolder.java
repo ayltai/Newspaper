@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.item;
 
 import java.io.Closeable;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,7 +19,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.list.ListScreen;
-import com.github.ayltai.newspaper.rss.Item;
+import com.github.ayltai.newspaper.model.Image;
+import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
@@ -105,17 +107,17 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Override
     public void setTitle(@Nullable final String title) {
-        ItemViewHolder.setText(this.title, title, true);
+        ItemViewHolder.setText(this.title, title, true, true);
     }
 
     @Override
     public void setDescription(@Nullable final String description) {
-        ItemViewHolder.setText(this.description, description, true);
+        ItemViewHolder.setText(this.description, description, true, true);
     }
 
     @Override
     public void setSource(@Nullable final String source) {
-        ItemViewHolder.setText(this.source, source, true);
+        ItemViewHolder.setText(this.source, source, true, false);
     }
 
     @Override
@@ -124,13 +126,18 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Override
     public void setPublishDate(final long publishDate) {
-        ItemViewHolder.setText(this.publishDate, publishDate == 0 ? null : DateUtils.getTimeAgo(this.itemView.getContext(), publishDate), false);
+        ItemViewHolder.setText(this.publishDate, publishDate == 0 ? null : DateUtils.getTimeAgo(this.itemView.getContext(), publishDate), false, false);
     }
 
     @Override
     public void setThumbnail(@Nullable final String thumbnail, @Constants.ListViewType final int type) {
         if (this.thumbnail != null) ItemViewHolder.setImage(this.thumbnail, thumbnail, type);
         if (this.draweeView != null) ItemViewHolder.setImage(this.draweeView, thumbnail);
+    }
+
+    @Override
+    public void setThumbnails(@NonNull final List<Image> images) {
+        // Ignored
     }
 
     @Override
@@ -156,7 +163,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Nullable
     @Override
-    public Observable<Void> zooms() {
+    public Observable<Integer> zooms() {
         return null;
     }
 
@@ -228,12 +235,14 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
         }
     }
 
-    private static void setText(@NonNull final TextView textView, @Nullable final String value, final boolean removeHtml) {
+    private static void setText(@NonNull final TextView textView, @Nullable final String value, final boolean removeImages, final boolean removeHtml) {
         if (TextUtils.isEmpty(value)) {
             textView.setVisibility(View.GONE);
         } else {
             textView.setVisibility(View.VISIBLE);
-            textView.setText(removeHtml ? ItemUtils.removeHtml(value) : value);
+
+            final String text = removeHtml ? ItemUtils.removeHtml(value) : value;
+            textView.setText(removeImages ? ItemUtils.removeImages(text) : text);
         }
     }
 }

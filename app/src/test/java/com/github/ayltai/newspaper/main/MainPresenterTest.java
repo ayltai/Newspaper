@@ -1,21 +1,24 @@
 package com.github.ayltai.newspaper.main;
 
+import java.util.ArrayList;
+
 import android.support.annotation.NonNull;
 
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 import com.github.ayltai.newspaper.PresenterTest;
-import com.github.ayltai.newspaper.data.Source;
+import com.github.ayltai.newspaper.model.Item;
 
+import rx.Observable;
 import rx.subjects.PublishSubject;
 
 public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPresenter.View> {
     //region Constants
 
     private static final int    FAVORITE_COUNT = 3;
-    private static final String SOURCE_NAME    = "SOURCE_NAME";
-    private static final String SOURCE_URL     = "SOURCE_URL";
+    private static final String CATEGORY_NAME  = "CATEGORY_NAME";
 
     //endregion
 
@@ -32,14 +35,10 @@ public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPr
     @NonNull
     @Override
     protected MainPresenter createPresenter() {
-        final Source source = Mockito.mock(Source.class);
-        Mockito.doReturn(MainPresenterTest.SOURCE_NAME).when(source).getName();
-        Mockito.doReturn(MainPresenterTest.SOURCE_URL).when(source).getUrl();
-
-        Mockito.doReturn(source).when(this.mainAdapter).getSource(Mockito.anyInt());
-
         final MainPresenter presenter = Mockito.spy(new MainPresenter());
         Mockito.doReturn(this.mainAdapter).when(presenter).createMainAdapter();
+
+        Mockito.doReturn(Observable.just(new ArrayList<Item>())).when(presenter).getHeaderImages(ArgumentMatchers.anyString());
 
         return presenter;
     }
@@ -60,6 +59,7 @@ public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPr
     public void setUp() throws Exception {
         this.mainAdapter = Mockito.mock(MainAdapter.class);
         Mockito.doReturn(MainPresenterTest.FAVORITE_COUNT).when(this.mainAdapter).getCount();
+        Mockito.doReturn(MainPresenterTest.CATEGORY_NAME).when(this.mainAdapter).getPageTitle(ArgumentMatchers.anyInt());
 
         super.setUp();
     }
@@ -85,8 +85,8 @@ public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPr
     public void testWhenBoundThenUpdateHeader() throws Exception {
         this.bind();
 
-        Mockito.verify(this.getView(), Mockito.times(1)).updateHeaderImages(Mockito.anyList());
-        Mockito.verify(this.getView(), Mockito.times(1)).updateHeaderTitle(MainPresenterTest.SOURCE_NAME);
+        Mockito.verify(this.getView(), Mockito.times(1)).updateHeaderTitle(MainPresenterTest.CATEGORY_NAME);
+        Mockito.verify(this.getView(), Mockito.times(1)).updateHeaderImages(ArgumentMatchers.anyList());
         Mockito.verify(this.getView(), Mockito.times(1)).enablePrevious(false);
         Mockito.verify(this.getView(), Mockito.times(1)).enableNext(true);
     }

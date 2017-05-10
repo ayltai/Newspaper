@@ -27,6 +27,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
 
         final boolean     isCompactLayout = Settings.getListViewType(this.getContext()) == Constants.LIST_VIEW_TYPE_COMPACT;
         final boolean     isDarkTheme     = Settings.isDarkTheme(this.getContext());
+        final Set<String> sources         = Settings.getSources(this.getContext());
         final Set<String> categories      = Settings.getCategories(this.getContext());
 
         this.findPreference(Settings.PREF_COMPACT_LAYOUT).setOnPreferenceChangeListener((preference, newValue) -> {
@@ -46,6 +47,17 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         this.findPreference(Settings.PREF_PANORAMA_ENABLED).setEnabled(Settings.canPanoramaBeEnabled(this.getContext()));
+
+        this.findPreference(Settings.PREF_SOURCES).setOnPreferenceChangeListener((preference, newValue) -> {
+            final Set<String> newSources = (Set<String>)newValue;
+
+            if (!sources.containsAll(newSources) || !newSources.containsAll(sources)) {
+                SettingsFragment.resultCode = Activity.RESULT_OK;
+                this.getActivity().setResult(Activity.RESULT_OK);
+            }
+
+            return true;
+        });
 
         this.findPreference(Settings.PREF_CATEGORIES).setOnPreferenceChangeListener((preference, newValue) -> {
             final Set<String> newCategories = (Set<String>)newValue;

@@ -36,7 +36,7 @@ public final class FrescoImageLoader implements ImageLoader {
     //region Variables
 
     private static String           cachePath;
-    private static ImageLoader      instance;
+    private static ImageLoader instance;
     private static ExecutorSupplier executorSupplier;
 
     //endregion
@@ -68,8 +68,8 @@ public final class FrescoImageLoader implements ImageLoader {
             callback.onStart();
             callback.onProgress(0);
 
-            final ImagePipeline pipeline = Fresco.getImagePipeline();
-            final DataSource<CloseableReference<PooledByteBuffer>> source = pipeline.fetchEncodedImage(request, true);
+            final ImagePipeline                                    pipeline = Fresco.getImagePipeline();
+            final DataSource<CloseableReference<PooledByteBuffer>> source   = pipeline.fetchEncodedImage(request, true);
 
             source.subscribe(new ImageDownloadSubscriber(FrescoImageLoader.cachePath) {
                 @Override

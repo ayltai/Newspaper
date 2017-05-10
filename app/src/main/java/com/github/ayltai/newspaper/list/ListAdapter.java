@@ -1,7 +1,9 @@
 package com.github.ayltai.newspaper.list;
 
 import java.io.Closeable;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
@@ -15,11 +17,12 @@ import android.view.ViewGroup;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.RxBus;
-import com.github.ayltai.newspaper.data.Feed;
-import com.github.ayltai.newspaper.data.FeedManager;
+import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.item.ItemPresenter;
 import com.github.ayltai.newspaper.item.ItemUpdatedEvent;
 import com.github.ayltai.newspaper.item.ItemViewHolder;
+import com.github.ayltai.newspaper.item.ItemsUpdatedEvent;
+import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -36,7 +39,7 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
     private final ListScreen.Key                     parentKey;
     private final int                                listViewType;
     private final Realm                              realm;
-    private final Feed                               feed;
+    private final List<Item>                         items;
 
     private final Subscriber<ItemUpdatedEvent> subscriber = new Subscriber<ItemUpdatedEvent>() {
         @Override
@@ -50,26 +53,24 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
 
         @Override
         public void onNext(final ItemUpdatedEvent itemUpdatedEvent) {
-            new FeedManager(ListAdapter.this.realm).getFeed(Constants.SOURCE_BOOKMARK)
-                .subscribe(feed -> {
-                    if (Constants.SOURCE_BOOKMARK.equals(ListAdapter.this.parentKey.getUrl())) {
+            new ItemManager(ListAdapter.this.realm).getItemsObservable(Collections.emptyList(), Collections.singletonList(ListAdapter.this.parentKey.getCategory()))
+                .subscribe(items -> {
+                    if (Constants.CATEGORY_BOOKMARK.equals(ListAdapter.this.parentKey.getCategory())) {
                         if (itemUpdatedEvent.getIndex() < 0) {
-                            if (feed.getItems().size() == 1) {
-                                // Hides empty view
-                                RxBus.getInstance().send(new FeedUpdatedEvent(feed));
+                            if (items.size() == 1) {
+                                RxBus.getInstance().send(new ItemsUpdatedEvent(items));
                             } else {
-                                ListAdapter.this.notifyItemInserted(feed.indexOf(itemUpdatedEvent.getItem()));
+                                ListAdapter.this.notifyItemInserted(items.indexOf(itemUpdatedEvent.getItem()));
                             }
                         } else {
-                            if (feed.getItems().isEmpty()) {
-                                // Shows empty view
-                                RxBus.getInstance().send(new FeedUpdatedEvent(feed));
+                            if (items.isEmpty()) {
+                                RxBus.getInstance().send(new ItemsUpdatedEvent(items));
                             } else {
                                 ListAdapter.this.notifyItemRemoved(itemUpdatedEvent.getIndex());
                             }
                         }
                     } else {
-                        final int index = ListAdapter.this.feed.indexOf(itemUpdatedEvent.getItem());
+                        final int index = ListAdapter.this.items.indexOf(itemUpdatedEvent.getItem());
                         if (index > -1) ListAdapter.this.notifyItemChanged(index);
                     }
                 });
@@ -80,11 +81,11 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
 
     //endregion
 
-    ListAdapter(@NonNull final Context context, @NonNull final ListScreen.Key parentKey, @Constants.ListViewType final int listViewType, @Nullable final Feed feed) {
+    ListAdapter(@NonNull final Context context, @NonNull final ListScreen.Key parentKey, @Constants.ListViewType final int listViewType, @Nullable final List<Item> items) {
         this.context      = context;
         this.parentKey    = parentKey;
         this.listViewType = listViewType;
-        this.feed         = feed;
+        this.items        = items;
         this.realm        = Realm.getDefaultInstance();
 
         RxBus.getInstance().register(ItemUpdatedEvent.class, this.subscriber);
@@ -94,7 +95,7 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
     public int getItemCount() {
         if (this.realm.isClosed()) return this.fakeCount;
 
-        return this.fakeCount = this.feed == null ? 0 : this.feed.getItems().size();
+        return this.fakeCount = this.items == null ? 0 : this.items.size();
     }
 
     @NonNull
@@ -116,7 +117,7 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
     public void onBindViewHolder(@NonNull final ItemViewHolder holder, final int position) {
         if (this.realm.isClosed()) return;
 
-        this.map.get(holder).bind(this.parentKey, this.feed.getItems().get(position), this.listViewType, false);
+        this.map.get(holder).bind(this.parentKey, this.items.get(position), this.listViewType, false);
     }
 
     @Override

@@ -2,11 +2,17 @@
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <android.support.v7.preference.PreferenceCategory android:title="@string/pref_general">
         <android.support.v14.preference.MultiSelectListPreference
+            android:key="PREF_SOURCES"
+            android:title="@string/pref_sources"
+            android:entries="@array/sources"
+            android:entryValues="@array/sources"
+            android:defaultValue="@array/sources" />
+        <android.support.v14.preference.MultiSelectListPreference
             android:key="PREF_CATEGORIES"
             android:title="@string/pref_categories"
-            android:entries="@array/pref_category_entries"
-            android:entryValues="@array/pref_category_values"
-            android:defaultValue="@array/pref_category_values" />
+            android:entries="@array/categories"
+            android:entryValues="@array/categories"
+            android:defaultValue="@array/categories" />
     </android.support.v7.preference.PreferenceCategory>
     <android.support.v7.preference.PreferenceCategory android:title="@string/pref_design">
         <android.support.v7.preference.SwitchPreferenceCompat

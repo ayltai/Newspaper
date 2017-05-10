@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.rss;
+package com.github.ayltai.newspaper.client.rss;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,14 +19,22 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.github.ayltai.newspaper.Constants;
-import com.github.ayltai.newspaper.util.ItemUtils;
+import com.github.ayltai.newspaper.model.Image;
+import com.github.ayltai.newspaper.model.Item;
 
 final class Parser {
     //region Constants
 
-    private static final String TAG_RSS     = "rss";
-    private static final String TAG_CHANNEL = "channel";
-    private static final String TAG_ITEM    = "item";
+    private static final String TAG_RSS          = "rss";
+    private static final String TAG_CHANNEL      = "channel";
+    private static final String TAG_ITEM         = "item";
+    private static final String TAG_TITLE        = "title";
+    private static final String TAG_DESCRIPTION  = "description";
+    private static final String TAG_LINK         = "link";
+    private static final String TAG_GUID         = "guid";
+    private static final String TAG_PUBLISH_DATE = "pubDate";
+    private static final String TAG_ENCLOSURE    = "enclosure";
+    private static final String ATTR_URL         = "url";
 
     //endregion
 
@@ -83,8 +92,6 @@ final class Parser {
             if (Parser.TAG_ITEM.equals(parser.getName())) {
                 final Item item = Parser.readItem(parser);
 
-                if (ItemUtils.filter(item)) continue;
-
                 if (!items.contains(item)) items.add(item);
             } else {
                 Parser.skipTags(parser);
@@ -106,28 +113,28 @@ final class Parser {
             final String name = parser.getName();
 
             switch (name) {
-                case Item.TAG_TITLE:
-                    item.title = Parser.readTag(parser, name);
+                case Parser.TAG_TITLE:
+                    item.setTitle(Parser.readTag(parser, name));
                     break;
 
-                case Item.TAG_DESCRIPTION:
-                    item.description = Parser.readTag(parser, name);
+                case Parser.TAG_DESCRIPTION:
+                    item.setDescription(Parser.readTag(parser, name));
                     break;
 
-                case Item.TAG_LINK:
-                    item.link = Parser.readTag(parser, name);
+                case Parser.TAG_LINK:
+                    item.setLink(Parser.readTag(parser, name));
                     break;
 
-                case Item.TAG_SOURCE:
-                    item.source = Parser.readTag(parser, name);
+                case Parser.TAG_GUID:
+                    item.setLink(Parser.readTag(parser, name));
                     break;
 
-                case Item.TAG_PUBLISH_DATE:
-                    item.publishDate = Parser.readPublishDate(parser);
+                case Parser.TAG_PUBLISH_DATE:
+                    item.setPublishDate(Parser.readPublishDate(parser));
                     break;
 
-                case Item.TAG_CONTENT:
-                    item.mediaUrl = Parser.readMediaUrl(parser);
+                case Parser.TAG_ENCLOSURE:
+                    item.getImages().add(new Image(Parser.readMediaUrl(parser)));
                     break;
 
                 default:
@@ -139,26 +146,27 @@ final class Parser {
         return item;
     }
 
-    private static long readPublishDate(@NonNull final XmlPullParser parser) throws XmlPullParserException, IOException {
-        final String value = Parser.readTag(parser, Item.TAG_PUBLISH_DATE);
+    @Nullable
+    private static Date readPublishDate(@NonNull final XmlPullParser parser) throws XmlPullParserException, IOException {
+        final String value = Parser.readTag(parser, Parser.TAG_PUBLISH_DATE);
 
         try {
-            return Parser.DATE_FORMAT.get().parse(value).getTime();
+            return Parser.DATE_FORMAT.get().parse(value);
         } catch (final ParseException e) {
             Log.e(Parser.class.getName(), e.getMessage(), e);
         }
 
-        return 0;
+        return null;
     }
 
     @NonNull
     private static String readMediaUrl(@NonNull final XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, null, Item.TAG_CONTENT);
+        parser.require(XmlPullParser.START_TAG, null, Parser.TAG_ENCLOSURE);
 
-        final String value = parser.getAttributeValue(null, Item.ATTR_URL);
+        final String value = parser.getAttributeValue(null, Parser.ATTR_URL);
         parser.nextTag();
 
-        parser.require(XmlPullParser.END_TAG, null, Item.TAG_CONTENT);
+        parser.require(XmlPullParser.END_TAG, null, Parser.TAG_ENCLOSURE);
 
         return value;
     }

@@ -1,29 +1,28 @@
 package com.github.ayltai.newspaper.list;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import javax.inject.Inject;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
-import com.github.ayltai.newspaper.ContextModule;
 import com.github.ayltai.newspaper.Presenter;
-import com.github.ayltai.newspaper.data.Feed;
-import com.github.ayltai.newspaper.data.FeedManager;
-import com.github.ayltai.newspaper.net.NetModule;
-import com.github.ayltai.newspaper.rss.Client;
-import com.github.ayltai.newspaper.rss.DaggerRssComponent;
-import com.github.ayltai.newspaper.rss.Item;
-import com.github.ayltai.newspaper.rss.RssModule;
+import com.github.ayltai.newspaper.client.Client;
+import com.github.ayltai.newspaper.client.ClientFactory;
+import com.github.ayltai.newspaper.data.FavoriteManager;
+import com.github.ayltai.newspaper.data.ItemManager;
+import com.github.ayltai.newspaper.model.Category;
+import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.ayltai.newspaper.util.TestUtils;
 
@@ -36,7 +35,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     public interface View extends Presenter.View {
-        void setItems(@NonNull ListScreen.Key parentKey, @Nullable Feed feed);
+        void setItems(@NonNull ListScreen.Key parentKey, @NonNull List<Item> items);
 
         @NonNull
         Observable<Void> refreshes();
@@ -46,15 +45,14 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
     //region Variables
 
-    @Inject
-    Client client;
-
     private CompositeSubscription subscriptions;
     private Subscription          refreshSubscription;
     private Subscription          updateSubscription;
     private Realm                 realm;
+    private FavoriteManager       favoriteManager;
+    private ItemManager           itemManager;
+    private List<Item>            items;
     private ListScreen.Key        key;
-    private Feed                  feed;
     private boolean               isBound;
 
     //endregion
@@ -70,20 +68,19 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
         if (this.isViewAttached() && !this.isBound) {
-            this.getFeedManager().getFeed(this.key.getUrl())
-                .subscribe(feed -> {
-                    this.feed = feed;
-
-                    if (this.feed == null || this.feed.getItems().isEmpty()) {
-                        if (this.feed != null && Constants.SOURCE_BOOKMARK.equals(this.key.getUrl())) {
-                            this.getView().setItems(this.key, this.feed);
-                        } else {
-                            this.bindFromRemote(Constants.REFRESH_LOAD_TIMEOUT);
-                        }
+            this.getItemManager().getItemsObservable(Collections.emptyList(), Collections.singletonList(this.key.getCategory()))
+                .subscribe(items -> {
+                    this.items = items;
+                    if (Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {
+                        this.getView().setItems(this.key, this.items);
                     } else {
-                        this.checkForUpdate();
+                        if (this.items.isEmpty()) {
+                            this.bindFromRemote(Constants.REFRESH_LOAD_TIMEOUT);
+                        } else {
+                            this.checkForUpdate();
 
-                        if (!Constants.SOURCE_BOOKMARK.equals(this.key.getUrl())) this.bindFromRemote(Constants.INIT_LOAD_TIMEOUT);
+                            this.bindFromRemote(Constants.INIT_LOAD_TIMEOUT);
+                        }
                     }
 
                     this.isBound = true;
@@ -93,66 +90,111 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private void bindFromRemote(final int timeout) {
+        if (this.getView() == null) return;
+
         if (this.refreshSubscription != null) this.refreshSubscription.unsubscribe();
 
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
-        this.refreshSubscription = this.client.get(this.key.getUrl())
-            .doOnNext(data -> {
-                this.copyToRealmOrUpdate(data);
-
-                this.checkForUpdate();
-            })
-            .timeout(timeout, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
+        this.getFavoriteManager().getFavorite()
             .subscribe(
-                feed -> {
-                    this.feed = feed;
+                favorite -> {
+                    final List<Observable<List<Item>>> observables = new ArrayList<>();
 
-                    this.getView().setItems(this.key, feed);
-                },
-                error -> {
-                    this.getView().setItems(this.key, this.feed);
+                    for (final Source source : favorite.getSources()) {
+                        for (final Category category : source.getCategories()) {
+                            if (category.getName().equals(this.key.getCategory())) {
+                                final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(source.getName());
 
-                    if (error instanceof TimeoutException) {
-                        this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
-                    } else {
-                        this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                if (client != null) {
+                                    observables.add(client.getItems(category.getUrl())
+                                        .timeout(timeout, TimeUnit.SECONDS)
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribeOn(Schedulers.io()));
+                                }
+                            }
+                        }
                     }
-                });
+
+                    this.refreshSubscription = ListPresenter.zip(observables)
+                        .subscribe(
+                            items -> {
+                                this.items = this.partialUpdate(items);
+
+                                this.getView().setItems(this.key, this.items);
+
+                                this.checkForUpdate();
+                            },
+                            error -> {
+                                this.getView().setItems(this.key, this.items);
+
+                                if (error instanceof TimeoutException) {
+                                    this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
+                                } else {
+                                    this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                }
+                            }
+                        );
+                },
+                error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
+        );
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private void checkForUpdate() {
         if (BuildConfig.DEBUG) Log.i(this.getClass().getSimpleName(), "Scheduled update check");
 
+        if (this.getView() == null) return;
+
         if (this.updateSubscription != null) this.updateSubscription.unsubscribe();
 
-        this.updateSubscription = this.client.get(this.key.getUrl())
-            .delaySubscription(Configs.getUpdateInterval(), TimeUnit.SECONDS)
-            .timeout(Configs.getUpdateInterval() + Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::showUpdateIndicator, error -> {
-                if (error instanceof TimeoutException) {
-                    this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
-                } else {
-                    this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
-                }
+        this.getFavoriteManager().getFavorite()
+            .subscribe(
+                favorite -> {
+                    final List<Observable<List<Item>>> observables = new ArrayList<>();
 
-                this.checkForUpdate();
-            });
+                    for (final Source source : favorite.getSources()) {
+                        for (final Category category : source.getCategories()) {
+                            if (category.getName().equals(this.key.getCategory())) {
+                                final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(source.getName());
+
+                                if (client != null) {
+                                    observables.add(client
+                                        .getItems(category.getUrl())
+                                        .delaySubscription(Configs.getUpdateInterval(), TimeUnit.SECONDS)
+                                        .timeout(Configs.getUpdateInterval() + Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribeOn(Schedulers.io()));
+                                }
+                            }
+                        }
+                    }
+
+                    this.updateSubscription = ListPresenter.zip(observables).subscribe(
+                        this::showUpdateIndicator,
+                        error -> {
+                            if (error instanceof TimeoutException) {
+                                this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
+                            } else {
+                                this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            }
+
+                            this.checkForUpdate();
+                        });
+                },
+                error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
+        );
     }
 
-    private void showUpdateIndicator(final Feed feed) {
+    private void showUpdateIndicator(final List<Item> items) {
         if (BuildConfig.DEBUG) Log.i(this.getClass().getSimpleName(), "Update check finished");
 
+        if (this.getView() == null) return;
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
-        if (this.feed != null && !this.feed.getItems().isEmpty() && !feed.getItems().isEmpty()) {
-            final Item i = this.feed.getItems().get(0);
-            final Item j = feed.getItems().get(0);
+        if (!this.items.isEmpty() && !items.isEmpty()) {
+            final Item i = this.items.get(0);
+            final Item j = items.get(0);
 
             if (i.getPublishDate() != null && j.getPublishDate() != null && i.getPublishDate().compareTo(j.getPublishDate()) < 0) this.getView().showUpdateIndicator();
 
@@ -160,14 +202,37 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         }
     }
 
-    private void copyToRealmOrUpdate(@NonNull final Feed feed) {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            if (!this.realm.isClosed()) {
-                this.realm.beginTransaction();
-                this.realm.copyToRealmOrUpdate(feed);
-                this.realm.commitTransaction();
+    private List<Item> partialUpdate(@NonNull final List<Item> items) {
+        if (!this.realm.isClosed()) {
+            this.realm.beginTransaction();
+
+            for (final Item item : items) {
+                final Item realmItem = this.getItemManager().getItem(item.getLink());
+
+                if (realmItem == null) {
+                    this.realm.insert(item);
+                } else {
+                    item.setIsFullDescription(realmItem.isFullDescription());
+                    if (!realmItem.isFullDescription()) realmItem.setDescription(item.getDescription());
+
+                    realmItem.setTitle(item.getTitle());
+                    realmItem.setPublishDate(item.getPublishDate());
+                    realmItem.setSource(item.getSource());
+                    realmItem.setCategory(item.getCategory());
+
+                    realmItem.getImages().clear();
+                    realmItem.getImages().addAll(item.getImages());
+
+                    item.setBookmarked(realmItem.isBookmarked());
+
+                    this.realm.insertOrUpdate(item);
+                }
             }
-        });
+
+            this.realm.commitTransaction();
+        }
+
+        return items;
     }
 
     //region Lifecycle
@@ -175,13 +240,6 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
     @Override
     public void onViewAttached(@NonNull final ListPresenter.View view) {
         super.onViewAttached(view);
-
-        if (this.client == null) this.client = DaggerRssComponent.builder()
-            .contextModule(new ContextModule(view.getContext()))
-            .netModule(new NetModule())
-            .rssModule(new RssModule())
-            .build()
-            .client();
 
         this.attachEvents();
     }
@@ -204,27 +262,33 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
             this.updateSubscription.unsubscribe();
             this.updateSubscription = null;
         }
-
-        if (this.client != null) {
-            this.client.close();
-            this.client = null;
-        }
     }
 
     //endregion
 
+    @NonNull
+    private FavoriteManager getFavoriteManager() {
+        if (this.favoriteManager == null) this.favoriteManager = new FavoriteManager(this.getView().getContext());
+
+        return this.favoriteManager;
+    }
+
     @VisibleForTesting
     @NonNull
-    /* private final */ FeedManager getFeedManager() {
-        return new FeedManager(this.realm);
+    /* private final */ ItemManager getItemManager() {
+        if (this.itemManager == null) this.itemManager = new ItemManager(this.realm);
+
+        return this.itemManager;
     }
 
     private void attachEvents() {
+        if (this.getView() == null) return;
+
         if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
         this.subscriptions.add(this.getView().refreshes().subscribe(dummy -> {
             if (this.key != null) {
-                if (Constants.SOURCE_BOOKMARK.equals(this.key.getUrl())) {
+                if (Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {
                     this.isBound = false;
 
                     this.bind(this.realm, this.key);
@@ -233,5 +297,16 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                 }
             }
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+    }
+
+    private static Observable<List<Item>> zip(@NonNull final Iterable<Observable<List<Item>>> observables) {
+        return Observable.zip(observables, lists -> {
+            final List<Item> items = new ArrayList<>();
+
+            for (final Object list : lists) items.addAll((List<Item>)list);
+            Collections.sort(items);
+
+            return items;
+        });
     }
 }

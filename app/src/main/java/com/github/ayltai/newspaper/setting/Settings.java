@@ -1,6 +1,8 @@
 package com.github.ayltai.newspaper.setting;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -13,7 +15,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import com.facebook.common.internal.Sets;
 import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
@@ -23,10 +24,11 @@ import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 public final class Settings {
     //region Constants
 
-    static final String PREF_COMPACT_LAYOUT       = "PREF_COMPACT_LAYOUT";
-    static final String PREF_DARK_THEME           = "PREF_DARK_THEME";
-    static final String PREF_PANORAMA_ENABLED     = "PREF_PANORAMA_ENABLED";
-    static final String PREF_CATEGORIES           = "PREF_CATEGORIES";
+    static final String PREF_COMPACT_LAYOUT   = "PREF_COMPACT_LAYOUT";
+    static final String PREF_DARK_THEME       = "PREF_DARK_THEME";
+    static final String PREF_PANORAMA_ENABLED = "PREF_PANORAMA_ENABLED";
+    static final String PREF_SOURCES          = "PREF_SOURCES";
+    static final String PREF_CATEGORIES       = "PREF_CATEGORIES";
 
     private static final String PREF_USER_ID              = "PREF_USER_ID";
     private static final String PREF_HEADER_IMAGE_ENABLED = "PREF_HEADER_IMAGE_ENABLED";
@@ -62,8 +64,29 @@ public final class Settings {
     }
 
     @NonNull
+    public static Set<String> getSources(@NonNull final Context context) {
+        final LinkedHashSet<String> allSources  = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.sources)));
+        final Set<String>           userSources = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_SOURCES, allSources);
+        final LinkedHashSet<String> sources     = new LinkedHashSet<>();
+
+        for (final String source : allSources) {
+            if (userSources.contains(source)) sources.add(source);
+        }
+
+        return sources;
+    }
+
+    @NonNull
     public static Set<String> getCategories(@NonNull final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, Sets.newHashSet(context.getResources().getStringArray(R.array.pref_category_values)));
+        final LinkedHashSet<String> allCategories  = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.categories)));
+        final Set<String>           userCategories = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, allCategories);
+        final LinkedHashSet<String> categories     = new LinkedHashSet<>();
+
+        for (final String category : allCategories) {
+            if (userCategories.contains(category)) categories.add(category);
+        }
+
+        return categories;
     }
 
     public static boolean isHeaderImageEnabled(@NonNull final Context context) {

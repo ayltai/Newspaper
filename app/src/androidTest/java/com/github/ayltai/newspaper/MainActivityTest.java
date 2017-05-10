@@ -58,16 +58,13 @@ public final class MainActivityTest {
             .perform(ViewActions.click());
 
         // Swipes through all tabs
-        final String[] shortCategories = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.pref_category_short_entries);
-        final String[] longCategories  = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.pref_category_entries);
+        final String[] categories = InstrumentationRegistry.getTargetContext().getResources().getStringArray(R.array.categories);
 
-        for (int i = 0; i < shortCategories.length; i++) {
-            final String longCategory = longCategories[i];
-
+        for (int i = 0; i < categories.length; i++) {
             Espresso.onView(ViewMatchers.withId(R.id.collapsingToolbarLayout))
-                .check(ViewAssertions.matches(MoreViewMatchers.withTitle(longCategory)));
+                .check(ViewAssertions.matches(MoreViewMatchers.withTitle(categories[i])));
 
-            Espresso.onView(Matchers.allOf(ViewMatchers.withText(shortCategories[i]), ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.tabLayout))))
+            Espresso.onView(Matchers.allOf(ViewMatchers.withText(categories[i]), ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.tabLayout))))
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
             Espresso.onView(ViewMatchers.withId(R.id.navigate_next))

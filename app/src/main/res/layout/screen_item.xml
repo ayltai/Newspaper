@@ -34,6 +34,11 @@
                 android:layout_marginTop="@dimen/space_5"
                 android:layout_marginBottom="@dimen/space_5"
                 style="@style/Item.Description" />
+            <LinearLayout
+                android:id="@+id/thumbnailsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

@@ -1,9 +1,9 @@
 package com.github.ayltai.newspaper.main;
 
 import java.io.Closeable;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -13,8 +13,13 @@ import android.support.annotation.VisibleForTesting;
 import com.github.ayltai.newspaper.DaggerMainComponent;
 import com.github.ayltai.newspaper.MainModule;
 import com.github.ayltai.newspaper.Presenter;
-import com.github.ayltai.newspaper.data.Source;
+import com.github.ayltai.newspaper.data.ItemManager;
+import com.github.ayltai.newspaper.model.Image;
+import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.setting.Settings;
 
+import io.realm.Realm;
+import rx.Emitter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
@@ -57,29 +62,20 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
 
         @Override
         public void onNext(final ImagesUpdatedEvent imagesUpdatedEvent) {
-            MainPresenter.this.images.put(imagesUpdatedEvent.getUrl(), imagesUpdatedEvent.getImages());
-
-            if (MainPresenter.this.lastUpdatedPosition != MainPresenter.this.currentPosition) {
-                MainPresenter.this.lastUpdatedPosition = MainPresenter.this.currentPosition;
-
-                MainPresenter.this.updateHeader();
-            }
+            MainPresenter.this.updateHeader();
         }
     };
-
-    private final Map<String, List<String>> images = new HashMap<>();
 
     //region Variables
 
     private CompositeSubscription subscriptions;
     private MainAdapter           adapter;
     private int                   currentPosition;
-    private int                   lastUpdatedPosition = -1;
 
     //endregion
 
     public final void bind() {
-        this.view.bind(this.adapter);
+        this.getView().bind(this.adapter);
     }
 
     @Override
@@ -92,17 +88,17 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
 
         this.subscriptions = new CompositeSubscription();
 
-        this.subscriptions.add(this.view.pageChanges().subscribe(position -> {
+        this.subscriptions.add(this.getView().pageChanges().subscribe(position -> {
             this.currentPosition = position;
 
             this.updateHeader();
 
-            this.view.enablePrevious(this.currentPosition > 0);
-            this.view.enableNext(this.currentPosition < this.adapter.getCount() - 1);
+            this.getView().enablePrevious(this.currentPosition > 0);
+            this.getView().enableNext(this.currentPosition < this.adapter.getCount() - 1);
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
-        this.subscriptions.add(this.view.previousClicks().subscribe(dummy -> this.view.navigatePrevious(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
-        this.subscriptions.add(this.view.nextClicks().subscribe(dummy -> this.view.navigateNext(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+        this.subscriptions.add(this.getView().previousClicks().subscribe(dummy -> this.getView().navigatePrevious(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+        this.subscriptions.add(this.getView().nextClicks().subscribe(dummy -> this.getView().navigateNext(), error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
         this.bus().register(ImagesUpdatedEvent.class, this.subscriber);
     }
@@ -120,19 +116,49 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
     }
 
     private void updateHeader() {
-        if (this.adapter.getCount() > 0) {
-            final Source source = this.adapter.getSource(this.currentPosition);
+        if (this.getView() == null) return;
 
-            if (source != null) {
-                this.view.updateHeaderTitle(source.getName());
-                this.view.updateHeaderImages(this.images.get(source.getUrl()));
-            }
+        if (this.adapter.getCount() > 0) {
+            final CharSequence category = this.adapter.getPageTitle(this.currentPosition);
+
+            this.getView().updateHeaderTitle(category);
+
+            this.getHeaderImages(category)
+                .subscribe(
+                    images -> this.getView().updateHeaderImages(images),
+                    error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
+                );
         }
     }
 
     @VisibleForTesting
     @NonNull
     /* private final */ MainAdapter createMainAdapter() {
-        return DaggerMainComponent.builder().mainModule(new MainModule((Activity)this.view.getContext())).build().mainAdapter();
+        return DaggerMainComponent.builder().mainModule(new MainModule((Activity)this.getView().getContext())).build().mainAdapter();
+    }
+
+    @VisibleForTesting
+    @NonNull
+    /* private */ Observable<List<String>> getHeaderImages(@NonNull final CharSequence category) {
+        return Observable.create(emitter -> {
+            final List<String> images = new ArrayList<>();
+            final Realm        realm  = Realm.getDefaultInstance();
+
+            try {
+                new ItemManager(realm).getItemsObservable(new ArrayList<>(Settings.getSources(this.getView().getContext())), Collections.singletonList(category.toString()))
+                    .subscribe(
+                        items -> {
+                            for (final Item item : items) {
+                                for (final Image image : item.getImages()) images.add(image.getUrl());
+                            }
+
+                            emitter.onNext(images);
+                        },
+                        error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
+                    );
+            } finally {
+                realm.close();
+            }
+        }, Emitter.BackpressureMode.BUFFER);
     }
 }

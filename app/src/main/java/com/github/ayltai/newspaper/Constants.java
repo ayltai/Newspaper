@@ -34,8 +34,11 @@ public final class Constants {
     public static final String ENCODING_UTF8 = "UTF-8";
 
     public static final String EMPTY = "";
+    public static final String SPACE = " ";
 
-    public static final String SOURCE_BOOKMARK = "BOOKMARK";
+    public static final String CATEGORY_BOOKMARK = "BOOKMARK";
+    public static final String CATEGORY_INSTANT  = "即時";
+    public static final int    CATEGORY_COUNT    = 11;
 
     public static final String ANALYTICS_BOOKMARK_ADD    = "Bookmark (Add)";
     public static final String ANALYTICS_BOOKMARK_REMOVE = "Bookmark (Remove)";

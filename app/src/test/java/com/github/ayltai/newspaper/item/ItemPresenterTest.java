@@ -1,21 +1,23 @@
 package com.github.ayltai.newspaper.item;
 
+import java.util.Collections;
 import java.util.Date;
 
 import android.support.annotation.NonNull;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.PresenterTest;
 import com.github.ayltai.newspaper.RxBus;
-import com.github.ayltai.newspaper.data.Feed;
-import com.github.ayltai.newspaper.data.FeedManager;
+import com.github.ayltai.newspaper.data.ItemManager;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.list.ListScreen;
-import com.github.ayltai.newspaper.rss.Item;
+import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
@@ -26,13 +28,13 @@ import rx.subjects.PublishSubject;
 public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPresenter.View> {
     //region Constants
 
-    private static final String KEY_PARENT_URL    = Constants.SOURCE_BOOKMARK;
-    private static final String ITEM_TITLE        = "title";
-    private static final String ITEM_DESCRIPTION  = "description";
-    private static final String ITEM_SOURCE       = "source";
-    private static final String ITEM_LINK         = "link";
-    private static final String ITEM_MEDIA_URL    = "media url";
-    private static final Date   ITEM_PUBLISH_DATE = new Date();
+    private static final String                 KEY_PARENT_URL    = Constants.CATEGORY_BOOKMARK;
+    private static final String                 ITEM_TITLE        = "title";
+    private static final String                 ITEM_DESCRIPTION  = "description";
+    private static final String                 ITEM_SOURCE       = "source";
+    private static final String                 ITEM_LINK         = "link";
+    private static final RealmList<Image>       ITEM_MEDIA_URLS   = new RealmList<>(new Image("media url"));
+    private static final Date                   ITEM_PUBLISH_DATE = new Date();
 
     private static final ListScreen.Key KEY_PARENT = new ListScreen.Key(ItemPresenterTest.KEY_PARENT_URL);
 
@@ -41,7 +43,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     //region Events
 
     private final PublishSubject<Void>    clicks    = PublishSubject.create();
-    private final PublishSubject<Void>    zooms     = PublishSubject.create();
+    private final PublishSubject<Integer> zooms     = PublishSubject.create();
     private final PublishSubject<Boolean> bookmarks = PublishSubject.create();
     private final PublishSubject<Void>    shares    = PublishSubject.create();
 
@@ -53,19 +55,20 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
 
     //endregion
 
-    private final Feed feed = new Feed(ItemPresenterTest.KEY_PARENT_URL, new RealmList<>());
+    private final RealmList<Item> items = new RealmList<>();
 
     @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
     @NonNull
     @Override
     protected ItemPresenter createPresenter() {
-        final FeedManager feedManager = Mockito.mock(FeedManager.class);
-        Mockito.doReturn(Observable.just(this.feed)).when(feedManager).getFeed(ItemPresenterTest.KEY_PARENT_URL);
+        this.items.add(this.item);
+
+        final ItemManager itemManager = Mockito.mock(ItemManager.class);
+        Mockito.doReturn(Observable.just(this.items)).when(itemManager).getItemsObservable(Collections.emptyList(), Collections.singletonList(ItemPresenterTest.KEY_PARENT_URL));
 
         final ItemPresenter presenter = Mockito.spy(new ItemPresenter(null));
-        Mockito.doReturn(feedManager).when(presenter).getFeedManager();
-        Mockito.doNothing().when(presenter).updateFeed(Mockito.any(Feed.class), Mockito.anyBoolean());
-        Mockito.doNothing().when(presenter).updateItemDescription(Mockito.anyString());
+        Mockito.doReturn(itemManager).when(presenter).getItemManager();
+        Mockito.doNothing().when(presenter).update(ArgumentMatchers.any(Item.class));
 
         final RxBus bus = Mockito.mock(RxBus.class);
         Mockito.doReturn(bus).when(presenter).bus();
@@ -98,7 +101,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         Mockito.doReturn(ItemPresenterTest.ITEM_DESCRIPTION).when(this.item).getDescription();
         Mockito.doReturn(ItemPresenterTest.ITEM_SOURCE).when(this.item).getSource();
         Mockito.doReturn(ItemPresenterTest.ITEM_LINK).when(this.item).getLink();
-        Mockito.doReturn(ItemPresenterTest.ITEM_MEDIA_URL).when(this.item).getMediaUrl();
+        Mockito.doReturn(ItemPresenterTest.ITEM_MEDIA_URLS).when(this.item).getImages();
         Mockito.doReturn(ItemPresenterTest.ITEM_PUBLISH_DATE).when(this.item).getPublishDate();
     }
 
@@ -112,8 +115,8 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         Mockito.verify(this.getView(), Mockito.times(1)).setDescription(this.item.getDescription());
         Mockito.verify(this.getView(), Mockito.times(1)).setSource(this.item.getSource());
         Mockito.verify(this.getView(), Mockito.times(1)).setLink(this.item.getLink());
-        Mockito.verify(this.getView(), Mockito.times(1)).setThumbnail(this.item.getMediaUrl(), Constants.LIST_VIEW_TYPE_DEFAULT);
-        Mockito.verify(this.getView(), Mockito.times(1)).setIsBookmarked(false);
+        Mockito.verify(this.getView(), Mockito.times(1)).setThumbnail(this.item.getImages().first().getUrl(), Constants.LIST_VIEW_TYPE_DEFAULT);
+        Mockito.verify(this.getView(), Mockito.times(1)).setThumbnails(this.item.getImages());
         Mockito.verify(this.getView(), Mockito.times(1)).setPublishDate(this.item.getPublishDate().getTime());
     }
 
@@ -130,18 +133,18 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     public void testWhenZoomedThenShowOriginalMedia() throws Exception {
         this.bind();
 
-        this.zooms.onNext(null);
+        this.zooms.onNext(0);
 
-        Mockito.verify(this.getView(), Mockito.times(1)).showMedia(this.item.getMediaUrl());
+        Mockito.verify(this.getView(), Mockito.times(1)).showMedia(this.item.getImages().first().getUrl());
     }
 
     @Test
-    public void testWhenBookmarkedThenUpdateFeed() throws Exception {
+    public void testWhenBookmarkedThenUpdateItem() throws Exception {
         this.bind();
 
         this.bookmarks.onNext(Boolean.TRUE);
 
-        Mockito.verify(this.getPresenter(), Mockito.times(1)).updateFeed(this.feed, true);
+        Mockito.verify(this.getPresenter(), Mockito.times(1)).update(true);
     }
 
     @Test

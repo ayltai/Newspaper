@@ -67,7 +67,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
         protected Key(@NonNull final Parcel in) {
         }
 
-        public static final Parcelable.Creator<MainScreen.Key> CREATOR = new Parcelable.Creator<MainScreen.Key>() {
+        public static final Creator<Key> CREATOR = new Creator<Key>() {
             @NonNull
             @Override
             public MainScreen.Key createFromParcel(@NonNull final Parcel source) {

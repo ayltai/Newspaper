@@ -1,7 +1,7 @@
 package com.github.ayltai.newspaper.item;
 
-import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,11 +11,12 @@ import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.data.Feed;
-import com.github.ayltai.newspaper.data.FeedManager;
+import com.github.ayltai.newspaper.client.ClientFactory;
+import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.list.ListScreen;
-import com.github.ayltai.newspaper.rss.Item;
-import com.github.ayltai.newspaper.util.ItemUtils;
+import com.github.ayltai.newspaper.main.ImagesUpdatedEvent;
+import com.github.ayltai.newspaper.model.Image;
+import com.github.ayltai.newspaper.model.Item;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -37,11 +38,13 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
         void setThumbnail(@Nullable String thumbnail, @Constants.ListViewType int type);
 
+        void setThumbnails(@NonNull List<Image> images);
+
         void setIsBookmarked(boolean isBookmarked);
 
         @Nullable Observable<Void> clicks();
 
-        @Nullable Observable<Void> zooms();
+        @Nullable Observable<Integer> zooms();
 
         @Nullable Observable<Boolean> bookmarks();
 
@@ -80,36 +83,44 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         if (this.isViewAttached()) {
             if (BuildConfig.DEBUG) this.log().d(this.getClass().getName(), "link = " + this.item.getLink());
 
-            this.getView().setTitle(this.item.getTitle());
-            this.getView().setDescription(this.showFullDescription && !this.item.isFullDescription() ? this.getView().getContext().getString(R.string.loading_indicator) : this.item.getDescription());
-            this.getView().setSource(this.item.getSource());
-            this.getView().setLink(this.item.getLink());
-            this.getView().setThumbnail(this.item.getMediaUrl(), this.type);
-
-            if (this.getView().bookmarks() != null) {
-                this.getFeedManager()
-                    .getFeed(Constants.SOURCE_BOOKMARK)
-                    .subscribe(
-                        feed -> this.getView().setIsBookmarked(feed.contains(this.item)),
-                        error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error));
-            }
-
-            final Date publishDate = this.item.getPublishDate();
-            this.getView().setPublishDate(publishDate == null ? 0 : publishDate.getTime());
+            this.bindView();
 
             if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
 
-            if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ItemUtils.getFullDescription(this.getView().getContext(), this.item)
+            if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ClientFactory.getInstance(this.getView().getContext()).getClient(this.item.getSource()).updateItem(this.item.clone())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
+                .filter(updatedItem -> updatedItem != null)
                 .subscribe(
-                    description -> {
-                        this.getView().setDescription(description);
+                    updatedItem -> {
+                        this.update(updatedItem);
 
-                        this.updateItemDescription(description);
+                        this.getView().setDescription(this.item.getDescription());
+
+                        if (!this.item.getImages().isEmpty()) {
+                            this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
+                            this.getView().setThumbnails(this.item.getImages());
+                        }
+
+                        this.bus().send(new ImagesUpdatedEvent());
                     },
                     error -> this.log().w(this.getClass().getSimpleName(), error.getMessage(), error)));
         }
+    }
+
+    private void bindView() {
+        if (this.getView() == null) throw new NullPointerException("View is null");
+
+        this.getView().setTitle(this.item.getTitle());
+        this.getView().setDescription(this.showFullDescription && !this.item.isFullDescription() ? this.getView().getContext().getString(R.string.loading_indicator) : this.item.getDescription());
+        this.getView().setSource(this.item.getSource());
+        this.getView().setLink(this.item.getLink());
+        this.getView().setThumbnail(this.item.getImages().isEmpty() ? null : this.item.getImages().first().getUrl(), this.type);
+        this.getView().setThumbnails(this.item.getImages());
+        if (this.getView().bookmarks() != null) this.getView().setIsBookmarked(this.item.isBookmarked());
+
+        final Date publishDate = this.item.getPublishDate();
+        this.getView().setPublishDate(publishDate == null ? 0 : publishDate.getTime());
     }
 
     //region Lifecycle
@@ -136,37 +147,41 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     //endregion
 
     @NonNull
-    /* protected final */ FeedManager getFeedManager() {
-        return new FeedManager(this.realm);
+    /* protected final */ ItemManager getItemManager() {
+        return new ItemManager(this.realm);
     }
 
-    /* protected final */ void updateFeed(@NonNull final Feed feed, final boolean bookmark) {
-        final int index = feed.indexOf(this.item);
-
-        this.realm.beginTransaction();
-
-        if (bookmark) {
-            if (index == -1) {
-                feed.getItems().add(this.item);
-                Collections.sort(feed.getItems());
-            }
-        } else {
-            if (index > -1) feed.getItems().remove(index);
-        }
-
-        this.realm.copyToRealmOrUpdate(feed);
-        this.realm.commitTransaction();
-    }
-
-    /* private */ void updateItemDescription(@Nullable final String description) {
+    /* protected final */ void update(@NonNull final Item item) {
         final Realm realm = Realm.getDefaultInstance();
 
-        realm.beginTransaction();
+        try {
+            realm.beginTransaction();
 
-        this.item.setDescription(description);
+            this.item.setDescription(item.getDescription());
+            this.item.setIsFullDescription(item.isFullDescription());
+            this.item.getImages().clear();
+            this.item.getImages().addAll(item.getImages());
 
-        realm.copyToRealmOrUpdate(this.item);
-        realm.commitTransaction();
+            realm.insertOrUpdate(this.item);
+            realm.commitTransaction();
+        } finally {
+            realm.close();
+        }
+    }
+
+    /* protected final */ void update(final boolean isBookmarked) {
+        final Realm realm = Realm.getDefaultInstance();
+
+        try {
+            realm.beginTransaction();
+
+            this.item.setBookmarked(isBookmarked);
+
+            realm.insertOrUpdate(this.item);
+            realm.commitTransaction();
+        } finally {
+            realm.close();
+        }
     }
 
     //region Event handlers
@@ -183,8 +198,10 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     protected abstract void attachClicks();
 
     private void attachZooms() {
-        if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(dummy -> {
-            if (this.item != null && this.item.getMediaUrl() != null && !this.item.getMediaUrl().isEmpty()) this.getView().showMedia(this.item.getMediaUrl());
+        if (this.getView() == null) return;
+
+        if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(index -> {
+            if (this.item != null && !this.item.getImages().isEmpty() && this.item.getImages().size() > index) this.getView().showMedia(this.item.getImages().get(index).getUrl());
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 

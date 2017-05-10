@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,7 +20,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public final class HttpClient extends BaseHttpClient implements Closeable {
-    private final List<Call> calls = new ArrayList<>();
+    private final List<Call> calls = Collections.synchronizedList(new ArrayList<>());
 
     private Context context;
 
@@ -34,7 +35,7 @@ public final class HttpClient extends BaseHttpClient implements Closeable {
     public void close() {
         synchronized (this.calls) {
             for (final Call call : this.calls) {
-                if (!call.isCanceled()) call.cancel();
+                if (call != null && !call.isCanceled()) call.cancel();
             }
 
             this.calls.clear();
@@ -63,6 +64,10 @@ public final class HttpClient extends BaseHttpClient implements Closeable {
     private InputStream mockDownload(@NonNull final String url) throws IOException {
         if (this.context == null) return null;
 
-        return this.context.getResources().openRawResource(BaseHttpClient.ASSETS.get(url));
+        final Integer asset = BaseHttpClient.ASSETS.get(url);
+
+        if (asset == null) return null;
+
+        return this.context.getResources().openRawResource(asset);
     }
 }

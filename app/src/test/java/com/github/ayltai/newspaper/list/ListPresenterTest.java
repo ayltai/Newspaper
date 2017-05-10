@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper.list;
 
+import java.util.Collections;
+
 import android.support.annotation.NonNull;
 
 import org.junit.Test;
@@ -8,8 +10,8 @@ import org.mockito.Mockito;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.PresenterTest;
 import com.github.ayltai.newspaper.RxBus;
-import com.github.ayltai.newspaper.data.Feed;
-import com.github.ayltai.newspaper.data.FeedManager;
+import com.github.ayltai.newspaper.data.ItemManager;
+import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
@@ -20,7 +22,7 @@ import rx.subjects.PublishSubject;
 public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPresenter.View> {
     //region Constants
 
-    private static final String KEY_PARENT_URL = Constants.SOURCE_BOOKMARK;
+    private static final String KEY_PARENT_URL = Constants.CATEGORY_BOOKMARK;
 
     private static final ListScreen.Key KEY = new ListScreen.Key(ListPresenterTest.KEY_PARENT_URL);
 
@@ -32,17 +34,17 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
 
     //endregion
 
-    private final Feed feed = new Feed(ListPresenterTest.KEY_PARENT_URL, new RealmList<>());
+    private final RealmList<Item> items = new RealmList<>();
 
     @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
     @NonNull
     @Override
     protected ListPresenter createPresenter() {
-        final FeedManager feedManager = Mockito.mock(FeedManager.class);
-        Mockito.doReturn(Observable.just(this.feed)).when(feedManager).getFeed(ListPresenterTest.KEY_PARENT_URL);
+        final ItemManager itemManager = Mockito.mock(ItemManager.class);
+        Mockito.doReturn(Observable.just(this.items)).when(itemManager).getItemsObservable(Collections.emptyList(), Collections.singletonList(ListPresenterTest.KEY_PARENT_URL));
 
         final ListPresenter presenter = Mockito.spy(new ListPresenter());
-        Mockito.doReturn(feedManager).when(presenter).getFeedManager();
+        Mockito.doReturn(itemManager).when(presenter).getItemManager();
 
         final RxBus bus = Mockito.mock(RxBus.class);
         Mockito.doReturn(bus).when(presenter).bus();
@@ -67,7 +69,7 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
     public void testViewBinding() throws Exception {
         this.bind();
 
-        Mockito.verify(this.getView(), Mockito.times(1)).setItems(ListPresenterTest.KEY, this.feed);
+        Mockito.verify(this.getView(), Mockito.times(1)).setItems(ListPresenterTest.KEY, this.items);
     }
 
     @Test
@@ -76,7 +78,7 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
 
         this.refreshes.onNext(null);
 
-        Mockito.verify(this.getView(), Mockito.times(2)).setItems(ListPresenterTest.KEY, this.feed);
+        Mockito.verify(this.getView(), Mockito.times(2)).setItems(ListPresenterTest.KEY, this.items);
     }
 
     //endregion

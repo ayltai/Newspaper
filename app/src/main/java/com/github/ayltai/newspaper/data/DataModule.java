@@ -26,7 +26,12 @@ public final class DataModule {
     }
 
     @Provides
-    FavoriteManager provideFavoriteManager(final Realm realm) {
-        return new FavoriteManager(this.context, realm);
+    FavoriteManager provideFavoriteManager() {
+        return new FavoriteManager(this.context);
+    }
+
+    @Provides
+    ItemManager provideItemManager(final Realm realm) {
+        return new ItemManager(realm);
     }
 }

@@ -17,7 +17,7 @@ import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 public final class FaceCenterCrop {
     //region Constants
 
-    private static final int MAX_WIDTH = 720;
+    private static final int MAX_WIDTH  = 720;
     private static final int MAX_HEIGHT = 720;
 
     private static final float MAX_DELTA = 0.05f;
