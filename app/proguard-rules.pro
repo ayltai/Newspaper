@@ -102,8 +102,6 @@
 -keep class com.facebook.** { *; }
 -keep interface com.facebook.** { *; }
 -dontnote com.facebook.**
-
-# Fresco v1.2.0
 -dontwarn com.facebook.infer.annotation.ReturnsOwnership
 -dontwarn com.facebook.infer.annotation.Functional
 
@@ -140,36 +138,6 @@
 -keep public class org.apache.http.**
 -keepclassmembers public class org.apache.http.** { *; }
 -dontnote org.apache.http.**
-
-### RxJava
--keep class sun.misc.Unsafe { *; }
--dontwarn sun.misc.Unsafe
--dontnote sun.misc.Unsafe
--dontwarn java.lang.invoke.*
--keep class rx.internal.util.unsafe.** { *; }
--dontwarn rx.internal.util.unsafe.**
--dontnote rx.internal.util.unsafe.**
--keep class rx.Scheduler { *; }
--keep class rx.schedulers.Schedulers {
-    public static <methods>;
-}
--keep class rx.schedulers.ImmediateScheduler {
-    public <methods>;
-}
--keep class rx.schedulers.TestScheduler {
-    public <methods>;
-}
--keep class rx.schedulers.Schedulers {
-    public static ** test();
-}
--keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
-    long producerIndex;
-    long consumerIndex;
-}
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    long producerNode;
-    long consumerNode;
-}
 
 # LeakCanary
 -keep class org.eclipse.mat.** { *; }
