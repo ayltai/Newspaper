@@ -27,8 +27,8 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
 
         final boolean     isCompactLayout = Settings.getListViewType(this.getContext()) == Constants.LIST_VIEW_TYPE_COMPACT;
         final boolean     isDarkTheme     = Settings.isDarkTheme(this.getContext());
-        final Set<String> sources         = Settings.getSources(this.getContext());
-        final Set<String> categories      = Settings.getCategories(this.getContext());
+        final Set<String> sources         = Settings.getPreferenceSources(this.getContext());
+        final Set<String> categories      = Settings.getPreferenceCategories(this.getContext());
 
         this.findPreference(Settings.PREF_COMPACT_LAYOUT).setOnPreferenceChangeListener((preference, newValue) -> {
             if (isCompactLayout != (boolean)newValue) this.getActivity().setResult(Activity.RESULT_OK);
