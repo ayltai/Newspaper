@@ -16,7 +16,7 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
-import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.processors.PublishProcessor;
 import io.realm.RealmList;
 
@@ -42,7 +42,7 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
     @Override
     protected ListPresenter createPresenter() {
         final ItemManager itemManager = Mockito.mock(ItemManager.class);
-        Mockito.doReturn(Flowable.just(this.items)).when(itemManager).getItemsObservable(Collections.emptyList(), Collections.singletonList(ListPresenterTest.KEY_PARENT_URL));
+        Mockito.doReturn(Single.just(this.items)).when(itemManager).getItemsSingle(Collections.emptyList(), Collections.singletonList(ListPresenterTest.KEY_PARENT_URL));
 
         final ListPresenter presenter = Mockito.spy(new ListPresenter());
         Mockito.doReturn(itemManager).when(presenter).getItemManager();

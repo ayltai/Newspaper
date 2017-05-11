@@ -69,7 +69,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
         if (this.isViewAttached() && !this.isBound) {
-            this.getItemManager().getItemsObservable(Collections.emptyList(), Collections.singletonList(this.key.getCategory()))
+            this.getItemManager().getItemsSingle(Collections.emptyList(), Collections.singletonList(this.key.getCategory()))
                 .subscribe(items -> {
                     this.items = items;
                     if (Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {

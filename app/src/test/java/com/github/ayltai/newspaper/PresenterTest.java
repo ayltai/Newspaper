@@ -7,7 +7,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
@@ -47,7 +46,7 @@ public abstract class PresenterTest<P extends Presenter, V extends Presenter.Vie
     @CallSuper
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+        //MockitoAnnotations.initMocks(this);
 
         this.presenter = this.createPresenter();
         this.view      = this.createView();
