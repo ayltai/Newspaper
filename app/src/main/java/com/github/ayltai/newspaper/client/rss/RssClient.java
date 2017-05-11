@@ -2,6 +2,7 @@ package com.github.ayltai.newspaper.client.rss;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,10 +13,12 @@ import org.apache.commons.io.IOUtils;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
+import com.github.ayltai.newspaper.util.LogUtils;
 
 import io.reactivex.Maybe;
 import io.realm.RealmList;
@@ -49,7 +52,13 @@ public abstract class RssClient extends Client {
 
                     emitter.onSuccess(items);
                 } catch (final XmlPullParserException | IOException e) {
-                    emitter.onError(e);
+                    if (e instanceof InterruptedIOException) {
+                        if (BuildConfig.DEBUG) LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
+
+                        emitter.onComplete();
+                    } else {
+                        emitter.onError(e);
+                    }
                 } finally {
                     IOUtils.closeQuietly(inputStream);
                 }
