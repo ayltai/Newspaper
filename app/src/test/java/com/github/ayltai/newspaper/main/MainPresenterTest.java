@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 
 import com.github.ayltai.newspaper.PresenterTest;
 import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.util.Irrelevant;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.PublishProcessor;
@@ -25,8 +26,8 @@ public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPr
     //region Events
 
     private final PublishProcessor<Integer> pageChanges    = PublishProcessor.create();
-    private final PublishProcessor<Void>    previousClicks = PublishProcessor.create();
-    private final PublishProcessor<Void>    nextClicks     = PublishProcessor.create();
+    private final PublishProcessor<Object>  previousClicks = PublishProcessor.create();
+    private final PublishProcessor<Object>  nextClicks     = PublishProcessor.create();
 
     //endregion
 
@@ -95,10 +96,10 @@ public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPr
     public void testWhenNavigationButtonClickedThenNavigate() throws Exception {
         this.bind();
 
-        this.nextClicks.onNext(null);
+        this.nextClicks.onNext(Irrelevant.INSTANCE);
         Mockito.verify(this.getView(), Mockito.times(1)).navigateNext();
 
-        this.previousClicks.onNext(null);
+        this.previousClicks.onNext(Irrelevant.INSTANCE);
         Mockito.verify(this.getView(), Mockito.times(1)).navigatePrevious();
     }
 

@@ -39,7 +39,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         void setItems(@NonNull ListScreen.Key parentKey, @NonNull List<Item> items);
 
         @NonNull
-        Flowable<Void> refreshes();
+        Flowable<Object> refreshes();
 
         void showUpdateIndicator();
     }

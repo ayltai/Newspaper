@@ -39,6 +39,7 @@ import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.IntentUtils;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.piasy.biv.loader.ImageLoader;
@@ -134,12 +135,11 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     //region Events
 
-    private final BehaviorProcessor<Void> attachedToWindow   = BehaviorProcessor.create();
-    private final BehaviorProcessor<Void> detachedFromWindow = BehaviorProcessor.create();
-
-    private final PublishProcessor<Integer> zooms     = PublishProcessor.create();
-    private final PublishProcessor<Boolean> bookmarks = PublishProcessor.create();
-    private final PublishProcessor<Void>    shares    = PublishProcessor.create();
+    private final BehaviorProcessor<Object> attachedToWindow   = BehaviorProcessor.create();
+    private final BehaviorProcessor<Object> detachedFromWindow = BehaviorProcessor.create();
+    private final PublishProcessor<Integer> zooms              = PublishProcessor.create();
+    private final PublishProcessor<Boolean> bookmarks          = PublishProcessor.create();
+    private final PublishProcessor<Object>  shares             = PublishProcessor.create();
 
     //endregion
 
@@ -306,7 +306,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     @Nullable
     @Override
-    public Flowable<Void> clicks() {
+    public Flowable<Object> clicks() {
         return null;
     }
 
@@ -324,7 +324,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     @Nullable
     @Override
-    public Flowable<Void> shares() {
+    public Flowable<Object> shares() {
         return this.shares;
     }
 
@@ -348,13 +348,13 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     @NonNull
     @Override
-    public Flowable<Void> attachments() {
+    public Flowable<Object> attachments() {
         return this.attachedToWindow;
     }
 
     @NonNull
     @Override
-    public Flowable<Void> detachments() {
+    public Flowable<Object> detachments() {
         return this.detachedFromWindow;
     }
 
@@ -399,7 +399,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
         if (Settings.isPanoramaEnabled(this.getContext())) this.observer.register(this.getContext());
 
-        this.attachedToWindow.onNext(null);
+        this.attachedToWindow.onNext(Irrelevant.INSTANCE);
     }
 
     @Override
@@ -415,7 +415,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             this.disposables = null;
         }
 
-        this.detachedFromWindow.onNext(null);
+        this.detachedFromWindow.onNext(Irrelevant.INSTANCE);
     }
 
     //endregion

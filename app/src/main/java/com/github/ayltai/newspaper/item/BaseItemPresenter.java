@@ -42,13 +42,13 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
         void setIsBookmarked(boolean isBookmarked);
 
-        @Nullable Flowable<Void> clicks();
+        @Nullable Flowable<Object> clicks();
 
         @Nullable Flowable<Integer> zooms();
 
         @Nullable Flowable<Boolean> bookmarks();
 
-        @Nullable Flowable<Void> shares();
+        @Nullable Flowable<Object> shares();
 
         void showItem(@NonNull ListScreen.Key parentKey, @NonNull Item item);
 
@@ -93,16 +93,18 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
                 .filter(updatedItem -> updatedItem != null)
                 .subscribe(
                     updatedItem -> {
-                        this.update(updatedItem);
+                        if (this.item.getDescription() == null || this.item.getDescription().length() == 0 || (updatedItem.getDescription() != null && updatedItem.getDescription().length() > 0)) {
+                            this.update(updatedItem);
 
-                        this.getView().setDescription(this.item.getDescription());
+                            this.getView().setDescription(this.item.getDescription());
 
-                        if (!this.item.getImages().isEmpty()) {
-                            this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
-                            this.getView().setThumbnails(this.item.getImages());
+                            if (!this.item.getImages().isEmpty()) {
+                                this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
+                                this.getView().setThumbnails(this.item.getImages());
+                            }
+
+                            this.bus().send(new ImagesUpdatedEvent());
                         }
-
-                        this.bus().send(new ImagesUpdatedEvent());
                     },
                     error -> this.log().w(this.getClass().getSimpleName(), error.getMessage(), error)));
         }

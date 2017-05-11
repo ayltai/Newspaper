@@ -35,6 +35,7 @@ import com.github.ayltai.newspaper.graphics.ImageLoaderCallback;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.setting.SettingsActivity;
 import com.github.ayltai.newspaper.util.ContextUtils;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -86,11 +87,11 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
     //region Events
 
-    private final BehaviorProcessor<Void>    attachedToWindow   = BehaviorProcessor.create();
-    private final BehaviorProcessor<Void>    detachedFromWindow = BehaviorProcessor.create();
+    private final BehaviorProcessor<Object>  attachedToWindow   = BehaviorProcessor.create();
+    private final BehaviorProcessor<Object>  detachedFromWindow = BehaviorProcessor.create();
     private final BehaviorProcessor<Integer> pageChanges        = BehaviorProcessor.create();
-    private final PublishProcessor<Void>     previousClicks     = PublishProcessor.create();
-    private final PublishProcessor<Void>     nextClicks         = PublishProcessor.create();
+    private final PublishProcessor<Object>   previousClicks     = PublishProcessor.create();
+    private final PublishProcessor<Object>   nextClicks         = PublishProcessor.create();
 
     //endregion
 
@@ -196,12 +197,12 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
     }
 
     @Override
-    public Flowable<Void> previousClicks() {
+    public Flowable<Object> previousClicks() {
         return this.previousClicks;
     }
 
     @Override
-    public Flowable<Void> nextClicks() {
+    public Flowable<Object> nextClicks() {
         return this.nextClicks;
     }
 
@@ -255,13 +256,13 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
     @NonNull
     @Override
-    public Flowable<Void> attachments() {
+    public Flowable<Object> attachments() {
         return this.attachedToWindow;
     }
 
     @NonNull
     @Override
-    public Flowable<Void> detachments() {
+    public Flowable<Object> detachments() {
         return this.detachedFromWindow;
     }
 
@@ -290,8 +291,8 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
             this.previousButton = view.findViewById(R.id.navigate_previous);
             this.nextButton     = view.findViewById(R.id.navigate_next);
 
-            this.disposable.add(RxView.clicks(this.previousButton).subscribe(dummy -> this.previousClicks.onNext(null)));
-            this.disposable.add(RxView.clicks(this.nextButton).subscribe(dummy -> this.nextClicks.onNext(null)));
+            this.disposable.add(RxView.clicks(this.previousButton).subscribe(dummy -> this.previousClicks.onNext(Irrelevant.INSTANCE)));
+            this.disposable.add(RxView.clicks(this.nextButton).subscribe(dummy -> this.nextClicks.onNext(Irrelevant.INSTANCE)));
 
             // Sets up ViewPager
             this.viewPager = (ViewPager)view.findViewById(R.id.viewPager);
@@ -313,14 +314,14 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
 
         this.headerContainer.setVisibility(Settings.isHeaderImageEnabled(this.getContext()) ? View.VISIBLE : View.GONE);
 
-        this.attachedToWindow.onNext(null);
+        this.attachedToWindow.onNext(Irrelevant.INSTANCE);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        this.detachedFromWindow.onNext(null);
+        this.detachedFromWindow.onNext(Irrelevant.INSTANCE);
     }
 
     @Override

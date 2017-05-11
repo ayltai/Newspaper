@@ -18,6 +18,7 @@ import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
@@ -28,24 +29,23 @@ import io.realm.RealmList;
 public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPresenter.View> {
     //region Constants
 
-    private static final String                 KEY_PARENT_URL    = Constants.CATEGORY_BOOKMARK;
-    private static final String                 ITEM_TITLE        = "title";
-    private static final String                 ITEM_DESCRIPTION  = "description";
-    private static final String                 ITEM_SOURCE       = "source";
-    private static final String                 ITEM_LINK         = "link";
-    private static final RealmList<Image>       ITEM_MEDIA_URLS   = new RealmList<>(new Image("media url"));
-    private static final Date                   ITEM_PUBLISH_DATE = new Date();
-
-    private static final ListScreen.Key KEY_PARENT = new ListScreen.Key(ItemPresenterTest.KEY_PARENT_URL);
+    private static final String           KEY_PARENT_URL    = Constants.CATEGORY_BOOKMARK;
+    private static final String           ITEM_TITLE        = "title";
+    private static final String           ITEM_DESCRIPTION  = "description";
+    private static final String           ITEM_SOURCE       = "source";
+    private static final String           ITEM_LINK         = "link";
+    private static final RealmList<Image> ITEM_MEDIA_URLS   = new RealmList<>(new Image("media url"));
+    private static final Date             ITEM_PUBLISH_DATE = new Date();
+    private static final ListScreen.Key   KEY_PARENT        = new ListScreen.Key(ItemPresenterTest.KEY_PARENT_URL);
 
     //endregion
 
     //region Events
 
-    private final PublishProcessor<Void>    clicks    = PublishProcessor.create();
+    private final PublishProcessor<Object>  clicks    = PublishProcessor.create();
     private final PublishProcessor<Integer> zooms     = PublishProcessor.create();
     private final PublishProcessor<Boolean> bookmarks = PublishProcessor.create();
-    private final PublishProcessor<Void>    shares    = PublishProcessor.create();
+    private final PublishProcessor<Object>  shares    = PublishProcessor.create();
 
     //endregion
 
@@ -124,7 +124,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     public void testWhenClickedThenShowItem() throws Exception {
         this.bind();
 
-        this.clicks.onNext(null);
+        this.clicks.onNext(Irrelevant.INSTANCE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).showItem(ItemPresenterTest.KEY_PARENT, this.item);
     }
@@ -151,7 +151,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     public void testWhenSharedThenShare() throws Exception {
         this.bind();
 
-        this.shares.onNext(null);
+        this.shares.onNext(Irrelevant.INSTANCE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).share(this.item.getLink());
     }

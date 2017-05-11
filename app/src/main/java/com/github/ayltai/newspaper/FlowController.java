@@ -88,8 +88,8 @@ final class FlowController {
                         view      = this.component.itemView();
                         presenter = this.component.itemPresenter();
 
-                        final Flowable<Void> attachments = view.attachments();
-                        final Flowable<Void> detachments = view.detachments();
+                        final Flowable<Object> attachments = view.attachments();
+                        final Flowable<Object> detachments = view.detachments();
 
                         if (attachments != null) this.subscriptions.add(attachments.subscribe(dummy -> presenter.onViewAttached(view), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
                         if (detachments != null) this.subscriptions.add(detachments.subscribe(dummy -> presenter.onViewDetached(), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
@@ -97,8 +97,8 @@ final class FlowController {
                         view      = this.component.mainView();
                         presenter = this.component.mainPresenter();
 
-                        final Flowable<Void> attachments = view.attachments();
-                        final Flowable<Void> detachments = view.detachments();
+                        final Flowable<Object> attachments = view.attachments();
+                        final Flowable<Object> detachments = view.detachments();
 
                         if (attachments != null) this.subscriptions.add(attachments.subscribe(dummy -> {
                             presenter.onViewAttached(view);

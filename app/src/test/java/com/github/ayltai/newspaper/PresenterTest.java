@@ -12,16 +12,18 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import com.github.ayltai.newspaper.util.Irrelevant;
+
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.processors.PublishProcessor;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public abstract class PresenterTest<P extends Presenter, V extends Presenter.View> {
-    private final PublishProcessor<Void> attachments = PublishProcessor.create();
-    private final PublishProcessor<Void> detachments = PublishProcessor.create();
+    private final PublishProcessor<Object> attachments = PublishProcessor.create();
+    private final PublishProcessor<Object> detachments = PublishProcessor.create();
 
-    private final CompositeDisposable subscriptions = new CompositeDisposable();
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     private P presenter;
     private V view;
@@ -54,17 +56,17 @@ public abstract class PresenterTest<P extends Presenter, V extends Presenter.Vie
         Mockito.when(this.view.attachments()).thenReturn(this.attachments);
         Mockito.when(this.view.detachments()).thenReturn(this.detachments);
 
-        this.subscriptions.add(this.view.attachments().subscribe(dummy -> this.presenter.onViewAttached(this.view)));
-        this.subscriptions.add(this.view.detachments().subscribe(dummy -> this.presenter.onViewDetached()));
+        this.disposables.add(this.view.attachments().subscribe(dummy -> this.presenter.onViewAttached(this.view)));
+        this.disposables.add(this.view.detachments().subscribe(dummy -> this.presenter.onViewDetached()));
 
-        this.attachments.onNext(null);
+        this.attachments.onNext(Irrelevant.INSTANCE);
     }
 
     @CallSuper
     @After
     public void tearDown() throws Exception {
-        this.detachments.onNext(null);
+        this.detachments.onNext(Irrelevant.INSTANCE);
 
-        this.subscriptions.dispose();
+        this.disposables.dispose();
     }
 }

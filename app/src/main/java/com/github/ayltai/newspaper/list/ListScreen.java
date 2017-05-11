@@ -30,6 +30,7 @@ import com.github.ayltai.newspaper.item.ItemsUpdatedEvent;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.LogUtils;
 
 import flow.ClassKey;
@@ -89,11 +90,10 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     //region Events
 
-    private final BehaviorProcessor<Void> attachedToWindow   = BehaviorProcessor.create();
-    private final BehaviorProcessor<Void> detachedFromWindow = BehaviorProcessor.create();
-
-    private final PublishProcessor<Void> refreshProcessor = PublishProcessor.create();
-    private final Flowable<Void>         refreshFlowable  = this.refreshProcessor.doOnNext(dummy -> this.resetPosition = true);
+    private final BehaviorProcessor<Object> attachedToWindow   = BehaviorProcessor.create();
+    private final BehaviorProcessor<Object> detachedFromWindow = BehaviorProcessor.create();
+    private final PublishProcessor<Object>  refreshProcessor   = PublishProcessor.create();
+    private final Flowable<Object>          refreshFlowable    = this.refreshProcessor.doOnNext(dummy -> this.resetPosition = true);
 
     //endregion
 
@@ -180,7 +180,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @NonNull
     @Override
-    public Flowable<Void> refreshes() {
+    public Flowable<Object> refreshes() {
         return this.refreshFlowable;
     }
 
@@ -190,7 +190,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             .setAction(R.string.action_refresh, view -> {
                 this.swipeRefreshLayout.post(() -> {
                     this.swipeRefreshLayout.setRefreshing(true);
-                    this.refreshProcessor.onNext(null);
+                    this.refreshProcessor.onNext(Irrelevant.INSTANCE);
                 });
             });
 
@@ -204,13 +204,13 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @NonNull
     @Override
-    public Flowable<Void> attachments() {
+    public Flowable<Object> attachments() {
         return this.attachedToWindow;
     }
 
     @NonNull
     @Override
-    public Flowable<Void> detachments() {
+    public Flowable<Object> detachments() {
         return this.detachedFromWindow;
     }
 
@@ -242,14 +242,14 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
             this.swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
             this.swipeRefreshLayout.setColorSchemeResources(ContextUtils.getResourceId(this.getContext(), R.attr.primaryColor));
-            this.swipeRefreshLayout.setOnRefreshListener(() -> this.refreshProcessor.onNext(null));
+            this.swipeRefreshLayout.setOnRefreshListener(() -> this.refreshProcessor.onNext(Irrelevant.INSTANCE));
 
             this.empty = (ViewGroup)view.findViewById(R.id.empty);
 
             this.addView(view);
         }
 
-        this.attachedToWindow.onNext(null);
+        this.attachedToWindow.onNext(Irrelevant.INSTANCE);
     }
 
     @Override
@@ -258,7 +258,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
         if (this.parentKey != null && !((Activity)this.getContext()).isFinishing()) Settings.setPosition(this.parentKey.getCategory(), ((LinearLayoutManager)this.recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
 
-        this.detachedFromWindow.onNext(null);
+        this.detachedFromWindow.onNext(Irrelevant.INSTANCE);
     }
 
     @Override
@@ -270,7 +270,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             this.adapter = null;
         }
 
-        this.detachedFromWindow.onNext(null);
+        this.detachedFromWindow.onNext(Irrelevant.INSTANCE);
     }
 
     //endregion

@@ -12,6 +12,7 @@ import com.github.ayltai.newspaper.PresenterTest;
 import com.github.ayltai.newspaper.RxBus;
 import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
@@ -30,7 +31,7 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
 
     //region Events
 
-    private final PublishProcessor<Void> refreshes = PublishProcessor.create();
+    private final PublishProcessor<Object> refreshes = PublishProcessor.create();
 
     //endregion
 
@@ -76,7 +77,7 @@ public final class ListPresenterTest extends PresenterTest<ListPresenter, ListPr
     public void testWhenRefreshedThenSetItems() throws Exception {
         this.bind();
 
-        this.refreshes.onNext(null);
+        this.refreshes.onNext(Irrelevant.INSTANCE);
 
         Mockito.verify(this.getView(), Mockito.times(2)).setItems(ListPresenterTest.KEY, this.items);
     }

@@ -25,6 +25,7 @@ import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.IntentUtils;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.widget.FaceCenteredImageView;
@@ -39,9 +40,9 @@ import io.reactivex.processors.PublishProcessor;
 public final class ItemViewHolder extends RecyclerView.ViewHolder implements ItemPresenter.View, Closeable {
     //region Events
 
-    private final PublishProcessor<Void>    clicks    = PublishProcessor.create();
+    private final PublishProcessor<Object>  clicks    = PublishProcessor.create();
     private final PublishProcessor<Boolean> bookmarks = PublishProcessor.create();
-    private final PublishProcessor<Void>    shares    = PublishProcessor.create();
+    private final PublishProcessor<Object>  shares    = PublishProcessor.create();
 
     //endregion
 
@@ -94,12 +95,12 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
         this.disposables.add(RxView.clicks(this.itemView)
             .subscribe(
-                v -> this.clicks.onNext(null),
+                v -> this.clicks.onNext(Irrelevant.INSTANCE),
                 error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
         if (this.thumbnail != null) this.disposables.add(RxView.clicks(this.thumbnail)
             .subscribe(
-                v -> this.clicks.onNext(null),
+                v -> this.clicks.onNext(Irrelevant.INSTANCE),
                 error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 
@@ -157,7 +158,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @NonNull
     @Override
-    public Flowable<Void> clicks() {
+    public Flowable<Object> clicks() {
         return this.clicks;
     }
 
@@ -175,7 +176,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Nullable
     @Override
-    public Flowable<Void> shares() {
+    public Flowable<Object> shares() {
         return this.shares;
     }
 
@@ -199,13 +200,13 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
 
     @Nullable
     @Override
-    public Flowable<Void> attachments() {
+    public Flowable<Object> attachments() {
         return null;
     }
 
     @Nullable
     @Override
-    public Flowable<Void> detachments() {
+    public Flowable<Object> detachments() {
         return null;
     }
 

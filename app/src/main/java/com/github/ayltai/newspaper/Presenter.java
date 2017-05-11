@@ -12,10 +12,10 @@ import io.reactivex.Flowable;
 public abstract class Presenter<V extends Presenter.View> extends BasePresenter<V> {
     public interface View {
         @Nullable
-        Flowable<Void> attachments();
+        Flowable<Object> attachments();
 
         @Nullable
-        Flowable<Void> detachments();
+        Flowable<Object> detachments();
 
         @NonNull
         Context getContext();

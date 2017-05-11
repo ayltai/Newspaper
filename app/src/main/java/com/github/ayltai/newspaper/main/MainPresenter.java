@@ -38,9 +38,9 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
 
         void enableNext(boolean enabled);
 
-        Flowable<Void> previousClicks();
+        Flowable<Object> previousClicks();
 
-        Flowable<Void> nextClicks();
+        Flowable<Object> nextClicks();
 
         void navigatePrevious();
 
