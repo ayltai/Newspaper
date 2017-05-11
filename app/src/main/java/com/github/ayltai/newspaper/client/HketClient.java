@@ -1,8 +1,12 @@
 package com.github.ayltai.newspaper.client;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -12,7 +16,6 @@ import android.support.annotation.Nullable;
 import org.apache.commons.io.IOUtils;
 
 import com.github.ayltai.newspaper.BuildConfig;
-import com.github.ayltai.newspaper.client.rss.RssClient;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
@@ -20,14 +23,88 @@ import com.github.ayltai.newspaper.net.HttpClient;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
-final class HketClient extends RssClient {
-    private static final String TAG_QUOTE = "\"";
+final class HketClient extends Client {
+    //region Constants
+
+    private static final int DATE_LENGTH = 10;
+
+    private static final String BASE_URI = "https://topick.hket.com";
+
+    private static final String TAG_DATA_SRC  = "data-src=\"";
+    private static final String TAG_PARAGRAPH = "</p>";
+    private static final String TAG_QUOTE     = "\"";
+
+    //endregion
+
+    private static final ThreadLocal<DateFormat> DATE_FORMAT_LONG = new ThreadLocal<DateFormat>() {
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.ENGLISH);
+        }
+    };
+
+    private static final ThreadLocal<DateFormat> DATE_FORMAT_SHORT = new ThreadLocal<DateFormat>() {
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+        }
+    };
 
     @Inject
     HketClient(@NonNull final HttpClient client, @Nullable final Source source) {
         super(client, source);
+    }
+
+    @NonNull
+    @Override
+    public Maybe<List<Item>> getItems(@NonNull final String url) {
+        return Maybe.create(emitter -> {
+            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
+
+            try {
+                final String     html         = IOUtils.toString(this.client.download(url), Client.ENCODING);
+                final String[]   sections     = StringUtils.substringsBetween(html, "<div class=\"article-listing\">", "</a>");
+                final List<Item> items        = new ArrayList<>(sections.length);
+                final String     categoryName = this.getCategoryName(url);
+
+                for (final String section : sections) {
+                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
+
+                    final Item item = new Item();
+
+                    item.setTitle(StringUtils.substringBetween(section, "<h3 class=\"reduce-line\">", "</h3>"));
+                    item.setLink(HketClient.BASE_URI + StringUtils.substringBetween(section, "href=\"", HketClient.TAG_QUOTE));
+                    item.setSource(this.source.getName());
+                    item.setCategory(categoryName);
+
+                    final String image = StringUtils.substringBetween(section, HketClient.TAG_DATA_SRC, HketClient.TAG_QUOTE);
+                    if (image != null) item.getImages().add(new Image(image));
+
+                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
+                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
+                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
+
+                    final String date = StringUtils.substringBetween(section, "<p class=\"article-listing-detail_datetime\">", HketClient.TAG_PARAGRAPH);
+
+                    if (date != null) {
+                        try {
+                            item.setPublishDate(date.length() > HketClient.DATE_LENGTH ? HketClient.DATE_FORMAT_LONG.get().parse(date) : HketClient.DATE_FORMAT_SHORT.get().parse(date));
+
+                            items.add(item);
+                        } catch (final ParseException e) {
+                            LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
+                        }
+                    }
+                }
+
+                emitter.onSuccess(items);
+            } catch (final IOException e) {
+                emitter.onError(e);
+            }
+        });
     }
 
     @NonNull
@@ -42,7 +119,7 @@ final class HketClient extends RssClient {
                 final List<Image> images          = new ArrayList<>();
 
                 for (final String imageContainer : imageContainers) {
-                    final String imageUrl         = StringUtils.substringBetween(imageContainer, "data-src=\"",HketClient. TAG_QUOTE);
+                    final String imageUrl         = StringUtils.substringBetween(imageContainer, HketClient.TAG_DATA_SRC, HketClient. TAG_QUOTE);
                     final String imageDescription = StringUtils.substringBetween(imageContainer, "alt=\"", HketClient.TAG_QUOTE);
 
                     if (imageUrl != null) images.add(new Image(imageUrl, imageDescription));
@@ -53,7 +130,7 @@ final class HketClient extends RssClient {
                     item.getImages().addAll(images);
                 }
 
-                final String[]      contents = StringUtils.substringsBetween(html, "<p>", "</p>");
+                final String[]      contents = StringUtils.substringsBetween(html, "<p>", HketClient.TAG_PARAGRAPH);
                 final StringBuilder builder  = new StringBuilder();
 
                 for (final String content : contents) builder.append(content).append("<br>");

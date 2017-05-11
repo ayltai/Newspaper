@@ -50,11 +50,10 @@ final class AppleDailyClient extends Client {
     @Override
     public Maybe<List<Item>> getItems(@NonNull final String url) {
         return Maybe.create(emitter -> {
+            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
+
             try {
-                final String html = IOUtils.toString(this.client.download(url), Client.ENCODING);
-
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
-
+                final String     html         = IOUtils.toString(this.client.download(url), Client.ENCODING);
                 final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"itemContainer\">", "<div class=\"clear\"></div>"), "div class=\"item\">", AppleDailyClient.TAG_DIV);
                 final List<Item> items        = new ArrayList<>(sections.length);
                 final String     categoryName = this.getCategoryName(url);

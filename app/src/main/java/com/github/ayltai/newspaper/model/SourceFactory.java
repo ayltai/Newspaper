@@ -52,7 +52,7 @@ public final class SourceFactory {
         this.sources.put(sources[i++], SourceFactory.createHeadlineRealtimeSource(sources, categories));
         this.sources.put(sources[i++], SourceFactory.createSkyPostSource(sources, categories));
         this.sources.put(sources[i++], SourceFactory.createEconomicJournalSource(sources, categories));
-        this.sources.put(sources[i], SourceFactory.createRadioTelevisionSource(sources, categories));
+        this.sources.put(sources[i],   SourceFactory.createRadioTelevisionSource(sources, categories));
     }
 
     @Nullable
@@ -116,13 +116,8 @@ public final class SourceFactory {
     @NonNull
     private static Source createEconomicTimesSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[4], new RealmList<>(
-            new Category("http://www.hket.com/rss/headlines", categories[0]),
-            new Category("http://www.hket.com/rss/hongkong", categories[1]),
-            new Category("http://www.hket.com/rss/world", categories[2]),
-            new Category("http://www.hket.com/rss/china", categories[3]),
-            new Category("http://www.hket.com/rss/finance", categories[4]),
-            new Category("http://www.hket.com/rss/lifestyle", categories[8]),
-            new Category("http://www.hket.com/rss/technology", categories[9])));
+            new Category("https://topick.hket.com/srat006/%E6%96%B0%E8%81%9E", categories[1]),
+            new Category("https://topick.hket.com/srat055/%E4%BC%91%E9%96%92", categories[8])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")

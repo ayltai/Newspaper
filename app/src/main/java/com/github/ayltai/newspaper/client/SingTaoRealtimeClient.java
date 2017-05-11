@@ -47,11 +47,10 @@ final class SingTaoRealtimeClient extends Client {
     @Override
     public Maybe<List<Item>> getItems(@NonNull final String url) {
         return Maybe.create(emitter -> {
+            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
+
             try {
-                final String html = IOUtils.toString(this.client.download(url), Client.ENCODING);
-
-                if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
-
+                final String     html         = IOUtils.toString(this.client.download(url), Client.ENCODING);
                 final String[]   sections     = StringUtils.substringsBetween(html, "<div class=\"news-wrap\">", "</a>\n</div>");
                 final List<Item> items        = new ArrayList<>(sections.length);
                 final String     categoryName = this.getCategoryName(url);
