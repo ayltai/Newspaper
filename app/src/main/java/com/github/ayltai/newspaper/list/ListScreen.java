@@ -19,6 +19,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
 import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
@@ -27,16 +30,16 @@ import com.github.ayltai.newspaper.item.ItemsUpdatedEvent;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.LogUtils;
 
 import flow.ClassKey;
+import io.reactivex.Flowable;
+import io.reactivex.processors.BehaviorProcessor;
+import io.reactivex.processors.PublishProcessor;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import rx.Observable;
-import rx.Subscriber;
-import rx.subjects.BehaviorSubject;
-import rx.subjects.PublishSubject;
 
 @SuppressLint("ViewConstructor")
 public final class ListScreen extends FrameLayout implements ListPresenter.View, Closeable {
@@ -87,11 +90,10 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     //region Events
 
-    private final BehaviorSubject<Void> attachedToWindow   = BehaviorSubject.create();
-    private final BehaviorSubject<Void> detachedFromWindow = BehaviorSubject.create();
-
-    private final PublishSubject<Void> refreshSubject    = PublishSubject.create();
-    private final Observable<Void>     refreshObservable = this.refreshSubject.doOnNext(dummy -> this.resetPosition = true);
+    private final BehaviorProcessor<Object> attachedToWindow   = BehaviorProcessor.create();
+    private final BehaviorProcessor<Object> detachedFromWindow = BehaviorProcessor.create();
+    private final PublishProcessor<Object>  refreshProcessor   = PublishProcessor.create();
+    private final Flowable<Object>          refreshFlowable    = this.refreshProcessor.doOnNext(dummy -> this.resetPosition = true);
 
     //endregion
 
@@ -99,7 +101,11 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     private final Subscriber<ItemsUpdatedEvent> subscriber = new Subscriber<ItemsUpdatedEvent>() {
         @Override
-        public void onCompleted() {
+        public void onComplete() {
+        }
+
+        @Override
+        public void onSubscribe(final Subscription subscription) {
         }
 
         @Override
@@ -174,8 +180,8 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @NonNull
     @Override
-    public Observable<Void> refreshes() {
-        return this.refreshObservable;
+    public Flowable<Object> refreshes() {
+        return this.refreshFlowable;
     }
 
     @Override
@@ -184,7 +190,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             .setAction(R.string.action_refresh, view -> {
                 this.swipeRefreshLayout.post(() -> {
                     this.swipeRefreshLayout.setRefreshing(true);
-                    this.refreshSubject.onNext(null);
+                    this.refreshProcessor.onNext(Irrelevant.INSTANCE);
                 });
             });
 
@@ -198,13 +204,13 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
     @NonNull
     @Override
-    public Observable<Void> attachments() {
+    public Flowable<Object> attachments() {
         return this.attachedToWindow;
     }
 
     @NonNull
     @Override
-    public Observable<Void> detachments() {
+    public Flowable<Object> detachments() {
         return this.detachedFromWindow;
     }
 
@@ -236,14 +242,14 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
             this.swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
             this.swipeRefreshLayout.setColorSchemeResources(ContextUtils.getResourceId(this.getContext(), R.attr.primaryColor));
-            this.swipeRefreshLayout.setOnRefreshListener(() -> this.refreshSubject.onNext(null));
+            this.swipeRefreshLayout.setOnRefreshListener(() -> this.refreshProcessor.onNext(Irrelevant.INSTANCE));
 
             this.empty = (ViewGroup)view.findViewById(R.id.empty);
 
             this.addView(view);
         }
 
-        this.attachedToWindow.onNext(null);
+        this.attachedToWindow.onNext(Irrelevant.INSTANCE);
     }
 
     @Override
@@ -252,7 +258,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
 
         if (this.parentKey != null && !((Activity)this.getContext()).isFinishing()) Settings.setPosition(this.parentKey.getCategory(), ((LinearLayoutManager)this.recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
 
-        this.detachedFromWindow.onNext(null);
+        this.detachedFromWindow.onNext(Irrelevant.INSTANCE);
     }
 
     @Override
@@ -264,7 +270,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             this.adapter = null;
         }
 
-        this.detachedFromWindow.onNext(null);
+        this.detachedFromWindow.onNext(Irrelevant.INSTANCE);
     }
 
     //endregion

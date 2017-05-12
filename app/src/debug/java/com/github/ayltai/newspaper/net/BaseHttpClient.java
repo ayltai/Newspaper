@@ -31,11 +31,12 @@ public abstract class BaseHttpClient {
             .writeTimeout(BaseHttpClient.WRITE_TIMEOUT, TimeUnit.SECONDS)
             .build();
 
-        if (TestUtils.isRunningInstrumentalTest() && HttpClient.ASSETS.isEmpty()) {
-            BaseHttpClient.ASSETS.put("http://skypost.ulifestyle.com.hk/rss/sras001", R.raw.rss_hk);
-            BaseHttpClient.ASSETS.put("http://rthk.hk/rthk/news/rss/c_expressnews_cinternational.xml", R.raw.rss_intl);
-            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00013.xml", R.raw.rss_china);
-            BaseHttpClient.ASSETS.put("http://skypost.ulifestyle.com.hk/rss/sras002", R.raw.rss_entertainment);
+        if (TestUtils.isRunningInstrumentalTest() && BaseHttpClient.ASSETS.isEmpty()) {
+            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00001.xml", R.raw.rss_china);
+            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00002.xml", R.raw.rss_hk);
+            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00014.xml", R.raw.rss_entertainment);
+            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00013.xml", R.raw.rss_intl);
+            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00004.xml", R.raw.rss_hk);
         }
     }
 }

@@ -7,21 +7,23 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
+import org.robolectric.shadows.multidex.ShadowMultiDex;
+import com.github.ayltai.newspaper.util.Irrelevant;
+
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.processors.PublishProcessor;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, shadows = { ShadowMultiDex.class })
 public abstract class PresenterTest<P extends Presenter, V extends Presenter.View> {
-    private final PublishSubject<Void> attachments = PublishSubject.create();
-    private final PublishSubject<Void> detachments = PublishSubject.create();
+    private final PublishProcessor<Object> attachments = PublishProcessor.create();
+    private final PublishProcessor<Object> detachments = PublishProcessor.create();
 
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     private P presenter;
     private V view;
@@ -45,8 +47,6 @@ public abstract class PresenterTest<P extends Presenter, V extends Presenter.Vie
     @CallSuper
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-
         this.presenter = this.createPresenter();
         this.view      = this.createView();
 
@@ -54,17 +54,17 @@ public abstract class PresenterTest<P extends Presenter, V extends Presenter.Vie
         Mockito.when(this.view.attachments()).thenReturn(this.attachments);
         Mockito.when(this.view.detachments()).thenReturn(this.detachments);
 
-        this.subscriptions.add(this.view.attachments().subscribe(dummy -> this.presenter.onViewAttached(this.view)));
-        this.subscriptions.add(this.view.detachments().subscribe(dummy -> this.presenter.onViewDetached()));
+        this.disposables.add(this.view.attachments().subscribe(dummy -> this.presenter.onViewAttached(this.view)));
+        this.disposables.add(this.view.detachments().subscribe(dummy -> this.presenter.onViewDetached()));
 
-        this.attachments.onNext(null);
+        this.attachments.onNext(Irrelevant.INSTANCE);
     }
 
     @CallSuper
     @After
     public void tearDown() throws Exception {
-        this.detachments.onNext(null);
+        this.detachments.onNext(Irrelevant.INSTANCE);
 
-        this.subscriptions.unsubscribe();
+        this.disposables.dispose();
     }
 }

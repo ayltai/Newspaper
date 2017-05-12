@@ -26,8 +26,8 @@ import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.LogUtils;
 
+import io.reactivex.disposables.CompositeDisposable;
 import io.realm.Realm;
-import rx.subscriptions.CompositeSubscription;
 
 public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
     //region Variables
@@ -39,7 +39,7 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
 
     @Inject Realm realm;
 
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable disposables;
 
     //endregion
 
@@ -75,16 +75,16 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
         final ListPresenter presenter = this.component.listPresenter();
         final ListScreen    view      = (ListScreen)this.component.listView();
 
-        if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
+        if (this.disposables == null) this.disposables = new CompositeDisposable();
 
-        this.subscriptions.add(view.attachments().subscribe(
+        this.disposables.add(view.attachments().subscribe(
             dummy -> {
                 presenter.onViewAttached(view);
                 presenter.bind(this.realm, new ListScreen.Key(position == this.categories.size() - 1 ? Constants.CATEGORY_BOOKMARK : this.categories.get(position)));
             },
             error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
-        this.subscriptions.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+        this.disposables.add(view.detachments().subscribe(dummy -> presenter.onViewDetached(), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
         this.views.put(position, view);
         container.addView(view);
@@ -111,9 +111,9 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
     public /* final */ void close() {
         for (int i = 0; i < this.views.size(); i++) this.closeView(this.views.get(this.views.keyAt(i)));
 
-        if (this.subscriptions != null && this.subscriptions.hasSubscriptions()) {
-            this.subscriptions.unsubscribe();
-            this.subscriptions = null;
+        if (this.disposables != null && !this.disposables.isDisposed() && this.disposables.size() > 0) {
+            this.disposables.dispose();
+            this.disposables = null;
         }
 
         for (int i = 0; i < this.views.size(); i++) this.closeView(this.views.get(this.views.keyAt(i)));

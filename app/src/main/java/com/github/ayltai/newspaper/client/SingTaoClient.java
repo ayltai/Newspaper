@@ -1,10 +1,12 @@
 package com.github.ayltai.newspaper.client;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,8 +25,8 @@ import com.github.ayltai.newspaper.net.HttpClient;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
-import rx.Emitter;
-import rx.Observable;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 final class SingTaoClient extends Client {
     //region Constants
@@ -49,54 +51,62 @@ final class SingTaoClient extends Client {
 
     @NonNull
     @Override
-    public Observable<List<Item>> getItems(@NonNull final String url) {
-        return Observable.create(emitter -> {
-            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
-
+    public Single<List<Item>> getItems(@NonNull final String url) {
+        return Single.create(emitter -> {
             try {
-                final String     html         = IOUtils.toString(this.client.download(url), Client.ENCODING);
-                final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"main list\">", "<input type=\"hidden\" id=\"totalnews\""), "underline\">", "</a>\n</div>");
-                final List<Item> items        = new ArrayList<>(sections.length);
-                final String     categoryName = this.getCategoryName(url);
+                final InputStream inputStream = this.client.download(url);
 
-                for (final String section : sections) {
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
+                if (inputStream == null) {
+                    LogUtils.getInstance().i(this.getClass().getSimpleName(), "No content from URL " + url);
 
-                    final Item item = new Item();
+                    emitter.onSuccess(Collections.emptyList());
+                } else {
+                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
 
-                    item.setTitle(StringUtils.substringBetween(section, "<div class=\"title\">", SingTaoClient.TAG_CLOSE));
-                    item.setLink(SingTaoClient.BASE_URI + StringUtils.substringBetween(section, "<a href=\"", "\">"));
-                    item.setDescription(StringUtils.substringBetween(section, "<div class=\"des\">　　(星島日報報道)", SingTaoClient.TAG_CLOSE));
-                    item.setSource(this.source.getName());
-                    item.setCategory(categoryName);
+                    final String     html         = IOUtils.toString(inputStream, Client.ENCODING);
+                    final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"main list\">", "<input type=\"hidden\" id=\"totalnews\""), "underline\">", "</a>\n</div>");
+                    final List<Item> items        = new ArrayList<>(sections.length);
+                    final String     categoryName = this.getCategoryName(url);
 
-                    final String image = StringUtils.substringBetween(section, "<img src=\"", SingTaoClient.TAG_QUOTE);
-                    if (image != null) item.getImages().add(new Image(image));
+                    for (final String section : sections) {
+                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
 
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
+                        final Item item = new Item();
 
-                    try {
-                        item.setPublishDate(SingTaoClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o\"></i>", SingTaoClient.TAG_CLOSE)));
+                        item.setTitle(StringUtils.substringBetween(section, "<div class=\"title\">", SingTaoClient.TAG_CLOSE));
+                        item.setLink(SingTaoClient.BASE_URI + StringUtils.substringBetween(section, "<a href=\"", "\">"));
+                        item.setDescription(StringUtils.substringBetween(section, "<div class=\"des\">　　(星島日報報道)", SingTaoClient.TAG_CLOSE));
+                        item.setSource(this.source.getName());
+                        item.setCategory(categoryName);
 
-                        items.add(item);
-                    } catch (final ParseException e) {
-                        LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
+                        final String image = StringUtils.substringBetween(section, "<img src=\"", SingTaoClient.TAG_QUOTE);
+                        if (image != null) item.getImages().add(new Image(image));
+
+                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
+                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
+                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
+
+                        try {
+                            item.setPublishDate(SingTaoClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o\"></i>", SingTaoClient.TAG_CLOSE)));
+
+                            items.add(item);
+                        } catch (final ParseException e) {
+                            LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
+                        }
                     }
-                }
 
-                emitter.onNext(items);
+                    emitter.onSuccess(items);
+                }
             } catch (final IOException e) {
-                emitter.onError(e);
+                this.handleError(emitter, e);
             }
-        }, Emitter.BackpressureMode.BUFFER);
+        });
     }
 
     @NonNull
     @Override
-    public Observable<Item> updateItem(@NonNull final Item item) {
-        return Observable.create(emitter -> {
+    public Maybe<Item> updateItem(@NonNull final Item item) {
+        return Maybe.create(emitter -> {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
 
             try {
@@ -124,10 +134,10 @@ final class SingTaoClient extends Client {
                 item.setDescription(builder.toString());
                 item.setIsFullDescription(true);
 
-                emitter.onNext(item);
+                emitter.onSuccess(item);
             } catch (final IOException e) {
-                emitter.onError(e);
+                this.handleError(emitter, e);
             }
-        }, Emitter.BackpressureMode.BUFFER);
+        });
     }
 }

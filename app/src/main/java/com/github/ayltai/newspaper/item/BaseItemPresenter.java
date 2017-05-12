@@ -18,11 +18,11 @@ import com.github.ayltai.newspaper.main.ImagesUpdatedEvent;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View> {
     public interface View extends Presenter.View {
@@ -42,13 +42,13 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
         void setIsBookmarked(boolean isBookmarked);
 
-        @Nullable Observable<Void> clicks();
+        @Nullable Flowable<Object> clicks();
 
-        @Nullable Observable<Integer> zooms();
+        @Nullable Flowable<Integer> zooms();
 
-        @Nullable Observable<Boolean> bookmarks();
+        @Nullable Flowable<Boolean> bookmarks();
 
-        @Nullable Observable<Void> shares();
+        @Nullable Flowable<Object> shares();
 
         void showItem(@NonNull ListScreen.Key parentKey, @NonNull Item item);
 
@@ -61,9 +61,9 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
     private final Realm realm;
 
-    protected CompositeSubscription subscriptions;
-    protected ListScreen.Key        parentKey;
-    protected Item                  item;
+    protected CompositeDisposable disposables;
+    protected ListScreen.Key      parentKey;
+    protected Item                item;
 
     private int     type = Configs.getDefaultListViewType();
     private boolean showFullDescription;
@@ -85,24 +85,26 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
             this.bindView();
 
-            if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
+            if (this.disposables == null) this.disposables = new CompositeDisposable();
 
-            if (this.showFullDescription && !this.item.isFullDescription()) this.subscriptions.add(ClientFactory.getInstance(this.getView().getContext()).getClient(this.item.getSource()).updateItem(this.item.clone())
+            if (this.showFullDescription && !this.item.isFullDescription()) this.disposables.add(ClientFactory.getInstance(this.getView().getContext()).getClient(this.item.getSource()).updateItem(this.item.clone())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .filter(updatedItem -> updatedItem != null)
                 .subscribe(
                     updatedItem -> {
-                        this.update(updatedItem);
+                        if (this.item.getDescription() == null || this.item.getDescription().length() == 0 || (updatedItem.getDescription() != null && updatedItem.getDescription().length() > 0)) {
+                            this.update(updatedItem);
 
-                        this.getView().setDescription(this.item.getDescription());
+                            this.getView().setDescription(this.item.getDescription());
 
-                        if (!this.item.getImages().isEmpty()) {
-                            this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
-                            this.getView().setThumbnails(this.item.getImages());
+                            if (!this.item.getImages().isEmpty()) {
+                                this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
+                                this.getView().setThumbnails(this.item.getImages());
+                            }
+
+                            this.bus().send(new ImagesUpdatedEvent());
                         }
-
-                        this.bus().send(new ImagesUpdatedEvent());
                     },
                     error -> this.log().w(this.getClass().getSimpleName(), error.getMessage(), error)));
         }
@@ -138,9 +140,9 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     public final void onViewDetached() {
         super.onViewDetached();
 
-        if (this.subscriptions != null && this.subscriptions.hasSubscriptions()) {
-            this.subscriptions.unsubscribe();
-            this.subscriptions = null;
+        if (this.disposables != null && !this.disposables.isDisposed() && this.disposables.size() > 0) {
+            this.disposables.dispose();
+            this.disposables = null;
         }
     }
 
@@ -187,7 +189,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     //region Event handlers
 
     private void attachEvents() {
-        if (this.subscriptions == null) this.subscriptions = new CompositeSubscription();
+        if (this.disposables == null) this.disposables = new CompositeDisposable();
 
         this.attachClicks();
         this.attachZooms();
@@ -200,7 +202,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     private void attachZooms() {
         if (this.getView() == null) return;
 
-        if (this.getView().zooms() != null) this.subscriptions.add(this.getView().zooms().subscribe(index -> {
+        if (this.getView().zooms() != null) this.disposables.add(this.getView().zooms().subscribe(index -> {
             if (this.item != null && !this.item.getImages().isEmpty() && this.item.getImages().size() > index) this.getView().showMedia(this.item.getImages().get(index).getUrl());
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }

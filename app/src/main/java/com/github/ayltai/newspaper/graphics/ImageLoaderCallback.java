@@ -14,10 +14,9 @@ import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.piasy.biv.loader.ImageLoader;
 
-import rx.Emitter;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public final class ImageLoaderCallback implements ImageLoader.Callback {
     private static Handler HANDLER = new Handler(Looper.getMainLooper());
@@ -63,7 +62,7 @@ public final class ImageLoaderCallback implements ImageLoader.Callback {
         @SuppressWarnings("checkstyle:illegalcatch")
         @Override
         public void run() {
-            Observable.<Bitmap>create(emitter -> emitter.onNext(BitmapFactory.decodeFile(this.image.getAbsolutePath(), ImageUtils.createOptions(this.image, Constants.MAX_IMAGE_WIDTH, Constants.MAX_IMAGE_HEIGHT))), Emitter.BackpressureMode.BUFFER)
+            Single.<Bitmap>create(emitter -> emitter.onSuccess(BitmapFactory.decodeFile(this.image.getAbsolutePath(), ImageUtils.createOptions(this.image, Constants.MAX_IMAGE_WIDTH, Constants.MAX_IMAGE_HEIGHT))))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(

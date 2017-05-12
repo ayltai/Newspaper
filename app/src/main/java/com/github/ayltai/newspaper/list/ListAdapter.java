@@ -14,6 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.RxBus;
@@ -24,17 +27,16 @@ import com.github.ayltai.newspaper.item.ItemViewHolder;
 import com.github.ayltai.newspaper.item.ItemsUpdatedEvent;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.util.LogUtils;
-import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding2.view.RxView;
 
+import io.reactivex.disposables.CompositeDisposable;
 import io.realm.Realm;
-import rx.Subscriber;
-import rx.subscriptions.CompositeSubscription;
 
 final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements Closeable {
     //region Variables
 
-    private final Map<ItemViewHolder, ItemPresenter> map           = new HashMap<>();
-    private final CompositeSubscription              subscriptions = new CompositeSubscription();
+    private final Map<ItemViewHolder, ItemPresenter> map         = new HashMap<>();
+    private final CompositeDisposable                disposables = new CompositeDisposable();
     private final Context                            context;
     private final ListScreen.Key                     parentKey;
     private final int                                listViewType;
@@ -43,7 +45,11 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
 
     private final Subscriber<ItemUpdatedEvent> subscriber = new Subscriber<ItemUpdatedEvent>() {
         @Override
-        public void onCompleted() {
+        public void onComplete() {
+        }
+
+        @Override
+        public void onSubscribe(final Subscription subscription) {
         }
 
         @Override
@@ -53,7 +59,7 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
 
         @Override
         public void onNext(final ItemUpdatedEvent itemUpdatedEvent) {
-            new ItemManager(ListAdapter.this.realm).getItemsObservable(Collections.emptyList(), Collections.singletonList(ListAdapter.this.parentKey.getCategory()))
+            new ItemManager(ListAdapter.this.realm).getItemsSingle(Collections.emptyList(), Collections.singletonList(ListAdapter.this.parentKey.getCategory()))
                 .subscribe(items -> {
                     if (Constants.CATEGORY_BOOKMARK.equals(ListAdapter.this.parentKey.getCategory())) {
                         if (itemUpdatedEvent.getIndex() < 0) {
@@ -105,8 +111,8 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
         final ItemViewHolder holder    = new ItemViewHolder(view);
         final ItemPresenter  presenter = new ItemPresenter(this.realm);
 
-        this.subscriptions.add(RxView.attaches(view).subscribe(dummy -> presenter.onViewAttached(holder)));
-        this.subscriptions.add(RxView.detaches(view).subscribe(dummy -> presenter.onViewDetached()));
+        this.disposables.add(RxView.attaches(view).subscribe(dummy -> presenter.onViewAttached(holder)));
+        this.disposables.add(RxView.detaches(view).subscribe(dummy -> presenter.onViewDetached()));
 
         this.map.put(holder, presenter);
 
@@ -124,7 +130,7 @@ final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> implements 
     public void close() {
         RxBus.getInstance().unregister(ItemUpdatedEvent.class, this.subscriber);
 
-        if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
+        if (!this.disposables.isDisposed() && this.disposables.size() > 0) this.disposables.dispose();
 
         for (final ItemViewHolder holder : this.map.keySet()) holder.close();
 

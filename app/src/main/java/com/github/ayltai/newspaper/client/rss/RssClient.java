@@ -17,9 +17,8 @@ import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
 
+import io.reactivex.Single;
 import io.realm.RealmList;
-import rx.Emitter;
-import rx.Observable;
 
 public abstract class RssClient extends Client {
     //@Inject
@@ -29,12 +28,12 @@ public abstract class RssClient extends Client {
 
     @NonNull
     @Override
-    public final Observable<List<Item>> getItems(@NonNull final String url) {
+    public final Single<List<Item>> getItems(@NonNull final String url) {
         final String categoryName = this.getCategoryName(url);
 
-        return Observable.create(emitter -> {
+        return Single.create(emitter -> {
             if (this.source == null) {
-                emitter.onCompleted();
+                emitter.onSuccess(Collections.emptyList());
             } else {
                 InputStream inputStream = null;
 
@@ -48,14 +47,14 @@ public abstract class RssClient extends Client {
 
                     Collections.sort(items);
 
-                    emitter.onNext(items);
+                    emitter.onSuccess(items);
                 } catch (final XmlPullParserException | IOException e) {
-                    emitter.onError(e);
+                    this.handleError(emitter, e);
                 } finally {
                     IOUtils.closeQuietly(inputStream);
                 }
             }
-        }, Emitter.BackpressureMode.BUFFER);
+        });
     }
 
     @NonNull

@@ -11,12 +11,11 @@ import android.support.annotation.Nullable;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.model.Item;
 
+import io.reactivex.Single;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import rx.Emitter;
-import rx.Observable;
 
 public class ItemManager {
     private static final String ERROR_REALM = "Realm is closed";
@@ -63,13 +62,13 @@ public class ItemManager {
     }
 
     @NonNull
-    public Observable<List<Item>> getItemsObservable(@NonNull final List<String> sources, @NonNull final List<String> categories) {
+    public Single<List<Item>> getItemsSingle(@NonNull final List<String> sources, @NonNull final List<String> categories) {
         if (this.realm.isClosed()) throw new IllegalStateException(ItemManager.ERROR_REALM);
 
-        return Observable.create(emitter -> {
+        return Single.create(emitter -> {
             final List<Item> items = this.getItems(sources, categories);
 
-            emitter.onNext(items.isEmpty() ? new ArrayList<>() : items);
-        }, Emitter.BackpressureMode.BUFFER);
+            emitter.onSuccess(items.isEmpty() ? new ArrayList<>() : items);
+        });
     }
 }

@@ -29,12 +29,12 @@ import flow.KeyDispatcher;
 import flow.KeyParceler;
 import flow.State;
 import flow.TraversalCallback;
+import io.reactivex.Flowable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.realm.Realm;
-import rx.Observable;
-import rx.subscriptions.CompositeSubscription;
 
 final class FlowController {
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
+    private final CompositeDisposable subscriptions = new CompositeDisposable();
 
     //region Cached presenters and views
 
@@ -88,8 +88,8 @@ final class FlowController {
                         view      = this.component.itemView();
                         presenter = this.component.itemPresenter();
 
-                        final Observable<Void> attachments = view.attachments();
-                        final Observable<Void> detachments = view.detachments();
+                        final Flowable<Object> attachments = view.attachments();
+                        final Flowable<Object> detachments = view.detachments();
 
                         if (attachments != null) this.subscriptions.add(attachments.subscribe(dummy -> presenter.onViewAttached(view), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
                         if (detachments != null) this.subscriptions.add(detachments.subscribe(dummy -> presenter.onViewDetached(), error -> Log.e(this.getClass().getSimpleName(), error.getMessage(), error)));
@@ -97,8 +97,8 @@ final class FlowController {
                         view      = this.component.mainView();
                         presenter = this.component.mainPresenter();
 
-                        final Observable<Void> attachments = view.attachments();
-                        final Observable<Void> detachments = view.detachments();
+                        final Flowable<Object> attachments = view.attachments();
+                        final Flowable<Object> detachments = view.detachments();
 
                         if (attachments != null) this.subscriptions.add(attachments.subscribe(dummy -> {
                             presenter.onViewAttached(view);
@@ -147,7 +147,7 @@ final class FlowController {
     }
 
     void onDestroy() {
-        if (this.subscriptions.hasSubscriptions()) this.subscriptions.unsubscribe();
+        if (!this.subscriptions.isDisposed() && this.subscriptions.size() > 0) this.subscriptions.dispose();
 
         for (final Presenter.View view : this.screens.values()) {
             if (view instanceof Closeable) {

@@ -8,50 +8,49 @@ import android.support.annotation.NonNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.PresenterTest;
 import com.github.ayltai.newspaper.RxBus;
 import com.github.ayltai.newspaper.data.ItemManager;
-import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.list.ListScreen;
+import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
+import io.reactivex.Single;
+import io.reactivex.processors.PublishProcessor;
 import io.realm.RealmList;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 
 public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPresenter.View> {
     //region Constants
 
-    private static final String                 KEY_PARENT_URL    = Constants.CATEGORY_BOOKMARK;
-    private static final String                 ITEM_TITLE        = "title";
-    private static final String                 ITEM_DESCRIPTION  = "description";
-    private static final String                 ITEM_SOURCE       = "source";
-    private static final String                 ITEM_LINK         = "link";
-    private static final RealmList<Image>       ITEM_MEDIA_URLS   = new RealmList<>(new Image("media url"));
-    private static final Date                   ITEM_PUBLISH_DATE = new Date();
-
-    private static final ListScreen.Key KEY_PARENT = new ListScreen.Key(ItemPresenterTest.KEY_PARENT_URL);
+    private static final String           KEY_PARENT_URL    = Constants.CATEGORY_BOOKMARK;
+    private static final String           ITEM_TITLE        = "title";
+    private static final String           ITEM_DESCRIPTION  = "description";
+    private static final String           ITEM_SOURCE       = "source";
+    private static final String           ITEM_LINK         = "link";
+    private static final RealmList<Image> ITEM_MEDIA_URLS   = new RealmList<>(new Image("media url"));
+    private static final Date             ITEM_PUBLISH_DATE = new Date();
+    private static final ListScreen.Key   KEY_PARENT        = new ListScreen.Key(ItemPresenterTest.KEY_PARENT_URL);
 
     //endregion
 
     //region Events
 
-    private final PublishSubject<Void>    clicks    = PublishSubject.create();
-    private final PublishSubject<Integer> zooms     = PublishSubject.create();
-    private final PublishSubject<Boolean> bookmarks = PublishSubject.create();
-    private final PublishSubject<Void>    shares    = PublishSubject.create();
+    private final PublishProcessor<Object>  clicks    = PublishProcessor.create();
+    private final PublishProcessor<Integer> zooms     = PublishProcessor.create();
+    private final PublishProcessor<Boolean> bookmarks = PublishProcessor.create();
+    private final PublishProcessor<Object>  shares    = PublishProcessor.create();
 
     //endregion
 
     //region Mocks
 
-    @Mock private Item item;
+    private Item item;
 
     //endregion
 
@@ -64,11 +63,12 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         this.items.add(this.item);
 
         final ItemManager itemManager = Mockito.mock(ItemManager.class);
-        Mockito.doReturn(Observable.just(this.items)).when(itemManager).getItemsObservable(Collections.emptyList(), Collections.singletonList(ItemPresenterTest.KEY_PARENT_URL));
+        Mockito.doReturn(Single.just(this.items)).when(itemManager).getItemsSingle(Collections.emptyList(), Collections.singletonList(ItemPresenterTest.KEY_PARENT_URL));
 
         final ItemPresenter presenter = Mockito.spy(new ItemPresenter(null));
         Mockito.doReturn(itemManager).when(presenter).getItemManager();
         Mockito.doNothing().when(presenter).update(ArgumentMatchers.any(Item.class));
+        Mockito.doNothing().when(presenter).update(ArgumentMatchers.anyBoolean());
 
         final RxBus bus = Mockito.mock(RxBus.class);
         Mockito.doReturn(bus).when(presenter).bus();
@@ -95,14 +95,15 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     @Override
     @Before
     public void setUp() throws Exception {
-        super.setUp();
+        this.item = new Item();
+        this.item.setTitle(ItemPresenterTest.ITEM_TITLE);
+        this.item.setDescription(ItemPresenterTest.ITEM_DESCRIPTION);
+        this.item.setSource(ItemPresenterTest.ITEM_SOURCE);
+        this.item.setLink(ItemPresenterTest.ITEM_LINK);
+        this.item.getImages().addAll(ItemPresenterTest.ITEM_MEDIA_URLS);
+        this.item.setPublishDate(ItemPresenterTest.ITEM_PUBLISH_DATE);
 
-        Mockito.doReturn(ItemPresenterTest.ITEM_TITLE).when(this.item).getTitle();
-        Mockito.doReturn(ItemPresenterTest.ITEM_DESCRIPTION).when(this.item).getDescription();
-        Mockito.doReturn(ItemPresenterTest.ITEM_SOURCE).when(this.item).getSource();
-        Mockito.doReturn(ItemPresenterTest.ITEM_LINK).when(this.item).getLink();
-        Mockito.doReturn(ItemPresenterTest.ITEM_MEDIA_URLS).when(this.item).getImages();
-        Mockito.doReturn(ItemPresenterTest.ITEM_PUBLISH_DATE).when(this.item).getPublishDate();
+        super.setUp();
     }
 
     //region Tests
@@ -124,7 +125,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     public void testWhenClickedThenShowItem() throws Exception {
         this.bind();
 
-        this.clicks.onNext(null);
+        this.clicks.onNext(Irrelevant.INSTANCE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).showItem(ItemPresenterTest.KEY_PARENT, this.item);
     }
@@ -151,7 +152,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     public void testWhenSharedThenShare() throws Exception {
         this.bind();
 
-        this.shares.onNext(null);
+        this.shares.onNext(Irrelevant.INSTANCE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).share(this.item.getLink());
     }

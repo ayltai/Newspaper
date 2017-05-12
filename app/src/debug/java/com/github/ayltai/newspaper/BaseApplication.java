@@ -1,14 +1,14 @@
 package com.github.ayltai.newspaper;
 
-import android.app.Application;
 import android.os.StrictMode;
+import android.support.multidex.MultiDexApplication;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.stetho.Stetho;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.squareup.leakcanary.LeakCanary;
 
-public abstract class BaseApplication extends Application {
+public abstract class BaseApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();

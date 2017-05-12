@@ -22,7 +22,7 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter tools,platform-tools,extra-android-m2repository,extra-android-support,extra-google-m2repository,extra-google-google_play_services
     - case $CIRCLE_NODE_INDEX in 0) (source scripts/ci-helpers.sh && downloadAndroidSdk 16 && downloadAndroidSdk 21) ;; 1) (source scripts/ci-helpers.sh && downloadAndroidSdk 17 && downloadAndroidSdk 22) ;; 2) (source scripts/ci-helpers.sh && downloadAndroidSdk 18 && downloadAndroidSdk 23) ;; 3) (source scripts/ci-helpers.sh && downloadAndroidSdk 19 && downloadAndroidSdk 24) ;; esac:
         parallel: true
-        timeout: 1800
+        timeout: 3600
   post:
     - android list targets
 test:
@@ -32,10 +32,10 @@ test:
   override:
     - case $CIRCLE_NODE_INDEX in 0) (source scripts/ci-helpers.sh && generateTestReports && runInstrumentalTests 16) ;; 1) (source scripts/ci-helpers.sh && inspectCode && runInstrumentalTests 17) ;; 2) (source scripts/ci-helpers.sh && runInstrumentalTests 18) ;; 3) (source scripts/ci-helpers.sh && runInstrumentalTests 19) ;; esac:
         parallel: true
-        timeout: 1800
+        timeout: 3600
     - case $CIRCLE_NODE_INDEX in 0) (source scripts/ci-helpers.sh && runInstrumentalTests 21) ;; 1) (source scripts/ci-helpers.sh && runInstrumentalTests 22) ;; 2) (source scripts/ci-helpers.sh && runInstrumentalTests 23 && buildRelease) ;; 3) (source scripts/ci-helpers.sh && runInstrumentalTests 24) ;; esac:
         parallel: true
-        timeout: 1800
+        timeout: 3600
     - cp -r app/build/outputs/androidTest-results/connected/*.xml $CIRCLE_TEST_REPORTS
   post:
     - if [ "$CIRCLE_NODE_INDEX" == "0" ]; then bash <(curl -s https://codecov.io/bash); fi:

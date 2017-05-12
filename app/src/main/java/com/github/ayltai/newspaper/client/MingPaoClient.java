@@ -23,8 +23,7 @@ import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
 import com.github.ayltai.newspaper.util.LogUtils;
 
-import rx.Emitter;
-import rx.Observable;
+import io.reactivex.Maybe;
 
 final class MingPaoClient extends RssClient {
     //region Constants
@@ -45,8 +44,8 @@ final class MingPaoClient extends RssClient {
     @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     @Override
-    public Observable<Item> updateItem(@NonNull final Item item) {
-        return Observable.create(emitter -> {
+    public Maybe<Item> updateItem(@NonNull final Item item) {
+        return Maybe.create(emitter -> {
             final String[] tokens = item.getLink().substring(MingPaoClient.BASE_URI.length()).split(MingPaoClient.SLASH);
 
             try {
@@ -69,11 +68,11 @@ final class MingPaoClient extends RssClient {
                 item.setDescription(json.getString("DESCRIPTION"));
                 item.setIsFullDescription(true);
 
-                emitter.onNext(item);
+                emitter.onSuccess(item);
             } catch (final IOException | JSONException e) {
-                emitter.onError(e);
+                this.handleError(emitter, e);
             }
-        }, Emitter.BackpressureMode.BUFFER);
+        });
     }
 
     private static List<Image> extractImages(@NonNull final JSONArray images) {

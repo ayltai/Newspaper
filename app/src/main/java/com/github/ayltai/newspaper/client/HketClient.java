@@ -20,8 +20,7 @@ import com.github.ayltai.newspaper.net.HttpClient;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
-import rx.Emitter;
-import rx.Observable;
+import io.reactivex.Maybe;
 
 final class HketClient extends RssClient {
     private static final String TAG_QUOTE = "\"";
@@ -33,8 +32,8 @@ final class HketClient extends RssClient {
 
     @NonNull
     @Override
-    public Observable<Item> updateItem(@NonNull final Item item) {
-        return Observable.create(emitter -> {
+    public Maybe<Item> updateItem(@NonNull final Item item) {
+        return Maybe.create(emitter -> {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
 
             try {
@@ -62,10 +61,10 @@ final class HketClient extends RssClient {
                 item.setDescription(builder.toString());
                 item.setIsFullDescription(true);
 
-                emitter.onNext(item);
+                emitter.onSuccess(item);
             } catch (final IOException e) {
-                emitter.onError(e);
+                this.handleError(emitter, e);
             }
-        }, Emitter.BackpressureMode.BUFFER);
+        });
     }
 }

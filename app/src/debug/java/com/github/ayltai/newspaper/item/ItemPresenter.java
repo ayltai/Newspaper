@@ -18,7 +18,7 @@ public class ItemPresenter extends BaseItemPresenter {
 
     @Override
     protected void attachClicks() {
-        if (this.getView().clicks() != null) this.subscriptions.add(this.getView()
+        if (this.getView().clicks() != null) this.disposables.add(this.getView()
             .clicks()
             .subscribe(
                 dummy -> {
@@ -29,10 +29,10 @@ public class ItemPresenter extends BaseItemPresenter {
 
     @Override
     protected void attachBookmarks() {
-        if (this.getView().bookmarks() != null) this.subscriptions.add(this.getView()
+        if (this.getView().bookmarks() != null) this.disposables.add(this.getView()
             .bookmarks()
             .subscribe(
-                bookmark -> this.getItemManager().getItemsObservable(Collections.emptyList(), this.parentKey == null ? Collections.emptyList() : Collections.singletonList(this.parentKey.getCategory()))
+                bookmark -> this.getItemManager().getItemsSingle(Collections.emptyList(), this.parentKey == null ? Collections.emptyList() : Collections.singletonList(this.parentKey.getCategory()))
                     .subscribe(
                         items -> {
                             this.update(bookmark);
@@ -45,7 +45,7 @@ public class ItemPresenter extends BaseItemPresenter {
 
     @Override
     protected void attachShares() {
-        if (this.getView().shares() != null) this.subscriptions.add(this.getView()
+        if (this.getView().shares() != null) this.disposables.add(this.getView()
             .shares()
             .subscribe(
                 dummy -> {
