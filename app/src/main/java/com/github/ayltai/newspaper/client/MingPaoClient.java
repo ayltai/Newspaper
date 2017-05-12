@@ -46,8 +46,6 @@ final class MingPaoClient extends RssClient {
     @Override
     public Maybe<Item> updateItem(@NonNull final Item item) {
         return Maybe.create(emitter -> {
-            final String[] tokens = item.getLink().substring(MingPaoClient.BASE_URI.length()).split(MingPaoClient.SLASH);
-
             try {
                 final String url = MingPaoClient.BASE_URI + MingPaoClient.DATA + tokens[0] + MingPaoClient.SLASH + tokens[0] + MingPaoClient.UNDERSCORE + tokens[2] + MingPaoClient.SLASH + tokens[3] + "1/" + tokens[4] + new JSONObject(IOUtils.toString(this.client.download(MingPaoClient.BASE_URI + MingPaoClient.DATA + tokens[0] + "/issuelist.js"), Client.ENCODING)).getJSONObject((tokens[0] + MingPaoClient.UNDERSCORE + tokens[2]).toUpperCase()).getJSONObject("1 " + tokens[4]).getString("E").toLowerCase() + "/todaycontent_" + tokens[6] + ".js";
 

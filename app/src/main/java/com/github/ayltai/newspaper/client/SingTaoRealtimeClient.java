@@ -53,8 +53,6 @@ final class SingTaoRealtimeClient extends Client {
                 final InputStream inputStream = this.client.download(url);
 
                 if (inputStream == null) {
-                    LogUtils.getInstance().i(this.getClass().getSimpleName(), "No content from URL " + url);
-
                     emitter.onSuccess(Collections.emptyList());
                 } else {
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
@@ -76,10 +74,6 @@ final class SingTaoRealtimeClient extends Client {
 
                         final String image = StringUtils.substringBetween(section, "<img src=\"", SingTaoRealtimeClient.TAG_QUOTE);
                         if (image != null) item.getImages().add(new Image(image));
-
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
 
                         try {
                             item.setPublishDate(SingTaoRealtimeClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o mr5\"></i>", SingTaoRealtimeClient.TAG_CLOSE)));

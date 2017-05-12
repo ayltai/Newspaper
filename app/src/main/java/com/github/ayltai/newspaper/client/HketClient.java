@@ -62,8 +62,6 @@ final class HketClient extends Client {
     @Override
     public Single<List<Item>> getItems(@NonNull final String url) {
         return Single.create(emitter -> {
-            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
-
             try {
                 final String     html         = IOUtils.toString(this.client.download(url), Client.ENCODING);
                 final String[]   sections     = StringUtils.substringsBetween(html, "<div class=\"article-listing\">", "</a>");
@@ -71,8 +69,6 @@ final class HketClient extends Client {
                 final String     categoryName = this.getCategoryName(url);
 
                 for (final String section : sections) {
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
-
                     final Item item = new Item();
 
                     item.setTitle(StringUtils.substringBetween(section, "<h3 class=\"reduce-line\">", "</h3>"));
@@ -82,10 +78,6 @@ final class HketClient extends Client {
 
                     final String image = StringUtils.substringBetween(section, HketClient.TAG_DATA_SRC, HketClient.TAG_QUOTE);
                     if (image != null) item.getImages().add(new Image(image));
-
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
 
                     final String date = StringUtils.substringBetween(section, "<p class=\"article-listing-detail_datetime\">", HketClient.TAG_PARAGRAPH);
 

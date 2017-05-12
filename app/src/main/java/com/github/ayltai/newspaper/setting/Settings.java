@@ -108,7 +108,9 @@ public final class Settings {
             if (userCategories.contains(category)) {
                 categories.add(category);
 
-                for (int i = 1; i < Constants.CATEGORY_COUNT - 1; i++) if (allCategories.get(i).equals(category)) categories.add(allCategories.get(i + Constants.CATEGORY_COUNT - 1));
+                for (int i = 1; i < Constants.CATEGORY_COUNT - 1; i++) {
+                    if (allCategories.get(i).equals(category)) categories.add(allCategories.get(i + Constants.CATEGORY_COUNT - 1));
+                }
             }
         }
 

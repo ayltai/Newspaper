@@ -56,12 +56,8 @@ final class AppleDailyClient extends Client {
                 final InputStream inputStream = this.client.download(url);
 
                 if (inputStream == null) {
-                    LogUtils.getInstance().i(this.getClass().getSimpleName(), "No content from URL " + url);
-
                     emitter.onSuccess(Collections.emptyList());
                 } else {
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
-
                     final String     html         = IOUtils.toString(inputStream, Client.ENCODING);
                     final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"itemContainer\">", "<div class=\"clear\"></div>"), "div class=\"item\">", AppleDailyClient.TAG_DIV);
                     final List<Item> items        = new ArrayList<>(sections.length);
