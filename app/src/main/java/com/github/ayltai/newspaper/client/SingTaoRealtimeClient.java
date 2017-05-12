@@ -55,16 +55,12 @@ final class SingTaoRealtimeClient extends Client {
                 if (inputStream == null) {
                     emitter.onSuccess(Collections.emptyList());
                 } else {
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
-
                     final String     html         = IOUtils.toString(inputStream, Client.ENCODING);
                     final String[]   sections     = StringUtils.substringsBetween(html, "<div class=\"news-wrap\">", "</a>\n</div>");
                     final List<Item> items        = new ArrayList<>(sections.length);
                     final String     categoryName = this.getCategoryName(url);
 
                     for (final String section : sections) {
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
-
                         final Item item = new Item();
 
                         item.setTitle(StringUtils.substringBetween(section, "<div class=\"title\">", SingTaoRealtimeClient.TAG_CLOSE));

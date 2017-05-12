@@ -64,8 +64,6 @@ final class HeadlineRealtimeClient extends Client {
                     final String     categoryName = this.getCategoryName(url);
 
                     for (final String section : sections) {
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
-
                         final Item   item  = new Item();
                         final String title = StringUtils.substringBetween(section, "<h4>", "</h4>");
 

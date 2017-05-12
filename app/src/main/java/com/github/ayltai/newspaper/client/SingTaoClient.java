@@ -59,8 +59,6 @@ final class SingTaoClient extends Client {
                 if (inputStream == null) {
                     emitter.onSuccess(Collections.emptyList());
                 } else {
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
-
                     final String     html         = IOUtils.toString(inputStream, Client.ENCODING);
                     final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"main list\">", "<input type=\"hidden\" id=\"totalnews\""), "underline\">", "</a>\n</div>");
                     final List<Item> items        = new ArrayList<>(sections.length);
