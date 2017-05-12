@@ -18,7 +18,7 @@ import com.github.ayltai.newspaper.net.HttpClient;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
-import io.reactivex.Single;
+import io.reactivex.Maybe;
 
 final class HkejClient extends RssClient {
     //region Constants
@@ -35,8 +35,8 @@ final class HkejClient extends RssClient {
 
     @NonNull
     @Override
-    public Single<Item> updateItem(@NonNull final Item item) {
-        return Single.create(emitter -> {
+    public Maybe<Item> updateItem(@NonNull final Item item) {
+        return Maybe.create(emitter -> {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
 
             try {
@@ -60,7 +60,7 @@ final class HkejClient extends RssClient {
 
                 emitter.onSuccess(item);
             } catch (final IOException e) {
-                emitter.onError(e);
+                this.handleError(emitter, e);
             }
         });
     }

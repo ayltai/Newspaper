@@ -32,10 +32,11 @@ public abstract class BaseHttpClient {
             .build();
 
         if (TestUtils.isRunningInstrumentalTest() && BaseHttpClient.ASSETS.isEmpty()) {
-            BaseHttpClient.ASSETS.put("http://www.hket.com/rss/headlines", R.raw.rss_hk);
-            BaseHttpClient.ASSETS.put("http://orientaldaily.on.cc/rss/news.xml", R.raw.rss_intl);
-            BaseHttpClient.ASSETS.put("https://www.singpao.com.hk/index.php?fi=news8", R.raw.rss_china);
-            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00013.xml", R.raw.rss_entertainment);
+            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00001.xml", R.raw.rss_china);
+            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00002.xml", R.raw.rss_hk);
+            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00014.xml", R.raw.rss_entertainment);
+            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00013.xml", R.raw.rss_intl);
+            BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00004.xml", R.raw.rss_hk);
         }
     }
 }

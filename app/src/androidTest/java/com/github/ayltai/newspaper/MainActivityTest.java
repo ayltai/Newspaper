@@ -49,7 +49,7 @@ public final class MainActivityTest {
 
         // Asserts that the title is expected
         Espresso.onView(ViewMatchers.withId(R.id.title))
-            .check(ViewAssertions.matches(ViewMatchers.withText("深水埗再有鹼水粽含禁用防腐劑   食安中心或檢控")));
+            .check(ViewAssertions.matches(ViewMatchers.withText("馬時亨冀3月就票價機制達協議 不覺得有驚天動地改變")));
 
         Espresso.pressBack();
 
