@@ -1,10 +1,12 @@
 package com.github.ayltai.newspaper.client;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,53 +47,61 @@ final class SingTaoRealtimeClient extends Client {
 
     @NonNull
     @Override
-    public Maybe<List<Item>> getItems(@NonNull final String url) {
-        return Maybe.create(emitter -> {
-            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
-
+    public Single<List<Item>> getItems(@NonNull final String url) {
+        return Single.create(emitter -> {
             try {
-                final String     html         = IOUtils.toString(this.client.download(url), Client.ENCODING);
-                final String[]   sections     = StringUtils.substringsBetween(html, "<div class=\"news-wrap\">", "</a>\n</div>");
-                final List<Item> items        = new ArrayList<>(sections.length);
-                final String     categoryName = this.getCategoryName(url);
+                final InputStream inputStream = this.client.download(url);
 
-                for (final String section : sections) {
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
+                if (inputStream == null) {
+                    LogUtils.getInstance().i(this.getClass().getSimpleName(), "No content from URL " + url);
 
-                    final Item item = new Item();
+                    emitter.onSuccess(Collections.emptyList());
+                } else {
+                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
 
-                    item.setTitle(StringUtils.substringBetween(section, "<div class=\"title\">", SingTaoRealtimeClient.TAG_CLOSE));
-                    item.setLink(StringUtils.substringBetween(section, "<a href=\"", SingTaoRealtimeClient.TAG_QUOTE));
-                    item.setSource(this.source.getName());
-                    item.setCategory(categoryName);
+                    final String     html         = IOUtils.toString(inputStream, Client.ENCODING);
+                    final String[]   sections     = StringUtils.substringsBetween(html, "<div class=\"news-wrap\">", "</a>\n</div>");
+                    final List<Item> items        = new ArrayList<>(sections.length);
+                    final String     categoryName = this.getCategoryName(url);
 
-                    final String image = StringUtils.substringBetween(section, "<img src=\"", SingTaoRealtimeClient.TAG_QUOTE);
-                    if (image != null) item.getImages().add(new Image(image));
+                    for (final String section : sections) {
+                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
 
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
+                        final Item item = new Item();
 
-                    try {
-                        item.setPublishDate(SingTaoRealtimeClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o mr5\"></i>", SingTaoRealtimeClient.TAG_CLOSE)));
+                        item.setTitle(StringUtils.substringBetween(section, "<div class=\"title\">", SingTaoRealtimeClient.TAG_CLOSE));
+                        item.setLink(StringUtils.substringBetween(section, "<a href=\"", SingTaoRealtimeClient.TAG_QUOTE));
+                        item.setSource(this.source.getName());
+                        item.setCategory(categoryName);
 
-                        items.add(item);
-                    } catch (final ParseException e) {
-                        LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
+                        final String image = StringUtils.substringBetween(section, "<img src=\"", SingTaoRealtimeClient.TAG_QUOTE);
+                        if (image != null) item.getImages().add(new Image(image));
+
+                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
+                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
+                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
+
+                        try {
+                            item.setPublishDate(SingTaoRealtimeClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o mr5\"></i>", SingTaoRealtimeClient.TAG_CLOSE)));
+
+                            items.add(item);
+                        } catch (final ParseException e) {
+                            LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
+                        }
                     }
-                }
 
-                emitter.onSuccess(items);
+                    emitter.onSuccess(items);
+                }
             } catch (final IOException e) {
-                emitter.onError(e);
+                this.handleError(emitter, e);
             }
         });
     }
 
     @NonNull
     @Override
-    public Single<Item> updateItem(@NonNull final Item item) {
-        return Single.create(emitter -> {
+    public Maybe<Item> updateItem(@NonNull final Item item) {
+        return Maybe.create(emitter -> {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
 
             try {
@@ -121,7 +131,7 @@ final class SingTaoRealtimeClient extends Client {
 
                 emitter.onSuccess(item);
             } catch (final IOException e) {
-                emitter.onError(e);
+                this.handleError(emitter, e);
             }
         });
     }

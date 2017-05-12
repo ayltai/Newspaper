@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import com.github.ayltai.newspaper.Constants;
@@ -22,7 +21,7 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.processors.PublishProcessor;
 import io.realm.RealmList;
 
@@ -51,7 +50,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
 
     //region Mocks
 
-    @Mock private Item item;
+    private Item item;
 
     //endregion
 
@@ -64,11 +63,12 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
         this.items.add(this.item);
 
         final ItemManager itemManager = Mockito.mock(ItemManager.class);
-        Mockito.doReturn(Observable.just(this.items)).when(itemManager).getItemsObservable(Collections.emptyList(), Collections.singletonList(ItemPresenterTest.KEY_PARENT_URL));
+        Mockito.doReturn(Single.just(this.items)).when(itemManager).getItemsSingle(Collections.emptyList(), Collections.singletonList(ItemPresenterTest.KEY_PARENT_URL));
 
         final ItemPresenter presenter = Mockito.spy(new ItemPresenter(null));
         Mockito.doReturn(itemManager).when(presenter).getItemManager();
         Mockito.doNothing().when(presenter).update(ArgumentMatchers.any(Item.class));
+        Mockito.doNothing().when(presenter).update(ArgumentMatchers.anyBoolean());
 
         final RxBus bus = Mockito.mock(RxBus.class);
         Mockito.doReturn(bus).when(presenter).bus();
@@ -95,14 +95,15 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
     @Override
     @Before
     public void setUp() throws Exception {
-        super.setUp();
+        this.item = new Item();
+        this.item.setTitle(ItemPresenterTest.ITEM_TITLE);
+        this.item.setDescription(ItemPresenterTest.ITEM_DESCRIPTION);
+        this.item.setSource(ItemPresenterTest.ITEM_SOURCE);
+        this.item.setLink(ItemPresenterTest.ITEM_LINK);
+        this.item.getImages().addAll(ItemPresenterTest.ITEM_MEDIA_URLS);
+        this.item.setPublishDate(ItemPresenterTest.ITEM_PUBLISH_DATE);
 
-        Mockito.doReturn(ItemPresenterTest.ITEM_TITLE).when(this.item).getTitle();
-        Mockito.doReturn(ItemPresenterTest.ITEM_DESCRIPTION).when(this.item).getDescription();
-        Mockito.doReturn(ItemPresenterTest.ITEM_SOURCE).when(this.item).getSource();
-        Mockito.doReturn(ItemPresenterTest.ITEM_LINK).when(this.item).getLink();
-        Mockito.doReturn(ItemPresenterTest.ITEM_MEDIA_URLS).when(this.item).getImages();
-        Mockito.doReturn(ItemPresenterTest.ITEM_PUBLISH_DATE).when(this.item).getPublishDate();
+        super.setUp();
     }
 
     //region Tests

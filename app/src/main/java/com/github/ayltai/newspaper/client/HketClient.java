@@ -60,8 +60,8 @@ final class HketClient extends Client {
 
     @NonNull
     @Override
-    public Maybe<List<Item>> getItems(@NonNull final String url) {
-        return Maybe.create(emitter -> {
+    public Single<List<Item>> getItems(@NonNull final String url) {
+        return Single.create(emitter -> {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
 
             try {
@@ -109,8 +109,8 @@ final class HketClient extends Client {
 
     @NonNull
     @Override
-    public Single<Item> updateItem(@NonNull final Item item) {
-        return Single.create(emitter -> {
+    public Maybe<Item> updateItem(@NonNull final Item item) {
+        return Maybe.create(emitter -> {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
 
             try {
@@ -140,7 +140,7 @@ final class HketClient extends Client {
 
                 emitter.onSuccess(item);
             } catch (final IOException e) {
-                emitter.onError(e);
+                this.handleError(emitter, e);
             }
         });
     }

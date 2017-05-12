@@ -151,7 +151,7 @@ public /* final */ class MainPresenter extends Presenter<MainPresenter.View> {
             final Realm        realm  = Realm.getDefaultInstance();
 
             try {
-                new ItemManager(realm).getItemsObservable(new ArrayList<>(Settings.getSources(this.getView().getContext())), Collections.singletonList(category.toString()))
+                new ItemManager(realm).getItemsSingle(new ArrayList<>(Settings.getSources(this.getView().getContext())), Collections.singletonList(category.toString()))
                     .subscribe(
                         items -> {
                             for (final Item item : items) {

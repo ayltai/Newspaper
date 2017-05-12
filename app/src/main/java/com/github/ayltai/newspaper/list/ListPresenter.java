@@ -27,7 +27,7 @@ import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.Flowable;
-import io.reactivex.Maybe;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -69,7 +69,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         if (!TestUtils.isRunningUnitTest() && this.realm.isClosed()) return;
 
         if (this.isViewAttached() && !this.isBound) {
-            this.getItemManager().getItemsObservable(Collections.emptyList(), Collections.singletonList(this.key.getCategory()))
+            this.getItemManager().getItemsSingle(Collections.emptyList(), Collections.singletonList(this.key.getCategory()))
                 .subscribe(items -> {
                     this.items = items;
                     if (Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {
@@ -100,7 +100,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         this.getFavoriteManager().getFavorite()
             .subscribe(
                 favorite -> {
-                    final List<Maybe<List<Item>>> observables = new ArrayList<>();
+                    final List<Single<List<Item>>> maybes = new ArrayList<>();
 
                     for (final Source source : favorite.getSources()) {
                         for (final Category category : source.getCategories()) {
@@ -108,7 +108,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                                 final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(source.getName());
 
                                 if (client != null) {
-                                    observables.add(client.getItems(category.getUrl())
+                                    maybes.add(client.getItems(category.getUrl())
                                         .timeout(timeout, TimeUnit.SECONDS)
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribeOn(Schedulers.io()));
@@ -117,7 +117,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                         }
                     }
 
-                    this.refreshDisposable = ListPresenter.zip(observables)
+                    this.refreshDisposable = ListPresenter.zip(maybes)
                         .subscribe(
                             items -> {
                                 this.items = this.partialUpdate(items);
@@ -152,7 +152,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         this.getFavoriteManager().getFavorite()
             .subscribe(
                 favorite -> {
-                    final List<Maybe<List<Item>>> observables = new ArrayList<>();
+                    final List<Single<List<Item>>> singles = new ArrayList<>();
 
                     for (final Source source : favorite.getSources()) {
                         for (final Category category : source.getCategories()) {
@@ -160,7 +160,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                                 final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(source.getName());
 
                                 if (client != null) {
-                                    observables.add(client
+                                    singles.add(client
                                         .getItems(category.getUrl())
                                         .delaySubscription(Configs.getUpdateInterval(), TimeUnit.SECONDS)
                                         .timeout(Configs.getUpdateInterval() + Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
@@ -171,7 +171,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                         }
                     }
 
-                    this.updateDisposable = ListPresenter.zip(observables).subscribe(
+                    this.updateDisposable = ListPresenter.zip(singles).subscribe(
                         this::showUpdateIndicator,
                         error -> {
                             if (error instanceof TimeoutException) {
@@ -300,8 +300,8 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 
-    private static Maybe<List<Item>> zip(@NonNull final Iterable<Maybe<List<Item>>> maybes) {
-        return Maybe.zip(maybes, lists -> {
+    private static Single<List<Item>> zip(@NonNull final Iterable<Single<List<Item>>> singles) {
+        return Single.zip(singles, lists -> {
             final List<Item> items = new ArrayList<>();
 
             for (final Object list : lists) items.addAll((List<Item>)list);

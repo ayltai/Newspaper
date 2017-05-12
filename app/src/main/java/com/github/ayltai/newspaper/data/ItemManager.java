@@ -62,7 +62,7 @@ public class ItemManager {
     }
 
     @NonNull
-    public Single<List<Item>> getItemsObservable(@NonNull final List<String> sources, @NonNull final List<String> categories) {
+    public Single<List<Item>> getItemsSingle(@NonNull final List<String> sources, @NonNull final List<String> categories) {
         if (this.realm.isClosed()) throw new IllegalStateException(ItemManager.ERROR_REALM);
 
         return Single.create(emitter -> {

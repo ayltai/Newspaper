@@ -45,7 +45,7 @@ public class ItemPresenter extends BaseItemPresenter {
         if (this.getView().bookmarks() != null) this.disposables.add(this.getView()
             .bookmarks()
             .subscribe(
-                bookmark -> this.getItemManager().getItemsObservable(Collections.emptyList(), this.parentKey == null ? Collections.emptyList() : Collections.singletonList(Constants.CATEGORY_BOOKMARK))
+                bookmark -> this.getItemManager().getItemsSingle(Collections.emptyList(), this.parentKey == null ? Collections.emptyList() : Collections.singletonList(Constants.CATEGORY_BOOKMARK))
                     .subscribe(
                         items -> {
                             this.update(bookmark);

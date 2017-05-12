@@ -12,7 +12,7 @@ import com.github.ayltai.newspaper.PresenterTest;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.util.Irrelevant;
 
-import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.processors.PublishProcessor;
 
 public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPresenter.View> {
@@ -39,7 +39,7 @@ public final class MainPresenterTest extends PresenterTest<MainPresenter, MainPr
         final MainPresenter presenter = Mockito.spy(new MainPresenter());
         Mockito.doReturn(this.mainAdapter).when(presenter).createMainAdapter();
 
-        Mockito.doReturn(Flowable.just(new ArrayList<Item>())).when(presenter).getHeaderImages(ArgumentMatchers.anyString());
+        Mockito.doReturn(Single.just(new ArrayList<Item>())).when(presenter).getHeaderImages(ArgumentMatchers.anyString());
 
         return presenter;
     }

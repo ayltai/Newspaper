@@ -17,7 +17,7 @@ import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
 
-import io.reactivex.Maybe;
+import io.reactivex.Single;
 import io.realm.RealmList;
 
 public abstract class RssClient extends Client {
@@ -28,12 +28,12 @@ public abstract class RssClient extends Client {
 
     @NonNull
     @Override
-    public final Maybe<List<Item>> getItems(@NonNull final String url) {
+    public final Single<List<Item>> getItems(@NonNull final String url) {
         final String categoryName = this.getCategoryName(url);
 
-        return Maybe.create(emitter -> {
+        return Single.create(emitter -> {
             if (this.source == null) {
-                emitter.onComplete();
+                emitter.onSuccess(Collections.emptyList());
             } else {
                 InputStream inputStream = null;
 
@@ -49,7 +49,7 @@ public abstract class RssClient extends Client {
 
                     emitter.onSuccess(items);
                 } catch (final XmlPullParserException | IOException e) {
-                    emitter.onError(e);
+                    this.handleError(emitter, e);
                 } finally {
                     IOUtils.closeQuietly(inputStream);
                 }

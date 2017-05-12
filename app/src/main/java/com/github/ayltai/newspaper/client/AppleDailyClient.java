@@ -1,7 +1,9 @@
 package com.github.ayltai.newspaper.client;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -48,49 +50,57 @@ final class AppleDailyClient extends Client {
 
     @NonNull
     @Override
-    public Maybe<List<Item>> getItems(@NonNull final String url) {
-        return Maybe.create(emitter -> {
-            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
-
+    public Single<List<Item>> getItems(@NonNull final String url) {
+        return Single.create(emitter -> {
             try {
-                final String     html         = IOUtils.toString(this.client.download(url), Client.ENCODING);
-                final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"itemContainer\">", "<div class=\"clear\"></div>"), "div class=\"item\">", AppleDailyClient.TAG_DIV);
-                final List<Item> items        = new ArrayList<>(sections.length);
-                final String     categoryName = this.getCategoryName(url);
+                final InputStream inputStream = this.client.download(url);
 
-                for (final String section : sections) {
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
+                if (inputStream == null) {
+                    LogUtils.getInstance().i(this.getClass().getSimpleName(), "No content from URL " + url);
 
-                    final Item   item = new Item();
-                    final String link = StringUtils.substringBetween(section, AppleDailyClient.TAG_HREF, AppleDailyClient.TAG_QUOTE);
+                    emitter.onSuccess(Collections.emptyList());
+                } else {
+                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
 
-                    if (link != null) {
-                        item.setTitle(StringUtils.substringBetween(section, AppleDailyClient.TAG_TITLE, AppleDailyClient.TAG_QUOTE));
-                        item.setLink(link.substring(0, link.lastIndexOf("/")).replace("dv", "apple").replace("actionnews", "news").replace("local", AppleDailyClient.ARTICLE).replace("chinainternational", AppleDailyClient.ARTICLE).replace("finance", AppleDailyClient.ARTICLE).replace("entertainmnt", AppleDailyClient.ARTICLE).replace("sports", AppleDailyClient.ARTICLE));
-                        item.setSource(this.source.getName());
-                        item.setCategory(categoryName);
+                    final String     html         = IOUtils.toString(inputStream, Client.ENCODING);
+                    final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"itemContainer\">", "<div class=\"clear\"></div>"), "div class=\"item\">", AppleDailyClient.TAG_DIV);
+                    final List<Item> items        = new ArrayList<>(sections.length);
+                    final String     categoryName = this.getCategoryName(url);
 
-                        final String image = StringUtils.substringBetween(section, "<img src=\"", AppleDailyClient.TAG_QUOTE);
-                        if (image != null) item.getImages().add(new Image(image));
+                    for (final String section : sections) {
+                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
 
-                        final String time = StringUtils.substringBetween(section, "pix/", "_");
-                        if (time != null) item.setPublishDate(new Date(Long.valueOf(time) * SECOND));
+                        final Item   item = new Item();
+                        final String link = StringUtils.substringBetween(section, AppleDailyClient.TAG_HREF, AppleDailyClient.TAG_QUOTE);
 
-                        items.add(item);
+                        if (link != null) {
+                            item.setTitle(StringUtils.substringBetween(section, AppleDailyClient.TAG_TITLE, AppleDailyClient.TAG_QUOTE));
+                            item.setLink(link.substring(0, link.lastIndexOf("/")).replace("dv", "apple").replace("actionnews", "news").replace("local", AppleDailyClient.ARTICLE).replace("chinainternational", AppleDailyClient.ARTICLE).replace("finance", AppleDailyClient.ARTICLE).replace("entertainmnt", AppleDailyClient.ARTICLE).replace("sports", AppleDailyClient.ARTICLE));
+                            item.setSource(this.source.getName());
+                            item.setCategory(categoryName);
+
+                            final String image = StringUtils.substringBetween(section, "<img src=\"", AppleDailyClient.TAG_QUOTE);
+                            if (image != null) item.getImages().add(new Image(image));
+
+                            final String time = StringUtils.substringBetween(section, "pix/", "_");
+                            if (time != null) item.setPublishDate(new Date(Long.valueOf(time) * SECOND));
+
+                            items.add(item);
+                        }
                     }
-                }
 
-                emitter.onSuccess(items);
+                    emitter.onSuccess(items);
+                }
             } catch (final IOException e) {
-                emitter.onError(e);
+                this.handleError(emitter, e);
             }
         });
     }
 
     @NonNull
     @Override
-    public Single<Item> updateItem(@NonNull final Item item) {
-        return Single.create(emitter -> {
+    public Maybe<Item> updateItem(@NonNull final Item item) {
+        return Maybe.create(emitter -> {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
 
             try {
@@ -120,7 +130,7 @@ final class AppleDailyClient extends Client {
 
                 emitter.onSuccess(item);
             } catch (final IOException e) {
-                emitter.onError(e);
+                this.handleError(emitter, e);
             }
         });
     }
