@@ -46,7 +46,6 @@ android {
 
     buildTypes {
         debug {
-            testCoverageEnabled true
             ext.enableCrashlytics = false
         }
 
