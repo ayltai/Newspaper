@@ -9,7 +9,7 @@ apply plugin: 'jacoco'
 apply plugin: 'org.standardout.versioneye'
 
 jacoco {
-    toolVersion '0.7.9'
+    toolVersion '0.7.4.201502262128'
 }
 
 String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
@@ -103,6 +103,7 @@ ext {
     debugDrawerVersion    = '0.7.0'
     stethoVersion         = '1.5.0'
     leakCanaryVersion     = '1.5.1'
+    robolectricVersion    = '3.3.2'
     espressoVersion       = '2.2.2'
 }
 
@@ -257,8 +258,8 @@ dependencies {
     // Tests
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.7.22'
-    testCompile 'org.robolectric:robolectric:3.3.2'
-    testCompile "org.robolectric:shadows-multidex:3.3.2"
+    testCompile "org.robolectric:robolectric:${robolectricVersion}"
+    testCompile "org.robolectric:shadows-multidex:${robolectricVersion}"
     androidTestCompile ('com.android.support.test:runner:0.5') {
         exclude group: 'com.android.support', module: 'support-annotations'
     }

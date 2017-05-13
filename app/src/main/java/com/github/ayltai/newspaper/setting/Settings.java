@@ -3,6 +3,7 @@ package com.github.ayltai.newspaper.setting;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -63,13 +64,33 @@ public final class Settings {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Settings.PREF_DARK_THEME, false);
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     public static Set<String> getSources(@NonNull final Context context) {
-        final LinkedHashSet<String> allSources  = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.sources)));
-        final Set<String>           userSources = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_SOURCES, allSources);
-        final LinkedHashSet<String> sources     = new LinkedHashSet<>();
+        final LinkedHashSet<String> reducedSources = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.pref_source_items)));
+        final List<String>          allSources     = Arrays.asList(context.getResources().getStringArray(R.array.sources));
+        final Set<String>           userSources    = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_SOURCES, reducedSources);
+        final LinkedHashSet<String> sources        = new LinkedHashSet<>();
 
-        for (final String source : allSources) {
+        for (final String source : reducedSources) {
+            if (userSources.contains(source)) {
+                sources.add(source);
+
+                if (allSources.get(2).equals(source)) sources.add(allSources.get(3));
+                if (allSources.get(6).equals(source)) sources.add(allSources.get(7));
+            }
+        }
+
+        return sources;
+    }
+
+    @NonNull
+    public static Set<String> getPreferenceSources(@NonNull final Context context) {
+        final LinkedHashSet<String> reducedSources = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.pref_source_items)));
+        final Set<String>           userSources    = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_SOURCES, reducedSources);
+        final LinkedHashSet<String> sources        = new LinkedHashSet<>();
+
+        for (final String source : reducedSources) {
             if (userSources.contains(source)) sources.add(source);
         }
 
@@ -78,11 +99,31 @@ public final class Settings {
 
     @NonNull
     public static Set<String> getCategories(@NonNull final Context context) {
-        final LinkedHashSet<String> allCategories  = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.categories)));
-        final Set<String>           userCategories = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, allCategories);
-        final LinkedHashSet<String> categories     = new LinkedHashSet<>();
+        final LinkedHashSet<String> reducedCategories = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.pref_category_items)));
+        final List<String>          allCategories     = Arrays.asList(context.getResources().getStringArray(R.array.categories));
+        final Set<String>           userCategories    = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, reducedCategories);
+        final LinkedHashSet<String> categories        = new LinkedHashSet<>();
 
-        for (final String category : allCategories) {
+        for (final String category : reducedCategories) {
+            if (userCategories.contains(category)) {
+                categories.add(category);
+
+                for (int i = 1; i < Constants.CATEGORY_COUNT - 1; i++) {
+                    if (allCategories.get(i).equals(category)) categories.add(allCategories.get(i + Constants.CATEGORY_COUNT - 1));
+                }
+            }
+        }
+
+        return categories;
+    }
+
+    @NonNull
+    public static Set<String> getPreferenceCategories(@NonNull final Context context) {
+        final LinkedHashSet<String> reducedCategories = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.pref_category_items)));
+        final Set<String>           userCategories    = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, reducedCategories);
+        final LinkedHashSet<String> categories        = new LinkedHashSet<>();
+
+        for (final String category : reducedCategories) {
             if (userCategories.contains(category)) categories.add(category);
         }
 
@@ -111,14 +152,14 @@ public final class Settings {
         return ((SensorManager)context.getSystemService(Context.SENSOR_SERVICE)).getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null;
     }
 
-    public static int getPosition(@NonNull final String url) {
-        if (Settings.POSITIONS.containsKey(url)) return Settings.POSITIONS.get(url);
+    public static int getPosition(@NonNull final String category) {
+        if (Settings.POSITIONS.containsKey(category)) return Settings.POSITIONS.get(category);
 
         return 0;
     }
 
-    public static void setPosition(@NonNull final String url, final int position) {
-        Settings.POSITIONS.put(url, position);
+    public static void setPosition(@NonNull final String category, final int position) {
+        Settings.POSITIONS.put(category, position);
     }
 
     public static void resetPosition() {

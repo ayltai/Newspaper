@@ -57,8 +57,6 @@ final class SingPaoClient extends Client {
                 final InputStream inputStream = this.client.download(url);
 
                 if (inputStream == null) {
-                    LogUtils.getInstance().i(this.getClass().getSimpleName(), "No content from URL " + url);
-
                     emitter.onSuccess(Collections.emptyList());
                 } else {
                     if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
@@ -69,8 +67,6 @@ final class SingPaoClient extends Client {
                     final String     categoryName = this.getCategoryName(url);
 
                     for (final String section : sections) {
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
-
                         final Item item = new Item();
 
                         item.setTitle(StringUtils.substringBetween(section, "class='list_title'>", "</a>"));
@@ -79,10 +75,6 @@ final class SingPaoClient extends Client {
                         item.setSource(this.source.getName());
                         item.setCategory(categoryName);
                         item.getImages().add(new Image(SingPaoClient.BASE_URI + StringUtils.substringBetween(section, "<img src='", SingPaoClient.TAG)));
-
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
 
                         try {
                             item.setPublishDate(SingPaoClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<font class='list_date'>", "<br>")));

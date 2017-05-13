@@ -52,7 +52,7 @@ public final class SourceFactory {
         this.sources.put(sources[i++], SourceFactory.createHeadlineRealtimeSource(sources, categories));
         this.sources.put(sources[i++], SourceFactory.createSkyPostSource(sources, categories));
         this.sources.put(sources[i++], SourceFactory.createEconomicJournalSource(sources, categories));
-        this.sources.put(sources[i], SourceFactory.createRadioTelevisionSource(sources, categories));
+        this.sources.put(sources[i],   SourceFactory.createRadioTelevisionSource(sources, categories));
     }
 
     @Nullable
@@ -66,11 +66,11 @@ public final class SourceFactory {
         final String date = DATE_FORMAT.get().format(new Date());
 
         return new Source(sources[0], new RealmList<>(
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/local/home/0", date), categories[12]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/chinainternational/home/0", date), categories[13]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/finance/home/0", date), categories[15]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/entertainmnt/home/0", date), categories[17]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[18])
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/local/home/0", date), categories[11]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/chinainternational/home/0", date), categories[12]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/finance/home/0", date), categories[14]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/entertainmnt/home/0", date), categories[16]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[17])
         ));
     }
 
@@ -103,26 +103,21 @@ public final class SourceFactory {
     @NonNull
     private static Source createSingTaoRealtimeSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[3], new RealmList<>(
-            new Category("http://std.stheadline.com/instant/articles/listview/%E9%A6%99%E6%B8%AF/", categories[12]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E5%9C%8B%E9%9A%9B/", categories[13]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E4%B8%AD%E5%9C%8B/", categories[14]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E7%B6%93%E6%BF%9F/", categories[15]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E5%9C%B0%E7%94%A2/", categories[16]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E5%A8%9B%E6%A8%82/", categories[17]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E9%AB%94%E8%82%B2/", categories[18])));
+            new Category("http://std.stheadline.com/instant/articles/listview/%E9%A6%99%E6%B8%AF/", categories[11]),
+            new Category("http://std.stheadline.com/instant/articles/listview/%E5%9C%8B%E9%9A%9B/", categories[12]),
+            new Category("http://std.stheadline.com/instant/articles/listview/%E4%B8%AD%E5%9C%8B/", categories[13]),
+            new Category("http://std.stheadline.com/instant/articles/listview/%E7%B6%93%E6%BF%9F/", categories[14]),
+            new Category("http://std.stheadline.com/instant/articles/listview/%E5%9C%B0%E7%94%A2/", categories[15]),
+            new Category("http://std.stheadline.com/instant/articles/listview/%E5%A8%9B%E6%A8%82/", categories[16]),
+            new Category("http://std.stheadline.com/instant/articles/listview/%E9%AB%94%E8%82%B2/", categories[17])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createEconomicTimesSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[4], new RealmList<>(
-            new Category("http://www.hket.com/rss/headlines", categories[0]),
-            new Category("http://www.hket.com/rss/hongkong", categories[1]),
-            new Category("http://www.hket.com/rss/world", categories[2]),
-            new Category("http://www.hket.com/rss/china", categories[3]),
-            new Category("http://www.hket.com/rss/finance", categories[4]),
-            new Category("http://www.hket.com/rss/lifestyle", categories[8]),
-            new Category("http://www.hket.com/rss/technology", categories[9])));
+            new Category("https://topick.hket.com/srat006/%E6%96%B0%E8%81%9E", categories[1]),
+            new Category("https://topick.hket.com/srat055/%E4%BC%91%E9%96%92", categories[8])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -150,13 +145,13 @@ public final class SourceFactory {
             new Category("https://news.mingpao.com/rss/pns/s00015.xml", categories[7]),
             new Category("https://news.mingpao.com/rss/pns/s00005.xml", categories[8]),
             new Category("https://news.mingpao.com/rss/pns/s00011.xml", categories[10]),
-            new Category("https://news.mingpao.com/rss/ins/s00001.xml", categories[12]),
-            new Category("https://news.mingpao.com/rss/ins/s00005.xml", categories[13]),
-            new Category("https://news.mingpao.com/rss/ins/s00004.xml", categories[14]),
-            new Category("https://news.mingpao.com/rss/ins/s00002.xml", categories[15]),
-            new Category("https://news.mingpao.com/rss/ins/s00003.xml", categories[16]),
-            new Category("https://news.mingpao.com/rss/ins/s00007.xml", categories[17]),
-            new Category("https://news.mingpao.com/rss/ins/s00006.xml", categories[18])));
+            new Category("https://news.mingpao.com/rss/ins/s00001.xml", categories[11]),
+            new Category("https://news.mingpao.com/rss/ins/s00005.xml", categories[12]),
+            new Category("https://news.mingpao.com/rss/ins/s00004.xml", categories[13]),
+            new Category("https://news.mingpao.com/rss/ins/s00002.xml", categories[14]),
+            new Category("https://news.mingpao.com/rss/ins/s00003.xml", categories[15]),
+            new Category("https://news.mingpao.com/rss/ins/s00007.xml", categories[16]),
+            new Category("https://news.mingpao.com/rss/ins/s00006.xml", categories[17])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -177,13 +172,13 @@ public final class SourceFactory {
     @NonNull
     private static Source createHeadlineRealtimeSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[8], new RealmList<>(
-            new Category("http://hd.stheadline.com/news/realtime/hk/", categories[12]),
-            new Category("http://hd.stheadline.com/news/realtime/wo/", categories[13]),
-            new Category("http://hd.stheadline.com/news/realtime/chi/", categories[14]),
-            new Category("http://hd.stheadline.com/news/realtime/fin/", categories[15]),
-            new Category("http://hd.stheadline.com/news/realtime/pp/", categories[16]),
-            new Category("http://hd.stheadline.com/news/realtime/ent/", categories[17]),
-            new Category("http://hd.stheadline.com/news/realtime/spt/", categories[18])));
+            new Category("http://hd.stheadline.com/news/realtime/hk/", categories[11]),
+            new Category("http://hd.stheadline.com/news/realtime/wo/", categories[12]),
+            new Category("http://hd.stheadline.com/news/realtime/chi/", categories[13]),
+            new Category("http://hd.stheadline.com/news/realtime/fin/", categories[14]),
+            new Category("http://hd.stheadline.com/news/realtime/pp/", categories[15]),
+            new Category("http://hd.stheadline.com/news/realtime/ent/", categories[16]),
+            new Category("http://hd.stheadline.com/news/realtime/spt/", categories[17])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -203,17 +198,17 @@ public final class SourceFactory {
     @NonNull
     private static Source createEconomicJournalSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[10], new RealmList<>(
-            new Category("http://www.hkej.com/rss/onlinenews.xml", categories[15])));
+            new Category("http://www.hkej.com/rss/onlinenews.xml", categories[14])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createRadioTelevisionSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[11], new RealmList<>(
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml", categories[12]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cinternational.xml", categories[13]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_greaterchina.xml", categories[14]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cfinance.xml", categories[15]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_csport.xml", categories[18])));
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml", categories[11]),
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cinternational.xml", categories[12]),
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_greaterchina.xml", categories[13]),
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cfinance.xml", categories[14]),
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_csport.xml", categories[17])));
     }
 }

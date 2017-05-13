@@ -14,6 +14,13 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.22.1'
         classpath 'org.standardout:gradle-versioneye-plugin:1.4.0'
     }
+
+    configurations.all {
+        resolutionStrategy {
+            force 'org.jacoco:org.jacoco.report:0.7.4.201502262128'
+            force 'org.jacoco:org.jacoco.core:0.7.4.201502262128'
+        }
+    }
 }
 
 allprojects {

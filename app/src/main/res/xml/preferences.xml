@@ -5,14 +5,14 @@
             android:key="PREF_SOURCES"
             android:title="@string/pref_sources"
             android:entries="@array/sources"
-            android:entryValues="@array/sources"
-            android:defaultValue="@array/sources" />
+            android:entryValues="@array/pref_source_items"
+            android:defaultValue="@array/pref_source_items" />
         <android.support.v14.preference.MultiSelectListPreference
             android:key="PREF_CATEGORIES"
             android:title="@string/pref_categories"
             android:entries="@array/categories"
-            android:entryValues="@array/categories"
-            android:defaultValue="@array/categories" />
+            android:entryValues="@array/pref_category_items"
+            android:defaultValue="@array/pref_category_items" />
     </android.support.v7.preference.PreferenceCategory>
     <android.support.v7.preference.PreferenceCategory android:title="@string/pref_design">
         <android.support.v7.preference.SwitchPreferenceCompat

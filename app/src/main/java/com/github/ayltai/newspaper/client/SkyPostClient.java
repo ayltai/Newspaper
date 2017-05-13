@@ -11,13 +11,11 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
 
-import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.client.rss.RssClient;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
-import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
 import io.reactivex.Maybe;
@@ -42,8 +40,6 @@ final class SkyPostClient extends RssClient {
     @Override
     public Maybe<Item> updateItem(@NonNull final Item item) {
         return Maybe.create(emitter -> {
-            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
-
             try {
                 final String      html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"article-title-widget\">", "<div class=\"article-detail_extra-info\">");
                 final String      headline        = StringUtils.substringBetween(html, "<h3 class=\"article-details__main-headline\">", SkyPostClient.TAG_CLOSE_HEADER);

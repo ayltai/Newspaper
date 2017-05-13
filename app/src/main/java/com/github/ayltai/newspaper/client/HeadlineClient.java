@@ -13,13 +13,11 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
 
-import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.client.rss.RssClient;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
-import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
 import io.reactivex.Maybe;
@@ -81,8 +79,6 @@ public final class HeadlineClient extends RssClient {
     @Override
     public Maybe<Item> updateItem(@NonNull final Item item) {
         return Maybe.create(emitter -> {
-            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
-
             try {
                 final String      html            = IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING);
                 final String[]    imageContainers = StringUtils.substringsBetween(html, "<a class=\"fancybox\" rel=\"gallery\"", "</a>");

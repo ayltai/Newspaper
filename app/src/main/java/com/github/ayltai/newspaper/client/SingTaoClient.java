@@ -57,20 +57,14 @@ final class SingTaoClient extends Client {
                 final InputStream inputStream = this.client.download(url);
 
                 if (inputStream == null) {
-                    LogUtils.getInstance().i(this.getClass().getSimpleName(), "No content from URL " + url);
-
                     emitter.onSuccess(Collections.emptyList());
                 } else {
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
-
                     final String     html         = IOUtils.toString(inputStream, Client.ENCODING);
                     final String[]   sections     = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"main list\">", "<input type=\"hidden\" id=\"totalnews\""), "underline\">", "</a>\n</div>");
                     final List<Item> items        = new ArrayList<>(sections.length);
                     final String     categoryName = this.getCategoryName(url);
 
                     for (final String section : sections) {
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Item = " + section);
-
                         final Item item = new Item();
 
                         item.setTitle(StringUtils.substringBetween(section, "<div class=\"title\">", SingTaoClient.TAG_CLOSE));
@@ -81,10 +75,6 @@ final class SingTaoClient extends Client {
 
                         final String image = StringUtils.substringBetween(section, "<img src=\"", SingTaoClient.TAG_QUOTE);
                         if (image != null) item.getImages().add(new Image(image));
-
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Title = " + item.getTitle());
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Link = " + item.getLink());
-                        if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), "Description = " + item.getDescription());
 
                         try {
                             item.setPublishDate(SingTaoClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o\"></i>", SingTaoClient.TAG_CLOSE)));

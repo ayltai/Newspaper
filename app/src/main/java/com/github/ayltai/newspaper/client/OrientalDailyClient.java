@@ -39,8 +39,6 @@ final class OrientalDailyClient extends RssClient {
     @Override
     public Maybe<Item> updateItem(@NonNull final Item item) {
         return Maybe.create(emitter -> {
-            if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
-
             try {
                 final String      html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div id=\"contentCTN-top\"", "<p><!--AD-->");
                 final String[]    imageContainers = StringUtils.substringsBetween(html, "<div class=\"photo", "</div>");

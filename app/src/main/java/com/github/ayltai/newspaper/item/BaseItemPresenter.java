@@ -6,7 +6,6 @@ import java.util.List;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Configs;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.Presenter;
@@ -81,8 +80,6 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         this.showFullDescription = showFullDescription;
 
         if (this.isViewAttached()) {
-            if (BuildConfig.DEBUG) this.log().d(this.getClass().getName(), "link = " + this.item.getLink());
-
             this.bindView();
 
             if (this.disposables == null) this.disposables = new CompositeDisposable();
