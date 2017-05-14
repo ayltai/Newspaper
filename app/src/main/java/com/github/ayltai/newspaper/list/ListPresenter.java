@@ -213,17 +213,13 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                 if (realmItem == null) {
                     this.realm.insert(item);
                 } else {
+                    if (realmItem.isFullDescription()) item.setDescription(realmItem.getDescription());
                     item.setIsFullDescription(realmItem.isFullDescription());
-                    if (!realmItem.isFullDescription()) realmItem.setDescription(item.getDescription());
 
-                    realmItem.setTitle(item.getTitle());
-                    realmItem.setPublishDate(item.getPublishDate());
-                    realmItem.setSource(item.getSource());
-                    realmItem.setCategory(item.getCategory());
+                    item.getImages().clear();
+                    item.getImages().addAll(realmItem.getImages());
 
-                    realmItem.getImages().clear();
-                    realmItem.getImages().addAll(item.getImages());
-
+                    if (realmItem.getVideo() != null) item.setVideo(realmItem.getVideo());
                     item.setBookmarked(realmItem.isBookmarked());
 
                     this.realm.insertOrUpdate(item);
