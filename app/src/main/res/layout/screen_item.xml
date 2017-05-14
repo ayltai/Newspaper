@@ -40,8 +40,8 @@
                 android:layout_marginEnd="@dimen/space_5">
                 <FrameLayout
                     android:id="@+id/videoThumbnailContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
                     <com.github.ayltai.newspaper.widget.FaceCenteredImageView
                         android:id="@+id/videoThumbnail"
                         android:layout_width="wrap_content"
@@ -62,7 +62,6 @@
                     android:id="@+id/video"
                     android:layout_height="@dimen/thumbnail_cozy"
                     android:layout_gravity="center"
-                    android:visibility="gone"
                     style="@style/Item" />
             </FrameLayout>
             <TextView

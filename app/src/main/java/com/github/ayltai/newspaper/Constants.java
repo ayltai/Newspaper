@@ -22,8 +22,13 @@ public final class Constants {
     static final boolean HEADER_IMAGE_ENABLED = true;
     static final boolean PANORAMA_ENABLED     = true;
 
-    public static final int REQUEST_SETTINGS = 1;
-    public static final int REQUEST_FIREBASE = 2;
+    public static final int REQUEST_SETTINGS          = 1;
+    public static final int REQUEST_FIREBASE          = 2;
+    public static final int REQUEST_VIDEO_FULL_SCREEN = 3;
+
+    public static final String EXTRA_VIDEO_URL     = "VIDEO_URL";
+    public static final String EXTRA_IS_PLAYING    = "IS_PLAYING";
+    public static final String EXTRA_SEEK_POSITION = "SEEK_POSITION";
 
     public static final int DRAWER_MENU_ANIMATION_DELAY = 250;
 

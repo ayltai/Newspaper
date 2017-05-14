@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Parcel;
@@ -25,6 +26,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -38,6 +43,7 @@ import com.google.android.exoplayer2.util.Util;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.RxBus;
 import com.github.ayltai.newspaper.graphics.DaggerGraphicsComponent;
 import com.github.ayltai.newspaper.graphics.GraphicsModule;
 import com.github.ayltai.newspaper.graphics.ImageLoaderCallback;
@@ -52,6 +58,8 @@ import com.github.ayltai.newspaper.util.IntentUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
+import com.github.ayltai.newspaper.video.VideoActivity;
+import com.github.ayltai.newspaper.video.VideoEvent;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
@@ -164,6 +172,33 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     private ImageLoaderCallback callback;
     private boolean             isBookmarked;
     private boolean             hasAttached;
+
+    private final Subscriber<VideoEvent> videoEventSubscriber = new Subscriber<VideoEvent>() {
+        @Override
+        public void onSubscribe(@NonNull final Subscription subscription) {
+        }
+
+        @Override
+        public void onNext(@NonNull final VideoEvent videoEvent) {
+            if (ItemScreen.this.videoPlayer != null) {
+                ItemScreen.this.videoPlayerView.setVisibility(View.VISIBLE);
+                ItemScreen.this.videoThumbnailContainer.setVisibility(View.GONE);
+
+                ItemScreen.this.videoPlayer.seekTo(videoEvent.getSeekPosition());
+
+                if (videoEvent.isPlaying()) ItemScreen.this.videoPlayer.setPlayWhenReady(true);
+            }
+        }
+
+        @Override
+        public void onError(@NonNull final Throwable throwable) {
+            LogUtils.getInstance().e(this.getClass().getSimpleName(), throwable.getMessage(), throwable);
+        }
+
+        @Override
+        public void onComplete() {
+        }
+    };
 
     //endregion
 
@@ -308,19 +343,39 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
             this.releaseVideoPlayer();
         } else {
-            this.videoContainer.setVisibility(View.VISIBLE);
-            this.videoPlayerView.setVisibility(View.GONE);
-            this.videoThumbnailContainer.setVisibility(View.VISIBLE);
-            this.videoThumbnail.showImage(Uri.parse(video.getThumbnailUrl()));
-
             if (this.videoPlayer == null) {
+                this.videoContainer.setVisibility(View.VISIBLE);
+                this.videoPlayerView.setVisibility(View.GONE);
+                this.videoThumbnailContainer.setVisibility(View.VISIBLE);
+                this.videoThumbnail.showImage(Uri.parse(video.getThumbnailUrl()));
+
                 this.videoPlayer    = ExoPlayerFactory.newSimpleInstance(this.getContext(), new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(null)));
                 this.videoPlayerView.setPlayer(this.videoPlayer);
+
+                final View videoFullScreen     = this.videoPlayerView.findViewById(R.id.exo_fullscreen);
+                final View videoFullScreenExit = this.videoPlayerView.findViewById(R.id.exo_fullscreen_exit);
+
+                videoFullScreen.setVisibility(View.VISIBLE);
+                videoFullScreenExit.setVisibility(View.GONE);
+
+                this.disposables.add(RxView.clicks(videoFullScreen).subscribe(
+                    dummy -> {
+                        final boolean isPlaying    = this.videoPlayer.getPlaybackState() == ExoPlayer.STATE_READY && this.videoPlayer.getPlayWhenReady();
+                        final long    seekPosition = this.videoPlayer.getCurrentPosition();
+
+                        this.videoPlayer.setPlayWhenReady(false);
+
+                        ((Activity)this.getContext()).startActivityForResult(new Intent(this.getContext(), VideoActivity.class)
+                            .putExtra(Constants.EXTRA_VIDEO_URL, video.getVideoUrl())
+                            .putExtra(Constants.EXTRA_IS_PLAYING, isPlaying)
+                            .putExtra(Constants.EXTRA_SEEK_POSITION, seekPosition), Constants.REQUEST_VIDEO_FULL_SCREEN);
+                    },
+                    error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+
+                this.videoPlayer.prepare(new ExtractorMediaSource(Uri.parse(video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
+
+                if (Settings.isAutoPlayEnabled(this.getContext())) this.startVideoPlayer();
             }
-
-            this.videoPlayer.prepare(new ExtractorMediaSource(Uri.parse(video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
-
-            if (Settings.isAutoPlayEnabled(this.getContext())) this.startVideoPlayer();
         }
     }
 
@@ -500,9 +555,13 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         this.videoThumbnailContainer.setVisibility(View.GONE);
 
         this.videoPlayer.setPlayWhenReady(true);
+
+        RxBus.getInstance().register(VideoEvent.class, this.videoEventSubscriber);
     }
 
     private void releaseVideoPlayer() {
+        RxBus.getInstance().unregister(VideoEvent.class, this.videoEventSubscriber);
+
         if (this.videoPlayer != null) {
             this.videoPlayer.release();
             this.videoPlayer = null;
