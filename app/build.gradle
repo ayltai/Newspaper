@@ -22,8 +22,8 @@ android {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    16
         targetSdkVersion 25
-        versionCode      13
-        versionName      '2.0.0r' + VERSION_REVISION + '-' + VERSION_HASH
+        versionCode      14
+        versionName      '2.1.0r' + VERSION_REVISION + '-' + VERSION_HASH
 
         multiDexEnabled true
 
@@ -207,6 +207,9 @@ dependencies {
         exclude group: 'com.facebook.fresco', module: 'fresco'
     }
     compile "com.github.piasy:ProgressPieIndicator:${bigImageViewerVersion}"
+
+    // Video processing
+    compile 'com.google.android.exoplayer:exoplayer:r2.4.0'
 
     // Eye candies
     compile ('hanks.xyz:smallbang-library:0.1.2') {

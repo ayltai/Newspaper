@@ -63,7 +63,7 @@ public final class SourceFactory {
     @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createAppleDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
-        final String date = DATE_FORMAT.get().format(new Date());
+        final String date = SourceFactory.DATE_FORMAT.get().format(new Date());
 
         return new Source(sources[0], new RealmList<>(
             new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/local/home/0", date), categories[11]),

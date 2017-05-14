@@ -1,6 +1,5 @@
 package com.github.ayltai.newspaper.item;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,6 +25,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
+
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
@@ -35,6 +44,7 @@ import com.github.ayltai.newspaper.graphics.ImageLoaderCallback;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.model.Video;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
@@ -159,20 +169,24 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
     //region Components
 
-    private final List<ImageView> thumbnails = new ArrayList<>();
-
-    private AppBarLayout appBarLayout;
-    private TextView     toolbarTitle;
-    private ImageView    bookmark;
-    private View         share;
-    private TextView     title;
-    private TextView     description;
-    private TextView     source;
-    private TextView     publishDate;
-    private ViewGroup    thumbnailContainer;
-    private ImageView    thumbnail;
-    private ViewGroup    thumbnailsContainer;
-    private SmallBang    smallBang;
+    private AppBarLayout        appBarLayout;
+    private TextView            toolbarTitle;
+    private ImageView           bookmark;
+    private View                share;
+    private TextView            title;
+    private TextView            description;
+    private TextView            source;
+    private TextView            publishDate;
+    private ViewGroup           thumbnailContainer;
+    private ImageView           thumbnail;
+    private ViewGroup           thumbnailsContainer;
+    private ViewGroup           videoContainer;
+    private ViewGroup           videoThumbnailContainer;
+    private BigImageView        videoThumbnail;
+    private View                videoPlay;
+    private SimpleExoPlayerView videoPlayerView;
+    private SimpleExoPlayer     videoPlayer;
+    private SmallBang           smallBang;
 
     //endregion
 
@@ -288,6 +302,29 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     }
 
     @Override
+    public void setVideo(@Nullable final Video video) {
+        if (video == null) {
+            this.videoContainer.setVisibility(View.GONE);
+
+            this.releaseVideoPlayer();
+        } else {
+            this.videoContainer.setVisibility(View.VISIBLE);
+            this.videoPlayerView.setVisibility(View.GONE);
+            this.videoThumbnailContainer.setVisibility(View.VISIBLE);
+            this.videoThumbnail.showImage(Uri.parse(video.getThumbnailUrl()));
+
+            if (this.videoPlayer == null) {
+                this.videoPlayer    = ExoPlayerFactory.newSimpleInstance(this.getContext(), new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(null)));
+                this.videoPlayerView.setPlayer(this.videoPlayer);
+            }
+
+            this.videoPlayer.prepare(new ExtractorMediaSource(Uri.parse(video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
+
+            if (Settings.isAutoPlayEnabled(this.getContext())) this.startVideoPlayer();
+        }
+    }
+
+    @Override
     public void setIsBookmarked(final boolean isBookmarked) {
         this.isBookmarked = isBookmarked;
 
@@ -333,7 +370,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
     }
 
     @Override
-    public void showMedia(@NonNull final String url) {
+    public void showImage(@NonNull final String url) {
         new ImageViewer.Builder(this.getContext(), new String[] { url }).show();
     }
 
@@ -372,16 +409,21 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
             final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_item, this, false);
 
-            this.appBarLayout        = (AppBarLayout)view.findViewById(R.id.appBarLayout);
-            this.toolbarTitle        = (TextView)view.findViewById(R.id.toolbar_title);
-            this.bookmark            = (ImageView)view.findViewById(R.id.bookmark);
-            this.share               = view.findViewById(R.id.share);
-            this.title               = (TextView)view.findViewById(R.id.title);
-            this.description         = (TextView)view.findViewById(R.id.description);
-            this.source              = (TextView)view.findViewById(R.id.source);
-            this.publishDate         = (TextView)view.findViewById(R.id.publishDate);
-            this.thumbnailContainer  = (ViewGroup)view.findViewById(R.id.thumbnailContainer);
-            this.thumbnailsContainer = (ViewGroup)view.findViewById(R.id.thumbnailsContainer);
+            this.appBarLayout            = (AppBarLayout)view.findViewById(R.id.appBarLayout);
+            this.toolbarTitle            = (TextView)view.findViewById(R.id.toolbar_title);
+            this.bookmark                = (ImageView)view.findViewById(R.id.bookmark);
+            this.share                   = view.findViewById(R.id.share);
+            this.title                   = (TextView)view.findViewById(R.id.title);
+            this.description             = (TextView)view.findViewById(R.id.description);
+            this.source                  = (TextView)view.findViewById(R.id.source);
+            this.publishDate             = (TextView)view.findViewById(R.id.publishDate);
+            this.thumbnailContainer      = (ViewGroup)view.findViewById(R.id.thumbnailContainer);
+            this.thumbnailsContainer     = (ViewGroup)view.findViewById(R.id.thumbnailsContainer);
+            this.videoContainer          = (ViewGroup)view.findViewById(R.id.videoContainer);
+            this.videoThumbnailContainer = (ViewGroup)view.findViewById(R.id.videoThumbnailContainer);
+            this.videoThumbnail          = (BigImageView)view.findViewById(R.id.videoThumbnail);
+            this.videoPlay               = view.findViewById(R.id.videoPlay);
+            this.videoPlayerView         = (SimpleExoPlayerView)view.findViewById(R.id.video);
 
             final Drawable drawable = AppCompatResources.getDrawable(this.getContext(), R.drawable.ic_arrow_back);
             DrawableCompat.setTint(drawable, ContextUtils.getColor(this.getContext(), R.attr.indicatorColor));
@@ -407,6 +449,8 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         super.onDetachedFromWindow();
 
         if (Settings.isPanoramaEnabled(this.getContext())) this.observer.unregister();
+
+        this.releaseVideoPlayer();
 
         this.smallBang = null;
 
@@ -434,6 +478,9 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
                 this.bookmarks.onNext(this.isBookmarked);
             }, error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+
+            this.disposables.add(RxView.clicks(this.videoThumbnail).subscribe(dummy -> this.startVideoPlayer(), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+            this.disposables.add(RxView.clicks(this.videoPlay).subscribe(dummy -> this.startVideoPlayer(), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
         }
     }
 
@@ -446,5 +493,19 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
         if (isPanoramaEnabled) ((PanoramaImageView)this.thumbnail).setGyroscopeObserver(this.observer);
 
         this.thumbnailContainer.addView(this.thumbnail);
+    }
+
+    private void startVideoPlayer() {
+        this.videoPlayerView.setVisibility(View.VISIBLE);
+        this.videoThumbnailContainer.setVisibility(View.GONE);
+
+        this.videoPlayer.setPlayWhenReady(true);
+    }
+
+    private void releaseVideoPlayer() {
+        if (this.videoPlayer != null) {
+            this.videoPlayer.release();
+            this.videoPlayer = null;
+        }
     }
 }

@@ -18,28 +18,25 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
     public static final String FIELD_CATEGORY     = "category";
     public static final String FIELD_LINK         = "link";
     public static final String FIELD_PUBLISH_DATE = "publishDate";
+    public static final String FIELD_VIDEO        = "video";
     public static final String FIELD_BOOKMARKED   = "bookmarked";
 
     //endregion
 
     //region Fields
 
-    private String title;
-
+    @PrimaryKey
+    private String  link;
+    private String  title;
     private String  description;
     private boolean isFullDescription;
-
-    @PrimaryKey
-    private String link;
-
-    private long publishDate;
-
-    private String source;
-    private String category;
+    private long    publishDate;
+    private String  source;
+    private String  category;
+    private Video   video;
+    private boolean bookmarked;
 
     private RealmList<Image> images = new RealmList<>();
-
-    private boolean bookmarked;
 
     //endregion
 
@@ -117,6 +114,15 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
         return this.images;
     }
 
+    @Nullable
+    public Video getVideo() {
+        return this.video;
+    }
+
+    public void setVideo(@Nullable final Video video) {
+        this.video = video;
+    }
+
     public boolean isBookmarked() {
         return this.bookmarked;
     }
@@ -159,6 +165,7 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
         item.setLink(this.link);
         item.setPublishDate(new Date(this.publishDate));
         item.getImages().addAll(this.images);
+        item.setVideo(this.video);
         item.setBookmarked(this.bookmarked);
         item.setSource(this.source);
         item.setCategory(this.category);
@@ -188,6 +195,7 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
         dest.writeString(this.source);
         dest.writeString(this.category);
         dest.writeTypedList(this.images);
+        dest.writeParcelable(this.video, 0);
         dest.writeInt(this.bookmarked ? 1 : 0);
     }
 
@@ -203,6 +211,7 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
         this.images = new RealmList<>();
         this.images.addAll(in.createTypedArrayList(Image.CREATOR));
 
+        this.video      = in.readParcelable(Video.class.getClassLoader());
         this.bookmarked = in.readInt() == 1;
     }
 

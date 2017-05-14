@@ -8,10 +8,14 @@ import android.support.annotation.NonNull;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class Source extends RealmObject implements Parcelable {
+    public static final String FIELD_NAME = "name";
+
     //region Fields
 
+    @PrimaryKey
     private String              name;
     private RealmList<Category> categories;
 

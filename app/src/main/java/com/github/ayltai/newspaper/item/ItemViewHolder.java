@@ -21,6 +21,7 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.model.Video;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
@@ -142,6 +143,11 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
     }
 
     @Override
+    public void setVideo(@Nullable final Video video) {
+        // Ignored
+    }
+
+    @Override
     public void setIsBookmarked(final boolean isBookmarked) {
         // Ignored
     }
@@ -186,7 +192,7 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
     }
 
     @Override
-    public void showMedia(@NonNull final String url) {
+    public void showImage(@NonNull final String url) {
     }
 
     @Override

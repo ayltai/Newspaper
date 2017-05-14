@@ -32,6 +32,7 @@ public final class Settings {
     static final String PREF_CATEGORIES       = "PREF_CATEGORIES";
 
     private static final String PREF_USER_ID              = "PREF_USER_ID";
+    private static final String PREF_AUTO_PLAY            = "PREF_AUTO_PLAY";
     private static final String PREF_HEADER_IMAGE_ENABLED = "PREF_HEADER_IMAGE_ENABLED";
 
     //endregion
@@ -128,6 +129,10 @@ public final class Settings {
         }
 
         return categories;
+    }
+
+    public static boolean isAutoPlayEnabled(@NonNull final Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Settings.PREF_AUTO_PLAY, false);
     }
 
     public static boolean isHeaderImageEnabled(@NonNull final Context context) {

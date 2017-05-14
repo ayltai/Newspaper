@@ -16,6 +16,7 @@ import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.main.ImagesUpdatedEvent;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.model.Video;
 
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -39,6 +40,8 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
         void setThumbnails(@NonNull List<Image> images);
 
+        void setVideo(@Nullable Video video);
+
         void setIsBookmarked(boolean isBookmarked);
 
         @Nullable Flowable<Object> clicks();
@@ -51,7 +54,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
         void showItem(@NonNull ListScreen.Key parentKey, @NonNull Item item);
 
-        void showMedia(@NonNull String url);
+        void showImage(@NonNull String url);
 
         void share(@NonNull String url);
     }
@@ -95,6 +98,8 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
                             this.getView().setDescription(this.item.getDescription());
 
+                            if (this.item.getVideo() != null) this.getView().setVideo(this.item.getVideo());
+
                             if (!this.item.getImages().isEmpty()) {
                                 this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
                                 this.getView().setThumbnails(this.item.getImages());
@@ -116,6 +121,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         this.getView().setLink(this.item.getLink());
         this.getView().setThumbnail(this.item.getImages().isEmpty() ? null : this.item.getImages().first().getUrl(), this.type);
         this.getView().setThumbnails(this.item.getImages());
+        this.getView().setVideo(this.item.getVideo());
         if (this.getView().bookmarks() != null) this.getView().setIsBookmarked(this.item.isBookmarked());
 
         final Date publishDate = this.item.getPublishDate();
@@ -160,6 +166,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
             this.item.setIsFullDescription(item.isFullDescription());
             this.item.getImages().clear();
             this.item.getImages().addAll(item.getImages());
+            this.item.setVideo(item.getVideo());
 
             realm.insertOrUpdate(this.item);
             realm.commitTransaction();
@@ -200,7 +207,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         if (this.getView() == null) return;
 
         if (this.getView().zooms() != null) this.disposables.add(this.getView().zooms().subscribe(index -> {
-            if (this.item != null && !this.item.getImages().isEmpty() && this.item.getImages().size() > index) this.getView().showMedia(this.item.getImages().get(index).getUrl());
+            if (this.item != null && !this.item.getImages().isEmpty() && this.item.getImages().size() > index) this.getView().showImage(this.item.getImages().get(index).getUrl());
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 
