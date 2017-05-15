@@ -59,12 +59,7 @@ public final class VideoActivity extends AppCompatActivity {
 
         this.disposables.add(RxView.clicks(videoFullScreenExit).subscribe(
             dummy -> {
-                final boolean currentIsPlaying    = this.videoPlayer.getPlaybackState() == ExoPlayer.STATE_READY && this.videoPlayer.getPlayWhenReady();
-                final long    currentSeekPosition = this.videoPlayer.getCurrentPosition();
-
-                this.videoPlayer.setPlayWhenReady(false);
-
-                RxBus.getInstance().send(new VideoEvent(currentIsPlaying, currentSeekPosition));
+                this.notifyCurrentPlaybackState();
 
                 this.finish();
             },
@@ -86,10 +81,17 @@ public final class VideoActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        this.videoPlayer.setPlayWhenReady(false);
-
-        RxBus.getInstance().send(new VideoEvent(this.videoPlayer.getPlaybackState() == ExoPlayer.STATE_READY && this.videoPlayer.getPlayWhenReady(), this.videoPlayer.getCurrentPosition()));
+        this.notifyCurrentPlaybackState();
 
         super.onBackPressed();
+    }
+
+    private void notifyCurrentPlaybackState() {
+        final boolean isPlaying    = this.videoPlayer.getPlaybackState() == ExoPlayer.STATE_READY && this.videoPlayer.getPlayWhenReady();
+        final long    seekPosition = this.videoPlayer.getCurrentPosition();
+
+        this.videoPlayer.setPlayWhenReady(false);
+
+        RxBus.getInstance().send(new VideoEvent(isPlaying, seekPosition));
     }
 }
