@@ -365,10 +365,10 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
                         this.videoPlayer.setPlayWhenReady(false);
 
-                        ((Activity)this.getContext()).startActivityForResult(new Intent(this.getContext(), VideoActivity.class)
+                        this.getContext().startActivity(new Intent(this.getContext(), VideoActivity.class)
                             .putExtra(Constants.EXTRA_VIDEO_URL, video.getVideoUrl())
                             .putExtra(Constants.EXTRA_IS_PLAYING, isPlaying)
-                            .putExtra(Constants.EXTRA_SEEK_POSITION, seekPosition), Constants.REQUEST_VIDEO_FULL_SCREEN);
+                            .putExtra(Constants.EXTRA_SEEK_POSITION, seekPosition));
                     },
                     error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
