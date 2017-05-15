@@ -43,12 +43,14 @@ public class Source extends RealmObject implements Parcelable {
 
     //region Properties
 
+    @NonNull
     public String getName() {
-        return name;
+        return this.name;
     }
 
+    @NonNull
     public RealmList<Category> getCategories() {
-        return categories;
+        return this.categories;
     }
 
     //endregion
@@ -74,7 +76,7 @@ public class Source extends RealmObject implements Parcelable {
         for (final Category category : categories) this.categories.add(category);
     }
 
-    public static final Creator<Source> CREATOR = new Creator<Source>() {
+    public static final Parcelable.Creator<Source> CREATOR = new Parcelable.Creator<Source>() {
         @NonNull
         @Override
         public Source createFromParcel(@NonNull final Parcel source) {

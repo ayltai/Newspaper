@@ -31,11 +31,11 @@ public class Category extends RealmObject implements Parcelable {
     //region Properties
 
     public String getUrl() {
-        return url;
+        return this.url;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     //endregion

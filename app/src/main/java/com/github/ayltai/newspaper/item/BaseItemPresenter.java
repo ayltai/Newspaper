@@ -91,23 +91,21 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
             if (this.showFullDescription && !this.item.isFullDescription()) this.disposables.add(ClientFactory.getInstance(this.getView().getContext()).getClient(this.item.getSource()).updateItem(this.item.clone())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .filter(updatedItem -> updatedItem != null)
+                .filter(updatedItem -> updatedItem != null && BaseItemPresenter.shouldUpdate(this.item, updatedItem))
                 .subscribe(
                     updatedItem -> {
-                        if (this.item.getDescription() == null || this.item.getDescription().length() == 0 || (updatedItem.getDescription() != null && updatedItem.getDescription().length() > 0)) {
-                            this.update(updatedItem);
+                        this.update(updatedItem);
 
-                            this.getView().setDescription(this.item.getDescription());
+                        this.getView().setDescription(this.item.getDescription());
 
-                            if (this.item.getVideo() != null) this.getView().setVideo(this.item.getVideo());
+                        if (this.item.getVideo() != null) this.getView().setVideo(this.item.getVideo());
 
-                            if (!this.item.getImages().isEmpty()) {
-                                this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
-                                this.getView().setThumbnails(this.item.getImages());
-                            }
-
-                            this.bus().send(new ImagesUpdatedEvent());
+                        if (!this.item.getImages().isEmpty()) {
+                            this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
+                            this.getView().setThumbnails(this.item.getImages());
                         }
+
+                        this.bus().send(new ImagesUpdatedEvent());
                     },
                     error -> this.log().w(this.getClass().getSimpleName(), error.getMessage(), error)));
         }
@@ -217,4 +215,8 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     protected abstract void attachShares();
 
     //endregion
+
+    private static boolean shouldUpdate(@NonNull final Item item, @NonNull final Item updatedItem) {
+        return item.getDescription() == null || item.getDescription().length() == 0 || (updatedItem.getDescription() != null && updatedItem.getDescription().length() > 0);
+    }
 }

@@ -11,6 +11,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+@SuppressWarnings("checkstyle:methodcount")
 public class Item extends RealmObject implements Cloneable, Comparable<Item>, Parcelable {
     //region Constants
 
@@ -155,6 +156,7 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
         return false;
     }
 
+    @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
     public Item clone() {
         final Item item = new Item();

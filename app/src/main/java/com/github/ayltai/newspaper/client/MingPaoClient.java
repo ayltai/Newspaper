@@ -97,7 +97,7 @@ final class MingPaoClient extends RssClient {
                         if (MingPaoClient.TYPE_IMAGE.equals(type) && height > max) {
                             img = new Image(MingPaoClient.BASE_IMAGE + obj.getString(MingPaoClient.TAG_URL), imageDescription);
                             max = height;
-                        } else if (TYPE_VIDEO.equals(type)) {
+                        } else if (MingPaoClient.TYPE_VIDEO.equals(type)) {
                             final String videoUrl = obj.getString(MingPaoClient.TAG_URL);
                             item.setVideo(new Video(videoUrl, videoUrl.replace("mp4", "jpg")));
                         }

@@ -104,7 +104,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
                     for (final Source source : favorite.getSources()) {
                         for (final Category category : source.getCategories()) {
-                            if (this.key.getCategory().equals(category.getName()) || (Constants.CATEGORY_INSTANT + this.key.getCategory()).equals(category.getName())) {
+                            if (ListPresenter.shouldFetch(this.key.getCategory(), category.getName())) {
                                 final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(source.getName());
 
                                 if (client != null) {
@@ -156,7 +156,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
                     for (final Source source : favorite.getSources()) {
                         for (final Category category : source.getCategories()) {
-                            if (this.key.getCategory().equals(category.getName()) || (Constants.CATEGORY_INSTANT + this.key.getCategory()).equals(category.getName())) {
+                            if (ListPresenter.shouldFetch(this.key.getCategory(), category.getName())) {
                                 final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(source.getName());
 
                                 if (client != null) {
@@ -305,5 +305,9 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
             return items;
         });
+    }
+
+    private static boolean shouldFetch(@NonNull final String requestedCategory, @NonNull final String category) {
+        return requestedCategory.equals(category) || (Constants.CATEGORY_INSTANT + requestedCategory).equals(category);
     }
 }

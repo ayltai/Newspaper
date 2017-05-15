@@ -93,7 +93,7 @@ final class OrientalDailyClient extends RssClient {
                     if (thumbnailUrl != null) {
                         final String videoUrl = thumbnailUrl.replace(".jpg", "_ipad.mp4");
 
-                        return new Video("http://video.cdn.on.cc/Video/" + date.substring(0, 6) + "/" + videoUrl, "http://tv.on.cc/xml/Thumbnail/" + date.substring(0, 6) + "/bigthumbnail/" + thumbnailUrl);
+                        return new Video("http://video.cdn.on.cc/Video/" + date.substring(0, 6) + OrientalDailyClient.SLASH + videoUrl, "http://tv.on.cc/xml/Thumbnail/" + date.substring(0, 6) + "/bigthumbnail/" + thumbnailUrl);
                     }
                 }
             }

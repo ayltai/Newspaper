@@ -25,7 +25,7 @@ public final class ContextUtils {
     @Nullable
     public static Activity getActivity(@NonNull final Context context) {
         if (context instanceof Activity) return (Activity)context;
-        if (context instanceof ContextWrapper) return getActivity(((ContextWrapper)context).getBaseContext());
+        if (context instanceof ContextWrapper) return ContextUtils.getActivity(((ContextWrapper)context).getBaseContext());
 
         return null;
     }

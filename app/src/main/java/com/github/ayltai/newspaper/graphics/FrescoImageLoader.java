@@ -58,7 +58,7 @@ public final class FrescoImageLoader implements ImageLoader {
     }
 
     @Override
-    public void loadImage(final Uri uri, final Callback callback) {
+    public void loadImage(final Uri uri, final ImageLoader.Callback callback) {
         final ImageRequest request = ImageRequest.fromUri(uri);
         final File         file    = FrescoImageLoader.getFileCache(request);
 

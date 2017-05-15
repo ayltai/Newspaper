@@ -76,6 +76,7 @@ import io.reactivex.processors.BehaviorProcessor;
 import io.reactivex.processors.PublishProcessor;
 import xyz.hanks.library.SmallBang;
 
+@SuppressWarnings("checkstyle:methodcount")
 public final class ItemScreen extends FrameLayout implements ItemPresenter.View {
     public static final class Key extends ClassKey implements TreeKey, Parcelable {
         private final ListScreen.Key parentKey;
@@ -134,7 +135,7 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
             this.item      = in.readParcelable(Item.class.getClassLoader());
         }
 
-        public static final Creator<Key> CREATOR = new Creator<Key>() {
+        public static final Parcelable.Creator<ItemScreen.Key> CREATOR = new Parcelable.Creator<ItemScreen.Key>() {
             @NonNull
             @Override
             public ItemScreen.Key createFromParcel(@NonNull final Parcel source) {

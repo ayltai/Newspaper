@@ -71,7 +71,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             this.category = in.readString();
         }
 
-        public static final Creator<Key> CREATOR = new Creator<Key>() {
+        public static final Parcelable.Creator<ListScreen.Key> CREATOR = new Parcelable.Creator<ListScreen.Key>() {
             @NonNull
             @Override
             public ListScreen.Key createFromParcel(@NonNull final Parcel source) {
@@ -187,12 +187,10 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
     @Override
     public void showUpdateIndicator() {
         final Snackbar snackbar = Snackbar.make(this, R.string.update_indicator, Constants.UPDATE_INDICATOR_DURATION)
-            .setAction(R.string.action_refresh, view -> {
-                this.swipeRefreshLayout.post(() -> {
-                    this.swipeRefreshLayout.setRefreshing(true);
-                    this.refreshProcessor.onNext(Irrelevant.INSTANCE);
-                });
-            });
+            .setAction(R.string.action_refresh, view -> this.swipeRefreshLayout.post(() -> {
+                this.swipeRefreshLayout.setRefreshing(true);
+                this.refreshProcessor.onNext(Irrelevant.INSTANCE);
+            }));
 
         ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setTextColor(ContextUtils.getColor(this.getContext(), R.attr.textColorInverse));
         ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_action)).setTextColor(ContextUtils.getColor(this.getContext(), R.attr.accentColor));

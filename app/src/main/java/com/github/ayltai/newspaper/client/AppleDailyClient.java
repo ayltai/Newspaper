@@ -35,7 +35,7 @@ final class AppleDailyClient extends Client {
 
     private static final long SECOND = 1000;
 
-    private static final String SLASH   = "/";
+    private static final String SLASH = "/";
 
     private static final String TAG_QUOTE    = "\"";
     private static final String TAG_HREF     = "href=\"";
@@ -74,7 +74,7 @@ final class AppleDailyClient extends Client {
 
                         if (link != null) {
                             item.setTitle(StringUtils.substringBetween(section, AppleDailyClient.TAG_TITLE, AppleDailyClient.TAG_QUOTE));
-                            item.setLink(link.substring(0, link.lastIndexOf("/"))
+                            item.setLink(link.substring(0, link.lastIndexOf(AppleDailyClient.SLASH))
                                 .replace("dv", "apple")
                                 .replace("actionnews/local", "news/art")
                                 .replace("actionnews/chinainternational", "international/art")

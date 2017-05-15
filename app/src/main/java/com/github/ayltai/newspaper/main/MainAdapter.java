@@ -34,7 +34,6 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
 
     private final SparseArrayCompat<String> categories = new SparseArrayCompat<>();
     private final SparseArrayCompat<View>   views      = new SparseArrayCompat<>();
-    private final Context                   context;
     private final MainComponent             component;
 
     @Inject Realm realm;
@@ -45,18 +44,17 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
 
     @Inject
     public MainAdapter(@NonNull final Context context) {
-        this.context   = context;
-        this.component = DaggerMainComponent.builder().mainModule(new MainModule((Activity)this.context)).build();
+        this.component = DaggerMainComponent.builder().mainModule(new MainModule((Activity)context)).build();
 
         DaggerDataComponent.builder()
             .build()
             .inject(this);
 
-        final List<String> categories = new ArrayList<>(Settings.getPreferenceCategories(this.context));
+        final List<String> categories = new ArrayList<>(Settings.getPreferenceCategories(context));
 
         int i;
         for (i = 0; i < Constants.CATEGORY_COUNT; i++) this.categories.put(i, categories.get(i));
-        this.categories.put(i, this.context.getString(R.string.title_bookmark));
+        this.categories.put(i, context.getString(R.string.title_bookmark));
     }
 
     @Override
