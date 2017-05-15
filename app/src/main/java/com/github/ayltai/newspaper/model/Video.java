@@ -5,7 +5,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 public class Video extends RealmObject implements Parcelable {
     //region Fields
@@ -40,6 +39,12 @@ public class Video extends RealmObject implements Parcelable {
     }
 
     //endregion
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Video { videoUrl = '" + this.videoUrl + "', thumbnailUrl = '" + this.thumbnailUrl + "'}";
+    }
 
     //region Parcelable
 

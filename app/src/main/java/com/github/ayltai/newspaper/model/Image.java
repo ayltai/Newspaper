@@ -61,6 +61,12 @@ public class Image extends RealmObject implements Parcelable {
         return this.url.hashCode();
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return "Image { url = '" + this.url + "', description = '" + this.description + "'}";
+    }
+
     //region Parcelable
 
     @Override

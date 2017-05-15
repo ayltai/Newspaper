@@ -21,6 +21,14 @@ public class Source extends RealmObject implements Parcelable {
 
     //endregion
 
+    @NonNull
+    public static String toDisplayName(@NonNull final String name) {
+        if ("星島即時".equals(name)) return "星島日報";
+        if ("頭條即時".equals(name)) return "頭條日報";
+
+        return name;
+    }
+
     //region Constructors
 
     public Source() {

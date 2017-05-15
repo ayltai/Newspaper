@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.client;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +20,7 @@ import io.reactivex.Maybe;
 import io.reactivex.MaybeEmitter;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
+import io.reactivex.exceptions.UndeliverableException;
 
 public abstract class Client implements Closeable {
     protected static final String ENCODING = "UTF-8";
@@ -57,7 +59,7 @@ public abstract class Client implements Closeable {
     }
 
     protected final <T> void handleError(@NonNull final SingleEmitter<T> emitter, @NonNull final Exception e) {
-        if (e instanceof InterruptedIOException) {
+        if (e instanceof InterruptedIOException || e instanceof UndeliverableException || e instanceof IOException) {
             if (BuildConfig.DEBUG) LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
 
             emitter.onSuccess((T)Collections.emptyList());
@@ -67,7 +69,7 @@ public abstract class Client implements Closeable {
     }
 
     protected final <T> void handleError(@NonNull final MaybeEmitter<T> emitter, @NonNull final Exception e) {
-        if (e instanceof InterruptedIOException) {
+        if (e instanceof InterruptedIOException || e instanceof UndeliverableException || e instanceof IOException) {
             if (BuildConfig.DEBUG) LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
 
             emitter.onComplete();

@@ -16,6 +16,7 @@ import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.main.ImagesUpdatedEvent;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.model.Video;
 
 import io.reactivex.Flowable;
@@ -117,7 +118,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
         this.getView().setTitle(this.item.getTitle());
         this.getView().setDescription(this.showFullDescription && !this.item.isFullDescription() ? this.getView().getContext().getString(R.string.loading_indicator) : this.item.getDescription());
-        this.getView().setSource(this.item.getSource());
+        this.getView().setSource(Source.toDisplayName(this.item.getSource()));
         this.getView().setLink(this.item.getLink());
         this.getView().setThumbnail(this.item.getImages().isEmpty() ? null : this.item.getImages().first().getUrl(), this.type);
         this.getView().setThumbnails(this.item.getImages());
