@@ -69,9 +69,8 @@ public final class SourceFactory {
             new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/local/home/0", date), categories[11]),
             new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/chinainternational/home/0", date), categories[12]),
             new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/finance/home/0", date), categories[14]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/entertainmnt/home/0", date), categories[16]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[17])
-        ));
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/entertainment/home/0", date), categories[16]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[17])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")

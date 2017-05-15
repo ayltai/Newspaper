@@ -46,7 +46,7 @@ public class ItemManager {
             if (categories.size() == 1 && Constants.CATEGORY_BOOKMARK.equals(categories.get(0))) {
                 query = query.equalTo(Item.FIELD_BOOKMARKED, true);
             } else {
-                final List<String> instantCategories = new ArrayList<>(categories.size());
+                final List<String> instantCategories = new ArrayList<>(categories.size() * 2);
                 for (final String category : categories) instantCategories.add(Constants.CATEGORY_INSTANT + category);
                 instantCategories.addAll(categories);
 

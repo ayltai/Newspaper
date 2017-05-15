@@ -14,10 +14,15 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
+import com.github.ayltai.newspaper.model.Video;
 import com.github.ayltai.newspaper.net.HttpClient;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
@@ -30,7 +35,7 @@ final class AppleDailyClient extends Client {
 
     private static final long SECOND = 1000;
 
-    private static final String ARTICLE = "art";
+    private static final String SLASH   = "/";
 
     private static final String TAG_QUOTE    = "\"";
     private static final String TAG_HREF     = "href=\"";
@@ -69,7 +74,13 @@ final class AppleDailyClient extends Client {
 
                         if (link != null) {
                             item.setTitle(StringUtils.substringBetween(section, AppleDailyClient.TAG_TITLE, AppleDailyClient.TAG_QUOTE));
-                            item.setLink(link.substring(0, link.lastIndexOf("/")).replace("dv", "apple").replace("actionnews", "news").replace("local", AppleDailyClient.ARTICLE).replace("chinainternational", AppleDailyClient.ARTICLE).replace("finance", AppleDailyClient.ARTICLE).replace("entertainmnt", AppleDailyClient.ARTICLE).replace("sports", AppleDailyClient.ARTICLE));
+                            item.setLink(link.substring(0, link.lastIndexOf("/"))
+                                .replace("dv", "apple")
+                                .replace("actionnews/local", "news/art")
+                                .replace("actionnews/chinainternational", "international/art")
+                                .replace("actionnews/finance", "financeestate/art")
+                                .replace("actionnews/entertainment", "entertainment/art")
+                                .replace("actionnews/sports", "sports/art"));
                             item.setSource(this.source.getName());
                             item.setCategory(categoryName);
 
@@ -98,7 +109,8 @@ final class AppleDailyClient extends Client {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
 
             try {
-                final String      html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "!-- START ARTILCLE CONTENT -->", "<!-- END ARTILCLE CONTENT -->");
+                final String      fullHtml        = IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING);
+                final String      html            = StringUtils.substringBetween(fullHtml, "!-- START ARTILCLE CONTENT -->", "<!-- END ARTILCLE CONTENT -->");
                 final String[]    imageContainers = StringUtils.substringsBetween(html, "rel=\"fancybox-button\"", "/>");
                 final List<Image> images          = new ArrayList<>();
 
@@ -114,6 +126,9 @@ final class AppleDailyClient extends Client {
                     item.getImages().addAll(images);
                 }
 
+                final Video video = this.extractVideo(item.getLink(), StringUtils.substringBetween(fullHtml, "var videoId = '", "';"));
+                if (video != null) item.setVideo(video);
+
                 final String[]      contents = StringUtils.substringsBetween(html, "<div class=\"ArticleContent_Inner\">", AppleDailyClient.TAG_DIV);
                 final StringBuilder builder  = new StringBuilder();
 
@@ -127,5 +142,30 @@ final class AppleDailyClient extends Client {
                 this.handleError(emitter, e);
             }
         });
+    }
+
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Nullable
+    private Video extractVideo(@NonNull final String url, @Nullable final String videoId) {
+        if (videoId == null) return null;
+
+        final String[] ids      = url.split(AppleDailyClient.SLASH);
+        final String   category = ids[ids.length - 4].replace("news", "local").replace("international", "chinainternational").replace("financeestate", "finance");
+
+        if (ids.length > 4) {
+            try {
+                final JSONArray items = new JSONArray(StringUtils.substringBetween(IOUtils.toString(this.client.download("http://hk.dv.nextmedia.com/video/videoplayer/" + ids[ids.length - 2] + AppleDailyClient.SLASH + category + AppleDailyClient.SLASH + category + AppleDailyClient.SLASH + ids[ids.length - 1] + AppleDailyClient.SLASH + videoId + "/0/0/0?ts=" + String.valueOf(System.currentTimeMillis() / 1000L)), Client.ENCODING), "window.videoPlaylistOriginal = ", "];") + "]");
+
+                for (int i = 0; i < items.length(); i++) {
+                    final JSONObject item = items.getJSONObject(i);
+
+                    if (ids[ids.length - 3].equals(item.getString("issue_id")) && ids[ids.length - 1].equals(item.getString("video_id"))) return new Video(item.getString("video"), item.getString("image_zoom"));
+                }
+            } catch (final IOException | JSONException e) {
+                LogUtils.getInstance().e(this.getClass().getSimpleName(), e.getMessage(), e);
+            }
+        }
+
+        return null;
     }
 }
