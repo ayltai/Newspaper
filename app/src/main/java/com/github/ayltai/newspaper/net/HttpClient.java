@@ -12,7 +12,9 @@ import javax.inject.Inject;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
+import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.util.TestUtils;
 
 import okhttp3.Call;
@@ -48,10 +50,11 @@ public final class HttpClient extends BaseHttpClient implements Closeable {
     public InputStream download(@NonNull final String url) throws IOException {
         if (TestUtils.isRunningInstrumentalTest()) return this.mockDownload(url);
 
+        if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "Downloading from " + url);
+
         final Call call = this.client.newCall(new Request.Builder()
             .url(url)
             .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:53.0) Gecko/20100101 Firefox/53.0")
-            .addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
             .build());
 
         this.calls.add(call);
