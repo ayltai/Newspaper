@@ -104,7 +104,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
                     for (final Source source : favorite.getSources()) {
                         for (final Category category : source.getCategories()) {
-                            if (category.getName().equals(this.key.getCategory())) {
+                            if (this.key.getCategory().equals(category.getName()) || (Constants.CATEGORY_INSTANT + this.key.getCategory()).equals(category.getName())) {
                                 final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(source.getName());
 
                                 if (client != null) {
@@ -156,7 +156,7 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
 
                     for (final Source source : favorite.getSources()) {
                         for (final Category category : source.getCategories()) {
-                            if (category.getName().equals(this.key.getCategory())) {
+                            if (this.key.getCategory().equals(category.getName()) || (Constants.CATEGORY_INSTANT + this.key.getCategory()).equals(category.getName())) {
                                 final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(source.getName());
 
                                 if (client != null) {

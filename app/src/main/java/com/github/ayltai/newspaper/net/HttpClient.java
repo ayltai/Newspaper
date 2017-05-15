@@ -48,7 +48,12 @@ public final class HttpClient extends BaseHttpClient implements Closeable {
     public InputStream download(@NonNull final String url) throws IOException {
         if (TestUtils.isRunningInstrumentalTest()) return this.mockDownload(url);
 
-        final Call call = this.client.newCall(new Request.Builder().url(url).build());
+        final Call call = this.client.newCall(new Request.Builder()
+            .url(url)
+            .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:53.0) Gecko/20100101 Firefox/53.0")
+            .addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+            .build());
+
         this.calls.add(call);
 
         final Response response = call.execute();

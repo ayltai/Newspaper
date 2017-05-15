@@ -99,26 +99,6 @@ public final class Settings {
     }
 
     @NonNull
-    public static Set<String> getCategories(@NonNull final Context context) {
-        final LinkedHashSet<String> reducedCategories = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.pref_category_items)));
-        final List<String>          allCategories     = Arrays.asList(context.getResources().getStringArray(R.array.categories));
-        final Set<String>           userCategories    = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, reducedCategories);
-        final LinkedHashSet<String> categories        = new LinkedHashSet<>();
-
-        for (final String category : reducedCategories) {
-            if (userCategories.contains(category)) {
-                categories.add(category);
-
-                for (int i = 1; i < Constants.CATEGORY_COUNT - 1; i++) {
-                    if (allCategories.get(i).equals(category)) categories.add(allCategories.get(i + Constants.CATEGORY_COUNT - 1));
-                }
-            }
-        }
-
-        return categories;
-    }
-
-    @NonNull
     public static Set<String> getPreferenceCategories(@NonNull final Context context) {
         final LinkedHashSet<String> reducedCategories = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.pref_category_items)));
         final Set<String>           userCategories    = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, reducedCategories);

@@ -52,7 +52,7 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
             .build()
             .inject(this);
 
-        final List<String> categories = new ArrayList<>(Settings.getCategories(this.context));
+        final List<String> categories = new ArrayList<>(Settings.getPreferenceCategories(this.context));
 
         int i;
         for (i = 0; i < Constants.CATEGORY_COUNT; i++) this.categories.put(i, categories.get(i));
