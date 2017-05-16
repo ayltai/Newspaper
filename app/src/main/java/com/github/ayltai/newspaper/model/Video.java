@@ -7,6 +7,13 @@ import android.support.annotation.NonNull;
 import io.realm.RealmObject;
 
 public class Video extends RealmObject implements Parcelable {
+    //region Constants
+
+    public static final String FIELD_VIDEO_URL     = "videoUrl";
+    public static final String FIELD_THUMBNAIL_URL = "thumbnailUrl";
+
+    //endregion
+
     //region Fields
 
     private String videoUrl;
