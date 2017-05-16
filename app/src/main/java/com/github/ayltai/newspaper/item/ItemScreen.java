@@ -22,7 +22,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -77,7 +76,7 @@ import io.reactivex.processors.PublishProcessor;
 import xyz.hanks.library.SmallBang;
 
 @SuppressWarnings("checkstyle:methodcount")
-public final class ItemScreen extends FrameLayout implements ItemPresenter.View {
+public final class ItemScreen extends BaseItemScreen implements ItemPresenter.View {
     public static final class Key extends ClassKey implements TreeKey, Parcelable {
         private final ListScreen.Key parentKey;
         private final Item           item;
@@ -361,6 +360,8 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
 
                 this.disposables.add(RxView.clicks(videoFullScreen).subscribe(
                     dummy -> {
+                        this.trackFullscreenVideoPlayback();
+
                         final boolean isPlaying    = this.videoPlayer.getPlaybackState() == ExoPlayer.STATE_READY && this.videoPlayer.getPlayWhenReady();
                         final long    seekPosition = this.videoPlayer.getCurrentPosition();
 
@@ -535,8 +536,19 @@ public final class ItemScreen extends FrameLayout implements ItemPresenter.View 
                 this.bookmarks.onNext(this.isBookmarked);
             }, error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
-            this.disposables.add(RxView.clicks(this.videoThumbnail).subscribe(dummy -> this.startVideoPlayer(), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
-            this.disposables.add(RxView.clicks(this.videoPlay).subscribe(dummy -> this.startVideoPlayer(), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+            this.disposables.add(RxView.clicks(this.videoThumbnail).subscribe(
+                dummy -> {
+                    this.trackStartVideoPlayback();
+                    this.startVideoPlayer();
+                },
+                error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+
+            this.disposables.add(RxView.clicks(this.videoPlay).subscribe(
+                dummy -> {
+                    this.trackStartVideoPlayback();
+                    this.startVideoPlayer();
+                },
+                error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
         }
     }
 
