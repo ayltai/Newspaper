@@ -8,6 +8,8 @@ import android.support.annotation.IntDef;
 import com.github.ayltai.newspaper.main.MainScreen;
 
 public final class Constants {
+    public static final int HOUSEKEEP_TIME = 72 * 60 * 60 * 1000;
+
     public static final int REMOTE_CONFIG_CACHE_EXPIRATION = 1000 * 60 * 60;
 
     public static final int REFRESH_LOAD_TIMEOUT = 30;

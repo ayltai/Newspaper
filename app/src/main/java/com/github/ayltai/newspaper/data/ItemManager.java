@@ -40,6 +40,8 @@ public class ItemManager {
 
     @NonNull
     public List<Item> getItems(@NonNull final List<String> sources, @NonNull final List<String> categories) {
+        this.deleteItems(Constants.HOUSEKEEP_TIME);
+
         RealmQuery<Item> query = this.realm.where(Item.class);
 
         if (!categories.isEmpty()) {
@@ -70,5 +72,17 @@ public class ItemManager {
 
             emitter.onSuccess(items.isEmpty() ? new ArrayList<>() : items);
         });
+    }
+
+    private void deleteItems(final long housekeepTime) {
+        this.realm.beginTransaction();
+
+        this.realm.where(Item.class)
+            .notEqualTo(Item.FIELD_BOOKMARKED, true)
+            .lessThan(Item.FIELD_PUBLISH_DATE, System.currentTimeMillis() - housekeepTime)
+            .findAll()
+            .deleteAllFromRealm();
+
+        this.realm.commitTransaction();
     }
 }
