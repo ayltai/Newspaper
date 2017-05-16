@@ -35,7 +35,7 @@ public abstract class ConnectivityChangeReceiver extends BroadcastReceiver {
     protected abstract void onConnectivityChange(boolean isConnected);
 
     private void updateConnectivityStatus() {
-        final NetworkInfo info        = ((ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+        final NetworkInfo info        = ((ConnectivityManager)this.context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
         final boolean     isConnected = info != null && info.isConnected();
 
         if (isConnected != this.isConnected) {

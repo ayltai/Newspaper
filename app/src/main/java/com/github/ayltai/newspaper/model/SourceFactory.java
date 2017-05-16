@@ -63,15 +63,14 @@ public final class SourceFactory {
     @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createAppleDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
-        final String date = DATE_FORMAT.get().format(new Date());
+        final String date = SourceFactory.DATE_FORMAT.get().format(new Date());
 
         return new Source(sources[0], new RealmList<>(
             new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/local/home/0", date), categories[11]),
             new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/chinainternational/home/0", date), categories[12]),
             new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/finance/home/0", date), categories[14]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/entertainmnt/home/0", date), categories[16]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[17])
-        ));
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/entertainment/home/0", date), categories[16]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[17])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")

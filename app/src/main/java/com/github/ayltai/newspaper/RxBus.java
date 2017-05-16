@@ -10,6 +10,8 @@ import android.support.v4.util.Pair;
 
 import org.reactivestreams.Subscriber;
 
+import com.github.ayltai.newspaper.util.LogUtils;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
@@ -39,9 +41,11 @@ public class RxBus {
     public <T> void register(@NonNull final Class<T> eventType, @NonNull final Subscriber<T> subscriber) {
         final Pair<Class, Subscriber> key = Pair.create(eventType, subscriber);
 
-        if (this.disposables.containsKey(key)) throw new IllegalArgumentException("The given subscriber is already registered");
-
-        this.disposables.put(key, this.bus.filter(event -> event != null && event.getClass().equals(eventType)).subscribe(value -> subscriber.onNext((T)value)));
+        if (this.disposables.containsKey(key)) {
+            LogUtils.getInstance().w(this.getClass().getSimpleName(), "The given subscriber is already registered");
+        } else {
+            this.disposables.put(key, this.bus.filter(event -> event != null && event.getClass().equals(eventType)).subscribe(value -> subscriber.onNext((T)value)));
+        }
     }
 
     public <T> void unregister(@NonNull final Class<T> eventType, @NonNull final Subscriber<T> subscriber) {

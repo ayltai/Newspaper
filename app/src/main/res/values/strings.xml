@@ -95,4 +95,5 @@
         <item>即時副刊</item>
         <item>即時科技</item>
     </string-array>
+    <string name="pref_auto_play">Play video news automatically</string>
 </resources>

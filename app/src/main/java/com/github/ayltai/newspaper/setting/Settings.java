@@ -32,6 +32,7 @@ public final class Settings {
     static final String PREF_CATEGORIES       = "PREF_CATEGORIES";
 
     private static final String PREF_USER_ID              = "PREF_USER_ID";
+    private static final String PREF_AUTO_PLAY            = "PREF_AUTO_PLAY";
     private static final String PREF_HEADER_IMAGE_ENABLED = "PREF_HEADER_IMAGE_ENABLED";
 
     //endregion
@@ -98,26 +99,6 @@ public final class Settings {
     }
 
     @NonNull
-    public static Set<String> getCategories(@NonNull final Context context) {
-        final LinkedHashSet<String> reducedCategories = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.pref_category_items)));
-        final List<String>          allCategories     = Arrays.asList(context.getResources().getStringArray(R.array.categories));
-        final Set<String>           userCategories    = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, reducedCategories);
-        final LinkedHashSet<String> categories        = new LinkedHashSet<>();
-
-        for (final String category : reducedCategories) {
-            if (userCategories.contains(category)) {
-                categories.add(category);
-
-                for (int i = 1; i < Constants.CATEGORY_COUNT - 1; i++) {
-                    if (allCategories.get(i).equals(category)) categories.add(allCategories.get(i + Constants.CATEGORY_COUNT - 1));
-                }
-            }
-        }
-
-        return categories;
-    }
-
-    @NonNull
     public static Set<String> getPreferenceCategories(@NonNull final Context context) {
         final LinkedHashSet<String> reducedCategories = new LinkedHashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.pref_category_items)));
         final Set<String>           userCategories    = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(Settings.PREF_CATEGORIES, reducedCategories);
@@ -128,6 +109,10 @@ public final class Settings {
         }
 
         return categories;
+    }
+
+    public static boolean isAutoPlayEnabled(@NonNull final Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Settings.PREF_AUTO_PLAY, false);
     }
 
     public static boolean isHeaderImageEnabled(@NonNull final Context context) {

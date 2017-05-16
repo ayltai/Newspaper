@@ -16,6 +16,8 @@ import com.github.ayltai.newspaper.list.ListScreen;
 import com.github.ayltai.newspaper.main.ImagesUpdatedEvent;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.model.Source;
+import com.github.ayltai.newspaper.model.Video;
 
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -39,6 +41,8 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
         void setThumbnails(@NonNull List<Image> images);
 
+        void setVideo(@Nullable Video video);
+
         void setIsBookmarked(boolean isBookmarked);
 
         @Nullable Flowable<Object> clicks();
@@ -51,7 +55,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
         void showItem(@NonNull ListScreen.Key parentKey, @NonNull Item item);
 
-        void showMedia(@NonNull String url);
+        void showImage(@NonNull String url);
 
         void share(@NonNull String url);
     }
@@ -87,21 +91,21 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
             if (this.showFullDescription && !this.item.isFullDescription()) this.disposables.add(ClientFactory.getInstance(this.getView().getContext()).getClient(this.item.getSource()).updateItem(this.item.clone())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .filter(updatedItem -> updatedItem != null)
+                .filter(updatedItem -> updatedItem != null && BaseItemPresenter.shouldUpdate(this.item, updatedItem))
                 .subscribe(
                     updatedItem -> {
-                        if (this.item.getDescription() == null || this.item.getDescription().length() == 0 || (updatedItem.getDescription() != null && updatedItem.getDescription().length() > 0)) {
-                            this.update(updatedItem);
+                        this.update(updatedItem);
 
-                            this.getView().setDescription(this.item.getDescription());
+                        this.getView().setDescription(this.item.getDescription());
 
-                            if (!this.item.getImages().isEmpty()) {
-                                this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
-                                this.getView().setThumbnails(this.item.getImages());
-                            }
+                        if (this.item.getVideo() != null) this.getView().setVideo(this.item.getVideo());
 
-                            this.bus().send(new ImagesUpdatedEvent());
+                        if (!this.item.getImages().isEmpty()) {
+                            this.getView().setThumbnail(this.item.getImages().first().getUrl(), this.type);
+                            this.getView().setThumbnails(this.item.getImages());
                         }
+
+                        this.bus().send(new ImagesUpdatedEvent());
                     },
                     error -> this.log().w(this.getClass().getSimpleName(), error.getMessage(), error)));
         }
@@ -112,10 +116,11 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
 
         this.getView().setTitle(this.item.getTitle());
         this.getView().setDescription(this.showFullDescription && !this.item.isFullDescription() ? this.getView().getContext().getString(R.string.loading_indicator) : this.item.getDescription());
-        this.getView().setSource(this.item.getSource());
+        this.getView().setSource(Source.toDisplayName(this.item.getSource()));
         this.getView().setLink(this.item.getLink());
         this.getView().setThumbnail(this.item.getImages().isEmpty() ? null : this.item.getImages().first().getUrl(), this.type);
         this.getView().setThumbnails(this.item.getImages());
+        this.getView().setVideo(this.item.getVideo());
         if (this.getView().bookmarks() != null) this.getView().setIsBookmarked(this.item.isBookmarked());
 
         final Date publishDate = this.item.getPublishDate();
@@ -160,6 +165,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
             this.item.setIsFullDescription(item.isFullDescription());
             this.item.getImages().clear();
             this.item.getImages().addAll(item.getImages());
+            this.item.setVideo(item.getVideo());
 
             realm.insertOrUpdate(this.item);
             realm.commitTransaction();
@@ -200,7 +206,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         if (this.getView() == null) return;
 
         if (this.getView().zooms() != null) this.disposables.add(this.getView().zooms().subscribe(index -> {
-            if (this.item != null && !this.item.getImages().isEmpty() && this.item.getImages().size() > index) this.getView().showMedia(this.item.getImages().get(index).getUrl());
+            if (this.item != null && !this.item.getImages().isEmpty() && this.item.getImages().size() > index) this.getView().showImage(this.item.getImages().get(index).getUrl());
         }, error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
 
@@ -209,4 +215,8 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
     protected abstract void attachShares();
 
     //endregion
+
+    private static boolean shouldUpdate(@NonNull final Item item, @NonNull final Item updatedItem) {
+        return item.getDescription() == null || item.getDescription().length() == 0 || (updatedItem.getDescription() != null && updatedItem.getDescription().length() > 0);
+    }
 }

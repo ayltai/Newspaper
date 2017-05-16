@@ -25,6 +25,10 @@ public final class Constants {
     public static final int REQUEST_SETTINGS = 1;
     public static final int REQUEST_FIREBASE = 2;
 
+    public static final String EXTRA_VIDEO_URL     = "VIDEO_URL";
+    public static final String EXTRA_IS_PLAYING    = "IS_PLAYING";
+    public static final String EXTRA_SEEK_POSITION = "SEEK_POSITION";
+
     public static final int DRAWER_MENU_ANIMATION_DELAY = 250;
 
     public static final int MAX_IMAGE_SCALE  = 100;

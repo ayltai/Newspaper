@@ -29,6 +29,41 @@
                 android:id="@+id/publishDate"
                 android:gravity="center_horizontal"
                 style="@style/Item.PublishDate" />
+            <FrameLayout
+                android:id="@+id/videoContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_5"
+                android:layout_marginLeft="@dimen/space_5"
+                android:layout_marginStart="@dimen/space_5"
+                android:layout_marginRight="@dimen/space_5"
+                android:layout_marginEnd="@dimen/space_5">
+                <FrameLayout
+                    android:id="@+id/videoThumbnailContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.github.ayltai.newspaper.widget.FaceCenteredImageView
+                        android:id="@+id/videoThumbnail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/thumbnail_cozy"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/thumbnail_placeholder"
+                        app:initScaleType="centerCrop" />
+                    <ImageView
+                        android:id="@+id/videoPlay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:scaleType="center"
+                        android:tint="?attr/indicatorColor"
+                        app:srcCompat="@drawable/ic_play_circle_outline" />
+                </FrameLayout>
+                <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                    android:id="@+id/video"
+                    android:layout_height="@dimen/thumbnail_cozy"
+                    android:layout_gravity="center"
+                    style="@style/Item" />
+            </FrameLayout>
             <TextView
                 android:id="@+id/description"
                 android:layout_marginTop="@dimen/space_5"

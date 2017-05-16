@@ -9,6 +9,7 @@ An aggreated news app containing news from 10+ local news publishers in Hong Kon
 
 ## Features
 * Fast. Just fast.
+* Support video news
 * [Auto face centering](https://developers.google.com/vision/face-detection-concepts) for image previews. No more weird cropping
 * Fancy showcases - [Ken Burns effect](https://en.wikipedia.org/wiki/Ken_Burns_effect) and [Panoramic effect](https://en.wikipedia.org/wiki/Panoramic_photography)
 * Read news from 10+ news publishers

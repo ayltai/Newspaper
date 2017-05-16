@@ -136,7 +136,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
 
         this.zooms.onNext(0);
 
-        Mockito.verify(this.getView(), Mockito.times(1)).showMedia(this.item.getImages().first().getUrl());
+        Mockito.verify(this.getView(), Mockito.times(1)).showImage(this.item.getImages().first().getUrl());
     }
 
     @Test

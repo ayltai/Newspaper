@@ -41,14 +41,14 @@ public final class HeadlineClient extends RssClient {
     private static final Map<String, String> KEYWORDS = new HashMap<>(8);
 
     static {
-        HeadlineClient.KEYWORDS.put(CATEGORY_HONG_KONG, " (港聞) ");
-        HeadlineClient.KEYWORDS.put(CATEGORY_INTERNATIONAL, " (國際) ");
-        HeadlineClient.KEYWORDS.put(CATEGORY_CHINA, " (中國) ");
-        HeadlineClient.KEYWORDS.put(CATEGORY_FINANCE, " (財經) ");
-        HeadlineClient.KEYWORDS.put(CATEGORY_PROPERTY, " (地產) ");
-        HeadlineClient.KEYWORDS.put(CATEGORY_ENTERTAINMENT, " (娛樂) ");
-        HeadlineClient.KEYWORDS.put(CATEGORY_SUPPLEMENT, " (副刊) ");
-        HeadlineClient.KEYWORDS.put(CATEGORY_SPORTS, " (體育) ");
+        HeadlineClient.KEYWORDS.put(HeadlineClient.CATEGORY_HONG_KONG, " (港聞) ");
+        HeadlineClient.KEYWORDS.put(HeadlineClient.CATEGORY_INTERNATIONAL, " (國際) ");
+        HeadlineClient.KEYWORDS.put(HeadlineClient.CATEGORY_CHINA, " (中國) ");
+        HeadlineClient.KEYWORDS.put(HeadlineClient.CATEGORY_FINANCE, " (財經) ");
+        HeadlineClient.KEYWORDS.put(HeadlineClient.CATEGORY_PROPERTY, " (地產) ");
+        HeadlineClient.KEYWORDS.put(HeadlineClient.CATEGORY_ENTERTAINMENT, " (娛樂) ");
+        HeadlineClient.KEYWORDS.put(HeadlineClient.CATEGORY_SUPPLEMENT, " (副刊) ");
+        HeadlineClient.KEYWORDS.put(HeadlineClient.CATEGORY_SPORTS, " (體育) ");
     }
 
     @Inject

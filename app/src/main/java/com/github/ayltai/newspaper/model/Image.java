@@ -15,6 +15,8 @@ public class Image extends RealmObject implements Parcelable {
 
     //endregion
 
+    //region Constructors
+
     public Image() {
     }
 
@@ -27,6 +29,10 @@ public class Image extends RealmObject implements Parcelable {
         this.description = description;
     }
 
+    //endregion
+
+    //region Properties
+
     @Nullable
     public String getUrl() {
         return this.url;
@@ -36,6 +42,8 @@ public class Image extends RealmObject implements Parcelable {
     public String getDescription() {
         return this.description;
     }
+
+    //endregion
 
     @Override
     public boolean equals(final Object o) {
@@ -51,6 +59,12 @@ public class Image extends RealmObject implements Parcelable {
     @Override
     public int hashCode() {
         return this.url.hashCode();
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Image { url = '" + this.url + "', description = '" + this.description + "'}";
     }
 
     //region Parcelable

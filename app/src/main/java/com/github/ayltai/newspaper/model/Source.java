@@ -8,14 +8,26 @@ import android.support.annotation.NonNull;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class Source extends RealmObject implements Parcelable {
+    public static final String FIELD_NAME = "name";
+
     //region Fields
 
+    @PrimaryKey
     private String              name;
     private RealmList<Category> categories;
 
     //endregion
+
+    @NonNull
+    public static String toDisplayName(@NonNull final String name) {
+        if ("星島即時".equals(name)) return "星島日報";
+        if ("頭條即時".equals(name)) return "頭條日報";
+
+        return name;
+    }
 
     //region Constructors
 
@@ -31,12 +43,14 @@ public class Source extends RealmObject implements Parcelable {
 
     //region Properties
 
+    @NonNull
     public String getName() {
-        return name;
+        return this.name;
     }
 
+    @NonNull
     public RealmList<Category> getCategories() {
-        return categories;
+        return this.categories;
     }
 
     //endregion
@@ -62,7 +76,7 @@ public class Source extends RealmObject implements Parcelable {
         for (final Category category : categories) this.categories.add(category);
     }
 
-    public static final Creator<Source> CREATOR = new Creator<Source>() {
+    public static final Parcelable.Creator<Source> CREATOR = new Parcelable.Creator<Source>() {
         @NonNull
         @Override
         public Source createFromParcel(@NonNull final Parcel source) {

@@ -9,13 +9,11 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
 
-import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.client.rss.RssClient;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
 import com.github.ayltai.newspaper.net.HttpClient;
-import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
 import io.reactivex.Maybe;

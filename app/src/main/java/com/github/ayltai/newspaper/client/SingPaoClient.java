@@ -59,8 +59,6 @@ final class SingPaoClient extends Client {
                 if (inputStream == null) {
                     emitter.onSuccess(Collections.emptyList());
                 } else {
-                    if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), url);
-
                     final String     html         = IOUtils.toString(inputStream, Client.ENCODING);
                     final String[]   sections     = StringUtils.substringsBetween(html, "<tr valign='top'><td width='220'>", "</td></tr>");
                     final List<Item> items        = new ArrayList<>(sections.length);

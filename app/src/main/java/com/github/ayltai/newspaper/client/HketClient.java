@@ -1,10 +1,12 @@
 package com.github.ayltai.newspaper.client;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,7 +65,14 @@ final class HketClient extends Client {
     public Single<List<Item>> getItems(@NonNull final String url) {
         return Single.create(emitter -> {
             try {
-                final String     html         = IOUtils.toString(this.client.download(url), Client.ENCODING);
+                final InputStream inputStream = this.client.download(url);
+
+                if (inputStream == null) {
+                    emitter.onSuccess(Collections.emptyList());
+                    return;
+                }
+
+                final String     html         = IOUtils.toString(inputStream, Client.ENCODING);
                 final String[]   sections     = StringUtils.substringsBetween(html, "<div class=\"article-listing\">", "</a>");
                 final List<Item> items        = new ArrayList<>(sections.length);
                 final String     categoryName = this.getCategoryName(url);
