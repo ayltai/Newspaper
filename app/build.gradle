@@ -9,7 +9,7 @@ apply plugin: 'jacoco'
 apply plugin: 'org.standardout.versioneye'
 
 jacoco {
-    toolVersion '0.7.9'
+    toolVersion '0.7.4.201502262128'
 }
 
 String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
@@ -22,8 +22,8 @@ android {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    16
         targetSdkVersion 25
-        versionCode      14
-        versionName      '2.1.0r' + VERSION_REVISION + '-' + VERSION_HASH
+        versionCode      15
+        versionName      '2.1.1r' + VERSION_REVISION + '-' + VERSION_HASH
 
         multiDexEnabled true
 
@@ -96,7 +96,7 @@ configurations {
 
 ext {
     supportLibraryVersion = '25.3.1'
-    firebaseSdkVersion    = '10.2.4'
+    firebaseSdkVersion    = '10.2.6'
     daggerVersion         = '2.10'
     frescoVersion         = '1.3.0'
     bigImageViewerVersion = '1.2.9'
@@ -185,7 +185,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
 
     // Database
-    compile 'io.realm:android-adapters:2.0.0'
+    compile 'io.realm:android-adapters:2.1.0'
 
     // Image processing
     compile "com.facebook.fresco:fresco:${frescoVersion}"

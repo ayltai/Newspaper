@@ -44,7 +44,7 @@ public final class Constants {
 
     public static final String CATEGORY_BOOKMARK = "BOOKMARK";
     public static final String CATEGORY_INSTANT  = "即時";
-    public static final int    CATEGORY_COUNT    = 11;
+    public static final int    CATEGORY_COUNT    = 10;
 
     public static final String ANALYTICS_BOOKMARK_ADD              = "ADD_BOOKMARK";
     public static final String ANALYTICS_BOOKMARK_REMOVE           = "REMOVE_BOOKMARK";

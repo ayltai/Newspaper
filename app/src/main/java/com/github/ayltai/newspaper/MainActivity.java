@@ -63,7 +63,7 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
 
         super.onCreate(savedInstanceState);
 
-        if (!TestUtils.isRunningInstrumentalTest()) {
+        if (!TestUtils.isRunningInstrumentedTest()) {
             this.setUpRemoteConfig();
 
             this.client = new GoogleApiClient.Builder(this.getApplicationContext())
@@ -122,14 +122,14 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     public void onStart() {
         super.onStart();
 
-        if (!TestUtils.isRunningInstrumentalTest()) this.client.connect();
+        if (!TestUtils.isRunningInstrumentedTest()) this.client.connect();
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        if (!TestUtils.isRunningInstrumentalTest()) this.client.disconnect();
+        if (!TestUtils.isRunningInstrumentedTest()) this.client.disconnect();
     }
 
     @Override

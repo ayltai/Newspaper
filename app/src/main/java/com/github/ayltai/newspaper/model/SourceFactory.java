@@ -66,11 +66,11 @@ public final class SourceFactory {
         final String date = SourceFactory.DATE_FORMAT.get().format(new Date());
 
         return new Source(sources[0], new RealmList<>(
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/local/home/0", date), categories[11]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/chinainternational/home/0", date), categories[12]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/finance/home/0", date), categories[14]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/entertainment/home/0", date), categories[16]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[17])));
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/local/home/0", date), categories[10]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/chinainternational/home/0", date), categories[11]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/finance/home/0", date), categories[13]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/entertainment/home/0", date), categories[15]),
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[16])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -102,13 +102,13 @@ public final class SourceFactory {
     @NonNull
     private static Source createSingTaoRealtimeSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[3], new RealmList<>(
-            new Category("http://std.stheadline.com/instant/articles/listview/%E9%A6%99%E6%B8%AF/", categories[11]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E5%9C%8B%E9%9A%9B/", categories[12]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E4%B8%AD%E5%9C%8B/", categories[13]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E7%B6%93%E6%BF%9F/", categories[14]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E5%9C%B0%E7%94%A2/", categories[15]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E5%A8%9B%E6%A8%82/", categories[16]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E9%AB%94%E8%82%B2/", categories[17])));
+            new Category("http://std.stheadline.com/instant/articles/listview/%E9%A6%99%E6%B8%AF/", categories[10]),
+            new Category("http://std.stheadline.com/instant/articles/listview/%E5%9C%8B%E9%9A%9B/", categories[11]),
+            new Category("http://std.stheadline.com/instant/articles/listview/%E4%B8%AD%E5%9C%8B/", categories[12]),
+            new Category("http://std.stheadline.com/instant/articles/listview/%E7%B6%93%E6%BF%9F/", categories[13]),
+            new Category("http://std.stheadline.com/instant/articles/listview/%E5%9C%B0%E7%94%A2/", categories[14]),
+            new Category("http://std.stheadline.com/instant/articles/listview/%E5%A8%9B%E6%A8%82/", categories[15]),
+            new Category("http://std.stheadline.com/instant/articles/listview/%E9%AB%94%E8%82%B2/", categories[16])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -143,14 +143,14 @@ public final class SourceFactory {
             new Category("https://news.mingpao.com/rss/pns/s00016.xml", categories[6]),
             new Category("https://news.mingpao.com/rss/pns/s00015.xml", categories[7]),
             new Category("https://news.mingpao.com/rss/pns/s00005.xml", categories[8]),
-            new Category("https://news.mingpao.com/rss/pns/s00011.xml", categories[10]),
-            new Category("https://news.mingpao.com/rss/ins/s00001.xml", categories[11]),
-            new Category("https://news.mingpao.com/rss/ins/s00005.xml", categories[12]),
-            new Category("https://news.mingpao.com/rss/ins/s00004.xml", categories[13]),
-            new Category("https://news.mingpao.com/rss/ins/s00002.xml", categories[14]),
-            new Category("https://news.mingpao.com/rss/ins/s00003.xml", categories[15]),
-            new Category("https://news.mingpao.com/rss/ins/s00007.xml", categories[16]),
-            new Category("https://news.mingpao.com/rss/ins/s00006.xml", categories[17])));
+            new Category("https://news.mingpao.com/rss/pns/s00011.xml", categories[9]),
+            new Category("https://news.mingpao.com/rss/ins/s00001.xml", categories[10]),
+            new Category("https://news.mingpao.com/rss/ins/s00005.xml", categories[11]),
+            new Category("https://news.mingpao.com/rss/ins/s00004.xml", categories[12]),
+            new Category("https://news.mingpao.com/rss/ins/s00002.xml", categories[13]),
+            new Category("https://news.mingpao.com/rss/ins/s00003.xml", categories[14]),
+            new Category("https://news.mingpao.com/rss/ins/s00007.xml", categories[15]),
+            new Category("https://news.mingpao.com/rss/ins/s00006.xml", categories[16])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -171,13 +171,13 @@ public final class SourceFactory {
     @NonNull
     private static Source createHeadlineRealtimeSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[8], new RealmList<>(
-            new Category("http://hd.stheadline.com/news/realtime/hk/", categories[11]),
-            new Category("http://hd.stheadline.com/news/realtime/wo/", categories[12]),
-            new Category("http://hd.stheadline.com/news/realtime/chi/", categories[13]),
-            new Category("http://hd.stheadline.com/news/realtime/fin/", categories[14]),
-            new Category("http://hd.stheadline.com/news/realtime/pp/", categories[15]),
-            new Category("http://hd.stheadline.com/news/realtime/ent/", categories[16]),
-            new Category("http://hd.stheadline.com/news/realtime/spt/", categories[17])));
+            new Category("http://hd.stheadline.com/news/realtime/hk/", categories[10]),
+            new Category("http://hd.stheadline.com/news/realtime/wo/", categories[11]),
+            new Category("http://hd.stheadline.com/news/realtime/chi/", categories[12]),
+            new Category("http://hd.stheadline.com/news/realtime/fin/", categories[13]),
+            new Category("http://hd.stheadline.com/news/realtime/pp/", categories[14]),
+            new Category("http://hd.stheadline.com/news/realtime/ent/", categories[15]),
+            new Category("http://hd.stheadline.com/news/realtime/spt/", categories[16])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -190,7 +190,7 @@ public final class SourceFactory {
             new Category("http://skypost.ulifestyle.com.hk/rss/sras002", categories[6]),
             new Category("http://skypost.ulifestyle.com.hk/rss/sras005", categories[7]),
             new Category("http://skypost.ulifestyle.com.hk/rss/sras006", categories[8]),
-            new Category("http://skypost.ulifestyle.com.hk/rss/sras007", categories[10])));
+            new Category("http://skypost.ulifestyle.com.hk/rss/sras007", categories[9])));
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -204,10 +204,10 @@ public final class SourceFactory {
     @NonNull
     private static Source createRadioTelevisionSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[11], new RealmList<>(
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml", categories[11]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cinternational.xml", categories[12]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_greaterchina.xml", categories[13]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cfinance.xml", categories[14]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_csport.xml", categories[17])));
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml", categories[10]),
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cinternational.xml", categories[11]),
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_greaterchina.xml", categories[12]),
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cfinance.xml", categories[13]),
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_csport.xml", categories[16])));
     }
 }

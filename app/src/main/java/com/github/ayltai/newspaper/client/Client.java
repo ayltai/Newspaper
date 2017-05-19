@@ -9,6 +9,8 @@ import java.util.List;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.xmlpull.v1.XmlPullParserException;
+
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.model.Category;
 import com.github.ayltai.newspaper.model.Item;
@@ -59,7 +61,7 @@ public abstract class Client implements Closeable {
     }
 
     protected final <T> void handleError(@NonNull final SingleEmitter<T> emitter, @NonNull final Exception e) {
-        if (e instanceof InterruptedIOException || e instanceof UndeliverableException || e instanceof IOException) {
+        if (e instanceof InterruptedIOException || e instanceof UndeliverableException || e instanceof IOException || e instanceof XmlPullParserException) {
             if (BuildConfig.DEBUG) LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
 
             emitter.onSuccess((T)Collections.emptyList());

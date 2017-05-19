@@ -53,7 +53,8 @@ public /* final */ class MainAdapter extends PagerAdapter implements Closeable {
         final List<String> categories = new ArrayList<>(Settings.getPreferenceCategories(context));
 
         int i;
-        for (i = 0; i < Constants.CATEGORY_COUNT; i++) this.categories.put(i, categories.get(i));
+        for (i = 0; i < categories.size(); i++) this.categories.put(i, categories.get(i));
+
         this.categories.put(i, context.getString(R.string.title_bookmark));
     }
 

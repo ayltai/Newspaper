@@ -171,7 +171,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
     private void updateHeaderImage(@NonNull final ImageView imageView) {
         if (this.images == null || this.images.isEmpty()) {
             imageView.post(() -> imageView.setImageBitmap(null));
-        } else if (!TestUtils.isRunningInstrumentalTest()) {
+        } else if (!TestUtils.isRunningInstrumentedTest()) {
             if (this.imageIndex == this.images.size()) {
                 this.imageIndex = 0;
 

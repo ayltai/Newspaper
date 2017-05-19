@@ -103,7 +103,7 @@ final class HketClient extends Client {
 
                 emitter.onSuccess(items);
             } catch (final IOException e) {
-                emitter.onError(e);
+                this.handleError(emitter, e);
             }
         });
     }
