@@ -25,10 +25,11 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
 
         this.addPreferencesFromResource(R.xml.preferences);
 
-        final boolean     isCompactLayout = Settings.getListViewType(this.getContext()) == Constants.LIST_VIEW_TYPE_COMPACT;
-        final boolean     isDarkTheme     = Settings.isDarkTheme(this.getContext());
-        final Set<String> sources         = Settings.getPreferenceSources(this.getContext());
-        final Set<String> categories      = Settings.getPreferenceCategories(this.getContext());
+        final boolean     isCompactLayout      = Settings.getListViewType(this.getContext()) == Constants.LIST_VIEW_TYPE_COMPACT;
+        final boolean     isDarkTheme          = Settings.isDarkTheme(this.getContext());
+        final boolean     isHeaderImageEnabled = Settings.isHeaderImageEnabled(this.getContext());
+        final Set<String> sources              = Settings.getPreferenceSources(this.getContext());
+        final Set<String> categories           = Settings.getPreferenceCategories(this.getContext());
 
         this.findPreference(Settings.PREF_COMPACT_LAYOUT).setOnPreferenceChangeListener((preference, newValue) -> {
             if (isCompactLayout != (boolean)newValue) this.getActivity().setResult(Activity.RESULT_OK);
@@ -41,6 +42,15 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
                 SettingsFragment.resultCode = Activity.RESULT_OK;
 
                 this.getActivity().recreate();
+            }
+
+            return true;
+        });
+
+        this.findPreference(Settings.PREF_HEADER_IMAGE_ENABLED).setOnPreferenceChangeListener((preference, newValue) -> {
+            if (isHeaderImageEnabled != (boolean)newValue) {
+                SettingsFragment.resultCode = Activity.RESULT_OK;
+                this.getActivity().setResult(Activity.RESULT_OK);
             }
 
             return true;

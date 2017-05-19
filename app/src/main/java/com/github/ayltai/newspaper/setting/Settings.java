@@ -25,15 +25,15 @@ import com.github.ayltai.newspaper.util.SuppressFBWarnings;
 public final class Settings {
     //region Constants
 
-    static final String PREF_COMPACT_LAYOUT   = "PREF_COMPACT_LAYOUT";
-    static final String PREF_DARK_THEME       = "PREF_DARK_THEME";
-    static final String PREF_PANORAMA_ENABLED = "PREF_PANORAMA_ENABLED";
-    static final String PREF_SOURCES          = "PREF_SOURCES";
-    static final String PREF_CATEGORIES       = "PREF_CATEGORIES";
+    static final String PREF_COMPACT_LAYOUT       = "PREF_COMPACT_LAYOUT";
+    static final String PREF_DARK_THEME           = "PREF_DARK_THEME";
+    static final String PREF_HEADER_IMAGE_ENABLED = "PREF_HEADER_IMAGE_ENABLED";
+    static final String PREF_PANORAMA_ENABLED     = "PREF_PANORAMA_ENABLED";
+    static final String PREF_SOURCES              = "PREF_SOURCES";
+    static final String PREF_CATEGORIES           = "PREF_CATEGORIES";
 
-    private static final String PREF_USER_ID              = "PREF_USER_ID";
-    private static final String PREF_AUTO_PLAY            = "PREF_AUTO_PLAY";
-    private static final String PREF_HEADER_IMAGE_ENABLED = "PREF_HEADER_IMAGE_ENABLED";
+    private static final String PREF_USER_ID   = "PREF_USER_ID";
+    private static final String PREF_AUTO_PLAY = "PREF_AUTO_PLAY";
 
     //endregion
 
