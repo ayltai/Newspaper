@@ -31,7 +31,7 @@ public abstract class BaseHttpClient {
             .writeTimeout(BaseHttpClient.WRITE_TIMEOUT, TimeUnit.SECONDS)
             .build();
 
-        if (TestUtils.isRunningInstrumentalTest() && BaseHttpClient.ASSETS.isEmpty()) {
+        if (TestUtils.isRunningInstrumentedTest() && BaseHttpClient.ASSETS.isEmpty()) {
             BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00001.xml", R.raw.rss_china);
             BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00002.xml", R.raw.rss_hk);
             BaseHttpClient.ASSETS.put("https://news.mingpao.com/rss/pns/s00014.xml", R.raw.rss_entertainment);

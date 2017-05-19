@@ -39,7 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!TestUtils.isRunningInstrumentalTest()) {
+        if (!TestUtils.isRunningInstrumentedTest()) {
             if (BaseActivity.referenceCount > 0) {
                 this.stopTakt();
 
@@ -52,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (!TestUtils.isRunningInstrumentalTest()) {
+        if (!TestUtils.isRunningInstrumentedTest()) {
             if (BaseActivity.pendingCreation) {
                 BaseActivity.pendingCreation = false;
 

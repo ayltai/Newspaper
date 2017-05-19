@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class TestUtils {
     private static AtomicBoolean isRunningUnitTest;
-    private static AtomicBoolean isRunningInstrumentalTest;
+    private static AtomicBoolean isRunningInstrumentedTest;
 
     private TestUtils() {
     }
@@ -26,20 +26,20 @@ public final class TestUtils {
         return TestUtils.isRunningUnitTest.get();
     }
 
-    public static synchronized boolean isRunningInstrumentalTest() {
-        if (TestUtils.isRunningInstrumentalTest == null) {
-            boolean isRunningInstrumentalTest = false;
+    public static synchronized boolean isRunningInstrumentedTest() {
+        if (TestUtils.isRunningInstrumentedTest == null) {
+            boolean isRunningInstrumentedTest = false;
 
             try {
                 Class.forName("android.support.test.espresso.Espresso");
-                isRunningInstrumentalTest = true;
+                isRunningInstrumentedTest = true;
             } catch (final ClassNotFoundException e) {
                 // Ignored
             }
 
-            TestUtils.isRunningInstrumentalTest = new AtomicBoolean(isRunningInstrumentalTest);
+            TestUtils.isRunningInstrumentedTest = new AtomicBoolean(isRunningInstrumentedTest);
         }
 
-        return TestUtils.isRunningInstrumentalTest.get();
+        return TestUtils.isRunningInstrumentedTest.get();
     }
 }

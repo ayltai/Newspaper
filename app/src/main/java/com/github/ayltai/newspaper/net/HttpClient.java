@@ -48,7 +48,7 @@ public final class HttpClient extends BaseHttpClient implements Closeable {
 
     @Nullable
     public InputStream download(@NonNull final String url) throws IOException {
-        if (TestUtils.isRunningInstrumentalTest()) return this.mockDownload(url);
+        if (TestUtils.isRunningInstrumentedTest()) return this.mockDownload(url);
 
         if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "Downloading from " + url);
 

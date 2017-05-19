@@ -13,7 +13,7 @@ public abstract class BaseApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
-        if (!TestUtils.isRunningUnitTest() && !TestUtils.isRunningInstrumentalTest()) {
+        if (!TestUtils.isRunningUnitTest() && !TestUtils.isRunningInstrumentedTest()) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .detectCustomSlowCalls()
                 .detectNetwork()
