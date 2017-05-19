@@ -56,7 +56,6 @@
         <item>娛樂</item>
         <item>體育</item>
         <item>副刊</item>
-        <item>科技</item>
         <item>教育</item>
     </string-array>
     <string-array name="sources">
@@ -83,7 +82,6 @@
         <item>娛樂</item>
         <item>體育</item>
         <item>副刊</item>
-        <item>科技</item>
         <item>教育</item>
         <item>即時港聞</item>
         <item>即時國際</item>
@@ -93,7 +91,6 @@
         <item>即時娛樂</item>
         <item>即時體育</item>
         <item>即時副刊</item>
-        <item>即時科技</item>
     </string-array>
     <string name="pref_auto_play">Play video news automatically</string>
 </resources>
