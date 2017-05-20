@@ -5,17 +5,12 @@ import javax.inject.Inject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatDelegate;
 import android.widget.TextView;
 
-import com.google.android.gms.appinvite.AppInvite;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import com.github.ayltai.newspaper.client.ClientFactory;
@@ -31,14 +26,13 @@ import com.github.piasy.biv.BigImageViewer;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
-public final class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
+public final class MainActivity extends BaseActivity {
     //region Variables
 
     @Inject
     FlowController controller;
 
     private FirebaseRemoteConfig       config;
-    private GoogleApiClient            client;
     private ConnectivityChangeReceiver receiver;
     private Snackbar                   snackbar;
 
@@ -63,14 +57,7 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
 
         super.onCreate(savedInstanceState);
 
-        if (!TestUtils.isRunningInstrumentedTest()) {
-            this.setUpRemoteConfig();
-
-            this.client = new GoogleApiClient.Builder(this.getApplicationContext())
-                .enableAutoManage(this, this)
-                .addApiIfAvailable(AppInvite.API)
-                .build();
-        }
+        if (!TestUtils.isRunningInstrumentedTest()) this.setUpRemoteConfig();
 
         this.setUpConnectivityChangeReceiver();
     }
@@ -119,20 +106,6 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        if (!TestUtils.isRunningInstrumentedTest()) this.client.connect();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        if (!TestUtils.isRunningInstrumentedTest()) this.client.disconnect();
-    }
-
-    @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -147,19 +120,6 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
     @Override
     public void onBackPressed() {
         if (!this.controller.onBackPressed()) super.onBackPressed();
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {
-        if (connectionResult.hasResolution()) {
-            try {
-                connectionResult.startResolutionForResult(this, Constants.REQUEST_FIREBASE);
-            } catch (final IntentSender.SendIntentException e) {
-                MainActivity.logConnectionError(connectionResult);
-            }
-        } else {
-            MainActivity.logConnectionError(connectionResult);
-        }
     }
 
     private void setUpConnectivityChangeReceiver() {
@@ -201,9 +161,5 @@ public final class MainActivity extends BaseActivity implements GoogleApiClient.
 
     private void applyRemoteConfig() {
         Configs.apply(this.config);
-    }
-
-    private static void logConnectionError(@NonNull final ConnectionResult connectionResult) {
-        LogUtils.getInstance().w(MainActivity.class.getName(), "onConnectionFailed: errorCode=" + connectionResult.getErrorCode() + ", errorMessage=" + connectionResult.getErrorMessage());
     }
 }
