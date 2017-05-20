@@ -245,9 +245,6 @@ dependencies {
     debugCompile ("io.palaima.debugdrawer:debugdrawer-commons:${debugDrawerVersion}") {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    debugCompile ("io.palaima.debugdrawer:debugdrawer-actions:${debugDrawerVersion}") {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
     debugCompile ("io.palaima.debugdrawer:debugdrawer-fps:${debugDrawerVersion}") {
         exclude group: 'com.android.support', module: 'support-annotations'
     }

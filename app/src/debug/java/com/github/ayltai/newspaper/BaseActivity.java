@@ -7,16 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.util.ViewUtils;
 
 import io.palaima.debugdrawer.DebugDrawer;
-import io.palaima.debugdrawer.actions.ActionsModule;
-import io.palaima.debugdrawer.actions.SwitchAction;
 import io.palaima.debugdrawer.commons.BuildModule;
 import io.palaima.debugdrawer.commons.DeviceModule;
-import io.palaima.debugdrawer.commons.NetworkModule;
 import io.palaima.debugdrawer.commons.SettingsModule;
 import io.palaima.debugdrawer.fps.FpsModule;
 import jp.wasabeef.takt.Seat;
@@ -124,21 +120,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void setUpDebugDrawer(@NonNull final Takt.Program program) {
-        final SwitchAction headerSwitchAction   = new SwitchAction(this.getString(R.string.pref_header_image_enabled), enabled -> Settings.setHeaderImageEnabled(this, enabled));
-        final SwitchAction panoramaSwitchAction = new SwitchAction(this.getString(R.string.pref_panorama_enabled), enabled -> Settings.setPanoramaEnabled(this, enabled));
-
         this.debugDrawer = new DebugDrawer.Builder(this)
             .modules(
-                new ActionsModule(headerSwitchAction, panoramaSwitchAction),
                 new FpsModule(program),
-                new NetworkModule(this),
                 new BuildModule(this),
-                new SettingsModule(this),
-                new DeviceModule(this)
-            )
-            .build();
-
-        if (Settings.isHeaderImageEnabled(this)) headerSwitchAction.setChecked(true);
-        if (Settings.isPanoramaEnabled(this)) panoramaSwitchAction.setChecked(true);
+                new DeviceModule(this),
+                new SettingsModule(this)
+            ).build();
     }
 }
