@@ -9,7 +9,7 @@ apply plugin: 'jacoco'
 apply plugin: 'org.standardout.versioneye'
 
 jacoco {
-    toolVersion '0.7.4.201502262128'
+    toolVersion '0.7.9'
 }
 
 String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
@@ -139,10 +139,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
     }
     compile ("com.google.firebase:firebase-config:${firebaseSdkVersion}") {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.android.support', module: 'support-v4'
-    }
-    compile ("com.google.firebase:firebase-invites:${firebaseSdkVersion}") {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-v4'
     }
