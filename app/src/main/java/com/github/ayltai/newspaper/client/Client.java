@@ -3,6 +3,7 @@ package com.github.ayltai.newspaper.client;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import android.support.annotation.Nullable;
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.github.ayltai.newspaper.BuildConfig;
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.model.Category;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
@@ -58,6 +60,17 @@ public abstract class Client implements Closeable {
         }
 
         return null;
+    }
+
+    @NonNull
+    protected List<Item> filters(@NonNull final String url, @NonNull final List<Item> items) {
+        final List<Item> filteredItems = new ArrayList<>();
+
+        for (final Item item : items) {
+            if (item.getPublishDate() != null && item.getPublishDate().getTime() > System.currentTimeMillis() - Constants.HOUSEKEEP_TIME) filteredItems.add(item);
+        }
+
+        return filteredItems;
     }
 
     protected final <T> void handleError(@NonNull final SingleEmitter<T> emitter, @NonNull final Exception e) {

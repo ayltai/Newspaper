@@ -80,7 +80,7 @@ final class SingTaoRealtimeClient extends Client {
                         }
                     }
 
-                    emitter.onSuccess(items);
+                    emitter.onSuccess(this.filters(url, items));
                 }
             } catch (final IOException e) {
                 this.handleError(emitter, e);

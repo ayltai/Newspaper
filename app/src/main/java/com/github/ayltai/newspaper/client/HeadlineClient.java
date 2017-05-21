@@ -72,7 +72,7 @@ public final class HeadlineClient extends RssClient {
             }
         }
 
-        return filteredItems;
+        return super.filters(url, filteredItems);
     }
 
     @NonNull
