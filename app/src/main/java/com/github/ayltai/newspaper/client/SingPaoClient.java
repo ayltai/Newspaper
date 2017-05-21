@@ -104,7 +104,7 @@ final class SingPaoClient extends Client {
                 final String[]    imageDescriptions = StringUtils.substringsBetween(html, "<font size='4'>", SingPaoClient.FONT);
 
                 for (int i = 0; i < imageUrls.length; i++) {
-                    final Image image = new Image(imageUrls[0], imageDescriptions[0]);
+                    final Image image = new Image(SingPaoClient.BASE_URI + imageUrls[0], imageDescriptions[0]);
 
                     if (!images.contains(image)) images.add(image);
                 }
