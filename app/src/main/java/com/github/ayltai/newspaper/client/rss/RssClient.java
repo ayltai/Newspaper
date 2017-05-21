@@ -56,9 +56,4 @@ public abstract class RssClient extends Client {
             }
         });
     }
-
-    @NonNull
-    protected List<Item> filters(@NonNull final String url, @NonNull final List<Item> items) {
-        return items;
-    }
 }

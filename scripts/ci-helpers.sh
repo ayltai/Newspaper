@@ -10,14 +10,14 @@ function inspectCode() {
     cp -r app/build/outputs/findbugs $CIRCLE_TEST_REPORTS
 }
 
-function runInstrumentalTests() {
+function runInstrumentedTests() {
     # Run Android emulator
     nohup bash -c "emulator -avd phone-$1 -skin WVGA800 -no-boot-anim -no-window &"
     circle-android wait-for-boot
 
     if test $1 -ge 23
         then
-            # Wait 3 minutes because circle-android is not reliable
+            # Wait 4 minutes because circle-android is not reliable
             sleep 240
         else
             # Wait 2 minutes because circle-android is not reliable
@@ -27,7 +27,7 @@ function runInstrumentalTests() {
     unlockAndroidEmulator $1
     setUpAndroidEmulator $1
 
-    # Run instrumental tests
+    # Run instrumented tests
     ./gradlew -i connectedDebugAndroidTest -PfabricApiSecret=$FABRIC_API_SECRET -PfabricApiKey=$FABRIC_API_KEY --console=plain
 
     # Stop the emulator
@@ -71,24 +71,24 @@ function createAndroidEmulator() {
 }
 
 function unlockAndroidEmulator() {
-    # Unlocks device
+    # Unlock device
     adb shell input keyevent 82
 
     if test $1 -ge 24
         then
-            # Taps "Wait" to dismiss "Process System is not responding" dialog
+            # Tap "Wait" to dismiss "Process System is not responding" dialog
             adb shell input tap 175 515
         else
-            # Taps "Wait" to dismiss "Process System is not responding" dialog
+            # Tap "Wait" to dismiss "Process System is not responding" dialog
             adb shell input tap 300 475
     fi
 
     if test $1 -ge 23
         then
-            # Taps "OK" to dismiss welcome screen
+            # Tap "OK" to dismiss welcome screen
             adb shell input tap 400 355
         else
-            # Taps "OK" to dismiss welcome screen
+            # Tap "OK" to dismiss welcome screen
             adb shell input tap 400 750
     fi
 }

@@ -30,10 +30,10 @@ test:
     - case $CIRCLE_NODE_INDEX in 0) (source scripts/ci-helpers.sh && createAndroidEmulator 16 && createAndroidEmulator 21) ;; 1) (source scripts/ci-helpers.sh && createAndroidEmulator 17 && createAndroidEmulator 22) ;; 2) (source scripts/ci-helpers.sh && createAndroidEmulator 18 && createAndroidEmulator 23) ;; 3) (source scripts/ci-helpers.sh && createAndroidEmulator 19 && createAndroidEmulator 24) ;; esac:
         parallel: true
   override:
-    - case $CIRCLE_NODE_INDEX in 0) (source scripts/ci-helpers.sh && generateTestReports && runInstrumentalTests 16) ;; 1) (source scripts/ci-helpers.sh && inspectCode && runInstrumentalTests 17) ;; 2) (source scripts/ci-helpers.sh && runInstrumentalTests 18) ;; 3) (source scripts/ci-helpers.sh && runInstrumentalTests 19) ;; esac:
+    - case $CIRCLE_NODE_INDEX in 0) (source scripts/ci-helpers.sh && generateTestReports && runInstrumentedTests 16) ;; 1) (source scripts/ci-helpers.sh && inspectCode && runInstrumentedTests 17) ;; 2) (source scripts/ci-helpers.sh && runInstrumentedTests 18) ;; 3) (source scripts/ci-helpers.sh && runInstrumentedTests 19) ;; esac:
         parallel: true
         timeout: 3600
-    - case $CIRCLE_NODE_INDEX in 0) (source scripts/ci-helpers.sh && runInstrumentalTests 21) ;; 1) (source scripts/ci-helpers.sh && runInstrumentalTests 22) ;; 2) (source scripts/ci-helpers.sh && runInstrumentalTests 23 && buildRelease) ;; 3) (source scripts/ci-helpers.sh && runInstrumentalTests 24) ;; esac:
+    - case $CIRCLE_NODE_INDEX in 0) (source scripts/ci-helpers.sh && runInstrumentedTests 21) ;; 1) (source scripts/ci-helpers.sh && runInstrumentedTests 22) ;; 2) (source scripts/ci-helpers.sh && runInstrumentedTests 23 && buildRelease) ;; 3) (source scripts/ci-helpers.sh && runInstrumentedTests 24) ;; esac:
         parallel: true
         timeout: 3600
     - cp -r app/build/outputs/androidTest-results/connected/*.xml $CIRCLE_TEST_REPORTS
