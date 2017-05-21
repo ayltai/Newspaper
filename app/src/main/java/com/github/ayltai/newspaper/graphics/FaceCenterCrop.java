@@ -54,8 +54,8 @@ public final class FaceCenterCrop {
         final float  scaleY = (float)this.height / bitmap.getHeight();
         final PointF center = FaceCenterCrop.findCroppedCenter(bitmap, this.width, this.height, scaleX, scaleY);
 
-        center.x *= options.inSampleSize;
-        center.y *= options.inSampleSize;
+        center.x *= options.inSampleSize / ratio;
+        center.y *= options.inSampleSize / ratio;
 
         return new ScaleCenter(ratio, center);
     }

@@ -18,6 +18,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
@@ -53,12 +55,14 @@ import com.github.ayltai.newspaper.model.Video;
 import com.github.ayltai.newspaper.setting.Settings;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
+import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.IntentUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.ItemUtils;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.video.VideoActivity;
 import com.github.ayltai.newspaper.video.VideoEvent;
+import com.github.ayltai.newspaper.widget.FaceCenteredImageView;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
@@ -213,7 +217,7 @@ public final class ItemScreen extends BaseItemScreen implements ItemPresenter.Vi
     private TextView            source;
     private TextView            publishDate;
     private ViewGroup           thumbnailContainer;
-    private ImageView           thumbnail;
+    private View                thumbnail;
     private ViewGroup           thumbnailsContainer;
     private ViewGroup           videoContainer;
     private ViewGroup           videoThumbnailContainer;
@@ -307,7 +311,11 @@ public final class ItemScreen extends BaseItemScreen implements ItemPresenter.Vi
             } else {
                 this.appBarLayout.setExpanded(true, false);
 
-                this.imageLoader.loadImage(Uri.parse(thumbnail), this.callback);
+                if (Settings.isPanoramaEnabled(this.getContext())) {
+                    this.imageLoader.loadImage(Uri.parse(thumbnail), this.callback);
+                } else {
+                    this.imageLoader.loadImage(Uri.parse(thumbnail), (BigImageView)this.thumbnail);
+                }
             }
         }
     }
@@ -555,10 +563,24 @@ public final class ItemScreen extends BaseItemScreen implements ItemPresenter.Vi
     private void initThumbnail() {
         final boolean isPanoramaEnabled = Settings.isPanoramaEnabled(this.getContext());
 
-        this.thumbnail = (ImageView)LayoutInflater.from(this.getContext()).inflate(isPanoramaEnabled ? R.layout.view_item_thumbnail_panorama : R.layout.view_item_thumbnail, this.thumbnailContainer, false);
-        this.callback  = new ImageLoaderCallback(this.thumbnail);
+        this.thumbnail = LayoutInflater.from(this.getContext()).inflate(isPanoramaEnabled ? R.layout.view_item_thumbnail_panorama : R.layout.view_item_thumbnail, this.thumbnailContainer, false);
 
-        if (isPanoramaEnabled) ((PanoramaImageView)this.thumbnail).setGyroscopeObserver(this.observer);
+        if (isPanoramaEnabled) {
+            this.callback = new ImageLoaderCallback((ImageView)this.thumbnail);
+
+            ((PanoramaImageView)this.thumbnail).setGyroscopeObserver(this.observer);
+        } else {
+            final Activity activity = ContextUtils.getActivity(this.getContext());
+
+            if (activity != null) {
+                final DisplayMetrics metrics = new DisplayMetrics();
+                activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+                ((FaceCenteredImageView)this.thumbnail).setScreenWidth(metrics.widthPixels);
+            }
+
+            ImageUtils.configure((SubsamplingScaleImageView)((BigImageView)this.thumbnail).getChildAt(0));
+        }
 
         this.thumbnailContainer.addView(this.thumbnail);
     }
