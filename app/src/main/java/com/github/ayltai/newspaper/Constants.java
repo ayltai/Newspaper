@@ -39,8 +39,9 @@ public final class Constants {
 
     public static final String ENCODING_UTF8 = "UTF-8";
 
-    public static final String EMPTY = "";
-    public static final String SPACE = " ";
+    public static final String EMPTY    = "";
+    public static final String SPACE    = " ";
+    public static final String NEW_LINE = "\n";
 
     public static final String CATEGORY_BOOKMARK = "BOOKMARK";
     public static final String CATEGORY_INSTANT  = "即時";
