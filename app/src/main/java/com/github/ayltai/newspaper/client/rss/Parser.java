@@ -151,7 +151,7 @@ final class Parser {
         final String value = Parser.readTag(parser, Parser.TAG_PUBLISH_DATE);
 
         try {
-            return Parser.DATE_FORMAT.get().parse(value);
+            return Parser.DATE_FORMAT.get().parse(value.replaceAll("EDT", "+0800"));
         } catch (final ParseException e) {
             Log.e(Parser.class.getName(), e.getMessage(), e);
         }
