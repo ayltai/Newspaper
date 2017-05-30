@@ -534,7 +534,7 @@ public final class ItemScreen extends BaseItemScreen implements ItemPresenter.Vi
             this.disposables = new CompositeDisposable();
 
             this.disposables.add(RxView.clicks(this.thumbnail).subscribe(dummy -> this.zooms.onNext(0), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
-            this.disposables.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(null), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+            this.disposables.add(RxView.clicks(this.share).subscribe(dummy -> this.shares.onNext(Irrelevant.INSTANCE), error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
             this.disposables.add(RxView.clicks(this.bookmark).subscribe(dummy -> {
                 this.setIsBookmarked(!this.isBookmarked);
