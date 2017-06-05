@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 import org.apache.commons.io.IOUtils;
 
 import com.github.ayltai.newspaper.BuildConfig;
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
@@ -78,10 +79,11 @@ final class HketClient extends Client {
                 final String     categoryName = this.getCategoryName(url);
 
                 for (final String section : sections) {
-                    final Item item = new Item();
+                    final Item   item = new Item();
+                    final String link = StringUtils.substringBetween(section, "href=\"", HketClient.TAG_QUOTE);
 
                     item.setTitle(StringUtils.substringBetween(section, "<h3 class=\"reduce-line\">", "</h3>"));
-                    item.setLink(HketClient.BASE_URI + StringUtils.substringBetween(section, "href=\"", HketClient.TAG_QUOTE));
+                    if (link != null) item.setLink((link.startsWith("http") ? Constants.EMPTY : HketClient.BASE_URI) + link);
                     item.setSource(this.source.getName());
                     item.setCategory(categoryName);
 
