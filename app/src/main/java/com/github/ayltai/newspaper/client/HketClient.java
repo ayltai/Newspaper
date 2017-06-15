@@ -34,7 +34,8 @@ final class HketClient extends Client {
 
     private static final int DATE_LENGTH = 10;
 
-    private static final String BASE_URI = "https://topick.hket.com";
+    private static final String BASE_URI       = "https://topick.hket.com";
+    private static final String CHINA_BASE_URI = "http://china.hket.com/";
 
     private static final String TAG_DATA_SRC  = "data-src=\"";
     private static final String TAG_PARAGRAPH = "</p>";
@@ -117,7 +118,8 @@ final class HketClient extends Client {
             if (BuildConfig.DEBUG) LogUtils.getInstance().d(this.getClass().getSimpleName(), item.getLink());
 
             try {
-                final String      html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), "<div class=\"article-detail\">", "<div class=\"article-detail_facebook-like\">");
+                final boolean     isChinaNews     = item.getLink().startsWith(HketClient.CHINA_BASE_URI);
+                final String      html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), isChinaNews ? "<div id=\"content-main\">" : "<div class=\"article-detail\">", isChinaNews ? "<div class=\"fb-like\"" : "<div class=\"article-detail_facebook-like\">");
                 final String[]    imageContainers = StringUtils.substringsBetween(html, "<img ", "/>");
                 final List<Image> images          = new ArrayList<>();
 
