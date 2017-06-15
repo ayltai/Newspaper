@@ -34,11 +34,7 @@ public class ItemPresenter extends BaseItemPresenter {
             .subscribe(
                 bookmark -> this.getItemManager().getItemsSingle(Collections.emptyList(), this.parentKey == null ? Collections.emptyList() : Collections.singletonList(this.parentKey.getCategory()))
                     .subscribe(
-                        items -> {
-                            this.update(bookmark);
-
-                            this.bus().send(new ItemUpdatedEvent(ItemUtils.indexOf(items, this.item), this.item));
-                        },
+                        items -> this.update(bookmark, () -> this.bus().send(new ItemUpdatedEvent(ItemUtils.indexOf(items, this.item), this.item)), null),
                         error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)),
                 error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
     }
