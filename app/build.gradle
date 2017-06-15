@@ -104,7 +104,7 @@ ext {
     debugDrawerVersion    = '0.7.0'
     stethoVersion         = '1.5.0'
     leakCanaryVersion     = '1.5.1'
-    robolectricVersion    = '3.3.2'
+    robolectricVersion    = '3.4-rc2'
     espressoVersion       = '2.2.2'
 }
 
