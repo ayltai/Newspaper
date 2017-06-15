@@ -16,16 +16,14 @@ String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
 String VERSION_HASH     = 'git rev-parse --short HEAD'.execute().text.trim()
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.0'
     defaultConfig {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    16
-        targetSdkVersion 25
-        versionCode      16
-        versionName      '2.1.2r' + VERSION_REVISION + '-' + VERSION_HASH
-
-        multiDexEnabled true
+        targetSdkVersion 26
+        versionCode      17
+        versionName      '2.1.3r' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
@@ -46,7 +44,9 @@ android {
 
     buildTypes {
         debug {
+            multiDexEnabled     true
             testCoverageEnabled true
+
             ext.enableCrashlytics = false
         }
 
@@ -95,12 +95,12 @@ configurations {
 }
 
 ext {
-    supportLibraryVersion = '25.3.1'
-    firebaseSdkVersion    = '10.2.6'
+    supportLibraryVersion = '26.0.0-beta2'
+    firebaseSdkVersion    = '11.0.0'
     daggerVersion         = '2.11'
     frescoVersion         = '1.3.0'
     bigImageViewerVersion = '1.2.9'
-    exoPlayerVersion      = 'r2.4.1'
+    exoPlayerVersion      = 'r2.4.2'
     debugDrawerVersion    = '0.7.0'
     stethoVersion         = '1.5.0'
     leakCanaryVersion     = '1.5.1'
@@ -124,7 +124,7 @@ dependencies {
     compile "com.android.support:support-core-utils:${supportLibraryVersion}"
     compile "com.android.support:preference-v7:${supportLibraryVersion}"
     compile "com.android.support:preference-v14:${supportLibraryVersion}"
-    compile ('com.takisoft.fix:preference-v7:25.3.1.0') {
+    compile ('com.takisoft.fix:preference-v7:25.4.0.3') {
         exclude group: 'com.android.support', module: 'preference-v7'
         exclude group: 'com.android.support', module: 'preference-v14'
     }
@@ -255,7 +255,7 @@ dependencies {
 
     // Tests
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.8.29'
+    testCompile 'org.mockito:mockito-core:2.8.45'
     testCompile "org.robolectric:robolectric:${robolectricVersion}"
     testCompile "org.robolectric:shadows-multidex:${robolectricVersion}"
     androidTestCompile ('com.android.support.test:runner:0.5') {
