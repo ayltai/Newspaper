@@ -17,8 +17,8 @@ dependencies:
     # Decrypt key store
     - openssl aes-256-cbc -d -in key-store.jks.cipher -out key-store.jks -k $ANDROID_KEY
   override:
-    - if [ ! -e $ANDROID_HOME/build-tools/25.0.3 ]; then echo y | android update sdk --no-ui --all --filter build-tools-25.0.3; fi
-    - if [ ! -e $ANDROID_HOME/platforms/android-25 ]; then echo y | android update sdk --no-ui --all --filter android-25; fi
+    - if [ ! -e $ANDROID_HOME/build-tools/26.0.0 ]; then echo y | android update sdk --no-ui --all --filter build-tools-26.0.0; fi
+    - if [ ! -e $ANDROID_HOME/platforms/android-26 ]; then echo y | android update sdk --no-ui --all --filter android-26; fi
     - echo y | android update sdk --no-ui --all --filter tools,platform-tools,extra-android-m2repository,extra-android-support,extra-google-m2repository,extra-google-google_play_services
     - case $CIRCLE_NODE_INDEX in 0) (source scripts/ci-helpers.sh && downloadAndroidSdk 16 && downloadAndroidSdk 21) ;; 1) (source scripts/ci-helpers.sh && downloadAndroidSdk 17 && downloadAndroidSdk 22) ;; 2) (source scripts/ci-helpers.sh && downloadAndroidSdk 18 && downloadAndroidSdk 23) ;; 3) (source scripts/ci-helpers.sh && downloadAndroidSdk 19 && downloadAndroidSdk 24) ;; esac:
         parallel: true
