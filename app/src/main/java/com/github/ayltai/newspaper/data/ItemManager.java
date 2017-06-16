@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.model.Item;
+import com.github.ayltai.newspaper.util.LogUtils;
 
 import io.reactivex.Single;
 import io.realm.Realm;
@@ -40,8 +41,6 @@ public class ItemManager {
 
     @NonNull
     public List<Item> getItems(@NonNull final List<String> sources, @NonNull final List<String> categories) {
-        this.deleteItems(Constants.HOUSEKEEP_TIME);
-
         RealmQuery<Item> query = this.realm.where(Item.class);
 
         if (!categories.isEmpty()) {
@@ -68,21 +67,29 @@ public class ItemManager {
         if (this.realm.isClosed()) throw new IllegalStateException(ItemManager.ERROR_REALM);
 
         return Single.create(emitter -> {
-            final List<Item> items = this.getItems(sources, categories);
+            final Runnable runnable = () -> {
+                final List<Item> items = this.getItems(sources, categories);
 
-            emitter.onSuccess(items.isEmpty() ? new ArrayList<>() : items);
+                emitter.onSuccess(items.isEmpty() ? new ArrayList<>() : items);
+            };
+
+            this.deleteItems(Constants.HOUSEKEEP_TIME,
+                runnable::run,
+                e -> runnable.run());
         });
     }
 
-    private void deleteItems(final long housekeepTime) {
-        this.realm.beginTransaction();
-
-        this.realm.where(Item.class)
+    private void deleteItems(final long housekeepTime, @Nullable final Realm.Transaction.OnSuccess onSuccess, @Nullable final Realm.Transaction.OnError onError) {
+        this.realm.executeTransactionAsync(realm -> realm.where(Item.class)
             .notEqualTo(Item.FIELD_BOOKMARKED, true)
             .lessThan(Item.FIELD_PUBLISH_DATE, System.currentTimeMillis() - housekeepTime)
             .findAll()
-            .deleteAllFromRealm();
+            .deleteAllFromRealm(),
+            onSuccess,
+            e -> {
+                LogUtils.getInstance().w(this.getClass().getSimpleName(), e.getMessage(), e);
 
-        this.realm.commitTransaction();
+                if (onError != null) onError.onError(e);
+            });
     }
 }

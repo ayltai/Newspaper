@@ -93,9 +93,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
                 .subscribeOn(Schedulers.io())
                 .filter(updatedItem -> updatedItem != null && BaseItemPresenter.shouldUpdate(this.item, updatedItem))
                 .subscribe(
-                    updatedItem -> {
-                        this.update(updatedItem);
-
+                    updatedItem -> this.update(updatedItem, () -> {
                         this.getView().setDescription(this.item.getDescription());
 
                         if (this.item.getVideo() != null) this.getView().setVideo(this.item.getVideo());
@@ -106,7 +104,7 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
                         }
 
                         this.bus().send(new ImagesUpdatedEvent());
-                    },
+                    }, null),
                     error -> this.log().w(this.getClass().getSimpleName(), error.getMessage(), error)));
         }
     }
@@ -155,38 +153,43 @@ public abstract class BaseItemPresenter extends Presenter<BaseItemPresenter.View
         return new ItemManager(this.realm);
     }
 
-    /* protected final */ void update(@NonNull final Item item) {
-        final Realm realm = Realm.getDefaultInstance();
+    /* protected final */ void update(@NonNull final Item item, @Nullable final Runnable onSuccess, @Nullable final Runnable onFailure) {
+        this.realm.executeTransactionAsync(
+            realm -> {
+                this.item.setDescription(item.getDescription());
+                this.item.setIsFullDescription(item.isFullDescription());
+                this.item.getImages().clear();
+                this.item.getImages().addAll(item.getImages());
+                this.item.setVideo(item.getVideo());
 
-        try {
-            realm.beginTransaction();
+                realm.insertOrUpdate(this.item);
+            },
+            () -> {
+                if (onSuccess != null) onSuccess.run();
+            },
+            e -> {
+                this.log().w(this.getClass().getSimpleName(), e.getMessage(), e);
 
-            this.item.setDescription(item.getDescription());
-            this.item.setIsFullDescription(item.isFullDescription());
-            this.item.getImages().clear();
-            this.item.getImages().addAll(item.getImages());
-            this.item.setVideo(item.getVideo());
-
-            realm.insertOrUpdate(this.item);
-            realm.commitTransaction();
-        } finally {
-            realm.close();
-        }
+                if (onFailure != null) onFailure.run();
+            });
     }
 
-    /* protected final */ void update(final boolean isBookmarked) {
-        final Realm realm = Realm.getDefaultInstance();
+    /* protected final */ void update(final boolean isBookmarked, @Nullable final Runnable onSuccess, @Nullable final Runnable onFailure) {
+        this.realm.executeTransactionAsync(
+            realm -> {
+                this.item.setBookmarked(isBookmarked);
 
-        try {
-            realm.beginTransaction();
+                realm.insertOrUpdate(this.item);
+            },
+            () -> {
+                if (onSuccess != null) onSuccess.run();
+            },
+            e -> {
+                this.log().w(this.getClass().getSimpleName(), e.getMessage(), e);
 
-            this.item.setBookmarked(isBookmarked);
-
-            realm.insertOrUpdate(this.item);
-            realm.commitTransaction();
-        } finally {
-            realm.close();
-        }
+                if (onFailure != null) onFailure.run();
+            }
+        );
     }
 
     //region Event handlers

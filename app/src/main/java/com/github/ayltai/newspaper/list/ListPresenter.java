@@ -9,6 +9,7 @@ import java.util.concurrent.TimeoutException;
 import javax.inject.Inject;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
@@ -120,11 +121,18 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                     this.refreshDisposable = ListPresenter.zip(maybes)
                         .subscribe(
                             items -> {
-                                this.items = this.partialUpdate(items);
+                                final Runnable runnable = () -> {
+                                    this.items = items;
 
-                                this.getView().setItems(this.key, this.items);
+                                    this.getView().setItems(this.key, this.items);
 
-                                this.checkForUpdate();
+                                    this.checkForUpdate();
+                                };
+
+                                this.partialUpdate(
+                                    items,
+                                    runnable::run,
+                                    e -> runnable.run());
                             },
                             error -> {
                                 this.getView().setItems(this.key, this.items);
@@ -203,33 +211,37 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         }
     }
 
-    private List<Item> partialUpdate(@NonNull final List<Item> items) {
+    private void partialUpdate(@NonNull final List<Item> items, @Nullable final Realm.Transaction.OnSuccess onSuccess, @Nullable final Realm.Transaction.OnError onError) {
         if (!this.realm.isClosed()) {
-            this.realm.beginTransaction();
+            this.realm.executeTransactionAsync(
+                realm -> {
+                    for (final Item item : items) {
+                        final Item realmItem = this.getItemManager().getItem(item.getLink());
 
-            for (final Item item : items) {
-                final Item realmItem = this.getItemManager().getItem(item.getLink());
+                        if (realmItem == null) {
+                            realm.insert(item);
+                        } else {
+                            if (realmItem.isFullDescription()) item.setDescription(realmItem.getDescription());
+                            item.setIsFullDescription(realmItem.isFullDescription());
 
-                if (realmItem == null) {
-                    this.realm.insert(item);
-                } else {
-                    if (realmItem.isFullDescription()) item.setDescription(realmItem.getDescription());
-                    item.setIsFullDescription(realmItem.isFullDescription());
+                            item.getImages().clear();
+                            item.getImages().addAll(realmItem.getImages());
 
-                    item.getImages().clear();
-                    item.getImages().addAll(realmItem.getImages());
+                            if (realmItem.getVideo() != null) item.setVideo(realmItem.getVideo());
+                            item.setBookmarked(realmItem.isBookmarked());
 
-                    if (realmItem.getVideo() != null) item.setVideo(realmItem.getVideo());
-                    item.setBookmarked(realmItem.isBookmarked());
+                            realm.insertOrUpdate(item);
+                        }
+                    }
+                },
+                onSuccess,
+                e -> {
+                    this.log().w(this.getClass().getSimpleName(), e.getMessage(), e);
 
-                    this.realm.insertOrUpdate(item);
+                    if (onError != null) onError.onError(e);
                 }
-            }
-
-            this.realm.commitTransaction();
+            );
         }
-
-        return items;
     }
 
     //region Lifecycle

@@ -48,12 +48,12 @@ public class ItemPresenter extends BaseItemPresenter {
                 bookmark -> this.getItemManager().getItemsSingle(Collections.emptyList(), this.parentKey == null ? Collections.emptyList() : Collections.singletonList(Constants.CATEGORY_BOOKMARK))
                     .subscribe(
                         items -> {
-                            this.update(bookmark);
+                            this.update(bookmark, () -> {
+                                this.bus().send(Pair.create(ItemUtils.indexOf(items, this.item), this.item));
 
-                            this.bus().send(Pair.create(ItemUtils.indexOf(items, this.item), this.item));
-
-                            this.answers().logCustom(AnalyticsUtils.applyAttributes(new CustomEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE), this.item));
-                            this.analytics().logEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE, AnalyticsUtils.createBundle(this.item));
+                                this.answers().logCustom(AnalyticsUtils.applyAttributes(new CustomEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE), this.item));
+                                this.analytics().logEvent(bookmark ? Constants.ANALYTICS_BOOKMARK_ADD : Constants.ANALYTICS_BOOKMARK_REMOVE, AnalyticsUtils.createBundle(this.item));
+                            }, null);
                         },
                         error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)),
                 error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)));
