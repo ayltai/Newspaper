@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper;
 
+import android.os.Build;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 
@@ -10,15 +11,15 @@ import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-
 import org.robolectric.shadows.multidex.ShadowMultiDex;
+
 import com.github.ayltai.newspaper.util.Irrelevant;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.processors.PublishProcessor;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, shadows = { ShadowMultiDex.class })
+@Config(sdk = Build.VERSION_CODES.N_MR1, constants = BuildConfig.class, shadows = { ShadowMultiDex.class })
 public abstract class PresenterTest<P extends Presenter, V extends Presenter.View> {
     private final PublishProcessor<Object> attachments = PublishProcessor.create();
     private final PublishProcessor<Object> detachments = PublishProcessor.create();

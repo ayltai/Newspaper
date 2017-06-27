@@ -99,7 +99,7 @@ ext {
     firebaseSdkVersion    = '11.0.0'
     daggerVersion         = '2.11'
     frescoVersion         = '1.3.0'
-    bigImageViewerVersion = '1.2.9'
+    bigImageViewerVersion = '1.3.0'
     exoPlayerVersion      = 'r2.4.2'
     debugDrawerVersion    = '0.7.0'
     stethoVersion         = '1.5.0'
@@ -158,7 +158,7 @@ dependencies {
     }
 
     // ReactiveX
-    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.1'
     compile ('io.reactivex.rxjava2:rxandroid:2.0.1') {
         exclude group: 'io.reactivex', module: 'rxjava'
     }
@@ -178,7 +178,7 @@ dependencies {
     }
 
     // Networking
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
 
     // Database
     compile 'io.realm:android-adapters:2.1.0'
@@ -255,7 +255,7 @@ dependencies {
 
     // Tests
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.8.45'
+    testCompile 'org.mockito:mockito-core:2.8.52'
     testCompile "org.robolectric:robolectric:${robolectricVersion}"
     testCompile "org.robolectric:shadows-multidex:${robolectricVersion}"
     androidTestCompile ('com.android.support.test:runner:0.5') {
