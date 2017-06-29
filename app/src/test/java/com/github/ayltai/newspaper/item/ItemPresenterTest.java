@@ -145,7 +145,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
 
         this.bookmarks.onNext(Boolean.TRUE);
 
-        Mockito.verify(this.getPresenter(), Mockito.times(1)).update(true, ArgumentMatchers.any(), ArgumentMatchers.any());
+        Mockito.verify(this.getPresenter(), Mockito.times(1)).update(ArgumentMatchers.eq(true), ArgumentMatchers.any(Runnable.class), ArgumentMatchers.eq(null));
     }
 
     @Test
