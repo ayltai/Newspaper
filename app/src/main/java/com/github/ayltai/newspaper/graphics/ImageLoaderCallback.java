@@ -47,6 +47,15 @@ public final class ImageLoaderCallback implements ImageLoader.Callback {
     }
 
     @Override
+    public void onSuccess(final File file) {
+    }
+
+    @Override
+    public void onFail(final Exception error) {
+        LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error);
+    }
+
+    @Override
     public void onFinish() {
     }
 
