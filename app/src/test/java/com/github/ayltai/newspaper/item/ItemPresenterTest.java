@@ -67,8 +67,8 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
 
         final ItemPresenter presenter = Mockito.spy(new ItemPresenter(null));
         Mockito.doReturn(itemManager).when(presenter).getItemManager();
-        Mockito.doNothing().when(presenter).update(ArgumentMatchers.any(Item.class));
-        Mockito.doNothing().when(presenter).update(ArgumentMatchers.anyBoolean());
+        Mockito.doNothing().when(presenter).update(ArgumentMatchers.any(Item.class), ArgumentMatchers.any(), ArgumentMatchers.any());
+        Mockito.doNothing().when(presenter).update(ArgumentMatchers.anyBoolean(), ArgumentMatchers.any(), ArgumentMatchers.any());
 
         final RxBus bus = Mockito.mock(RxBus.class);
         Mockito.doReturn(bus).when(presenter).bus();
@@ -145,7 +145,7 @@ public final class ItemPresenterTest extends PresenterTest<ItemPresenter, ItemPr
 
         this.bookmarks.onNext(Boolean.TRUE);
 
-        Mockito.verify(this.getPresenter(), Mockito.times(1)).update(true);
+        Mockito.verify(this.getPresenter(), Mockito.times(1)).update(true, ArgumentMatchers.any(), ArgumentMatchers.any());
     }
 
     @Test
