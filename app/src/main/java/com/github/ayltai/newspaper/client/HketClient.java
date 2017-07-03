@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.apache.commons.io.IOUtils;
 
@@ -22,6 +23,7 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.model.Image;
 import com.github.ayltai.newspaper.model.Item;
 import com.github.ayltai.newspaper.model.Source;
+import com.github.ayltai.newspaper.model.Video;
 import com.github.ayltai.newspaper.net.HttpClient;
 import com.github.ayltai.newspaper.util.LogUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
@@ -34,8 +36,9 @@ final class HketClient extends Client {
 
     private static final int DATE_LENGTH = 10;
 
-    private static final String BASE_URI       = "https://topick.hket.com";
-    private static final String CHINA_BASE_URI = "http://china.hket.com/";
+    private static final String BASE_URI        = "https://topick.hket.com";
+    private static final String CHINA_BASE_URI  = "http://china.hket.com/";
+    private static final String INVEST_BASE_URI = "http://invest.hket.com/";
 
     private static final String TAG_DATA_SRC  = "data-src=\"";
     private static final String TAG_PARAGRAPH = "</p>";
@@ -119,7 +122,8 @@ final class HketClient extends Client {
 
             try {
                 final boolean     isChinaNews     = item.getLink().startsWith(HketClient.CHINA_BASE_URI);
-                final String      html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), isChinaNews ? "<div id=\"content-main\">" : "<div class=\"article-detail\">", isChinaNews ? "<div class=\"fb-like\"" : "<div class=\"article-detail_facebook-like\">");
+                final boolean     isInvestNews    = item.getLink().startsWith(HketClient.INVEST_BASE_URI);
+                final String      html            = StringUtils.substringBetween(IOUtils.toString(this.client.download(item.getLink()), Client.ENCODING), isChinaNews || isInvestNews ? "<div id=\"content-main\">" : "<div class=\"article-detail\">", isChinaNews ? "<div class=\"fb-like\"" : isInvestNews ? "<div class=\"fb-page-like\">" : "<div class=\"article-detail_facebook-like\">");
                 final String[]    imageContainers = StringUtils.substringsBetween(html, "<img ", "/>");
                 final List<Image> images          = new ArrayList<>();
 
@@ -135,10 +139,15 @@ final class HketClient extends Client {
                     item.getImages().addAll(images);
                 }
 
+                final String videoId = StringUtils.substringBetween(html, "<iframe width=\"640\" height=\"360\" src=\"//www.youtube.com/embed/", "?rel=0");
+                if (videoId != null) item.setVideo(new Video("https://www.youtube.com/watch?v=" + videoId, String.format("https://img.youtube.com/vi/%s/mqdefault.jpg", videoId)));
+
                 final String[]      contents = StringUtils.substringsBetween(html, "<p>", HketClient.TAG_PARAGRAPH);
                 final StringBuilder builder  = new StringBuilder();
 
-                for (final String content : contents) builder.append(content).append("<br>");
+                for (final String content : contents) {
+                    if (!TextUtils.isEmpty(content)) builder.append(content).append("<br>");
+                }
 
                 item.setDescription(builder.toString());
                 item.setIsFullDescription(true);

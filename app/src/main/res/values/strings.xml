@@ -7,6 +7,7 @@
     <string name="empty_news_description">Please try again later</string>
     <string name="empty_bookmark_title">You don\'t have any favorite news yet</string>
     <string name="empty_bookmark_description">Tap on the bookmark icon to collect news here</string>
+    <string name="view_via">View via…</string>
     <string name="share_to">Share to…</string>
     <string name="rate_app">Rate 5 stars</string>
     <string name="update_indicator">New news available</string>

@@ -224,7 +224,7 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
             final View                view          = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_list, this, false);
             final LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
 
-            this.recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+            this.recyclerView = view.findViewById(R.id.recyclerView);
             this.recyclerView.setLayoutManager(layoutManager);
             this.recyclerView.setAdapter(new DummyAdapter());
 
@@ -238,11 +238,11 @@ public final class ListScreen extends FrameLayout implements ListPresenter.View,
                 }
             });
 
-            this.swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
+            this.swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
             this.swipeRefreshLayout.setColorSchemeResources(ContextUtils.getResourceId(this.getContext(), R.attr.primaryColor));
             this.swipeRefreshLayout.setOnRefreshListener(() -> this.refreshProcessor.onNext(Irrelevant.INSTANCE));
 
-            this.empty = (ViewGroup)view.findViewById(R.id.empty);
+            this.empty = view.findViewById(R.id.empty);
 
             this.addView(view);
         }

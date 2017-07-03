@@ -65,10 +65,10 @@ public final class ItemViewHolder extends RecyclerView.ViewHolder implements Ite
         super(itemView);
 
         this.itemView    = itemView;
-        this.title       = (TextView)itemView.findViewById(R.id.title);
-        this.description = (TextView)itemView.findViewById(R.id.description);
-        this.source      = (TextView)itemView.findViewById(R.id.source);
-        this.publishDate = (TextView)itemView.findViewById(R.id.publishDate);
+        this.title       = itemView.findViewById(R.id.title);
+        this.description = itemView.findViewById(R.id.description);
+        this.source      = itemView.findViewById(R.id.source);
+        this.publishDate = itemView.findViewById(R.id.publishDate);
 
         final View view = itemView.findViewById(R.id.thumbnail);
 

@@ -174,6 +174,7 @@ public final class ItemScreen extends BaseItemScreen implements ItemPresenter.Vi
 
     private CompositeDisposable disposables;
     private ImageLoaderCallback callback;
+    private String              videoUrl;
     private boolean             isBookmarked;
     private boolean             hasAttached;
 
@@ -357,34 +358,38 @@ public final class ItemScreen extends BaseItemScreen implements ItemPresenter.Vi
                 this.videoThumbnailContainer.setVisibility(View.VISIBLE);
                 this.videoThumbnail.showImage(Uri.parse(video.getThumbnailUrl()));
 
-                this.videoPlayer    = ExoPlayerFactory.newSimpleInstance(this.getContext(), new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(null)));
-                this.videoPlayerView.setPlayer(this.videoPlayer);
+                this.videoUrl = video.getVideoUrl();
 
-                final View videoFullScreen     = this.videoPlayerView.findViewById(R.id.exo_fullscreen);
-                final View videoFullScreenExit = this.videoPlayerView.findViewById(R.id.exo_fullscreen_exit);
+                if (!ItemUtils.isYouTube(video.getVideoUrl())) {
+                    this.videoPlayer    = ExoPlayerFactory.newSimpleInstance(this.getContext(), new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(null)));
+                    this.videoPlayerView.setPlayer(this.videoPlayer);
 
-                videoFullScreen.setVisibility(View.VISIBLE);
-                videoFullScreenExit.setVisibility(View.GONE);
+                    final View videoFullScreen     = this.videoPlayerView.findViewById(R.id.exo_fullscreen);
+                    final View videoFullScreenExit = this.videoPlayerView.findViewById(R.id.exo_fullscreen_exit);
 
-                this.disposables.add(RxView.clicks(videoFullScreen).subscribe(
-                    dummy -> {
-                        this.trackFullscreenVideoPlayback();
+                    videoFullScreen.setVisibility(View.VISIBLE);
+                    videoFullScreenExit.setVisibility(View.GONE);
 
-                        final boolean isPlaying    = this.videoPlayer.getPlaybackState() == ExoPlayer.STATE_READY && this.videoPlayer.getPlayWhenReady();
-                        final long    seekPosition = this.videoPlayer.getCurrentPosition();
+                    this.disposables.add(RxView.clicks(videoFullScreen).subscribe(
+                        dummy -> {
+                            this.trackFullscreenVideoPlayback();
 
-                        this.videoPlayer.setPlayWhenReady(false);
+                            final boolean isPlaying    = this.videoPlayer.getPlaybackState() == ExoPlayer.STATE_READY && this.videoPlayer.getPlayWhenReady();
+                            final long    seekPosition = this.videoPlayer.getCurrentPosition();
 
-                        this.getContext().startActivity(new Intent(this.getContext(), VideoActivity.class)
-                            .putExtra(Constants.EXTRA_VIDEO_URL, video.getVideoUrl())
-                            .putExtra(Constants.EXTRA_IS_PLAYING, isPlaying)
-                            .putExtra(Constants.EXTRA_SEEK_POSITION, seekPosition));
-                    },
-                    error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
+                            this.videoPlayer.setPlayWhenReady(false);
 
-                this.videoPlayer.prepare(new ExtractorMediaSource(Uri.parse(video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
+                            this.getContext().startActivity(new Intent(this.getContext(), VideoActivity.class)
+                                .putExtra(Constants.EXTRA_VIDEO_URL, video.getVideoUrl())
+                                .putExtra(Constants.EXTRA_IS_PLAYING, isPlaying)
+                                .putExtra(Constants.EXTRA_SEEK_POSITION, seekPosition));
+                        },
+                        error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
-                if (Settings.isAutoPlayEnabled(this.getContext())) this.startVideoPlayer();
+                    this.videoPlayer.prepare(new ExtractorMediaSource(Uri.parse(video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
+
+                    if (Settings.isAutoPlayEnabled(this.getContext())) this.startVideoPlayer();
+                }
             }
         }
     }
@@ -474,26 +479,26 @@ public final class ItemScreen extends BaseItemScreen implements ItemPresenter.Vi
 
             final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_item, this, false);
 
-            this.appBarLayout            = (AppBarLayout)view.findViewById(R.id.appBarLayout);
-            this.toolbarTitle            = (TextView)view.findViewById(R.id.toolbar_title);
-            this.bookmark                = (ImageView)view.findViewById(R.id.bookmark);
+            this.appBarLayout            = view.findViewById(R.id.appBarLayout);
+            this.toolbarTitle            = view.findViewById(R.id.toolbar_title);
+            this.bookmark                = view.findViewById(R.id.bookmark);
             this.share                   = view.findViewById(R.id.share);
-            this.title                   = (TextView)view.findViewById(R.id.title);
-            this.description             = (TextView)view.findViewById(R.id.description);
-            this.source                  = (TextView)view.findViewById(R.id.source);
-            this.publishDate             = (TextView)view.findViewById(R.id.publishDate);
-            this.thumbnailContainer      = (ViewGroup)view.findViewById(R.id.thumbnailContainer);
-            this.thumbnailsContainer     = (ViewGroup)view.findViewById(R.id.thumbnailsContainer);
-            this.videoContainer          = (ViewGroup)view.findViewById(R.id.videoContainer);
-            this.videoThumbnailContainer = (ViewGroup)view.findViewById(R.id.videoThumbnailContainer);
-            this.videoThumbnail          = (BigImageView)view.findViewById(R.id.videoThumbnail);
+            this.title                   = view.findViewById(R.id.title);
+            this.description             = view.findViewById(R.id.description);
+            this.source                  = view.findViewById(R.id.source);
+            this.publishDate             = view.findViewById(R.id.publishDate);
+            this.thumbnailContainer      = view.findViewById(R.id.thumbnailContainer);
+            this.thumbnailsContainer     = view.findViewById(R.id.thumbnailsContainer);
+            this.videoContainer          = view.findViewById(R.id.videoContainer);
+            this.videoThumbnailContainer = view.findViewById(R.id.videoThumbnailContainer);
+            this.videoThumbnail          = view.findViewById(R.id.videoThumbnail);
             this.videoPlay               = view.findViewById(R.id.videoPlay);
-            this.videoPlayerView         = (SimpleExoPlayerView)view.findViewById(R.id.video);
+            this.videoPlayerView         = view.findViewById(R.id.video);
 
             final Drawable drawable = AppCompatResources.getDrawable(this.getContext(), R.drawable.ic_arrow_back);
             DrawableCompat.setTint(drawable, ContextUtils.getColor(this.getContext(), R.attr.indicatorColor));
 
-            final Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);
+            final Toolbar toolbar = view.findViewById(R.id.toolbar);
             toolbar.setNavigationIcon(drawable);
             toolbar.setNavigationOnClickListener(v -> Flow.get(v).goBack());
 
@@ -545,17 +550,11 @@ public final class ItemScreen extends BaseItemScreen implements ItemPresenter.Vi
             }, error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
             this.disposables.add(RxView.clicks(this.videoThumbnail).subscribe(
-                dummy -> {
-                    this.trackStartVideoPlayback();
-                    this.startVideoPlayer();
-                },
+                dummy -> this.startPlayer(),
                 error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
 
             this.disposables.add(RxView.clicks(this.videoPlay).subscribe(
-                dummy -> {
-                    this.trackStartVideoPlayback();
-                    this.startVideoPlayer();
-                },
+                dummy -> this.startPlayer(),
                 error -> LogUtils.getInstance().e(this.getClass().getSimpleName(), error.getMessage(), error)));
         }
     }
@@ -585,6 +584,16 @@ public final class ItemScreen extends BaseItemScreen implements ItemPresenter.Vi
         this.thumbnailContainer.addView(this.thumbnail);
     }
 
+    private void startPlayer() {
+        this.trackStartVideoPlayback();
+
+        if (this.videoUrl != null && ItemUtils.isYouTube(this.videoUrl)) {
+            this.startYouTubePlayer();
+        } else {
+            this.startVideoPlayer();
+        }
+    }
+
     private void startVideoPlayer() {
         this.videoPlayerView.setVisibility(View.VISIBLE);
         this.videoThumbnailContainer.setVisibility(View.GONE);
@@ -601,5 +610,9 @@ public final class ItemScreen extends BaseItemScreen implements ItemPresenter.Vi
             this.videoPlayer.release();
             this.videoPlayer = null;
         }
+    }
+
+    private void startYouTubePlayer() {
+        this.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(this.videoUrl)), this.getContext().getText(R.string.view_via)));
     }
 }
