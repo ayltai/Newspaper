@@ -479,26 +479,26 @@ public final class ItemScreen extends BaseItemScreen implements ItemPresenter.Vi
 
             final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_item, this, false);
 
-            this.appBarLayout            = (AppBarLayout)view.findViewById(R.id.appBarLayout);
-            this.toolbarTitle            = (TextView)view.findViewById(R.id.toolbar_title);
-            this.bookmark                = (ImageView)view.findViewById(R.id.bookmark);
+            this.appBarLayout            = view.findViewById(R.id.appBarLayout);
+            this.toolbarTitle            = view.findViewById(R.id.toolbar_title);
+            this.bookmark                = view.findViewById(R.id.bookmark);
             this.share                   = view.findViewById(R.id.share);
-            this.title                   = (TextView)view.findViewById(R.id.title);
-            this.description             = (TextView)view.findViewById(R.id.description);
-            this.source                  = (TextView)view.findViewById(R.id.source);
-            this.publishDate             = (TextView)view.findViewById(R.id.publishDate);
-            this.thumbnailContainer      = (ViewGroup)view.findViewById(R.id.thumbnailContainer);
-            this.thumbnailsContainer     = (ViewGroup)view.findViewById(R.id.thumbnailsContainer);
-            this.videoContainer          = (ViewGroup)view.findViewById(R.id.videoContainer);
-            this.videoThumbnailContainer = (ViewGroup)view.findViewById(R.id.videoThumbnailContainer);
-            this.videoThumbnail          = (BigImageView)view.findViewById(R.id.videoThumbnail);
+            this.title                   = view.findViewById(R.id.title);
+            this.description             = view.findViewById(R.id.description);
+            this.source                  = view.findViewById(R.id.source);
+            this.publishDate             = view.findViewById(R.id.publishDate);
+            this.thumbnailContainer      = view.findViewById(R.id.thumbnailContainer);
+            this.thumbnailsContainer     = view.findViewById(R.id.thumbnailsContainer);
+            this.videoContainer          = view.findViewById(R.id.videoContainer);
+            this.videoThumbnailContainer = view.findViewById(R.id.videoThumbnailContainer);
+            this.videoThumbnail          = view.findViewById(R.id.videoThumbnail);
             this.videoPlay               = view.findViewById(R.id.videoPlay);
-            this.videoPlayerView         = (SimpleExoPlayerView)view.findViewById(R.id.video);
+            this.videoPlayerView         = view.findViewById(R.id.video);
 
             final Drawable drawable = AppCompatResources.getDrawable(this.getContext(), R.drawable.ic_arrow_back);
             DrawableCompat.setTint(drawable, ContextUtils.getColor(this.getContext(), R.attr.indicatorColor));
 
-            final Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);
+            final Toolbar toolbar = view.findViewById(R.id.toolbar);
             toolbar.setNavigationIcon(drawable);
             toolbar.setNavigationOnClickListener(v -> Flow.get(v).goBack());
 

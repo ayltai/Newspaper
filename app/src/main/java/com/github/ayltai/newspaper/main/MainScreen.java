@@ -276,13 +276,13 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
             final ViewGroup view = (ViewGroup)LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, false);
             if (BuildConfig.DEBUG) view.removeView(view.findViewById(R.id.statusBarPadding));
 
-            this.toolbar = (CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout);
+            this.toolbar = view.findViewById(R.id.collapsingToolbarLayout);
 
             // Sets up header
             this.headerContainer = view.findViewById(R.id.headerContainer);
-            this.viewSwitcher    = (ViewSwitcher)view.findViewById(R.id.viewSwitcher);
-            this.headerImage0    = (KenBurnsView)view.findViewById(R.id.headerImage0);
-            this.headerImage1    = (KenBurnsView)view.findViewById(R.id.headerImage1);
+            this.viewSwitcher    = view.findViewById(R.id.viewSwitcher);
+            this.headerImage0    = view.findViewById(R.id.headerImage0);
+            this.headerImage1    = view.findViewById(R.id.headerImage1);
 
             this.headerImage0.setTransitionListener(this);
             this.headerImage1.setTransitionListener(this);
@@ -295,7 +295,7 @@ public final class MainScreen extends FrameLayout implements MainPresenter.View,
             this.disposable.add(RxView.clicks(this.nextButton).subscribe(dummy -> this.nextClicks.onNext(Irrelevant.INSTANCE)));
 
             // Sets up ViewPager
-            this.viewPager = (ViewPager)view.findViewById(R.id.viewPager);
+            this.viewPager = view.findViewById(R.id.viewPager);
             this.viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                 @Override
                 public void onPageSelected(final int position) {
