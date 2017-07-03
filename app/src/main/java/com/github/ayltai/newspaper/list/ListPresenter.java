@@ -9,7 +9,6 @@ import java.util.concurrent.TimeoutException;
 import javax.inject.Inject;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
@@ -111,28 +110,23 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                                 if (client != null) {
                                     maybes.add(client.getItems(category.getUrl())
                                         .timeout(timeout, TimeUnit.SECONDS)
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribeOn(Schedulers.io()));
+                                        .onErrorReturnItem(Collections.emptyList())
+                                        .subscribeOn(Schedulers.newThread()));
                                 }
                             }
                         }
                     }
 
                     this.refreshDisposable = ListPresenter.zip(maybes)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                             items -> {
-                                final Runnable runnable = () -> {
-                                    this.items = items;
+                                this.items = this.partialUpdate(items);
 
-                                    this.getView().setItems(this.key, this.items);
+                                this.getView().setItems(this.key, this.items);
 
-                                    this.checkForUpdate();
-                                };
-
-                                this.partialUpdate(
-                                    items,
-                                    runnable::run,
-                                    e -> runnable.run());
+                                this.checkForUpdate();
                             },
                             error -> {
                                 this.getView().setItems(this.key, this.items);
@@ -172,30 +166,32 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                                         .getItems(category.getUrl())
                                         .delaySubscription(Configs.getUpdateInterval(), TimeUnit.SECONDS)
                                         .timeout(Configs.getUpdateInterval() + Constants.REFRESH_LOAD_TIMEOUT, TimeUnit.SECONDS)
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribeOn(Schedulers.io()));
+                                        .onErrorReturnItem(Collections.emptyList())
+                                        .subscribeOn(Schedulers.newThread()));
                                 }
                             }
                         }
                     }
 
-                    this.updateDisposable = ListPresenter.zip(singles).subscribe(
-                        this::showUpdateIndicator,
-                        error -> {
-                            if (error instanceof TimeoutException) {
-                                this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
-                            } else {
-                                this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
-                            }
+                    this.updateDisposable = ListPresenter.zip(singles)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                            this::showUpdateIndicator,
+                            error -> {
+                                if (error instanceof TimeoutException) {
+                                    this.log().w(this.getClass().getSimpleName(), error.getMessage(), error);
+                                } else {
+                                    this.log().e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                }
 
-                            this.checkForUpdate();
-                        });
+                                this.checkForUpdate();
+                            });
                 },
                 error -> this.log().e(this.getClass().getSimpleName(), error.getMessage(), error)
         );
     }
 
-    private void showUpdateIndicator(final List<Item> items) {
+    private void showUpdateIndicator(@NonNull final List<Item> items) {
         if (BuildConfig.DEBUG) Log.i(this.getClass().getSimpleName(), "Update check finished");
 
         if (this.getView() == null) return;
@@ -211,37 +207,34 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
         }
     }
 
-    private void partialUpdate(@NonNull final List<Item> items, @Nullable final Realm.Transaction.OnSuccess onSuccess, @Nullable final Realm.Transaction.OnError onError) {
+    @NonNull
+    private List<Item> partialUpdate(@NonNull final List<Item> items) {
         if (!this.realm.isClosed()) {
-            this.realm.executeTransactionAsync(
-                realm -> {
-                    for (final Item item : items) {
-                        final Item realmItem = this.getItemManager().getItem(item.getLink());
+            this.realm.beginTransaction();
 
-                        if (realmItem == null) {
-                            realm.insert(item);
-                        } else {
-                            if (realmItem.isFullDescription()) item.setDescription(realmItem.getDescription());
-                            item.setIsFullDescription(realmItem.isFullDescription());
+            for (final Item item : items) {
+                final Item realmItem = this.getItemManager().getItem(item.getLink());
 
-                            item.getImages().clear();
-                            item.getImages().addAll(realmItem.getImages());
+                if (realmItem == null) {
+                    realm.insert(item);
+                } else {
+                    if (realmItem.isFullDescription()) item.setDescription(realmItem.getDescription());
+                    item.setIsFullDescription(realmItem.isFullDescription());
 
-                            if (realmItem.getVideo() != null) item.setVideo(realmItem.getVideo());
-                            item.setBookmarked(realmItem.isBookmarked());
+                    item.getImages().clear();
+                    item.getImages().addAll(realmItem.getImages());
 
-                            realm.insertOrUpdate(item);
-                        }
-                    }
-                },
-                onSuccess,
-                e -> {
-                    this.log().w(this.getClass().getSimpleName(), e.getMessage(), e);
+                    if (realmItem.getVideo() != null) item.setVideo(realmItem.getVideo());
+                    item.setBookmarked(realmItem.isBookmarked());
 
-                    if (onError != null) onError.onError(e);
+                    realm.insertOrUpdate(item);
                 }
-            );
+            }
+
+            this.realm.commitTransaction();
         }
+
+        return items;
     }
 
     //region Lifecycle
