@@ -36,4 +36,8 @@ public final class ItemUtils {
     public static boolean contains(@NonNull final List<Item> items, @NonNull final Item item) {
         return ItemUtils.indexOf(items, item) >= 0;
     }
+
+    public static boolean isYouTube(@NonNull final String url) {
+        return url.startsWith("https://www.youtube.com/");
+    }
 }
