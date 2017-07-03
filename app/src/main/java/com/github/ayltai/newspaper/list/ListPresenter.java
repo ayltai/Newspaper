@@ -72,9 +72,9 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
             this.getItemManager().getItemsSingle(Collections.emptyList(), Collections.singletonList(this.key.getCategory()))
                 .subscribe(items -> {
                     this.items = items;
-                    if (Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {
-                        this.getView().setItems(this.key, this.items);
-                    } else {
+                    this.getView().setItems(this.key, this.items);
+
+                    if (!Constants.CATEGORY_BOOKMARK.equals(this.key.getCategory())) {
                         if (this.items.isEmpty()) {
                             this.bindFromRemote(Constants.REFRESH_LOAD_TIMEOUT);
                         } else {
@@ -122,9 +122,11 @@ public /* final */ class ListPresenter extends Presenter<ListPresenter.View> {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                             items -> {
-                                this.items = this.partialUpdate(items);
+                                if (!items.isEmpty()) {
+                                    this.items = this.partialUpdate(items);
 
-                                this.getView().setItems(this.key, this.items);
+                                    this.getView().setItems(this.key, this.items);
+                                }
 
                                 this.checkForUpdate();
                             },
