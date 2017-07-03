@@ -96,11 +96,11 @@ configurations {
 
 ext {
     supportLibraryVersion = '26.0.0-beta2'
-    firebaseSdkVersion    = '11.0.0'
+    firebaseSdkVersion    = '11.0.2'
     daggerVersion         = '2.11'
     frescoVersion         = '1.3.0'
     bigImageViewerVersion = '1.3.0'
-    exoPlayerVersion      = 'r2.4.2'
+    exoPlayerVersion      = 'r2.4.3'
     debugDrawerVersion    = '0.7.0'
     stethoVersion         = '1.5.0'
     leakCanaryVersion     = '1.5.1'
