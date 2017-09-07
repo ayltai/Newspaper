@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Cozy">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/space16</item>
+        <item name="android:layout_marginRight">@dimen/space16</item>
+    </style>
+    <style name="Cozy.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="Cozy.Description">
+        <item name="android:textSize">16sp</item>
+        <item name="android:maxLines">4</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="Cozy.Source">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="Cozy.PublishDate">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="Compact">
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="Compact.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="Compact.Description">
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="Compact.Source">
+        <item name="android:textSize">12sp</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="Compact.PublishDate">
+        <item name="android:textSize">12sp</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="Item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/space16</item>
+        <item name="android:layout_marginRight">@dimen/space16</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
+    <style name="Item.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Item.Description">
+        <item name="android:textSize">16sp</item>
+        <item name="android:autoLink">web</item>
+        <item name="android:linksClickable">true</item>
+    </style>
+    <style name="Item.Source">
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="Item.PublishDate">
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="DrawerMenuItem">
+        <item name="android:textSize">@dimen/text_title</item>
+        <item name="android:textColor">?attr/textColorInverse</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="ExoPlayerControlButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@null</item>
+    </style>
+    <style name="ExoPlayerControlItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">@dimen/space4</item>
+        <item name="android:paddingRight">@dimen/space4</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#bebebe</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+</resources>

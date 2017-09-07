@@ -53,34 +53,15 @@ Temporary Items
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
-.idea/androidDexCompiler.xml
-.idea/findbugs-idea.xml
-.idea/checkstyle-idea.xml
-.idea/workspace.xml
-.idea/bashsupport_project.xml
-.idea/tasks.xml
-.idea/qaplug_profiles.xml
-.idea/markdown-navigator.xml
-.idea/markdown-exported-files.xml
-.idea/misc.xml
-.idea/externalDependencies.xml
+.idea/*.xml
 .idea/*/*.xml
 
 # Sensitive or high-churn files:
 .idea/dataSources/
 .idea/dataSources.ids
-.idea/dataSources.xml
-.idea/dataSources.local.xml
-.idea/sqlDataSources.xml
-.idea/dynamic.xml
-.idea/uiDesigner.xml
 
 # Gradle:
-.idea/gradle.xml
 .idea/libraries
-
-# Mongo Explorer plugin:
-.idea/mongoSettings.xml
 
 ## File-based project format:
 *.iws
@@ -111,7 +92,6 @@ out/
 # Gradle files
 .gradle/
 build/
-*/build/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -154,5 +134,6 @@ hs_err_pid*
 ### Google SDKs
 google-services.json
 
-### Android Key Store
-key-store.jks
+
+### Key stores
+*.jks

@@ -1,0 +1,365 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.firebase.firebase-crash'
+apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'io.fabric'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'realm-android'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'jacoco'
+apply plugin: 'org.standardout.versioneye'
+
+jacoco {
+    toolVersion '0.7.9'
+}
+
+String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
+String VERSION_HASH     = 'git rev-parse --short HEAD'.execute().text.trim()
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '26.0.1'
+    defaultConfig {
+        applicationId    'com.github.ayltai.newspaper'
+        minSdkVersion    16
+        targetSdkVersion 26
+        versionCode      18
+        versionName      '3.0.' + VERSION_REVISION + '-' + VERSION_HASH
+
+        testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunnerArguments disableAnalytics: 'true'
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
+
+        resConfigs 'auto'
+    }
+
+    signingConfigs {
+        release {
+            storeFile     file('../key-store.jks')
+            keyAlias      System.getenv('ANDROID_KEY_ALIAS')
+            storePassword System.getenv('ANDROID_STORE_PASSWORD')
+            keyPassword   System.getenv('ANDROID_KEY_PASSWORD')
+        }
+    }
+
+    buildTypes {
+        debug {
+            multiDexEnabled     true
+            testCoverageEnabled true
+
+            ext.enableCrashlytics = false
+        }
+
+        release {
+            minifyEnabled   true
+            shrinkResources true
+            signingConfig   signingConfigs.release
+            proguardFiles   getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    testOptions {
+        unitTests {
+            // For Android Studio 3
+            //includeAndroidResources = true
+            returnDefaultValues     = true
+        }
+
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses true
+            }
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+        disable     'RestrictedApi'
+        disable     'MissingTranslation'
+    }
+
+    aaptOptions {
+        cruncherEnabled project.hasProperty('ciBuild')
+    }
+
+    dexOptions {
+        preDexLibraries !project.hasProperty('ciBuild')
+        javaMaxHeapSize '1024m'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+checkstyle {
+    configFile     rootProject.file('checkstyle.xml')
+    showViolations true
+}
+
+configurations {
+    codacy
+}
+
+ext {
+    multidexVersion       = '1.0.2'
+    supportLibraryVersion = '26.0.2'
+    architectureVersion   = '1.0.0-alpha9'
+    firebaseSdkVersion    = '11.2.0'
+    daggerVersion         = '2.11'
+    rxBindingVersion      = '2.0.0'
+    okhttpVersion         = '3.8.1'
+    retrofitVersion       = '2.3.0'
+    frescoVersion         = '1.5.0'
+    bigImageViewerVersion = '1.3.2'
+    exoPlayerVersion      = 'r2.5.1'
+    autoValueVersion      = '1.5'
+    autoValueGsonVersion  = '0.5.0'
+    leakCanaryVersion     = '1.5.1'
+    robolectricVersion    = '3.4.2'
+    powerMockVersion      = '1.7.1'
+    espressoVersion       = '3.0.1'
+}
+
+repositories {
+    flatDir {
+        dirs './aars'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Multi-dex support
+    debugCompile       "com.android.support:multidex:$multidexVersion"
+    androidTestCompile "com.android.support:multidex-instrumentation:$multidexVersion"
+
+    // Android Architecture libraries
+    compile ("android.arch.lifecycle:runtime:$architectureVersion") {
+        exclude group : 'com.android.support'
+    }
+    compile ("android.arch.lifecycle:extensions:$architectureVersion") {
+        exclude group : 'com.android.support'
+    }
+    annotationProcessor ("android.arch.lifecycle:compiler:$architectureVersion") {
+        exclude group : 'com.android.support'
+    }
+
+    // Android Support libraries
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$supportLibraryVersion"
+    compile "com.android.support:design:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    compile "com.android.support:support-fragment:$supportLibraryVersion"
+    compile "com.android.support:support-vector-drawable:$supportLibraryVersion"
+    compile "com.takisoft.fix:preference-v7:$supportLibraryVersion.0"
+
+    // Firebase
+    compile "com.google.firebase:firebase-core:$firebaseSdkVersion"
+    compile "com.google.firebase:firebase-crash:$firebaseSdkVersion"
+    compile "com.google.firebase:firebase-config:$firebaseSdkVersion"
+    compile "com.google.firebase:firebase-perf:$firebaseSdkVersion"
+
+    // Reactive programming
+    compile 'io.reactivex.rxjava2:rxjava:2.1.3'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile "com.jakewharton.rxbinding2:rxbinding:$rxBindingVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxBindingVersion"
+
+    // Dagger 2
+    compile "com.google.dagger:dagger:${daggerVersion}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
+
+    // Dependency injection
+    compile             "com.google.dagger:dagger:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    // Networking
+    compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+
+    // Database
+    compile 'io.realm:android-adapters:2.1.0'
+
+    // Image processing
+    compile "com.facebook.fresco:fresco:$frescoVersion"
+    compile "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
+    compile "com.github.piasy:BigImageViewer:$bigImageViewerVersion"
+    compile "com.google.android.gms:play-services-vision:$firebaseSdkVersion"
+
+    // Video processing
+    compile "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
+    compile "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
+
+    compile 'com.squareup.flow:flow:1.0.0-alpha3'
+
+    // Eye candies
+    compile 'io.supercharge:shimmerlayout:1.0.2'
+    compile 'com.fujiyuu75:sequent:0.2.1'
+    compile 'com.sackcentury:shinebutton:0.1.9'
+    compile 'com.github.ybq:Android-SpinKit:1.1.0'
+    compile 'io.github.inflationx:calligraphy3:3.0.0'
+
+    // Eye candies
+    compile 'jp.wasabeef:recyclerview-animators:2.2.6'
+    compile 'com.flaviofaria:kenburnsview:1.0.7'
+    compile 'com.gjiazhe:PanoramaImageView:1.0'
+
+    // Code generation tools
+    provided            "com.jakewharton.auto.value:auto-value-annotations:$autoValueVersion"
+    annotationProcessor "com.google.auto.value:auto-value:$autoValueVersion"
+    annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
+
+    // Fabric
+    compile('io.fabric.sdk.android:fabric:1.3.17@aar') {
+        transitive = true;
+    }
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
+
+    // Debugging
+    debugCompile   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    testCompile    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+
+    // Unit testing
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.9.1'
+    testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
+    testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
+    testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
+    testCompile "org.powermock:powermock-classloading-xstream:$powerMockVersion"
+    testCompile "org.robolectric:robolectric:$robolectricVersion"
+    testCompile "org.robolectric:multidex:$robolectricVersion"
+
+    // Instrumented testing
+    androidTestCompile (name :'cloudtestingscreenshotter_lib', ext :'aar')
+    androidTestCompile ('com.android.support.test:runner:1.0.1') {
+        exclude group : 'com.android.support'
+    }
+    androidTestCompile ("com.android.support.test.espresso:espresso-core:$espressoVersion") {
+        exclude group : 'com.android.support'
+    }
+    androidTestCompile ("com.android.support.test.espresso:espresso-contrib:$espressoVersion") {
+        exclude group : 'com.android.support'
+    }
+    androidTestCompile ("com.android.support.test.espresso:espresso-intents:$espressoVersion") {
+        exclude group : 'com.android.support'
+    }
+
+    // Android Wear
+    wearApp project(':wear')
+    compile "com.google.android.gms:play-services-wearable:$firebaseSdkVersion"
+
+    // Code coverage by Codacy
+    codacy 'com.github.codacy:codacy-coverage-reporter:1.0.13'
+}
+
+task customFindBugs(type: FindBugs) {
+    ignoreFailures = false
+    effort         = "max"
+    reportLevel    = "medium"
+    classes        = files("$project.buildDir/intermediates/classes")
+
+    // Use this only if you want exclude some errors
+    excludeFilter = file("$rootProject.rootDir/findbugs-android-exclude.xml")
+
+    source    = fileTree('src/main/java/')
+    classpath = files()
+
+    reports {
+        xml.enabled      = false
+        xml.withMessages = true
+        html.enabled     = true
+        xml.destination  "$project.buildDir/outputs/findbugs/findbugs-output.xml"
+        html.destination "$project.buildDir/outputs/findbugs/findbugs-output.html"
+    }
+}
+
+assemble.dependsOn customFindBugs
+
+def coverageSourceDirs = [
+    'src/main/java',
+    'src/debug/java'
+]
+
+task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+    group       = 'Reporting'
+    description = 'Generate Jacoco coverage reports'
+
+    reports {
+        xml.enabled  = true
+        html.enabled = true
+    }
+
+    classDirectories = fileTree(
+        dir: 'build/intermediates/classes/test/debug',
+        excludes: [
+            '**/R.class',
+            '**/R$*.class',
+            '**/*$ViewInjector*.*',
+            '**/*$ViewBinder*.*',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*$Lambda$*.*',
+            '**/*$RealmProxy.*'
+        ]
+    )
+
+    sourceDirectories = files(coverageSourceDirs)
+    executionData     = files('build/jacoco/testDebugUnitTest.exec')
+
+    doFirst {
+        files('build/intermediates/classes/test/debug').getFiles().each { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
+    }
+}
+
+task uploadCoverageToCodacy(type: JavaExec, dependsOn : jacocoTestReport) {
+    main      = "com.codacy.CodacyCoverageReporter"
+    classpath = configurations.codacy
+
+    args = [
+        "-l",
+        "Java",
+        "-r",
+        "${buildDir}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+    ]
+}
+
+task (codacyDepsize) << {
+    def size = 0;
+
+    configurations.codacy.collect {
+        it.length() / (1024 * 1024)
+    }
+    .each {
+        size += it
+    }
+
+    println "Total dependencies size: ${Math.round(size * 100) / 100} MB"
+
+    configurations.codacy.sort {
+        -it.length()
+    }
+    .each {
+        println "${it.name}: ${Math.round(it.length() / (1024) * 100) / 100} KB"
+    }
+}
+
+task (codacyLocs) << {
+    configurations.codacy.each {
+        String  jarName = it
+        println jarName
+    }
+}
+
+apply plugin: 'com.google.gms.google-services'
