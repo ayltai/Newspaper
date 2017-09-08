@@ -19,12 +19,8 @@ import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 
 public abstract class RssClient extends Client {
-    protected final ApiService apiService;
-
-    protected RssClient(@NonNull final OkHttpClient client, @NonNull final Source source, @NonNull final ApiService apiService) {
-        super(client, source);
-
-        this.apiService = apiService;
+    protected RssClient(@NonNull final OkHttpClient client, @NonNull final ApiService apiService, @NonNull final Source source) {
+        super(client, apiService, source);
     }
 
     @WorkerThread
@@ -34,31 +30,27 @@ public abstract class RssClient extends Client {
         final String category = this.getCategoryName(url);
 
         return Single.create(emitter -> {
-            if (this.source == null) {
-                emitter.onSuccess(Collections.emptyList());
-            } else {
-                this.apiService
-                    .getFeed(url)
-                    .compose(RxUtils.applyObservableBackgroundSchedulers())
-                    .map(feed -> this.filter(url, feed))
-                    .subscribe(
-                        items -> {
-                            for (final Item item : items) {
-                                item.setSource(this.source.getName());
-                                item.setCategory(category);
-                            }
-
-                            Collections.sort(items);
-
-                            emitter.onSuccess(items);
-                        },
-                        error -> {
-                            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-
-                            emitter.onError(error);
+            this.apiService
+                .getFeed(url)
+                .compose(RxUtils.applyObservableBackgroundSchedulers())
+                .map(feed -> this.filter(url, feed))
+                .subscribe(
+                    items -> {
+                        for (final Item item : items) {
+                            item.setSource(this.source.getName());
+                            if (category != null) item.setCategory(category);
                         }
-                    );
-            }
+
+                        Collections.sort(items);
+
+                        emitter.onSuccess(items);
+                    },
+                    error -> {
+                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+
+                        emitter.onError(error);
+                    }
+                );
         });
     }
 

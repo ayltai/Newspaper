@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import android.support.annotation.NonNull;
 
+import io.reactivex.MaybeTransformer;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Scheduler;
 import io.reactivex.SingleTransformer;
@@ -39,6 +40,13 @@ public final class RxUtils {
             .subscribeOn(Schedulers.io());
     }
 
+    public static <T> MaybeTransformer<T, T> applyMaybeBackgroundSchedulers() {
+        if (TestUtils.isRunningUnitTest()) return RxUtils.applyMaybeTrampolineSchedulers();
+
+        return maybe -> maybe.observeOn(Schedulers.io())
+            .subscribeOn(Schedulers.io());
+    }
+
     public static <T> ObservableTransformer<T, T> applyObservableBackgroundToMainSchedulers() {
         if (TestUtils.isRunningUnitTest()) return RxUtils.applyObservableTrampolineSchedulers();
 
@@ -53,6 +61,13 @@ public final class RxUtils {
             .subscribeOn(Schedulers.io());
     }
 
+    public static <T> MaybeTransformer<T, T> applyMaybeBackgroundToMainSchedulers() {
+        if (TestUtils.isRunningUnitTest()) return RxUtils.applyMaybeTrampolineSchedulers();
+
+        return maybe -> maybe.observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io());
+    }
+
     public static <T> ObservableTransformer<T, T> applyObservableTrampolineSchedulers() {
         return observable -> observable.observeOn(Schedulers.trampoline())
             .subscribeOn(Schedulers.trampoline());
@@ -60,6 +75,11 @@ public final class RxUtils {
 
     public static <T> SingleTransformer<T, T> applySingleTrampolineSchedulers() {
         return single -> single.observeOn(Schedulers.trampoline())
+            .subscribeOn(Schedulers.trampoline());
+    }
+
+    public static <T> MaybeTransformer<T, T> applyMaybeTrampolineSchedulers() {
+        return maybe -> maybe.observeOn(Schedulers.trampoline())
             .subscribeOn(Schedulers.trampoline());
     }
 

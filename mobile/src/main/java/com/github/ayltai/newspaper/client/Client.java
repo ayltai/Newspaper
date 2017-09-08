@@ -17,6 +17,7 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.data.model.Category;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.data.model.Source;
+import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.Maybe;
@@ -29,14 +30,16 @@ import okhttp3.OkHttpClient;
 public abstract class Client {
     //region Variables
 
-    protected final Source       source;
     protected final OkHttpClient client;
+    protected final ApiService   apiService;
+    protected final Source       source;
 
     //endregion
 
-    protected Client(@NonNull final OkHttpClient client, @Nullable final Source source) {
-        this.client = client;
-        this.source = source;
+    protected Client(@NonNull final OkHttpClient client, @NonNull final ApiService apiService, @NonNull final Source source) {
+        this.client     = client;
+        this.apiService = apiService;
+        this.source     = source;
     }
 
     @WorkerThread

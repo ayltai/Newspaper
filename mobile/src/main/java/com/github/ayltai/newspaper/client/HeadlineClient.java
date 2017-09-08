@@ -15,7 +15,6 @@ import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.net.ApiService;
-import com.github.ayltai.newspaper.net.DaggerHttpComponent;
 import com.github.ayltai.newspaper.rss.RssFeed;
 import com.github.ayltai.newspaper.rss.RssItem;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -55,8 +54,8 @@ public final class HeadlineClient extends RssClient {
     }
 
     @Inject
-    HeadlineClient(@NonNull final OkHttpClient client, @NonNull final Source source, @NonNull final ApiService apiService) {
-        super(client, source, apiService);
+    HeadlineClient(@NonNull final OkHttpClient client, @NonNull final ApiService apiService, @NonNull final Source source) {
+        super(client, apiService, source);
     }
 
     @NonNull
@@ -86,10 +85,7 @@ public final class HeadlineClient extends RssClient {
     @NonNull
     @Override
     public Maybe<Item> updateItem(@NonNull final Item item) {
-        return Maybe.create(emitter -> DaggerHttpComponent.builder()
-            .build()
-            .retrofit()
-            .create(ApiService.class)
+        return Maybe.create(emitter -> this.apiService
             .getHtml(item.getLink())
             .compose(RxUtils.applyObservableBackgroundSchedulers())
             .subscribe(
