@@ -181,6 +181,10 @@ dependencies {
     // Networking
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
     compile "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-simplexml:$retrofitVersion"
 
     // Database
     compile 'io.realm:android-adapters:2.1.0'

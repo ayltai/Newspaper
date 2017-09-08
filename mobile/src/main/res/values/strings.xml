@@ -93,4 +93,16 @@
         <item>即時副刊</item>
     </string-array>
     <string name="pref_auto_play">Play video news automatically</string>
+
+    <!-- Sources -->
+    <string name="source_apple_daily">Apple Daily</string>
+    <string name="source_oriental_daily">Oriental Daily</string>
+    <string name="source_sing_tao_daily">Sing Tao Daily</string>
+    <string name="source_hket">Hong Kong Economic Times</string>
+    <string name="source_sing_pao_daily">Sing Pao Daily News</string>
+    <string name="source_ming_pao">Ming Pao</string>
+    <string name="source_headline_daily">Headline Daily</string>
+    <string name="source_sky_post">Sky Post</string>
+    <string name="source_hkej">Hong Kong Economic Journal</string>
+    <string name="source_rthk">Radio Television Hong Kong</string>
 </resources>

@@ -10,6 +10,9 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 @Module
 public final class HttpModule {
@@ -22,7 +25,7 @@ public final class HttpModule {
 
     @Singleton
     @Provides
-    static OkHttpClient.Builder provideHttpClientBuilder() {
+    static OkHttpClient provideHttpClient() {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
             .connectTimeout(HttpModule.TIMEOUT_CONNECT, TimeUnit.SECONDS)
             .readTimeout(HttpModule.TIMEOUT_READ, TimeUnit.SECONDS)
@@ -30,6 +33,28 @@ public final class HttpModule {
 
         if (BuildConfig.DEBUG) builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
 
-        return builder;
+        return builder.build();
+    }
+
+    @Singleton
+    @Provides
+    static Retrofit provideRetrofit() {
+        return new Retrofit.Builder()
+            .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(SimpleXmlConverterFactory.create())
+            .client(DaggerHttpComponent.builder()
+                .build()
+                .httpClient())
+            .build();
+    }
+
+    @Singleton
+    @Provides
+    static ApiService provideApiService() {
+        return DaggerHttpComponent.builder()
+            .build()
+            .retrofit()
+            .create(ApiService.class);
     }
 }

@@ -26,21 +26,29 @@ public final class RxUtils {
     }
 
     public static <T> ObservableTransformer<T, T> applyObservableBackgroundSchedulers() {
+        if (TestUtils.isRunningUnitTest()) return RxUtils.applyObservableTrampolineSchedulers();
+
         return observable -> observable.observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io());
     }
 
     public static <T> SingleTransformer<T, T> applySingleBackgroundSchedulers() {
+        if (TestUtils.isRunningUnitTest()) return RxUtils.applySingleTrampolineSchedulers();
+
         return single -> single.observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io());
     }
 
     public static <T> ObservableTransformer<T, T> applyObservableBackgroundToMainSchedulers() {
+        if (TestUtils.isRunningUnitTest()) return RxUtils.applyObservableTrampolineSchedulers();
+
         return observable -> observable.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io());
     }
 
     public static <T> SingleTransformer<T, T> applySingleBackgroundToMainSchedulers() {
+        if (TestUtils.isRunningUnitTest()) return RxUtils.applySingleTrampolineSchedulers();
+
         return single -> single.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io());
     }

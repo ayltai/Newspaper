@@ -35,4 +35,16 @@
     <string name="pref_sources">報紙</string>
     <string name="pref_categories">分類</string>
     <string name="pref_auto_play">自動播放視頻新聞</string>
+
+    <!-- Sources -->
+    <string name="source_apple_daily">蘋果日報</string>
+    <string name="source_oriental_daily">東方日報</string>
+    <string name="source_sing_tao_daily">星島日報</string>
+    <string name="source_hket">經濟日報</string>
+    <string name="source_sing_pao_daily">成報</string>
+    <string name="source_ming_pao">明報</string>
+    <string name="source_headline_daily">頭條日報</string>
+    <string name="source_sky_post">晴報</string>
+    <string name="source_hkej">信報</string>
+    <string name="source_rthk">香港電台</string>
 </resources>

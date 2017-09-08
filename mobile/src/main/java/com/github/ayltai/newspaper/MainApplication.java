@@ -53,8 +53,7 @@ public final class MainApplication extends MultiDexApplication {
 
         Fresco.initialize(this, OkHttpImagePipelineConfigFactory.newBuilder(this, DaggerHttpComponent.builder()
                 .build()
-                .httpClientBuilder()
-                .build())
+                .httpClient())
             .setDownsampleEnabled(true)
             .setExecutorSupplier(new DefaultExecutorSupplier(Runtime.getRuntime().availableProcessors()))
             .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
