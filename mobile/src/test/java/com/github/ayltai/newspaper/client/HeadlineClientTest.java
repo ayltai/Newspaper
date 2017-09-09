@@ -18,12 +18,9 @@ import com.github.ayltai.newspaper.data.model.SourceFactory;
 import com.github.ayltai.newspaper.rss.RssFeed;
 
 import io.reactivex.Observable;
-import io.reactivex.subscribers.TestSubscriber;
 
 public final class HeadlineClientTest extends NetworkTest {
     private static final String HEADLINE_URL = HeadlineClient.URL + HeadlineClient.CATEGORY_HONG_KONG;
-
-    private final TestSubscriber<List<Item>> subscriber = new TestSubscriber<>();
 
     private HeadlineClient client;
 
@@ -32,9 +29,9 @@ public final class HeadlineClientTest extends NetworkTest {
     public void setUp() throws Exception {
         super.setUp();
 
-        Mockito.doReturn(Observable.just(this.createFeed())).when(this.apiService).getFeed(HeadlineClientTest.HEADLINE_URL);
+        Mockito.doReturn(Observable.just(HeadlineClientTest.createFeed())).when(this.apiService).getFeed(HeadlineClientTest.HEADLINE_URL);
 
-        this.client = new HeadlineClient(this.httpClient, SourceFactory.getInstance(RuntimeEnvironment.application).getSource("頭條日報"), this.apiService);
+        this.client = new HeadlineClient(this.httpClient, this.apiService, SourceFactory.getInstance(RuntimeEnvironment.application).getSource("頭條日報"));
     }
 
     @Test
@@ -56,7 +53,7 @@ public final class HeadlineClientTest extends NetworkTest {
     }
 
     @NonNull
-    private RssFeed createFeed() throws Exception {
-        return new Persister().read(RssFeed.class, new FileInputStream("src/debug/assets/feed_headline.xml"));
+    private static RssFeed createFeed() throws Exception {
+        return new Persister().read(RssFeed.class, new FileInputStream("src/debug/assets/headline.xml"));
     }
 }

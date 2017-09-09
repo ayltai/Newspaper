@@ -9,13 +9,23 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 
 public final class IOUtils {
     private static final String TAG = IOUtils.class.getSimpleName();
 
     private IOUtils() {
+    }
+
+    public static String readString(@NonNull final InputStream inputStream) throws IOException {
+        final StringBuilder builder = new StringBuilder();
+        final byte[]        buffer  = new byte[Constants.FILE_BUFFER_SIZE];
+
+        int length;
+
+        while ((length = inputStream.read(buffer)) > -1) builder.append(new String(buffer, 0, length));
+
+        return builder.toString();
     }
 
     public static long copy(@NonNull final InputStream inputStream, @NonNull final OutputStream outputStream) throws IOException {
@@ -38,7 +48,7 @@ public final class IOUtils {
             try {
                 closeable.close();
             } catch (IOException e) {
-                if (BuildConfig.DEBUG) Log.e(IOUtils.TAG, e.getMessage(), e);
+                if (TestUtils.isLoggable()) Log.e(IOUtils.TAG, e.getMessage(), e);
             }
         }
     }
