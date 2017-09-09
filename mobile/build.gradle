@@ -184,7 +184,9 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     compile "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
-    compile "com.squareup.retrofit2:converter-simplexml:$retrofitVersion"
+    compile ("com.squareup.retrofit2:converter-simplexml:$retrofitVersion") {
+        exclude group : 'xpp3'
+    }
 
     // Database
     compile 'io.realm:android-adapters:2.1.0'

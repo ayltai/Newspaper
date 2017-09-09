@@ -68,10 +68,12 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
         this.source      = source;
         this.category    = category;
 
-        try {
-            this.publishDate = Item.DATE_FORMAT.get().parse(rss.getPubDate().replaceAll("EDT", "+0800")).getTime();
-        } catch (final ParseException e) {
-            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+        if (rss.getPubDate() != null) {
+            try {
+                this.publishDate = Item.DATE_FORMAT.get().parse(rss.getPubDate().replaceAll("EDT", "+0800")).getTime();
+            } catch (final ParseException e) {
+                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+            }
         }
 
         final Enclosure enclosure = rss.getEnclosure();

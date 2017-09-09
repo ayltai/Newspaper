@@ -118,22 +118,26 @@ final class HketClient extends Client {
                 html -> {
                     html = StringUtils.substringBetween(html, isChinaNews || isInvestNews ? "<div id=\"content-main\">" : "<div class=\"article-detail\">", isChinaNews ? "<div class=\"fb-like\"" : isInvestNews ? "<div class=\"fb-page-like\">" : "<div class=\"article-detail_facebook-like\">");
 
-                    HketClient.extraImages(html, item);
+                    if (html == null) {
+                        emitter.onError(new ParseException("Unparseable content", 0));
+                    } else {
+                        HketClient.extraImages(html, item);
 
-                    final String videoId = StringUtils.substringBetween(html, "<iframe width=\"640\" height=\"360\" src=\"//www.youtube.com/embed/", "?rel=0");
-                    if (videoId != null) item.setVideo(new Video("https://www.youtube.com/watch?v=" + videoId, String.format("https://img.youtube.com/vi/%s/mqdefault.jpg", videoId)));
+                        final String videoId = StringUtils.substringBetween(html, "<iframe width=\"640\" height=\"360\" src=\"//www.youtube.com/embed/", "?rel=0");
+                        if (videoId != null) item.setVideo(new Video("https://www.youtube.com/watch?v=" + videoId, String.format("https://img.youtube.com/vi/%s/mqdefault.jpg", videoId)));
 
-                    final String[]      contents = StringUtils.substringsBetween(html, "<p>", HketClient.TAG_PARAGRAPH);
-                    final StringBuilder builder  = new StringBuilder();
+                        final String[]      contents = StringUtils.substringsBetween(html, "<p>", HketClient.TAG_PARAGRAPH);
+                        final StringBuilder builder  = new StringBuilder();
 
-                    for (final String content : contents) {
-                        if (!TextUtils.isEmpty(content)) builder.append(content).append("<br>");
+                        for (final String content : contents) {
+                            if (!TextUtils.isEmpty(content)) builder.append(content).append("<br>");
+                        }
+
+                        item.setDescription(builder.toString());
+                        item.setIsFullDescription(true);
+
+                        emitter.onSuccess(item);
                     }
-
-                    item.setDescription(builder.toString());
-                    item.setIsFullDescription(true);
-
-                    emitter.onSuccess(item);
                 },
                 error -> {
                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);

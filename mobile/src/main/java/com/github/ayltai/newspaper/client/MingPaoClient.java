@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
@@ -99,27 +100,11 @@ final class MingPaoClient extends RssClient {
 
         for (int i = 0; i < images.length(); i++) {
             try {
-                final JSONObject image            = images.getJSONObject(i);
-                final String     imageDescription = image.getString("media:title");
-                final JSONArray  array            = image.getJSONArray("media:content");
+                final JSONObject image = images.getJSONObject(i);
+                final JSONArray  array = image.getJSONArray("media:content");
 
                 if (array != null && array.length() > 0) {
-                    Image img = null;
-                    int   max = 0;
-
-                    for (int j = 0; j < array.length(); j++) {
-                        final JSONObject obj    = array.getJSONObject(j).getJSONObject("ATTRIBUTES");
-                        final String     type   = obj.getString("MEDIUM");
-                        final int        height = obj.getInt("HEIGHT");
-
-                        if (MingPaoClient.TYPE_IMAGE.equals(type) && height > max) {
-                            img = new Image(MingPaoClient.BASE_IMAGE + obj.getString(MingPaoClient.TAG_URL), imageDescription);
-                            max = height;
-                        } else if (MingPaoClient.TYPE_VIDEO.equals(type)) {
-                            final String videoUrl = obj.getString(MingPaoClient.TAG_URL);
-                            item.setVideo(new Video(videoUrl, videoUrl.replace("mp4", "jpg")));
-                        }
-                    }
+                    final Image img = MingPaoClient.findLargestImage(item, image, array);
 
                     if (img != null) fullImages.add(img);
                 }
@@ -129,5 +114,31 @@ final class MingPaoClient extends RssClient {
         }
 
         return fullImages;
+    }
+
+    @Nullable
+    private static Image findLargestImage(@NonNull final Item item, @NonNull final JSONObject image, @NonNull final JSONArray array) {
+        Image img = null;
+        int   max = 0;
+
+        for (int j = 0; j < array.length(); j++) {
+            try {
+                final JSONObject obj    = array.getJSONObject(j).getJSONObject("ATTRIBUTES");
+                final String     type   = obj.getString("MEDIUM");
+                final int        height = obj.getInt("HEIGHT");
+
+                if (MingPaoClient.TYPE_IMAGE.equals(type) && height > max) {
+                    img = new Image(MingPaoClient.BASE_IMAGE + obj.getString(MingPaoClient.TAG_URL), image.getString("media:title"));
+                    max = height;
+                } else if (MingPaoClient.TYPE_VIDEO.equals(type)) {
+                    final String videoUrl = obj.getString(MingPaoClient.TAG_URL);
+                    item.setVideo(new Video(videoUrl, videoUrl.replace("mp4", "jpg")));
+                }
+            } catch (final JSONException e) {
+                if (TestUtils.isLoggable()) Log.e(MingPaoClient.class.getSimpleName(), e.getMessage(), e);
+            }
+        }
+
+        return img;
     }
 }

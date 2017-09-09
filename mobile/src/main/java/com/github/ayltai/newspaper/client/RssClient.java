@@ -29,29 +29,27 @@ public abstract class RssClient extends Client {
     public final Single<List<Item>> getItems(@NonNull final String url) {
         final String category = this.getCategoryName(url);
 
-        return Single.create(emitter -> {
-            this.apiService
-                .getFeed(url)
-                .compose(RxUtils.applyObservableBackgroundSchedulers())
-                .map(feed -> this.filter(url, feed))
-                .subscribe(
-                    items -> {
-                        for (final Item item : items) {
-                            item.setSource(this.source.getName());
-                            if (category != null) item.setCategory(category);
-                        }
-
-                        Collections.sort(items);
-
-                        emitter.onSuccess(items);
-                    },
-                    error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-
-                        emitter.onError(error);
+        return Single.create(emitter -> this.apiService
+            .getFeed(url)
+            .compose(RxUtils.applyObservableBackgroundSchedulers())
+            .map(feed -> this.filter(url, feed))
+            .subscribe(
+                items -> {
+                    for (final Item item : items) {
+                        item.setSource(this.source.getName());
+                        if (category != null) item.setCategory(category);
                     }
-                );
-        });
+
+                    Collections.sort(items);
+
+                    emitter.onSuccess(items);
+                },
+                error -> {
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+
+                    emitter.onError(error);
+                }
+            ));
     }
 
     @NonNull

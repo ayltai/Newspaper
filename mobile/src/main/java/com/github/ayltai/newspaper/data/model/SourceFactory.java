@@ -9,7 +9,6 @@ import java.util.Map;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.client.HeadlineClient;
@@ -55,9 +54,13 @@ public final class SourceFactory {
         this.sources.put(sources[i],   SourceFactory.createRadioTelevisionSource(sources, categories));
     }
 
-    @Nullable
+    @NonNull
     public Source getSource(@NonNull final String name) {
-        return this.sources.get(name);
+        final Source source = this.sources.get(name);
+
+        if (source == null) throw new IllegalArgumentException("Unrecognized source name: " + name);
+
+        return source;
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
