@@ -95,13 +95,10 @@ final class OrientalDailyClient extends RssClient {
 
         for (final String video : StringUtils.substringsBetween(videoList, "<news>", "</news>")) {
             if (("odn-" + date + "-" + date.substring(4) + "_" + StringUtils.substringBetween(url, date + OrientalDailyClient.SLASH, ".html")).equals(StringUtils.substringBetween(video, "<articleID>", "</articleID>"))) {
-                final String thumbnailUrl = StringUtils.substringBetween(video, "<thumbnail>", "</thumbnail>");
+                final String thumbnailUri = StringUtils.substringBetween(video, "<thumbnail>", "</thumbnail>");
+                final String videoUri     = StringUtils.substringBetween(video, "?mid=", "&amp;mtype=video");
 
-                if (thumbnailUrl != null) {
-                    final String videoUrl = thumbnailUrl.replace(".jpg", "_ipad.mp4");
-
-                    return new Video("http://video.cdn.on.cc/Video/" + date.substring(0, 6) + OrientalDailyClient.SLASH + videoUrl, "http://tv.on.cc/xml/Thumbnail/" + date.substring(0, 6) + "/bigthumbnail/" + thumbnailUrl);
-                }
+                if (videoUri != null && thumbnailUri != null) return new Video("http://video.cdn.on.cc/Video/" + date.substring(0, 6) + OrientalDailyClient.SLASH + videoUri + "_ipad.mp4", "http://tv.on.cc/xml/Thumbnail/" + date.substring(0, 6) + "/bigthumbnail/" + thumbnailUri);
             }
         }
 
