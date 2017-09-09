@@ -242,6 +242,7 @@ dependencies {
     testCompile "org.powermock:powermock-classloading-xstream:$powerMockVersion"
     testCompile "org.robolectric:robolectric:$robolectricVersion"
     testCompile "org.robolectric:multidex:$robolectricVersion"
+    testCompile 'org.json:json:20170516'
 
     // Instrumented testing
     androidTestCompile (name :'cloudtestingscreenshotter_lib', ext :'aar')

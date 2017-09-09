@@ -6,9 +6,11 @@ import android.support.annotation.CallSuper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.multidex.ShadowMultiDex;
@@ -34,6 +36,9 @@ import okhttp3.OkHttpClient;
     "android.*"
 })
 public abstract class NetworkTest {
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
+
     protected OkHttpClient httpClient;
     protected ApiService   apiService;
 

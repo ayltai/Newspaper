@@ -1,7 +1,7 @@
 <script type="text/javascript">
 $(function(){
 	$(".vdoBox .DotPagerPrev").hide();
-	$(".vdoBox .DotPagerNext").hide();	
+	$(".vdoBox .DotPagerNext").hide();
   // assign the slider to a variable
   var vdoBox = $('#vdoSlider').bxSlider({
 		pager : true,
@@ -12,11 +12,11 @@ $(function(){
 	    var n = 0;
 	    for(var i = 1; i <= totalSlideQty ; i++)
 	    {
-	    	
+
 	    	if((i > (currentSlideNumber-2) || i > (totalSlideQty-6)) && n < 6){
 	    		n++;
-		    	$(".vdoBox .pager-"+i).show();	   
-		    } 
+		    	$(".vdoBox .pager-"+i).show();
+		    }
 	    }
 	  },
 	    onAfterSlide: function(currentSlideNumber, totalSlideQty, currentSlideHtmlObject){
@@ -26,19 +26,19 @@ $(function(){
 		    var n = 0;
 		    if(totalSlideQty > 1) {
 			    $(".vdoBox .DotPagerPrev").show();
-			    $(".vdoBox .DotPagerNext").show();			    
+			    $(".vdoBox .DotPagerNext").show();
 			    for(var i = 1; i <= totalSlideQty ; i++)
 			    {
-			    	
+
 			    	if((i > (currentSlideNumber-2) || i > (totalSlideQty-6)) && n < 6){
 			    		n++;
-				    	$(".vdoBox .pager-"+i).show();	   
-				    } 
+				    	$(".vdoBox .pager-"+i).show();
+				    }
 			    }
 		    }
-		    
+
 	    }
-	  }		  			    
+	  }
   });
 
 
@@ -46,54 +46,53 @@ $(function(){
 	$('.vdoBox .dotController a.pager-link').click(function(){
 		var paged = $(this).html();
 		alert(paged);
-			vdoBox.goToSlide(paged);  
+			vdoBox.goToSlide(paged);
 	});
 */
 
 	$('.vdoBox .DotPagerNext').click(function(){
 		vdoBox.goToNextSlide();
 	});
-	
+
    $('.vdoBox .DotPagerPrev').click(function(){
 		vdoBox.goToPreviousSlide();
     });
-    
+
     $('.vdoBox .SildeTo').click(function(){
     	var paged = $("#vdo_paged").val();
-	    vdoBox.goToSlide(paged);  
-    }); 
-    
+	    vdoBox.goToSlide(paged);
+    });
+
     $('.vdoBox .SildeToFirst').click(function(){
-	    vdoBox.goToSlide(0);  
-    });    
-    
+	    vdoBox.goToSlide(0);
+    });
+
    $('.LHS .item a').click(
 	  function() {
 		 $('.LHS .item a').removeClass('Hovered');
-		 $(this).addClass('Hovered');     // On hover add the class 'hovered' and apply the hovered styles 
+		 $(this).addClass('Hovered');     // On hover add the class 'hovered' and apply the hovered styles
 	  }
-   );    
+   );
 });
 
 
-</script> 
+</script>
 	<div class="LHSTitle page_video">
-	<a class="page_video_link" href="http://hk.dv.nextmedia.com/actionnews/index/
-<view-source:http://hk.dv.nextmedia.com/actionnews/index/>"></a>
- 
+	<a class="page_video_link" href="http://hk.dv.nextmedia.com/actionnews/index/"></a>
+
 
     <div class="LHSTitle_inner vdoBox">
     	<table cellpadding="0" cellspacing="0" style="margin:0 auto">
         	<tr>
             	<td>
                     <div class="DotPager">
-            
-                        <a href="javascript:void(0);" style="display:none" class="SildeToFirst"></a>             
-                        <a href="javascript:void(0);" style="display:none" class="SildeTo"></a>   
-                        <a href="javascript:void(0);" class="DotPagerPrev"></a>                
+
+                        <a href="javascript:void(0);" style="display:none" class="SildeToFirst"></a>
+                        <a href="javascript:void(0);" style="display:none" class="SildeTo"></a>
+                        <a href="javascript:void(0);" class="DotPagerPrev"></a>
                         <div class="dotController">
-                        
-                        </div>            
+
+                        </div>
                         <a href="javascript:void(0);" class="DotPagerNext"></a>
                     </div>
             	</td>
@@ -105,38 +104,28 @@ $(function(){
 				<ul id="vdoSlider">
 					<li class="vdo_layer" style="width:540px">
 				            <div class="item">
-					<a class="switchvdo_btn v_20162113" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147535/20162113
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147535/20162113>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900568_d1c2.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900568_d1c2.jpg>" title="教大民主牆令校長好痛心　閉路離奇流出咩居心？" alt="教大民主牆令校長好痛心　閉路離奇流出咩居心？" class="photo"/>
+					<a class="switchvdo_btn v_20162113" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147535/20162113">
+                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900568_d1c2.jpg" title="教大民主牆令校長好痛心　閉路離奇流出咩居心？" alt="教大民主牆令校長好痛心　閉路離奇流出咩居心？" class="photo"/>
                         <span>教大民主牆令校長好痛心　閉路離奇流出咩居心？</span>
-                         <span class="small_view">76,484</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">76,484</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162122" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147680/20162122
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147680/20162122>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900282_f806.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900282_f806.jpg>" title="民主牆自己管 教大學生會：點解仲要查CCTV？" alt="民主牆自己管 教大學生會：點解仲要查CCTV？" class="photo"/>
+					<a class="switchvdo_btn v_20162122" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147680/20162122">
+                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900282_f806.jpg" title="民主牆自己管 教大學生會：點解仲要查CCTV？" alt="民主牆自己管 教大學生會：點解仲要查CCTV？" class="photo"/>
                         <span>民主牆自己管 教大學生會：點解仲要查CCTV？</span>
-                         <span class="small_view">40,580</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">40,580</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162103" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147542/20162103
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147542/20162103>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900558_dcd7.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900558_dcd7.jpg>" title="【副局長喪子】女友《修煉愛情》寄意" alt="【副局長喪子】女友《修煉愛情》寄意" class="photo"/>
+					<a class="switchvdo_btn v_20162103" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147542/20162103">
+                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900558_dcd7.jpg" title="【副局長喪子】女友《修煉愛情》寄意" alt="【副局長喪子】女友《修煉愛情》寄意" class="photo"/>
                         <span>【副局長喪子】女友《修煉愛情》寄意</span>
-                         <span class="small_view">61,002</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">61,002</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162119" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147682/20162119
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147682/20162119>">
+					<a class="switchvdo_btn v_20162119" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147682/20162119">
                         <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900323_746f.jpg
 <view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900323_746f.jpg>" title="因是副局個仔先問候？港大學生會前會長轟偽善" alt="因是副局個仔先問候？港大學生會前會長轟偽善" class="photo"/>
                         <span>因是副局個仔先問候？港大學生會前會長轟偽善</span>
@@ -194,7 +183,7 @@ $(function(){
 <view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
                     </a>
 	            </div>
-	              	                        		                        		                        		                        		                                   
+
 			</li>
 						<li class="vdo_layer" style="width:540px">
 				            <div class="item">
@@ -287,7 +276,7 @@ $(function(){
 <view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
                     </a>
 	            </div>
-	              	                        		                        		                        		                        		                                   
+
 			</li>
 						<li class="vdo_layer" style="width:540px">
 				            <div class="item">
@@ -380,7 +369,7 @@ $(function(){
 <view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
                     </a>
 	            </div>
-	              	                        		                        		                        		                        		                                   
+
 			</li>
 						<li class="vdo_layer" style="width:540px">
 				            <div class="item">
@@ -393,11 +382,11 @@ $(function(){
 <view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
                     </a>
 	            </div>
-	              	                        		                        		                        		                        		                                   
+
 			</li>
-			         			                			
+
 		</ul>
-				
+
     <div class="clear"></div>
 </div>
 

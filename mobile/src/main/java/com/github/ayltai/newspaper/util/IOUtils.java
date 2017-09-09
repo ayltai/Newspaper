@@ -23,7 +23,7 @@ public final class IOUtils {
 
         int length;
 
-        while ((length = inputStream.read(buffer)) > -1) builder.append(new String(buffer, 0, length));
+        while ((length = inputStream.read(buffer)) > -1) builder.append(new String(buffer, 0, length, Constants.ENCODING_UTF8));
 
         return builder.toString();
     }
