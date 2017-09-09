@@ -54,7 +54,7 @@ final class HeadlineRealtimeClient extends Client {
             .compose(RxUtils.applyObservableBackgroundSchedulers())
             .subscribe(
                 html -> {
-                    final String[]   sections = StringUtils.substringsBetween(html, "<div class=\"topic\">", "<div class=\"col-xs-12 instantnews-list-1\">");
+                    final String[]   sections = StringUtils.substringsBetween(html, "<div class=\"topic\">", "<p class=\"text-left\">");
                     final List<Item> items    = new ArrayList<>(sections.length);
                     final String     category = this.getCategoryName(url);
 
@@ -102,8 +102,7 @@ final class HeadlineRealtimeClient extends Client {
                 .compose(RxUtils.applyObservableBackgroundSchedulers())
                 .subscribe(
                     html -> {
-                        HeadlineRealtimeClient.extractImages(StringUtils.substringsBetween(html, "<a class=\"fancybox\" rel=\"gallery\"", HeadlineRealtimeClient.TAG_LINK), item);
-                        HeadlineRealtimeClient.extractImages(StringUtils.substringsBetween(html, "<figure ", "</figure>"), item);
+                        HeadlineRealtimeClient.extractImages(StringUtils.substringsBetween(html, "<a class=\"fancybox image\" rel=\"fancybox-thumb\"", HeadlineRealtimeClient.TAG_LINK), item);
 
                         item.setDescription(StringUtils.substringBetween(html, "<div id=\"news-content\" class=\"set-font-aera\" style=\"visibility: visible;\">", "</div>"));
                         item.setIsFullDescription(true);

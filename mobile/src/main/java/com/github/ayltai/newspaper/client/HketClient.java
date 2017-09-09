@@ -70,7 +70,7 @@ final class HketClient extends Client {
             .compose(RxUtils.applyObservableBackgroundSchedulers())
             .subscribe(
                 html -> {
-                    final String[]   sections = StringUtils.substringsBetween(html, "<div class=\"article-listing\">", "</a>");
+                    final String[]   sections = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"section-listing-widget\">", "<div class=\"pagination-widget\">"), "<div class=\"article-listing\">", "</a>");
                     final List<Item> items    = new ArrayList<>(sections.length);
                     final String     category = this.getCategoryName(url);
 
@@ -123,7 +123,7 @@ final class HketClient extends Client {
                     } else {
                         HketClient.extraImages(html, item);
 
-                        final String videoId = StringUtils.substringBetween(html, "<iframe width=\"640\" height=\"360\" src=\"//www.youtube.com/embed/", "?rel=0");
+                        final String videoId = StringUtils.substringBetween(html, "<iframe src=\"//www.youtube.com/embed/", "?rel=0");
                         if (videoId != null) item.setVideo(new Video("https://www.youtube.com/watch?v=" + videoId, String.format("https://img.youtube.com/vi/%s/mqdefault.jpg", videoId)));
 
                         final String[]      contents = StringUtils.substringsBetween(html, "<p>", HketClient.TAG_PARAGRAPH);

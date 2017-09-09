@@ -22,8 +22,8 @@ import com.github.ayltai.newspaper.util.IOUtils;
 import io.reactivex.Observable;
 
 public final class HeadlineClientTest extends NetworkTest {
-    private static final String HEADLINE_URL        = HeadlineClient.URL + HeadlineClient.CATEGORY_HONG_KONG;
-    private static final String HEADLINE_DETAIL_URL = "http://hd.stheadline.com/news/daily/hk/601358/";
+    private static final String HEADLINE_URL         = HeadlineClient.URL + HeadlineClient.CATEGORY_HONG_KONG;
+    private static final String HEADLINE_DETAILS_URL = "http://hd.stheadline.com/news/daily/hk/601358/";
 
     private HeadlineClient client;
 
@@ -33,7 +33,7 @@ public final class HeadlineClientTest extends NetworkTest {
         super.setUp();
 
         Mockito.doReturn(Observable.just(HeadlineClientTest.createFeed())).when(this.apiService).getFeed(HeadlineClientTest.HEADLINE_URL);
-        Mockito.doReturn(Observable.just(HeadlineClientTest.createHtml())).when(this.apiService).getHtml(HeadlineClientTest.HEADLINE_DETAIL_URL);
+        Mockito.doReturn(Observable.just(HeadlineClientTest.createHtml())).when(this.apiService).getHtml(HeadlineClientTest.HEADLINE_DETAILS_URL);
 
         this.client = new HeadlineClient(this.httpClient, this.apiService, SourceFactory.getInstance(RuntimeEnvironment.application).getSource("頭條日報"));
     }
@@ -44,7 +44,7 @@ public final class HeadlineClientTest extends NetworkTest {
 
         Assert.assertEquals("Incorrect items.size()", 29, items.size());
         Assert.assertEquals("Incorrect item title", "鐵人賽頭重創後情緒低落  蔡若蓮長子抑鬱墮樓亡", items.get(0).getTitle());
-        Assert.assertEquals("Incorrect item link", HeadlineClientTest.HEADLINE_DETAIL_URL, items.get(0).getLink());
+        Assert.assertEquals("Incorrect item link", HeadlineClientTest.HEADLINE_DETAILS_URL, items.get(0).getLink());
         Assert.assertEquals("Incorrect item description", "        教育局副局長蔡若蓮長子潘匡仁，昨晨在家中伸腳出窗危坐，女傭發現並將他拉回屋內，他其後返回房間並將門上鎖，未幾墮樓，倒臥平台，送院後證實死亡。潘生前任職物理治療師，平日喜歡運動和玩樂器，去年在單車賽中撞傷頭部。警方表示，死者生前有情緒病紀錄，據悉是抑鬱症。蔡若蓮驚聞噩耗，到醫院見兒子最後一面，離開時神情哀傷，她感謝各界人士關心，希望各界給予空間讓她和家人渡過困難時間。\n" +
             "    死者潘匡仁(二十五歲)，洋名Peter，生前任職北區醫院物理治療師，居住柯士甸道擎天半島第三座四十一樓一單位。據土地註冊署資料顯示，該單位○三年以四百四十萬元一手購入。據悉，潘喜歡音樂及運動，去年參加三項鐵人賽中的單車賽時，遇上意外，頭部受傷，他患抑鬱症近一年。\n" +
             "伸腳出窗危坐  女傭拉回屋內\n" +
