@@ -99,7 +99,7 @@ final class SingTaoRealtimeClient extends Client {
                     html -> {
                         html = StringUtils.substringBetween(html, "<div class=\"post-content\">", "<div class=\"post-sharing\">");
 
-                        final String[]    imageContainers = StringUtils.substringsBetween(html, "<a class=\"fancybox-thumb\"", ">");
+                        final String[]    imageContainers = StringUtils.substringsBetween(html, "<a class=\"fancybox-thumb", ">");
                         final List<Image> images          = new ArrayList<>();
 
                         for (final String imageContainer : imageContainers) {

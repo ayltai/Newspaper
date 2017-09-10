@@ -40,7 +40,7 @@ public final class HeadlineRealtimeClientTest extends NetworkTest {
 
         Assert.assertEquals("Incorrect items.size()", 10, items.size());
         Assert.assertEquals("Incorrect item title", "將軍澳冷氣機房爆炸 19歲工人6成皮膚燒傷", items.get(0).getTitle());
-        Assert.assertEquals("Incorrect item link", "http://hd.stheadline.com/news/realtime/hk/1008479/", items.get(0).getLink());
+        Assert.assertEquals("Incorrect item link", HeadlineRealtimeClientTest.HEADLINE_REALTIME_DETAILS_URL, items.get(0).getLink());
         Assert.assertEquals("Incorrect item description", "將軍澳新都城第一期停車場冷氣機房發生爆炸，2名工人受傷，其中1人身體6成皮膚被燒傷，送院治理。消息指，有人疑在冷氣機房內點煙肇禍，消防正調查爆炸原因。事發在中午12時許，2名工人在冷氣機房清洗冷氣機，期間房內突然發生爆炸，2人走避不及，慘遭燒傷。消防接報趕至，迅速將火救熄。其中一名19歲工人6成皮膚被燒傷，由救護車送往...", items.get(0).getDescription());
     }
 
