@@ -19,15 +19,15 @@ public final class Enclosure {
 
     @NonNull
     public String getUrl() {
-        return url;
+        return this.url;
     }
 
     public long getLength() {
-        return length;
+        return this.length;
     }
 
     @Nullable
     public String getType() {
-        return type;
+        return this.type;
     }
 }

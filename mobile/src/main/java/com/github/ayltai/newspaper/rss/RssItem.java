@@ -18,6 +18,10 @@ public final class RssItem {
     @Text(required = false)
     private String link;
 
+    @Path("guid")
+    @Text(required = false)
+    private String guid;
+
     @Path("description")
     @Text(required = false, data = true)
     private String description;
@@ -31,7 +35,7 @@ public final class RssItem {
 
     @NonNull
     public String getTitle() {
-        return title.replace("\uFEFF", "");
+        return this.title.replace("\uFEFF", "");
     }
 
     public void setTitle(@NonNull final String title) {
@@ -40,21 +44,21 @@ public final class RssItem {
 
     @Nullable
     public String getLink() {
-        return link;
+        return this.link == null ? this.guid : this.link;
     }
 
     @Nullable
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     @Nullable
     public String getPubDate() {
-        return pubDate;
+        return this.pubDate;
     }
 
     @Nullable
     public Enclosure getEnclosure() {
-        return enclosure;
+        return this.enclosure;
     }
 }

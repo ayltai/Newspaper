@@ -12,6 +12,7 @@ import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.rss.RssFeed;
+import com.github.ayltai.newspaper.rss.RssItem;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 
@@ -58,7 +59,7 @@ public abstract class RssClient extends Client {
         final List<Item> items    = new ArrayList<>();
 
         if (feed.getItems() != null) {
-            for (int i = 0; i < feed.getItems().size(); i++) items.add(new Item(feed.getItems().get(i), this.source.getName(), category));
+            for (final RssItem item : feed.getItems()) items.add(new Item(item, this.source.getName(), category));
         }
 
         return items;

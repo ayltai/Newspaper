@@ -9,6 +9,7 @@ import android.util.Log;
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.data.model.Source;
+import com.github.ayltai.newspaper.data.model.Video;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
@@ -20,8 +21,9 @@ import okhttp3.OkHttpClient;
 final class RthkClient extends RssClient {
     //region Constants
 
-    private static final String TAG_CLOSE = "</div>";
-    private static final String TAG_QUOTE = "\"";
+    private static final String TAG_CLOSE        = "</div>";
+    private static final String TAG_DOUBLE_QUOTE = "\"";
+    private static final String TAG_SINGLE_QUOTE = "'";
 
     //endregion
 
@@ -42,18 +44,18 @@ final class RthkClient extends RssClient {
                     final String imageContainer = StringUtils.substringBetween(html, "<div class=\"itemSlideShow\">", "<div class=\"clr\"></div>");
 
                     if (imageContainer != null) {
-                        final String imageUrl         = StringUtils.substringBetween(imageContainer, "<a href=\"", RthkClient.TAG_QUOTE);
-                        final String imageDescription = StringUtils.substringBetween(imageContainer, "alt=\"", RthkClient.TAG_QUOTE);
+                        final String imageUrl         = StringUtils.substringBetween(imageContainer, "<a href=\"", RthkClient.TAG_DOUBLE_QUOTE);
+                        final String imageDescription = StringUtils.substringBetween(imageContainer, "alt=\"", RthkClient.TAG_DOUBLE_QUOTE);
 
                         if (imageUrl != null) {
                             item.getImages().clear();
                             item.getImages().add(new Image(imageUrl, imageDescription));
                         }
 
-                        final String videoUrl         = StringUtils.substringBetween(imageContainer, "var videoThumbnail\t\t= '", "'");
-                        final String videoDescription = StringUtils.substringBetween(imageContainer, "div class='detailNewsSlideTitleText'>", RthkClient.TAG_CLOSE);
+                        final String videoUrl     = StringUtils.substringBetween(imageContainer, "var videoFile\t\t\t= '", RthkClient.TAG_SINGLE_QUOTE);
+                        final String thumbnailUrl = StringUtils.substringBetween(imageContainer, "var videoThumbnail\t\t= '", RthkClient.TAG_SINGLE_QUOTE);
 
-                        if (videoUrl != null) item.getImages().add(new Image(videoUrl, videoDescription));
+                        if (videoUrl != null && thumbnailUrl != null) item.setVideo(new Video(videoUrl, thumbnailUrl));
                     }
 
                     item.setDescription(StringUtils.substringBetween(html, "<div class=\"itemFullText\">", RthkClient.TAG_CLOSE));

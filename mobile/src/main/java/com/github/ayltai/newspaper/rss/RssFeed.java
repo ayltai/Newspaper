@@ -29,21 +29,21 @@ public final class RssFeed {
 
     @Nullable
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     @Nullable
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     @Nullable
     public String getCopyright() {
-        return copyright;
+        return this.copyright;
     }
 
     @Nullable
     public List<RssItem> getItems() {
-        return items;
+        return this.items;
     }
 }
