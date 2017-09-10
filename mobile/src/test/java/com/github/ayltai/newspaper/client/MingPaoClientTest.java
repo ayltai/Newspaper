@@ -86,8 +86,6 @@ public final class MingPaoClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect item full description", "<p>從前，梁小偉（Gary）的生活只能靠白手杖，左右掃動，但無論多麼小心亦難保「碰壁」。今年4月Gary 放下手杖，執起導盲鞍，迎接導盲犬Gaga，Gary的生命從此不一樣。人犬相處短短5個月，從不", item.getDescription().substring(0, 100));
     }
 
-    // TODO: Checks video news
-
     @NonNull
     private static RssFeed createFeed() throws Exception {
         return new Persister().read(RssFeed.class, new FileInputStream("src/debug/assets/mingpao.xml"));
