@@ -35,7 +35,7 @@ public final class HketClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_HkejUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
+    public void Given_HketUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
         final List<Item> items = this.client.getItems(HketClientTest.HKET_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 30, items.size());

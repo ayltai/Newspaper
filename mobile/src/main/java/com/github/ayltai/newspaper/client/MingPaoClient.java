@@ -59,14 +59,13 @@ final class MingPaoClient extends RssClient {
         final Observable<String> url = isInstant
             ? this.apiService
             .getHtml(MingPaoClient.BASE_URI + MingPaoClient.DATA + tokens[0] + MingPaoClient.SLASH + tokens[0] + MingPaoClient.UNDERSCORE + tokens[2] + MingPaoClient.SLASH + tokens[3] + MingPaoClient.ONE_SLASH + tokens[4] + "/content_" + tokens[6] + MingPaoClient.JS_EXTENSION)
-            .compose(RxUtils.applyObservableBackgroundSchedulers())
             : this.apiService
             .getHtml(MingPaoClient.BASE_URI + MingPaoClient.DATA + tokens[0] + "/issuelist" + MingPaoClient.JS_EXTENSION)
             .compose(RxUtils.applyObservableBackgroundSchedulers())
-            .map(html -> MingPaoClient.BASE_URI + MingPaoClient.DATA + tokens[0] + MingPaoClient.SLASH + tokens[0] + MingPaoClient.UNDERSCORE + tokens[2] + MingPaoClient.SLASH + tokens[3] + MingPaoClient.ONE_SLASH + tokens[4] + new JSONObject(html).getJSONObject((tokens[0] + MingPaoClient.UNDERSCORE + tokens[2]).toUpperCase()).getJSONObject("1 " + tokens[4]).getString("E").toLowerCase() + "/todaycontent_" + tokens[6] + MingPaoClient.JS_EXTENSION);
+            .map(html -> MingPaoClient.BASE_URI + MingPaoClient.DATA + tokens[0] + MingPaoClient.SLASH + tokens[0] + MingPaoClient.UNDERSCORE + tokens[2] + MingPaoClient.SLASH + tokens[3] + MingPaoClient.ONE_SLASH + tokens[4] + new JSONObject(html).getJSONObject((tokens[0] + MingPaoClient.UNDERSCORE + tokens[2]).toUpperCase()).getJSONObject("1 " + tokens[4]).getString("E").toLowerCase() + "/todaycontent_" + tokens[6] + MingPaoClient.JS_EXTENSION)
+            .flatMap(this.apiService::getHtml);
 
-        return Maybe.create(emitter -> url.flatMap(this.apiService::getHtml)
-            .compose(RxUtils.applyObservableBackgroundSchedulers())
+        return Maybe.create(emitter -> url.compose(RxUtils.applyObservableBackgroundSchedulers())
             .map(JSONObject::new)
             .subscribe(
                 json -> {

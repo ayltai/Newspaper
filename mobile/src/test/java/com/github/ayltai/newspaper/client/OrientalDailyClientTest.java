@@ -38,7 +38,7 @@ public final class OrientalDailyClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_HeadlineUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
+    public void Given_OrientalDailyUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
         final List<Item> items = this.client.getItems(OrientalDailyClientTest.ORIENTAL_DAILY_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 20, items.size());
