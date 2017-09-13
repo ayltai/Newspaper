@@ -195,6 +195,7 @@ dependencies {
     compile "com.facebook.fresco:fresco:$frescoVersion"
     compile "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
     compile "com.github.piasy:BigImageViewer:$bigImageViewerVersion"
+    compile 'com.flaviofaria:kenburnsview:1.0.7'
     compile "com.google.android.gms:play-services-vision:$firebaseSdkVersion"
 
     // Video processing

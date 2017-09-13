@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <ProgressBar
-        android:layout_width="@dimen/spinnerSize"
-        android:layout_height="@dimen/spinnerSize"
+        android:layout_width="@dimen/spinner_size"
+        android:layout_height="@dimen/spinner_size"
         android:layout_gravity="center"
         style="?android:attr/progressBarStyle" />
 </FrameLayout>

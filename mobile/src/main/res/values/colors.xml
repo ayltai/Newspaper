@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primaryColorLight">#e04a19</color>
-    <color name="primaryColorDarkLight">#d74417</color>
-    <color name="accentColorLight">#e04a19</color>
-    <color name="textColorLight">#323133</color>
-    <color name="textColorHintLight">#aab2bd</color>
-    <color name="textColorInverseLight">#ffffff</color>
-    <color name="windowBackgroundLight">#eeeeee</color>
-    <color name="cardBackgroundLight">#fafafa</color>
-    <color name="indicatorColorLight">#ffffff</color>
     <color name="primaryColorDark">#263238</color>
+    <color name="primaryColorDarkLight">#d74417</color>
     <color name="primaryColorDarkDark">#1c282e</color>
+    <color name="accentColorLight">#e04a19</color>
     <color name="accentColorDark">#e04a19</color>
+    <color name="textColorLight">#323133</color>
     <color name="textColorDark">#e6e9ed</color>
+    <color name="textColorHintLight">#aab2bd</color>
     <color name="textColorHintDark">#aab2bd</color>
+    <color name="textColorInverseLight">#ffffff</color>
     <color name="textColorInverseDark">#ffffff</color>
+    <color name="windowBackgroundLight">#eeeeee</color>
     <color name="windowBackgroundDark">#1f242c</color>
+    <color name="cardBackgroundLight">#fafafa</color>
     <color name="cardBackgroundDark">#3f4b5c</color>
+    <color name="indicatorColorLight">#ffffff</color>
     <color name="indicatorColorDark">#ffffff</color>
     <color name="textProtectionScrimTop">#00000000</color>
     <color name="textProtectionScrimCenter">#44000000</color>
     <color name="textProtectionScrimBottom">#99000000</color>
+    <color name="shadowStart">#00000000</color>
+    <color name="shadowEnd">#000000</color>
 </resources>
