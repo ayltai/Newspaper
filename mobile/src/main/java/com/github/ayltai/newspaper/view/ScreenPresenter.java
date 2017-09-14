@@ -1,6 +1,6 @@
 package com.github.ayltai.newspaper.view;
 
-public class ScreenPresenter<M, V extends ScreenPresenter.View> extends BindingPresenter<M, V> {
+public class ScreenPresenter<V extends ScreenPresenter.View> extends Presenter<V> {
     public interface View extends Presenter.View {
         /**
          * Navigates to the previous screen.

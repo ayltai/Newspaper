@@ -41,6 +41,8 @@ public class Screen extends ObservableView implements ScreenPresenter.View {
 
     @Override
     public boolean goBack() {
+        this.backNavigations.onNext(Irrelevant.INSTANCE);
+
         return false;
     }
 }

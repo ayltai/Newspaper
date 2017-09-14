@@ -12,7 +12,7 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
-public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends ObservablePresenter<V> {
+public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends BindingPresenter<List<M>, V> {
     public interface View<M> extends Presenter.View {
         void bind(@NonNull List<M> models);
 
@@ -34,15 +34,15 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
         Flowable<Integer> bestVisibleItemPositionChanges();
     }
 
-    private boolean isInfiniteLoading;
-    private boolean isBound;
-
     public abstract Observable<List<M>> load();
 
     protected void resetState() {
     }
 
-    protected void onLoad(@NonNull final List<M> models) {
+    @Override
+    public void bindModel(final List<M> models) {
+        super.bindModel(models);
+
         if (this.getView() != null) {
             if (models.isEmpty()) {
                 this.getView().showEndOfList();
@@ -59,20 +59,17 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
 
         view.showLoadingView();
 
-        if (!this.isBound) {
-            this.isBound = true;
-
+        if (isFirstAttached) {
             final Observable<List<M>> observable = this.load();
 
             this.manageDisposable(observable.subscribe(
-                this::onLoad,
+                this::bindModel,
                 error -> {
                     if (BuildConfig.DEBUG) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                 }
             ));
 
             this.subscribePullToRefreshes(view);
-            this.subscribeInfiniteLoads(view);
         }
     }
 
@@ -88,7 +85,7 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
                 this.manageDisposable(observable.subscribe(
                     models -> {
                         view.clear();
-                        this.onLoad(models);
+                        this.bindModel(models);
                     },
                     error -> {
                         if (BuildConfig.DEBUG) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
@@ -98,44 +95,5 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
                 if (BuildConfig.DEBUG) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
             }
         ));
-    }
-
-    private void subscribeInfiniteLoads(@NonNull final V view) {
-        this.manageDisposable(view.infiniteLoads().subscribe(
-            irrelevant -> {
-                if (!isInfiniteLoading) {
-                    isInfiniteLoading = true;
-
-                    if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "Infinite loading");
-
-                    final Observable<List<M>> observable = this.load();
-
-                    this.manageDisposable(observable.subscribe(
-                        models -> {
-                            this.isInfiniteLoading = false;
-
-                            this.onLoad(models);
-                        },
-                        error -> {
-                            this.isInfiniteLoading = false;
-
-                            if (BuildConfig.DEBUG) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                        }
-                    ));
-                }
-            },
-            error -> {
-                if (BuildConfig.DEBUG) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-            }
-        ));
-    }
-
-    @CallSuper
-    @Override
-    public void onViewDetached() {
-        this.isBound           = false;
-        this.isInfiniteLoading = false;
-
-        super.onViewDetached();
     }
 }
