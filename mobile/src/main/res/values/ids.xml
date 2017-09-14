@@ -3,4 +3,7 @@
     <item
         name="view_type_infinite_loading"
         type="id" />
+    <item
+        name="view_type_item_header"
+        type="id" />
 </resources>

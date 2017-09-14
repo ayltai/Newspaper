@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.model.Category;
 import com.github.ayltai.newspaper.data.model.Item;
@@ -28,6 +29,8 @@ import io.reactivex.Single;
 
 public final class ItemListLoader extends RealmLoader<List<Item>> {
     //region Constants
+
+    public static final int ID = ItemListLoader.class.hashCode();
 
     private static final String KEY_SOURCE   = "source";
     private static final String KEY_CATEGORY = "category";
@@ -68,7 +71,7 @@ public final class ItemListLoader extends RealmLoader<List<Item>> {
         public Flowable<List<Item>> build() {
             return Flowable.create(emitter -> this.activity
                 .getSupportLoaderManager()
-                .restartLoader(ItemListLoader.class.hashCode(), this.args, new LoaderManager.LoaderCallbacks<List<Item>>() {
+                .restartLoader(ItemListLoader.ID, this.args, new LoaderManager.LoaderCallbacks<List<Item>>() {
                     @Override
                     public Loader<List<Item>> onCreateLoader(final int id, final Bundle args) {
                         return new ItemListLoader(ItemListLoader.Builder.this.activity, args);
@@ -111,19 +114,19 @@ public final class ItemListLoader extends RealmLoader<List<Item>> {
             final String                   categoryName = ItemListLoader.getCategory(args);
 
             for (final String source : ItemListLoader.getSources(args)) {
-                for (final Category category : SourceFactory.getInstance(context)
-                    .getSource(source)
-                    .getCategories()) {
+                for (final Category category : SourceFactory.getInstance(context).getSource(source).getCategories()) {
                     if (category.getName().equals(categoryName)) {
-                        singles.add(ClientFactory.getInstance(context)
-                            .getClient(source)
-                            .getItems(category.getUrl()));
+                        final Client client = ClientFactory.getInstance(context).getClient(source);
+                        if (client != null) singles.add(client.getItems(category.getUrl()));
                     }
                 }
             }
 
             Single.merge(singles)
                 .compose(RxUtils.applyFlowableBackgroundSchedulers())
+                .doOnNext(items -> {
+                    if (this.getRealm() != null) new ItemManager(this.getRealm()).putItems(items);
+                })
                 .subscribe(
                     emitter::onNext,
                     error -> {

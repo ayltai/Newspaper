@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper;
+package com.github.ayltai.newspaper.app;
 
 import java.util.Map;
 

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.util.Irrelevant;
 
 import io.reactivex.Single;
 import io.realm.Realm;
@@ -27,6 +28,15 @@ public final class ItemManager extends DataManager {
             if (!TextUtils.isEmpty(category)) query.equalTo(Item.FIELD_CATEGORY, category);
 
             emitter.onSuccess(query.findAllSorted(Item.FIELD_PUBLISH_DATE, Sort.DESCENDING));
+        });
+    }
+
+    @NonNull
+    public Single<Irrelevant> putItems(@NonNull final List<Item> items) {
+        return Single.create(emitter -> {
+            this.getRealm().beginTransaction();
+            this.getRealm().insertOrUpdate(items);
+            this.getRealm().commitTransaction();
         });
     }
 }

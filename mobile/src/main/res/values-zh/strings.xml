@@ -11,6 +11,8 @@
     <string name="share_to">分享給…</string>
     <string name="update_indicator">有新的新聞</string>
     <string name="loading_indicator">下載中…</string>
+
+    <!-- Time nameings -->
     <string name="time_ago_now">現在</string>
     <string name="time_ago_minute">1分鐘前</string>
     <string name="time_ago_minutes">%s分鐘前</string>
@@ -18,14 +20,19 @@
     <string name="time_ago_hours">%s小時前</string>
     <string name="time_ago_day">昨天</string>
     <string name="time_ago_days">%s天前</string>
+
     <string name="title_bookmark">書籤</string>
     <string name="go_back">上一個類別</string>
     <string name="go_next">下一個類別</string>
+
+    <!-- Actions -->
     <string name="action_settings">設置</string>
     <string name="action_bookmark">書籤</string>
     <string name="action_share">分享</string>
     <string name="action_about">關於</string>
     <string name="action_refresh">更新</string>
+
+    <!-- Preferences -->
     <string name="pref_general">一般</string>
     <string name="pref_design">設計</string>
     <string name="pref_compact_layout">密集設計</string>

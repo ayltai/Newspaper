@@ -1,7 +1,9 @@
-package com.github.ayltai.newspaper;
+package com.github.ayltai.newspaper.app;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatDelegate;
+
+import com.github.ayltai.newspaper.LifecycleActivity;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
