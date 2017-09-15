@@ -22,6 +22,10 @@ public final class Enclosure {
         return this.url;
     }
 
+    public void setUrl(@NonNull final String url) {
+        this.url = url;
+    }
+
     public long getLength() {
         return this.length;
     }

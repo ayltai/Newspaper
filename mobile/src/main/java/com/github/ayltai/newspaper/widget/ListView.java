@@ -20,8 +20,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.view.ListPresenter;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
@@ -60,26 +60,22 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     protected ListView(@NonNull final Context context) {
         super(context);
-
         this.init();
     }
 
     protected ListView(@NonNull final Context context, @Nullable final AttributeSet attrs) {
         super(context, attrs);
-
         this.init();
     }
 
     protected ListView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         this.init();
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     protected ListView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-
         this.init();
     }
 
@@ -110,7 +106,7 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     @Override
     public void bind(@NonNull final List<M> models) {
-        if (BuildConfig.DEBUG) {
+        if (TestUtils.isLoggable()) {
             for (final M model : models) Log.d(this.getClass().getSimpleName(), model.toString());
         }
 
@@ -161,6 +157,7 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
         this.adapter.onItemRemoved(this.adapter.getItemCount() - 1);
     }
 
+    @NonNull
     protected abstract UniversalAdapter<M, ?, ?> createAdapter();
 
     //endregion

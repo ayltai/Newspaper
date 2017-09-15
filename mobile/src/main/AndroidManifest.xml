@@ -31,9 +31,9 @@
         <activity
             android:name=".video.VideoActivity"
             android:theme="@style/AppTheme.Dark"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape" />-->
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="3852232f6854cd891d91a69732ab35097b757d0e" />-->
+            android:value="3852232f6854cd891d91a69732ab35097b757d0e" />
     </application>
 </manifest>

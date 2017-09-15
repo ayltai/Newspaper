@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.app;
+package com.github.ayltai.newspaper.app.view;
 
 import java.util.Collections;
 import java.util.List;

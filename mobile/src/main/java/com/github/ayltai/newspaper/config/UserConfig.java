@@ -11,12 +11,14 @@ import android.support.v7.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Sets;
 
 public final class UserConfig {
     private static final String KEY_SOURCES    = "sources";
     private static final String KEY_CATEGORIES = "categories";
+    private static final String KEY_VIEW_STYLE = "viewStyle";
 
     private UserConfig() {
     }
@@ -51,5 +53,11 @@ public final class UserConfig {
     @NonNull
     public static List<String> getDefaultCategories(@NonNull final Context context) {
         return Arrays.asList(context.getResources().getStringArray(R.array.categories));
+    }
+
+    @SuppressWarnings("WrongConstant")
+    @Constants.ViewStyle
+    public static int getViewStyle(@NonNull final Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(UserConfig.KEY_VIEW_STYLE, Constants.VIEW_STYLE_COZY);
     }
 }

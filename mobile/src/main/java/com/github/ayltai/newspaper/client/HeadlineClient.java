@@ -29,6 +29,8 @@ public final class HeadlineClient extends RssClient {
 
     public static final String URL = "http://hd.stheadline.com/rss/news/daily/";
 
+    private static final String IMAGE_URI = "http://static.stheadline.com";
+
     public static final String CATEGORY_HONG_KONG     = "?category=hongkong";
     public static final String CATEGORY_INTERNATIONAL = "?category=international";
     public static final String CATEGORY_CHINA         = "?category=chain";
@@ -70,6 +72,7 @@ public final class HeadlineClient extends RssClient {
 
             if (index >= 0) {
                 item.setTitle(item.getTitle().substring(0, index));
+                if (item.getEnclosure() != null && !item.getEnclosure().getUrl().startsWith("http")) item.getEnclosure().setUrl(HeadlineClient.IMAGE_URI + item.getEnclosure().getUrl());
 
                 rssItems.add(item);
             }
@@ -96,7 +99,7 @@ public final class HeadlineClient extends RssClient {
                         final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", "\"");
                         final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"■", "\">");
 
-                        if (imageUrl != null) images.add(new Image("http:" + imageUrl, imageDescription));
+                        if (imageUrl != null) images.add(new Image(HeadlineClient.IMAGE_URI + imageUrl, imageDescription));
                     }
 
                     if (!images.isEmpty()) {

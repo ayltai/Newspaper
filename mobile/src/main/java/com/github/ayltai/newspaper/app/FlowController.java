@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper.app;
 
+import java.lang.ref.WeakReference;
 import java.util.Map;
 
 import android.app.Activity;
@@ -12,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.ayltai.newspaper.app.screen.MainPresenter;
+import com.github.ayltai.newspaper.app.screen.MainScreen;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.ScreenPresenter;
@@ -23,9 +26,7 @@ import flow.State;
 import flow.TraversalCallback;
 
 final class FlowController {
-    private static final String TAG = FlowController.class.getSimpleName();
-
-    private final Map<Object, Pair<Presenter, Presenter.View>> cache = new ArrayMap<>();
+    private final Map<Object, Pair<WeakReference<Presenter>, WeakReference<Presenter.View>>> cache = new ArrayMap<>();
 
     private final Activity activity;
 
@@ -53,48 +54,47 @@ final class FlowController {
             .dispatcher(KeyDispatcher.configure(this.activity, (outgoingState, incomingState, direction, incomingContexts, callback) -> {
                 if (outgoingState != null) outgoingState.save(((ViewGroup)this.activity.findViewById(android.R.id.content)).getChildAt(0));
 
-                final Presenter      presenter;
-                final Presenter.View view;
+                Presenter      presenter = null;
+                Presenter.View view      = null;
 
-                final Pair<Presenter, Presenter.View> pair = this.cache.get(incomingState.getKey());
+                final Pair<WeakReference<Presenter>, WeakReference<Presenter.View>> pair = this.cache.get(incomingState.getKey());
 
-                if (pair == null) {
-//                    if (incomingState.getKey() instanceof MainScreen.Key) {
-//                        presenter = new MainPresenter();
-//                        view      = new MainScreen(this.activity);
-//
-//                        this.cache.put(incomingState.getKey(), Pair.create(presenter, view));
-//                    } else if (incomingState.getKey() instanceof RoomListScreen.Key) {
-//                        presenter = new RoomListPresenter();
-//                        view      = new RoomListScreen(this.activity);
-//                    } else {
-                        presenter = null;
-                        view      = null;
-//                    }
-                } else {
-                    presenter = pair.first;
-                    view      = pair.second;
+                if (pair != null) {
+                    presenter = pair.first.get();
+                    view      = pair.second.get();
                 }
 
-                if (presenter != null) {
+                if (pair == null || presenter == null || view == null) {
+                    if (incomingState.getKey() instanceof MainScreen.Key) {
+                        presenter = new MainPresenter();
+                        view      = new MainScreen(this.activity);
+
+                        this.cache.put(incomingState.getKey(), Pair.create(new WeakReference<>(presenter), new WeakReference<>(view)));
+                    }
+                }
+
+                if (presenter != null && view != null) {
+                    final Presenter      p = presenter;
+                    final Presenter.View v = view;
+
                     if (view.attachments() != null) view.attachments().subscribe(
-                        isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
+                        isFirstTimeAttachment -> p.onViewAttached(v, isFirstTimeAttachment),
                         error -> {
-                            if (TestUtils.isLoggable()) Log.e(FlowController.TAG, error.getMessage(), error);
+                            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                         }
                     );
 
                     if (view.detachments() != null) view.detachments().subscribe(
-                        irrelevant -> presenter.onViewDetached(),
+                        irrelevant -> p.onViewDetached(),
                         error -> {
-                            if (TestUtils.isLoggable()) Log.e(FlowController.TAG, error.getMessage(), error);
+                            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                         }
                     );
 
                     this.dispatch((View)view, incomingState, callback);
                 }
             }).build())
-//            .defaultKey(MainScreen.KEY)
+            .defaultKey(MainScreen.KEY)
             .install();
     }
 

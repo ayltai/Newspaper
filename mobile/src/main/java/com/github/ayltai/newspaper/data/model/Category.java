@@ -40,6 +40,12 @@ public class Category extends RealmObject implements Parcelable {
 
     //endregion
 
+    @NonNull
+    @Override
+    public String toString() {
+        return "Category { url = '" + url + "', name = '" + name + "' }";
+    }
+
     //region Parcelable
 
     @Override

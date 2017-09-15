@@ -50,7 +50,7 @@ public class Video extends RealmObject implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return "Video { videoUrl = '" + this.videoUrl + "', thumbnailUrl = '" + this.thumbnailUrl + "'}";
+        return "Video { videoUrl = '" + this.videoUrl + "', thumbnailUrl = '" + this.thumbnailUrl + "' }";
     }
 
     //region Parcelable

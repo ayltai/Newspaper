@@ -85,8 +85,8 @@ checkstyle {
 }
 
 ext {
-    wearableVersion    = '2.0.4'
-    firebaseVersion    = '11.2.0'
+    wearableVersion    = '2.0.5'
+    firebaseVersion    = '11.2.2'
     robolectricVersion = '3.4.2'
 }
 
@@ -100,6 +100,6 @@ dependencies {
 
     // Unit testing
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.9.1'
+    testCompile 'org.mockito:mockito-core:2.10.0'
     testCompile "org.robolectric:robolectric:$robolectricVersion"
 }

@@ -1,8 +1,9 @@
-package com.github.ayltai.newspaper.app;
+package com.github.ayltai.newspaper.app.widget;
 
 import java.util.Date;
 
 import android.content.Context;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -40,10 +41,12 @@ public final class HeaderView extends ItemView {
     public HeaderView(@NonNull final Context context) {
         super(context);
 
-        this.container   = LayoutInflater.from(context).inflate(R.layout.view_news_cozy_header, this, true);
-        this.avatar      = this.container.findViewById(R.id.avatar);
-        this.source      = this.container.findViewById(R.id.source);
-        this.publishDate = this.container.findViewById(R.id.publish_date);
+        final View view = LayoutInflater.from(context).inflate(R.layout.view_news_cozy_header, this, true);
+
+        this.container   = view.findViewById(R.id.container);
+        this.avatar      = view.findViewById(R.id.avatar);
+        this.source      = view.findViewById(R.id.source);
+        this.publishDate = view.findViewById(R.id.publish_date);
     }
 
     //region Properties
@@ -79,12 +82,15 @@ public final class HeaderView extends ItemView {
 
     //endregion
 
-    @Nullable
+    @NonNull
     @Override
     public Flowable<Irrelevant> clicks() {
         return this.clicks;
     }
 
+    //region Lifecycle
+
+    @CallSuper
     @Override
     protected void onAttachedToWindow() {
         this.disposable = RxView.clicks(this.container).subscribe(irrelevant -> this.clicks.onNext(Irrelevant.INSTANCE));
@@ -92,6 +98,7 @@ public final class HeaderView extends ItemView {
         super.onAttachedToWindow();
     }
 
+    @CallSuper
     @Override
     protected void onDetachedFromWindow() {
         if (this.disposable != null && this.disposable.isDisposed()) {
@@ -101,4 +108,6 @@ public final class HeaderView extends ItemView {
 
         super.onDetachedFromWindow();
     }
+
+    //endregion
 }

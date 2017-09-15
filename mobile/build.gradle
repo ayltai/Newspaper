@@ -112,11 +112,11 @@ ext {
     firebaseSdkVersion    = '11.2.2'
     daggerVersion         = '2.11'
     rxBindingVersion      = '2.0.0'
-    okhttpVersion         = '3.8.1'
+    okhttpVersion         = '3.9.0'
     retrofitVersion       = '2.3.0'
     frescoVersion         = '1.5.0'
     bigImageViewerVersion = '1.3.2'
-    exoPlayerVersion      = 'r2.5.1'
+    exoPlayerVersion      = 'r2.5.2'
     autoValueVersion      = '1.5'
     autoValueGsonVersion  = '0.5.0'
     leakCanaryVersion     = '1.5.1'
@@ -185,6 +185,7 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     compile "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
     compile ("com.squareup.retrofit2:converter-simplexml:$retrofitVersion") {
+        exclude group : 'stax'
         exclude group : 'xpp3'
     }
 
@@ -237,7 +238,7 @@ dependencies {
 
     // Unit testing
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.9.2'
+    testCompile 'org.mockito:mockito-core:2.10.0'
     testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
     testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
@@ -267,6 +268,12 @@ dependencies {
 
     // Code coverage by Codacy
     codacy 'com.github.codacy:codacy-coverage-reporter:1.0.13'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.google.code.findbugs:jsr305:3.0.2'
+    }
 }
 
 task customFindBugs(type: FindBugs) {

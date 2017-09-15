@@ -118,12 +118,18 @@ public final class ItemListLoader extends RealmLoader<List<Item>> {
                     if (category.getName().equals(categoryName)) {
                         final Client client = ClientFactory.getInstance(context).getClient(source);
                         if (client != null) singles.add(client.getItems(category.getUrl()));
+
+                        break;
                     }
                 }
             }
 
             Single.merge(singles)
                 .compose(RxUtils.applyFlowableBackgroundSchedulers())
+                .map(items -> {
+                    Collections.sort(items);
+                    return items;
+                })
                 .doOnNext(items -> {
                     if (this.getRealm() != null) new ItemManager(this.getRealm()).putItems(items);
                 })

@@ -43,6 +43,7 @@ public final class HttpModule {
             .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(SimpleXmlConverterFactory.create())
+            .baseUrl("http://dummy.base.url")
             .client(DaggerHttpComponent.builder()
                 .build()
                 .httpClient())

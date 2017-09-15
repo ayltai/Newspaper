@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper;
 
+import android.support.annotation.IntDef;
+
 public final class Constants {
     public static final String ENCODING_UTF8 = "UTF-8";
 
@@ -10,6 +12,13 @@ public final class Constants {
     public static final long CACHE_SIZE_MAX_SMALL    = 16 * 1024 * 1024;
     public static final long CACHE_SIZE_MAX_SMALLER  = 8 * 1024 * 1024;
     public static final long CACHE_SIZE_MAX_SMALLEST = 4 * 1024 * 1024;
+
+    public static final int VIEW_STYLE_COMPACT = 0;
+    public static final int VIEW_STYLE_COZY    = 1;
+
+    @IntDef({ Constants.VIEW_STYLE_COMPACT, Constants.VIEW_STYLE_COZY })
+    public @interface ViewStyle {
+    }
 
     private Constants() {
     }

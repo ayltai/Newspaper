@@ -18,7 +18,6 @@ public final class VmPolicyFactory {
             .penaltyLog();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) builder.detectFileUriExposure();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) builder.detectCleartextNetwork();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) builder.detectContentUriWithoutPermission().detectUntaggedSockets();
 
         return builder.build();

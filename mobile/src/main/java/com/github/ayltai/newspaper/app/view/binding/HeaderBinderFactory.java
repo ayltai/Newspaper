@@ -1,8 +1,11 @@
-package com.github.ayltai.newspaper.app;
+package com.github.ayltai.newspaper.app.view.binding;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.ayltai.newspaper.app.view.HeaderPresenter;
+import com.github.ayltai.newspaper.app.widget.HeaderView;
+import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.view.binding.PresentationBinderFactory;
 

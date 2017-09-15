@@ -1,12 +1,13 @@
-package com.github.ayltai.newspaper.app;
+package com.github.ayltai.newspaper.app.widget;
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.Video;
 import com.github.ayltai.newspaper.util.Irrelevant;
@@ -48,7 +49,7 @@ public class ItemView extends BaseView implements ItemPresenter.View {
     }
 
     @Override
-    public void setImages(@NonNull final Collection<Image> images) {
+    public void setImages(@NonNull final List<Image> images) {
     }
 
     @Override

@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.ViewUtils;
@@ -22,7 +21,7 @@ import io.reactivex.processors.BehaviorProcessor;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public class BaseView extends FrameLayout implements Presenter.View {
+public class BaseView extends PartView implements Presenter.View {
     //region Subscriptions
 
     protected final FlowableProcessor<Boolean>    attachments = PublishProcessor.create();
@@ -30,7 +29,7 @@ public class BaseView extends FrameLayout implements Presenter.View {
 
     //endregion
 
-    private boolean isFirstTimeAttachment = true;
+    protected boolean isFirstTimeAttachment = true;
 
     //region Constructors
 

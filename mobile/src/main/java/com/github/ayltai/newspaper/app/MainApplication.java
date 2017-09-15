@@ -5,6 +5,8 @@ import java.util.Collections;
 import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.cache.disk.DiskCacheConfig;
@@ -43,11 +45,13 @@ public final class MainApplication extends MultiDexApplication {
             if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
         }
 
-        Fabric.with(this, new Crashlytics.Builder()
+        if (!TestUtils.isLoggable()) Fabric.with(this, new Crashlytics.Builder()
             .core(new CrashlyticsCore.Builder()
-                .disabled(BuildConfig.DEBUG || TestUtils.isRunningTests())
+                .disabled(TestUtils.isLoggable())
                 .build())
             .build());
+
+        FirebaseCrash.setCrashCollectionEnabled(!TestUtils.isLoggable());
 
         FLog.setMinimumLoggingLevel(BuildConfig.DEBUG ? FLog.INFO : FLog.ERROR);
 

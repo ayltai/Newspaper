@@ -1,7 +1,7 @@
-package com.github.ayltai.newspaper.app;
+package com.github.ayltai.newspaper.app.view;
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,7 +41,7 @@ public class ItemPresenter extends PresentationBinder<Item, ItemPresenter.View> 
         void setIsBookmarked(boolean isBookmarked);
 
         @UiThread
-        void setImages(@NonNull Collection<Image> images);
+        void setImages(@NonNull List<Image> images);
 
         @UiThread
         void setVideo(@Nullable Video video);

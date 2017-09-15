@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.app;
+package com.github.ayltai.newspaper.app.view;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +12,9 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.ayltai.newspaper.app.widget.FooterView;
+import com.github.ayltai.newspaper.app.widget.HeaderView;
+import com.github.ayltai.newspaper.app.widget.ImageView;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.ayltai.newspaper.view.SimpleUniversalAdapter;
@@ -71,6 +74,12 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
         switch (viewType) {
             case HeaderView.VIEW_TYPE:
                 return new SimpleViewHolder<>(new HeaderView(this.context));
+
+            case ImageView.VIEW_TYPE:
+                return new SimpleViewHolder<>(new ImageView(this.context));
+
+            case FooterView.VIEW_TYPE:
+                return new SimpleViewHolder<>(new FooterView(this.context));
 
             default:
                 throw new IllegalArgumentException("Unsupported view type: " + viewType);

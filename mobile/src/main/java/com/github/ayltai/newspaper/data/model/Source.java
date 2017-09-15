@@ -51,6 +51,12 @@ public class Source extends RealmObject implements Parcelable {
 
     //endregion
 
+    @NonNull
+    @Override
+    public String toString() {
+        return "Source { name = '" + name + "', categories = " + categories + " }";
+    }
+
     //region Parcelable
 
     @Override

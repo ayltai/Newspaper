@@ -9,12 +9,11 @@
     <dimen name="textHeading3">24sp</dimen>
     <dimen name="textNormal">16sp</dimen>
     <dimen name="textSmall">14sp</dimen>
-    <dimen name="tabbar_height">48dp</dimen>
     <dimen name="featured_item_height">320dp</dimen>
     <dimen name="featured_image_height">240dp</dimen>
     <dimen name="featured_title_height">96dp</dimen>
-    <dimen name="cozy_item_header_clipped_height">88dp</dimen>
-    <dimen name="cozy_item_header_padded_height">104dp</dimen>
+    <dimen name="cozy_item_header_clipped_height">72dp</dimen>
+    <dimen name="cozy_item_header_padded_height">88dp</dimen>
     <dimen name="cozy_item_header_height">72dp</dimen>
     <dimen name="cozy_item_image_padded_height">232dp</dimen>
     <dimen name="cozy_item_image_height">200dp</dimen>

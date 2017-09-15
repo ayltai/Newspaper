@@ -6,4 +6,10 @@
     <item
         name="view_type_item_header"
         type="id" />
+    <item
+        name="view_type_item_image"
+        type="id" />
+    <item
+        name="view_type_item_footer"
+        type="id" />
 </resources>

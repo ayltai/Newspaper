@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.app;
+package com.github.ayltai.newspaper.app.widget;
 
 import android.content.Context;
 import android.os.Build;
@@ -11,12 +11,13 @@ import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 
+import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.util.ViewUtils;
-import com.github.ayltai.newspaper.view.UniversalAdapter;
 import com.github.ayltai.newspaper.widget.ListView;
 
-public final class ItemListView extends ListView<Item> implements ItemListPresenter.View {
+public abstract class ItemListView extends ListView<Item> implements ItemListPresenter.View {
     //region Constructors
 
     public ItemListView(@NonNull final Context context) {
@@ -40,26 +41,20 @@ public final class ItemListView extends ListView<Item> implements ItemListPresen
 
     @LayoutRes
     @Override
-    protected int getLayoutId() {
-        return 0;
-    }
-
-    @LayoutRes
-    @Override
     protected int getSwipeRefreshLayoutId() {
-        return 0;
+        return R.id.swipeRefreshLayout;
     }
 
     @IdRes
     @Override
     protected int getRecyclerViewId() {
-        return 0;
+        return R.id.recyclerView;
     }
 
     @IdRes
     @Override
     protected int getLoadingViewId() {
-        return 0;
+        return R.id.loading;
     }
 
     @IdRes
@@ -71,13 +66,6 @@ public final class ItemListView extends ListView<Item> implements ItemListPresen
     @Override
     protected int getInfiniteLoadingThreshold() {
         return ListView.NO_INFINITE_LOADING;
-    }
-
-    @Override
-    protected UniversalAdapter<Item, ?, ?> createAdapter() {
-        return new ItemListAdapter.Builder(this.getContext())
-            .addBinderFactory(new HeaderBinderFactory())
-            .build();
     }
 
     @Override

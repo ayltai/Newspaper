@@ -62,15 +62,15 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
     }
 
     public Item(@NonNull final RssItem rss, final String source, final String category) {
-        this.link        = rss.getLink();
-        this.title       = rss.getTitle();
-        this.description = rss.getDescription();
+        this.link        = rss.getLink() == null ? null : rss.getLink().trim();
+        this.title       = rss.getTitle().trim();
+        this.description = rss.getDescription() == null ? null : rss.getDescription().trim();
         this.source      = source;
         this.category    = category;
 
         if (rss.getPubDate() != null) {
             try {
-                this.publishDate = Item.DATE_FORMAT.get().parse(rss.getPubDate().replaceAll("EDT", "+0800")).getTime();
+                this.publishDate = Item.DATE_FORMAT.get().parse(rss.getPubDate().trim().replaceAll("EDT", "+0800")).getTime();
             } catch (final ParseException e) {
                 if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
@@ -219,6 +219,12 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
     @Override
     public final int hashCode() {
         return this.link.hashCode();
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Item { link = '" + link + "', title = '" + title + "', description = '" + description + "', isFullDescription = " + isFullDescription + ", publishDate = " + publishDate + ", source = '" + source + "', category = '" + category + "', video = " + video + ", bookmarked = " + bookmarked + ", images = " + images + " }";
     }
 
     //region Parcelable

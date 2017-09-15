@@ -27,10 +27,10 @@ final class HeadlineRealtimeClient extends Client {
     //region Constants
 
     private static final String BASE_URI  = "http://hd.stheadline.com";
+    private static final String IMAGE_URI = "http://static.stheadline.com";
     private static final String TAG_LINK  = "</a>";
     private static final String TAG_QUOTE = "\"";
     private static final String TAG_CLOSE = "\">";
-    private static final String HTTP      = "http:";
 
     //endregion
 
@@ -69,7 +69,7 @@ final class HeadlineRealtimeClient extends Client {
                         if (category != null) item.setCategory(category);
 
                         final String image = StringUtils.substringBetween(section, "<img src=\"", HeadlineRealtimeClient.TAG_QUOTE);
-                        if (image != null) item.getImages().add(new Image(HeadlineRealtimeClient.HTTP + image));
+                        if (image != null) item.getImages().add(new Image(HeadlineRealtimeClient.IMAGE_URI + image));
 
                         try {
                             item.setPublishDate(HeadlineRealtimeClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o\"></i>", "</span>")));
@@ -125,7 +125,7 @@ final class HeadlineRealtimeClient extends Client {
             final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", HeadlineRealtimeClient.TAG_QUOTE);
             final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"", HeadlineRealtimeClient.TAG_QUOTE);
 
-            if (imageUrl != null) images.add(new Image(HeadlineRealtimeClient.HTTP + imageUrl, imageDescription));
+            if (imageUrl != null) images.add(new Image(HeadlineRealtimeClient.IMAGE_URI + imageUrl, imageDescription));
         }
 
         if (!images.isEmpty()) {
