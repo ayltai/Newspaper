@@ -26,6 +26,8 @@
     <string name="go_next">下一個類別</string>
 
     <!-- Actions -->
+    <string name="action_search">搜尋</string>
+    <string name="action_filter">篩選</string>
     <string name="action_settings">設置</string>
     <string name="action_bookmark">書籤</string>
     <string name="action_share">分享</string>

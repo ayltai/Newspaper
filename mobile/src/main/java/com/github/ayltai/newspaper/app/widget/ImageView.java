@@ -9,8 +9,8 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.app.widget.ItemView;
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
@@ -42,6 +42,10 @@ public final class ImageView extends ItemView {
 
         this.container = view.findViewById(R.id.container);
         this.image     = view.findViewById(R.id.image);
+
+        this.image.getSSIV().setMaxScale(Constants.IMAGE_ZOOM_MAX);
+        this.image.getSSIV().setPanEnabled(false);
+        this.image.getSSIV().setZoomEnabled(false);
     }
 
     @Override

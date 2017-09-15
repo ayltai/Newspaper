@@ -96,6 +96,8 @@ public final class MainScreen extends Screen implements MainPresenter.View {
         this.tabLayout = view.findViewById(R.id.tabLayout);
         this.viewPager = view.findViewById(R.id.viewPager);
 
+        this.toolbar.inflateMenu(R.menu.main);
+
         this.tabLayout.setupWithViewPager(this.viewPager, true);
     }
 }

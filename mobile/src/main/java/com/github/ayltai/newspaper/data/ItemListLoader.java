@@ -103,6 +103,10 @@ public final class ItemListLoader extends RealmLoader<List<Item>> {
         return Observable.create(emitter -> new ItemManager(this.getRealm()).getItems(ItemListLoader.getSources(args).toArray(new String[0]), category)
             .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
             .map(items -> this.getRealm().copyFromRealm(items))
+            .map(items -> {
+                Collections.sort(items);
+                return items;
+            })
             .subscribe(emitter::onNext));
     }
 
@@ -131,7 +135,13 @@ public final class ItemListLoader extends RealmLoader<List<Item>> {
                     return items;
                 })
                 .doOnNext(items -> {
-                    if (this.getRealm() != null) new ItemManager(this.getRealm()).putItems(items);
+                    if (this.getRealm() != null) new ItemManager(this.getRealm()).putItems(items)
+                        .subscribe(
+                            irrelevant -> {
+                            },
+                            error -> {
+                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            });
                 })
                 .subscribe(
                     emitter::onNext,

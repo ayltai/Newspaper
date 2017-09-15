@@ -9,7 +9,8 @@
         <item name="android:textColor">?attr/textColor</item>
         <item name="android:textColorHint">?attr/textColorHint</item>
         <item name="android:windowBackground">?attr/windowBackground</item>
-        <item name="android:windowTranslucentStatus" tools:targetApi="21">true</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="21">false</item>
+        <item name="android:fitsSystemWindows">true</item>
     </style>
     <style name="AppTheme.Light">
         <item name="primaryColor">@color/primaryColorLight</item>

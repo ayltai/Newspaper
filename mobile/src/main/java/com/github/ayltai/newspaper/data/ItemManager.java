@@ -12,7 +12,6 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import io.reactivex.Single;
 import io.realm.Realm;
 import io.realm.RealmQuery;
-import io.realm.Sort;
 
 public final class ItemManager extends DataManager {
     public ItemManager(@NonNull final Realm realm) {
@@ -27,7 +26,7 @@ public final class ItemManager extends DataManager {
             if (sources != null) query.in(Item.FIELD_SOURCE, sources);
             if (!TextUtils.isEmpty(category)) query.equalTo(Item.FIELD_CATEGORY, category);
 
-            emitter.onSuccess(query.findAllSorted(Item.FIELD_PUBLISH_DATE, Sort.DESCENDING));
+            emitter.onSuccess(query.findAll());
         });
     }
 
