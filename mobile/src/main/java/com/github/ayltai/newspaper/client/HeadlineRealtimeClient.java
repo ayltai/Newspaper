@@ -31,6 +31,7 @@ final class HeadlineRealtimeClient extends Client {
     private static final String TAG_LINK  = "</a>";
     private static final String TAG_QUOTE = "\"";
     private static final String TAG_CLOSE = "\">";
+    private static final String HTTP      = "http";
 
     //endregion
 
@@ -69,7 +70,7 @@ final class HeadlineRealtimeClient extends Client {
                         if (category != null) item.setCategory(category);
 
                         final String image = StringUtils.substringBetween(section, "<img src=\"", HeadlineRealtimeClient.TAG_QUOTE);
-                        if (image != null) item.getImages().add(new Image(HeadlineRealtimeClient.IMAGE_URI + image));
+                        if (image != null) item.getImages().add(new Image(HeadlineRealtimeClient.formatImageUrl(image)));
 
                         try {
                             item.setPublishDate(HeadlineRealtimeClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<i class=\"fa fa-clock-o\"></i>", "</span>")));
@@ -125,12 +126,17 @@ final class HeadlineRealtimeClient extends Client {
             final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", HeadlineRealtimeClient.TAG_QUOTE);
             final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"", HeadlineRealtimeClient.TAG_QUOTE);
 
-            if (imageUrl != null) images.add(new Image(HeadlineRealtimeClient.IMAGE_URI + imageUrl, imageDescription));
+            if (imageUrl != null) images.add(new Image(HeadlineRealtimeClient.formatImageUrl(imageUrl), imageDescription));
         }
 
         if (!images.isEmpty()) {
             item.getImages().clear();
             item.getImages().addAll(images);
         }
+    }
+
+    @NonNull
+    private static String formatImageUrl(@NonNull final String url) {
+        return url.startsWith("//") ? HeadlineRealtimeClient.HTTP + url : url.startsWith(HeadlineRealtimeClient.HTTP) ? url : HeadlineRealtimeClient.IMAGE_URI + url;
     }
 }

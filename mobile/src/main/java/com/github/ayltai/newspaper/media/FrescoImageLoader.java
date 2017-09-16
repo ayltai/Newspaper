@@ -35,8 +35,8 @@ import com.facebook.imagepipeline.core.ExecutorSupplier;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 
@@ -111,7 +111,7 @@ public class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObser
                         FrescoImageLoader.SOURCES.remove(source);
                     }
 
-                    if (BuildConfig.DEBUG) Log.e(FrescoImageLoader.TAG, error.getMessage(), error);
+                    if (TestUtils.isLoggable()) Log.e(FrescoImageLoader.TAG, error.getMessage(), error);
 
                     FrescoImageLoader.HANDLER.post(() -> {
                         if (callback != null) callback.onFail(new RuntimeException(error));

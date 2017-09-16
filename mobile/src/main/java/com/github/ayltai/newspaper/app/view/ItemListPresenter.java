@@ -12,7 +12,7 @@ import com.github.ayltai.newspaper.data.ItemListLoader;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.view.ListPresenter;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 
 public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.View> {
     public interface View extends ListPresenter.View<Item> {
@@ -25,16 +25,15 @@ public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.Vie
     }
 
     @Override
-    public Observable<List<Item>> load() {
-        if (this.getView() == null) return Observable.just(Collections.emptyList());
+    public Flowable<List<Item>> load() {
+        if (this.getView() == null) return Flowable.just(Collections.emptyList());
 
         final Activity activity = this.getView().getActivity();
-        if (activity == null) return Observable.just(Collections.emptyList());
+        if (activity == null) return Flowable.just(Collections.emptyList());
 
         final ItemListLoader.Builder builder = new ItemListLoader.Builder((AppCompatActivity)activity).setCategory(this.category);
-
         for (final String source : UserConfig.getSources(this.getView().getContext())) builder.addSource(source);
 
-        return builder.build().toObservable();
+        return builder.build();
     }
 }

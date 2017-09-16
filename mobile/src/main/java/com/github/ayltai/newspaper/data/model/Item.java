@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.github.ayltai.newspaper.rss.Enclosure;
 import com.github.ayltai.newspaper.rss.RssItem;
+import com.github.ayltai.newspaper.util.RealmLists;
 import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.realm.RealmList;
@@ -224,7 +225,7 @@ public class Item extends RealmObject implements Cloneable, Comparable<Item>, Pa
     @NonNull
     @Override
     public String toString() {
-        return "Item { link = '" + link + "', title = '" + title + "', description = '" + description + "', isFullDescription = " + isFullDescription + ", publishDate = " + publishDate + ", source = '" + source + "', category = '" + category + "', video = " + video + ", bookmarked = " + bookmarked + ", images = " + images + " }";
+        return "Item { link = '" + this.link + "', title = '" + this.title + "', description = '" + this.description + "', isFullDescription = " + this.isFullDescription + ", publishDate = " + this.publishDate + ", source = '" + this.source + "', category = '" + this.category + "', video = " + this.video + ", bookmarked = " + this.bookmarked + ", images = " + RealmLists.toString(this.images) + " }";
     }
 
     //region Parcelable

@@ -3,6 +3,9 @@ package com.github.ayltai.newspaper.app.screen;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SparseArrayCompat;
@@ -17,27 +20,17 @@ import com.github.ayltai.newspaper.app.widget.CompactItemListView;
 import com.github.ayltai.newspaper.app.widget.CozyItemListView;
 import com.github.ayltai.newspaper.app.widget.ItemListView;
 import com.github.ayltai.newspaper.config.UserConfig;
-import com.github.ayltai.newspaper.data.DaggerDataComponent;
-import com.github.ayltai.newspaper.data.DataModule;
 import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.realm.Realm;
 
-public class MainAdapter extends PagerAdapter {
+public class MainAdapter extends PagerAdapter implements LifecycleObserver {
     private final SparseArrayCompat<String>              categories = new SparseArrayCompat<>();
     private final SparseArrayCompat<WeakReference<View>> views      = new SparseArrayCompat<>();
-
-    private final Realm realm;
 
     private CompositeDisposable disposables;
 
     public MainAdapter(@NonNull final Context context) {
-        this.realm = DaggerDataComponent.builder()
-            .dataModule(new DataModule(context))
-            .build()
-            .realm();
-
         final List<String> categories = UserConfig.getCategories(context);
         for (int i = 0; i < categories.size(); i++) this.categories.put(i, categories.get(i));
     }
@@ -95,6 +88,14 @@ public class MainAdapter extends PagerAdapter {
                 this.views.remove(position);
                 container.removeView(view);
             }
+        }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    void dispose() {
+        if (this.disposables != null && !this.disposables.isDisposed()) {
+            this.disposables.dispose();
+            this.disposables = null;
         }
     }
 }

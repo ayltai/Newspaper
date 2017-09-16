@@ -23,6 +23,6 @@ public class FooterBinderFactory extends PresentationBinderFactory<Item, ItemPre
 
     @Override
     public boolean isNeeded(@Nullable final Item model) {
-        return model != null && model.getTitle() != null && !model.getTitle().isEmpty() && model.getDescription() != null && !model.getDescription().isEmpty();
+        return model != null && (model.getTitle() != null && !model.getTitle().isEmpty() || model.getDescription() != null && !model.getDescription().isEmpty());
     }
 }

@@ -20,11 +20,13 @@ public final class DataModule {
         this.context = context;
     }
 
+    @NonNull
     @Provides
     Context provideContext() {
         return this.context;
     }
 
+    @NonNull
     @Provides
     Realm provideRealm() {
         if (!DataModule.isInitialized) {

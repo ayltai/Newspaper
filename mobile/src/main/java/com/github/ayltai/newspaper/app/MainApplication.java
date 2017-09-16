@@ -17,7 +17,6 @@ import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
-import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.debug.ThreadPolicyFactory;
@@ -53,7 +52,7 @@ public final class MainApplication extends MultiDexApplication {
 
         FirebaseCrash.setCrashCollectionEnabled(!TestUtils.isLoggable());
 
-        FLog.setMinimumLoggingLevel(BuildConfig.DEBUG ? FLog.INFO : FLog.ERROR);
+        FLog.setMinimumLoggingLevel(TestUtils.isLoggable() ? FLog.INFO : FLog.ERROR);
 
         ImagePipelineConfig.getDefaultImageRequestConfig()
             .setProgressiveRenderingEnabled(true);

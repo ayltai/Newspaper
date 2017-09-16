@@ -1,16 +1,17 @@
 package com.github.ayltai.newspaper.view;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.RxUtils;
+import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 
 public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends BindingPresenter<List<M>, V> {
     public interface View<M> extends Presenter.View {
@@ -34,7 +35,7 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
         Flowable<Integer> bestVisibleItemPositionChanges();
     }
 
-    public abstract Observable<List<M>> load();
+    public abstract Flowable<List<M>> load();
 
     protected void resetState() {
     }
@@ -60,14 +61,13 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
         view.showLoadingView();
 
         if (isFirstAttached) {
-            final Observable<List<M>> observable = this.load();
-
-            this.manageDisposable(observable.subscribe(
-                this::bindModel,
-                error -> {
-                    if (BuildConfig.DEBUG) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                }
-            ));
+            this.manageDisposable(this.load()
+                .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
+                .subscribe(
+                    this::bindModel,
+                    error -> {
+                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    }));
 
             this.subscribePullToRefreshes(view);
         }
@@ -76,23 +76,27 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
     private void subscribePullToRefreshes(@NonNull final V view) {
         this.manageDisposable(view.pullToRefreshes().subscribe(
             irrelevant -> {
-                if (BuildConfig.DEBUG) Log.d(this.getClass().getSimpleName(), "Pull-to-refresh");
+                if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Pull-to-refresh");
 
                 this.resetState();
 
-                final Observable<List<M>> observable = this.load();
+                final AtomicBoolean hasCleared = new AtomicBoolean(false);
 
-                this.manageDisposable(observable.subscribe(
+                this.manageDisposable(this.load().subscribe(
                     models -> {
-                        view.clear();
+                        if (!hasCleared.get()) {
+                            hasCleared.set(true);
+                            view.clear();
+                        }
+
                         this.bindModel(models);
                     },
                     error -> {
-                        if (BuildConfig.DEBUG) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                     }));
             },
             error -> {
-                if (BuildConfig.DEBUG) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
             }
         ));
     }

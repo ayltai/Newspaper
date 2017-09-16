@@ -3,6 +3,7 @@ package com.github.ayltai.newspaper.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.model.Category;
@@ -69,9 +71,11 @@ public final class ItemListLoader extends RealmLoader<List<Item>> {
 
         @NonNull
         public Flowable<List<Item>> build() {
+            final String category = this.args.getString(ItemListLoader.KEY_CATEGORY);
+
             return Flowable.create(emitter -> this.activity
                 .getSupportLoaderManager()
-                .restartLoader(ItemListLoader.ID, this.args, new LoaderManager.LoaderCallbacks<List<Item>>() {
+                .restartLoader(category == null ? ItemListLoader.ID : category.hashCode(), this.args, new LoaderManager.LoaderCallbacks<List<Item>>() {
                     @Override
                     public Loader<List<Item>> onCreateLoader(final int id, final Bundle args) {
                         return new ItemListLoader(ItemListLoader.Builder.this.activity, args);
@@ -110,6 +114,7 @@ public final class ItemListLoader extends RealmLoader<List<Item>> {
             .subscribe(emitter::onNext));
     }
 
+    @SuppressWarnings("unchecked")
     @NonNull
     @Override
     protected Observable<List<Item>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
@@ -121,21 +126,38 @@ public final class ItemListLoader extends RealmLoader<List<Item>> {
                 for (final Category category : SourceFactory.getInstance(context).getSource(source).getCategories()) {
                     if (category.getName().equals(categoryName)) {
                         final Client client = ClientFactory.getInstance(context).getClient(source);
-                        if (client != null) singles.add(client.getItems(category.getUrl()));
+
+                        if (client != null) singles.add(client.getItems(category.getUrl())
+                            .timeout(Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+                            .onErrorResumeNext(error -> {
+                                if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+
+                                return Single.just(Collections.emptyList());
+                            }));
 
                         break;
                     }
                 }
             }
 
-            Single.merge(singles)
-                .compose(RxUtils.applyFlowableBackgroundSchedulers())
+            Single.zip(
+                singles,
+                lists -> {
+                    final List<Item> combinedList = new ArrayList<>();
+                    for (final Object list : lists) combinedList.addAll((List<Item>)list);
+
+                    Collections.sort(combinedList);
+
+                    return combinedList;
+                })
+                .compose(RxUtils.applySingleBackgroundSchedulers())
                 .map(items -> {
                     Collections.sort(items);
                     return items;
                 })
-                .doOnNext(items -> {
+                .doOnSuccess(items -> {
                     if (this.getRealm() != null) new ItemManager(this.getRealm()).putItems(items)
+                        .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
                         .subscribe(
                             irrelevant -> {
                             },

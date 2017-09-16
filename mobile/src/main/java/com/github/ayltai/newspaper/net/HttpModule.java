@@ -4,7 +4,9 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
-import com.github.ayltai.newspaper.BuildConfig;
+import android.support.annotation.NonNull;
+
+import com.github.ayltai.newspaper.util.TestUtils;
 
 import dagger.Module;
 import dagger.Provides;
@@ -24,6 +26,7 @@ public final class HttpModule {
     }
 
     @Singleton
+    @NonNull
     @Provides
     static OkHttpClient provideHttpClient() {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
@@ -31,12 +34,13 @@ public final class HttpModule {
             .readTimeout(HttpModule.TIMEOUT_READ, TimeUnit.SECONDS)
             .writeTimeout(HttpModule.TIMEOUT_WRITE, TimeUnit.SECONDS);
 
-        if (BuildConfig.DEBUG) builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        if (TestUtils.isLoggable()) builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS));
 
         return builder.build();
     }
 
     @Singleton
+    @NonNull
     @Provides
     static Retrofit provideRetrofit() {
         return new Retrofit.Builder()
@@ -51,6 +55,7 @@ public final class HttpModule {
     }
 
     @Singleton
+    @NonNull
     @Provides
     static ApiService provideApiService() {
         return DaggerHttpComponent.builder()

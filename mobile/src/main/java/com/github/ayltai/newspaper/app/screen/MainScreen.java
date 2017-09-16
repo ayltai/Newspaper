@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper.app.screen;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.os.Build;
 import android.os.Parcelable;
@@ -72,7 +73,6 @@ public final class MainScreen extends Screen implements MainPresenter.View {
 
     //endregion
 
-
     @NonNull
     @Override
     public Flowable<Integer> pageChanges() {
@@ -82,7 +82,12 @@ public final class MainScreen extends Screen implements MainPresenter.View {
     @Override
     protected void onAttachedToWindow() {
         if (this.isFirstTimeAttachment) {
-            this.viewPager.setAdapter(this.adapter = new MainAdapter(this.getContext()));
+            this.adapter = new MainAdapter(this.getContext());
+
+            final LifecycleOwner lifecycleOwner = this.getLifecycleOwner();
+            if (lifecycleOwner != null) lifecycleOwner.getLifecycle().addObserver(this.adapter);
+
+            this.viewPager.setAdapter(this.adapter);
             this.pageChanges.onNext(0);
         }
 

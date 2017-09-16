@@ -29,8 +29,6 @@ public final class HeadlineClient extends RssClient {
 
     public static final String URL = "http://hd.stheadline.com/rss/news/daily/";
 
-    private static final String IMAGE_URI = "http://static.stheadline.com";
-
     public static final String CATEGORY_HONG_KONG     = "?category=hongkong";
     public static final String CATEGORY_INTERNATIONAL = "?category=international";
     public static final String CATEGORY_CHINA         = "?category=chain";
@@ -39,6 +37,9 @@ public final class HeadlineClient extends RssClient {
     public static final String CATEGORY_ENTERTAINMENT = "?category=entertainment";
     public static final String CATEGORY_SUPPLEMENT    = "?category=supplement";
     public static final String CATEGORY_SPORTS        = "?category=sports";
+
+    private static final String IMAGE_URI = "http://static.stheadline.com";
+    private static final String HTTP      = "http";
 
     //endregion
 
@@ -72,7 +73,7 @@ public final class HeadlineClient extends RssClient {
 
             if (index >= 0) {
                 item.setTitle(item.getTitle().substring(0, index));
-                if (item.getEnclosure() != null && !item.getEnclosure().getUrl().startsWith("http")) item.getEnclosure().setUrl(HeadlineClient.IMAGE_URI + item.getEnclosure().getUrl());
+                if (item.getEnclosure() != null) item.getEnclosure().setUrl(HeadlineClient.formatImageUrl(item.getEnclosure().getUrl()));
 
                 rssItems.add(item);
             }
@@ -99,7 +100,7 @@ public final class HeadlineClient extends RssClient {
                         final String imageUrl         = StringUtils.substringBetween(imageContainer, "href=\"", "\"");
                         final String imageDescription = StringUtils.substringBetween(imageContainer, "title=\"■", "\">");
 
-                        if (imageUrl != null) images.add(new Image(HeadlineClient.IMAGE_URI + imageUrl, imageDescription));
+                        if (imageUrl != null) images.add(new Image(HeadlineClient.formatImageUrl(imageUrl), imageDescription));
                     }
 
                     if (!images.isEmpty()) {
@@ -123,6 +124,11 @@ public final class HeadlineClient extends RssClient {
                     emitter.onError(error);
                 }
             ));
+    }
+
+    @NonNull
+    private static String formatImageUrl(@NonNull final String url) {
+        return url.startsWith("//") ? HeadlineClient.HTTP + url : url.startsWith(HeadlineClient.HTTP) ? url : HeadlineClient.IMAGE_URI + url;
     }
 }
 

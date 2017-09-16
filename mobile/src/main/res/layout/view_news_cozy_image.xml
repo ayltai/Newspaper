@@ -20,7 +20,7 @@
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="@dimen/cozy_item_image_height"
-            android:layout_marginTop="@dimen/space16"
+            android:layout_marginTop="@dimen/space8"
             app:initScaleType="centerCrop" />
     </android.support.v7.widget.CardView>
 </FrameLayout>

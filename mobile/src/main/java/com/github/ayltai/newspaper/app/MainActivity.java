@@ -1,11 +1,20 @@
 package com.github.ayltai.newspaper.app;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.github.ayltai.newspaper.LifecycleActivity;
+import com.github.ayltai.newspaper.data.DaggerDataComponent;
+import com.github.ayltai.newspaper.data.DataManager;
+import com.github.ayltai.newspaper.data.DataModule;
+import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.RxUtils;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import io.reactivex.Single;
+import io.realm.Realm;
 
 public final class MainActivity extends LifecycleActivity {
     static {
@@ -13,6 +22,19 @@ public final class MainActivity extends LifecycleActivity {
     }
 
     private FlowController controller;
+    private Realm          realm;
+
+    @Override
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Single.<Realm>create(emitter -> emitter.onSuccess(DaggerDataComponent.builder()
+            .dataModule(new DataModule(this))
+            .build()
+            .realm()))
+            .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
+            .subscribe(realm -> this.realm = realm);
+    }
 
     @Override
     protected void onDestroy() {
@@ -20,6 +42,19 @@ public final class MainActivity extends LifecycleActivity {
 
         this.controller.onDestroy();
         this.controller = null;
+
+        if (this.isFinishing()) {
+            if (this.realm != null) {
+                Single.<Irrelevant>create(
+                    emitter -> {
+                        this.realm.close();
+
+                        emitter.onSuccess(Irrelevant.INSTANCE);
+                    })
+                    .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
+                    .subscribe();
+            }
+        }
     }
 
     @Override
