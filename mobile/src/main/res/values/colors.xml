@@ -8,10 +8,10 @@
     <color name="accentColorDark">#e04a19</color>
     <color name="textColorLight">#323133</color>
     <color name="textColorDark">#e6e9ed</color>
-    <color name="textColorHintLight">#aab2bd</color>
+    <color name="textColorHintLight">#434a54</color>
     <color name="textColorHintDark">#aab2bd</color>
     <color name="textColorInverseLight">#ffffff</color>
-    <color name="textColorInverseDark">#ffffff</color>
+    <color name="textColorInverseDark">#323133</color>
     <color name="windowBackgroundLight">#eeeeee</color>
     <color name="windowBackgroundDark">#1f242c</color>
     <color name="cardBackgroundLight">#fafafa</color>
