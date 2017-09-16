@@ -37,7 +37,7 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     protected final FlowableProcessor<Integer>    bestVisibleItemPositionChanges = PublishProcessor.create();
     protected final FlowableProcessor<Irrelevant> pullToRefreshes                = PublishProcessor.create();
-    protected final FlowableProcessor<Irrelevant> infiniteLoads = PublishProcessor.create();
+    protected final FlowableProcessor<Irrelevant> infiniteLoads                  = PublishProcessor.create();
     protected final FlowableProcessor<Boolean>    attachments                    = BehaviorProcessor.create();
     protected final FlowableProcessor<Irrelevant> detachments                    = PublishProcessor.create();
 
