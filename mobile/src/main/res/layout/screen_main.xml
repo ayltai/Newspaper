@@ -46,7 +46,8 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_anchor="@+id/viewPager"
-        app:layout_anchorGravity="end|bottom">
+        app:layout_anchorGravity="end|bottom"
+        app:layout_behavior="com.github.ayltai.newspaper.view.FloatingActionButtonBehavior">
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/action_go_top"
             android:layout_width="wrap_content"

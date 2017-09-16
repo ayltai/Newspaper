@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import io.supercharge.shimmerlayout.ShimmerLayout;
 
 public final class ViewUtils {
-    private static final float ANIMATION_SCALE_FROM = 0.5f;
-
     private ViewUtils() {
     }
 
@@ -62,8 +60,6 @@ public final class ViewUtils {
     public static Iterable<Animator> createDefaultAnimators(@NonNull final View view) {
         return Arrays.asList(
             ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
-            ObjectAnimator.ofFloat(view, "scaleX", ViewUtils.ANIMATION_SCALE_FROM, 1f),
-            ObjectAnimator.ofFloat(view, "scaleY", ViewUtils.ANIMATION_SCALE_FROM, 1f),
             ObjectAnimator.ofFloat(view, "translationY", view.getMeasuredHeight(), 0f)
         );
     }

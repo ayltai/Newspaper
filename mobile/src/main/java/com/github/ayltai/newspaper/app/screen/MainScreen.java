@@ -184,6 +184,10 @@ public final class MainScreen extends Screen implements MainPresenter.View {
         this.goTopAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
         this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
         this.filterAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+
+        this.goTopAction.setClickable(true);
+        this.refreshAction.setClickable(true);
+        this.filterAction.setClickable(true);
     }
 
     private void hideMoreActions() {
@@ -193,5 +197,9 @@ public final class MainScreen extends Screen implements MainPresenter.View {
         this.goTopAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_close));
         this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_close));
         this.filterAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_close));
+
+        this.goTopAction.setClickable(false);
+        this.refreshAction.setClickable(false);
+        this.filterAction.setClickable(false);
     }
 }
