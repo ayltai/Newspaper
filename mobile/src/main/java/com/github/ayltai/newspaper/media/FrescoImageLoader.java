@@ -46,12 +46,12 @@ public class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObser
     private static final Handler          HANDLER = new Handler(Looper.getMainLooper());
     private static final List<DataSource> SOURCES = new ArrayList<>();
 
-    protected static ImageLoader instance;
+    protected static FrescoImageLoader instance;
 
     private static ExecutorSupplier executorSupplier;
 
     @NonNull
-    public static ImageLoader getInstance() {
+    public static FrescoImageLoader getInstance() {
         if (FrescoImageLoader.instance == null) {
             FrescoImageLoader.executorSupplier = new DefaultExecutorSupplier(Runtime.getRuntime().availableProcessors());
             FrescoImageLoader.instance         = new FrescoImageLoader();
@@ -67,6 +67,9 @@ public class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObser
     public void loadImage(@NonNull final Uri uri, @Nullable final Callback callback) {
         final ImageRequest request = ImageRequest.fromUri(uri);
         final File         file    = FrescoImageLoader.getFileCache(request);
+
+        if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Load image = " + uri.toString());
+        if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "File cache = " + file.getAbsolutePath());
 
         if (file.exists()) {
             if (callback != null) callback.onCacheHit(file);
@@ -111,7 +114,7 @@ public class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObser
                         FrescoImageLoader.SOURCES.remove(source);
                     }
 
-                    if (TestUtils.isLoggable()) Log.e(FrescoImageLoader.TAG, error.getMessage(), error);
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
 
                     FrescoImageLoader.HANDLER.post(() -> {
                         if (callback != null) callback.onFail(new RuntimeException(error));

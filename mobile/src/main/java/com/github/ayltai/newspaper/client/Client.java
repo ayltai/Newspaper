@@ -15,7 +15,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.data.model.Category;
-import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -44,11 +44,11 @@ public abstract class Client {
 
     @WorkerThread
     @NonNull
-    public abstract Single<List<Item>> getItems(@NonNull String url);
+    public abstract Single<List<NewsItem>> getItems(@NonNull String url);
 
     @WorkerThread
     @NonNull
-    public abstract Maybe<Item> updateItem(@NonNull Item item);
+    public abstract Maybe<NewsItem> updateItem(@NonNull NewsItem item);
 
     @Nullable
     protected final String getCategoryName(@NonNull final String url) {
@@ -60,10 +60,10 @@ public abstract class Client {
     }
 
     @NonNull
-    protected List<Item> filter(@NonNull final List<Item> items) {
-        final List<Item> filteredItems = new ArrayList<>();
+    protected List<NewsItem> filter(@NonNull final List<NewsItem> items) {
+        final List<NewsItem> filteredItems = new ArrayList<>();
 
-        for (final Item item : items) {
+        for (final NewsItem item : items) {
             if (item.getPublishDate() != null && item.getPublishDate().getTime() > System.currentTimeMillis() - Constants.HOUSEKEEP_TIME) filteredItems.add(item);
         }
 

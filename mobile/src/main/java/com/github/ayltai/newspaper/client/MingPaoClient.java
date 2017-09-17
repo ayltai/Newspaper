@@ -15,7 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.github.ayltai.newspaper.data.model.Image;
-import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.data.model.Video;
 import com.github.ayltai.newspaper.net.ApiService;
@@ -52,7 +52,7 @@ final class MingPaoClient extends RssClient {
     @WorkerThread
     @NonNull
     @Override
-    public Maybe<Item> updateItem(@NonNull final Item item) {
+    public Maybe<NewsItem> updateItem(@NonNull final NewsItem item) {
         final String[] tokens    = item.getLink().substring(MingPaoClient.BASE_URI.length()).split(MingPaoClient.SLASH);
         final boolean  isInstant = item.getLink().contains("/ins/");
 
@@ -94,7 +94,7 @@ final class MingPaoClient extends RssClient {
     }
 
     @NonNull
-    private static List<Image> extractImages(@NonNull final Item item, @NonNull final JSONArray images) {
+    private static List<Image> extractImages(@NonNull final NewsItem item, @NonNull final JSONArray images) {
         final List<Image> fullImages = new ArrayList<>();
 
         for (int i = 0; i < images.length(); i++) {
@@ -116,7 +116,7 @@ final class MingPaoClient extends RssClient {
     }
 
     @Nullable
-    private static Image findLargestImage(@NonNull final Item item, @NonNull final JSONObject image, @NonNull final JSONArray array) {
+    private static Image findLargestImage(@NonNull final NewsItem item, @NonNull final JSONObject image, @NonNull final JSONArray array) {
         Image img = null;
         int   max = 0;
 

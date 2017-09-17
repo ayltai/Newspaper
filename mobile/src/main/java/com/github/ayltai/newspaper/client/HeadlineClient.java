@@ -12,7 +12,7 @@ import android.support.annotation.WorkerThread;
 import android.util.Log;
 
 import com.github.ayltai.newspaper.data.model.Image;
-import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.rss.RssFeed;
@@ -62,7 +62,7 @@ public final class HeadlineClient extends RssClient {
     }
 
     @NonNull
-    protected List<Item> filter(@NonNull final String url, @NonNull final RssFeed feed) {
+    protected List<NewsItem> filter(@NonNull final String url, @NonNull final RssFeed feed) {
         if (feed.getItems() == null) return new ArrayList<>();
 
         final String        keyword  = HeadlineClient.KEYWORDS.get(url.substring(HeadlineClient.URL.length()));
@@ -88,7 +88,7 @@ public final class HeadlineClient extends RssClient {
     @WorkerThread
     @NonNull
     @Override
-    public Maybe<Item> updateItem(@NonNull final Item item) {
+    public Maybe<NewsItem> updateItem(@NonNull final NewsItem item) {
         return Maybe.create(emitter -> this.apiService
             .getHtml(item.getLink())
             .compose(RxUtils.applyObservableBackgroundSchedulers())

@@ -8,4 +8,6 @@
     <include layout="@layout/placeholder_item_compact" />
     <include layout="@layout/placeholder_item_compact" />
     <include layout="@layout/placeholder_item_compact" />
+    <include layout="@layout/placeholder_item_compact" />
+    <include layout="@layout/placeholder_item_compact" />
 </LinearLayout>

@@ -3,7 +3,6 @@ package com.github.ayltai.newspaper.app.widget;
 import java.util.Date;
 
 import android.content.Context;
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -15,10 +14,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.jakewharton.rxbinding2.view.RxView;
 
-import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
@@ -29,14 +25,11 @@ public final class HeaderView extends ItemView {
 
     //region Components
 
-    private final View             container;
     private final SimpleDraweeView avatar;
     private final TextView         source;
     private final TextView         publishDate;
 
     //endregion
-
-    private Disposable disposable;
 
     public HeaderView(@NonNull final Context context) {
         super(context);
@@ -78,35 +71,6 @@ public final class HeaderView extends ItemView {
             this.publishDate.setVisibility(View.VISIBLE);
             this.publishDate.setText(DateUtils.getTimeAgo(this.getContext(), date.getTime()));
         }
-    }
-
-    //endregion
-
-    @NonNull
-    @Override
-    public Flowable<Irrelevant> clicks() {
-        return this.clicks;
-    }
-
-    //region Lifecycle
-
-    @CallSuper
-    @Override
-    protected void onAttachedToWindow() {
-        this.disposable = RxView.clicks(this.container).subscribe(irrelevant -> this.clicks.onNext(Irrelevant.INSTANCE));
-
-        super.onAttachedToWindow();
-    }
-
-    @CallSuper
-    @Override
-    protected void onDetachedFromWindow() {
-        if (this.disposable != null && this.disposable.isDisposed()) {
-            this.disposable.dispose();
-            this.disposable = null;
-        }
-
-        super.onDetachedFromWindow();
     }
 
     //endregion

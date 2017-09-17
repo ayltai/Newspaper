@@ -3,6 +3,7 @@ package com.github.ayltai.newspaper.app.view.binding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.view.FooterPresenter;
 import com.github.ayltai.newspaper.app.widget.FooterView;
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
@@ -23,6 +24,6 @@ public class FooterBinderFactory extends PresentationBinderFactory<Item, ItemPre
 
     @Override
     public boolean isNeeded(@Nullable final Item model) {
-        return model != null && (model.getTitle() != null && !model.getTitle().isEmpty() || model.getDescription() != null && !model.getDescription().isEmpty());
+        return !(model instanceof FeaturedItem) && model != null && (model.getTitle() != null && !model.getTitle().isEmpty() || model.getDescription() != null && !model.getDescription().isEmpty());
     }
 }

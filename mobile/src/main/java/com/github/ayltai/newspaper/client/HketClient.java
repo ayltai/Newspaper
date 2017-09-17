@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.data.model.Video;
 import com.github.ayltai.newspaper.net.ApiService;
@@ -64,19 +65,19 @@ final class HketClient extends Client {
     @WorkerThread
     @NonNull
     @Override
-    public Single<List<Item>> getItems(@NonNull final String url) {
+    public Single<List<NewsItem>> getItems(@NonNull final String url) {
         return Single.create(emitter -> this.apiService
             .getHtml(url)
             .compose(RxUtils.applyObservableBackgroundSchedulers())
             .subscribe(
                 html -> {
-                    final String[]   sections = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"section-listing-widget\">", "<div class=\"pagination-widget\">"), "<div class=\"article-listing\">", "</a>");
-                    final List<Item> items    = new ArrayList<>(sections.length);
-                    final String     category = this.getCategoryName(url);
+                    final String[]       sections = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"section-listing-widget\">", "<div class=\"pagination-widget\">"), "<div class=\"article-listing\">", "</a>");
+                    final List<NewsItem> items    = new ArrayList<>(sections.length);
+                    final String         category = this.getCategoryName(url);
 
                     for (final String section : sections) {
-                        final Item   item = new Item();
-                        final String link = StringUtils.substringBetween(section, "href=\"", HketClient.TAG_QUOTE);
+                        final NewsItem item = new NewsItem();
+                        final String   link = StringUtils.substringBetween(section, "href=\"", HketClient.TAG_QUOTE);
 
                         item.setTitle(StringUtils.substringBetween(section, "<h3 class=\"reduce-line\">", "</h3>"));
                         if (link != null) item.setLink((link.startsWith("http") ? "" : HketClient.BASE_URI) + link);
@@ -107,7 +108,7 @@ final class HketClient extends Client {
     @WorkerThread
     @NonNull
     @Override
-    public Maybe<Item> updateItem(@NonNull final Item item) {
+    public Maybe<NewsItem> updateItem(@NonNull final NewsItem item) {
         final boolean isChinaNews  = item.getLink().startsWith(HketClient.CHINA_BASE_URI);
         final boolean isInvestNews = item.getLink().startsWith(HketClient.INVEST_BASE_URI);
 

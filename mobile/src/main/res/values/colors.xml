@@ -21,6 +21,6 @@
     <color name="textProtectionScrimTop">#00000000</color>
     <color name="textProtectionScrimCenter">#44000000</color>
     <color name="textProtectionScrimBottom">#99000000</color>
-    <color name="shadowStart">#00000000</color>
-    <color name="shadowEnd">#000000</color>
+    <color name="shadowStart">#003c3b3d</color>
+    f<color name="shadowEnd">#9f323133</color>
 </resources>

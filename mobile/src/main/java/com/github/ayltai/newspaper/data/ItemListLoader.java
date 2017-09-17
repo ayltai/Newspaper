@@ -19,7 +19,7 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.model.Category;
-import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.SourceFactory;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -29,7 +29,7 @@ import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
-public final class ItemListLoader extends RealmLoader<List<Item>> {
+public class ItemListLoader extends RealmLoader<List<NewsItem>> {
     //region Constants
 
     public static final int ID = ItemListLoader.class.hashCode();
@@ -70,36 +70,36 @@ public final class ItemListLoader extends RealmLoader<List<Item>> {
         }
 
         @NonNull
-        public Flowable<List<Item>> build() {
+        public Flowable<List<NewsItem>> build() {
             final String category = this.args.getString(ItemListLoader.KEY_CATEGORY);
 
             return Flowable.create(emitter -> this.activity
                 .getSupportLoaderManager()
-                .restartLoader(category == null ? ItemListLoader.ID : category.hashCode(), this.args, new LoaderManager.LoaderCallbacks<List<Item>>() {
+                .restartLoader(category == null ? ItemListLoader.ID : category.hashCode(), this.args, new LoaderManager.LoaderCallbacks<List<NewsItem>>() {
                     @Override
-                    public Loader<List<Item>> onCreateLoader(final int id, final Bundle args) {
+                    public Loader<List<NewsItem>> onCreateLoader(final int id, final Bundle args) {
                         return new ItemListLoader(ItemListLoader.Builder.this.activity, args);
                     }
 
                     @Override
-                    public void onLoadFinished(final Loader<List<Item>> loader, final List<Item> items) {
+                    public void onLoadFinished(final Loader<List<NewsItem>> loader, final List<NewsItem> items) {
                         emitter.onNext(items);
                     }
 
                     @Override
-                    public void onLoaderReset(final Loader<List<Item>> loader) {
+                    public void onLoaderReset(final Loader<List<NewsItem>> loader) {
                     }
                 }), BackpressureStrategy.LATEST);
         }
     }
 
-    private ItemListLoader(@NonNull final Context context, @Nullable final Bundle args) {
+    protected ItemListLoader(@NonNull final Context context, @Nullable final Bundle args) {
         super(context, args);
     }
 
     @NonNull
     @Override
-    protected Observable<List<Item>> loadFromLocalSource(@NonNull final Context context, @Nullable final Bundle args) {
+    protected Observable<List<NewsItem>> loadFromLocalSource(@NonNull final Context context, @Nullable final Bundle args) {
         if (this.getRealm() == null) return Observable.error(new IllegalStateException("Realm instance is null"));
 
         final String category = ItemListLoader.getCategory(args);
@@ -117,10 +117,10 @@ public final class ItemListLoader extends RealmLoader<List<Item>> {
     @SuppressWarnings("unchecked")
     @NonNull
     @Override
-    protected Observable<List<Item>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
+    protected Observable<List<NewsItem>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
         return Observable.create(emitter -> {
-            final List<Single<List<Item>>> singles      = new ArrayList<>();
-            final String                   categoryName = ItemListLoader.getCategory(args);
+            final List<Single<List<NewsItem>>> singles      = new ArrayList<>();
+            final String                       categoryName = ItemListLoader.getCategory(args);
 
             for (final String source : ItemListLoader.getSources(args)) {
                 for (final Category category : SourceFactory.getInstance(context).getSource(source).getCategories()) {
@@ -143,8 +143,8 @@ public final class ItemListLoader extends RealmLoader<List<Item>> {
             Single.zip(
                 singles,
                 lists -> {
-                    final List<Item> combinedList = new ArrayList<>();
-                    for (final Object list : lists) combinedList.addAll((List<Item>)list);
+                    final List<NewsItem> combinedList = new ArrayList<>();
+                    for (final Object list : lists) combinedList.addAll((List<NewsItem>)list);
 
                     Collections.sort(combinedList);
 

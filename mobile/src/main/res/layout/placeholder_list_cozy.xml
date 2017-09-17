@@ -7,5 +7,4 @@
     android:orientation="vertical">
     <include layout="@layout/placeholder_item_cozy" />
     <include layout="@layout/placeholder_item_cozy" />
-    <include layout="@layout/placeholder_item_cozy" />
 </LinearLayout>

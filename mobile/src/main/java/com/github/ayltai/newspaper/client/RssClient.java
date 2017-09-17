@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
-import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.rss.RssFeed;
@@ -27,7 +27,7 @@ public abstract class RssClient extends Client {
     @WorkerThread
     @NonNull
     @Override
-    public final Single<List<Item>> getItems(@NonNull final String url) {
+    public final Single<List<NewsItem>> getItems(@NonNull final String url) {
         final String category = this.getCategoryName(url);
 
         return Single.create(emitter -> this.apiService
@@ -36,7 +36,7 @@ public abstract class RssClient extends Client {
             .map(feed -> this.filter(url, feed))
             .subscribe(
                 items -> {
-                    for (final Item item : items) {
+                    for (final NewsItem item : items) {
                         item.setSource(this.source.getName());
                         if (category != null) item.setCategory(category);
                     }
@@ -54,12 +54,12 @@ public abstract class RssClient extends Client {
     }
 
     @NonNull
-    protected List<Item> filter(@NonNull final String url, @NonNull final RssFeed feed) {
-        final String     category = this.getCategoryName(url);
-        final List<Item> items    = new ArrayList<>();
+    protected List<NewsItem> filter(@NonNull final String url, @NonNull final RssFeed feed) {
+        final String         category = this.getCategoryName(url);
+        final List<NewsItem> items    = new ArrayList<>();
 
         if (feed.getItems() != null) {
-            for (final RssItem item : feed.getItems()) items.add(new Item(item, this.source.getName(), category));
+            for (final RssItem item : feed.getItems()) items.add(new NewsItem(item, this.source.getName(), category));
         }
 
         return items;

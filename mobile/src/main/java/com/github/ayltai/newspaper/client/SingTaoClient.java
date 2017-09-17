@@ -14,7 +14,7 @@ import android.support.annotation.WorkerThread;
 import android.util.Log;
 
 import com.github.ayltai.newspaper.data.model.Image;
-import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -49,18 +49,18 @@ final class SingTaoClient extends Client {
     @WorkerThread
     @NonNull
     @Override
-    public Single<List<Item>> getItems(@NonNull final String url) {
+    public Single<List<NewsItem>> getItems(@NonNull final String url) {
         return Single.create(emitter -> this.apiService
             .getHtml(url)
             .compose(RxUtils.applyObservableBackgroundSchedulers())
             .subscribe(
                 html -> {
-                    final String[]   sections = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"main list\">", "<input type=\"hidden\" id=\"totalnews\""), "underline\">", "</a>\n</div>");
-                    final List<Item> items    = new ArrayList<>(sections.length);
-                    final String     category = this.getCategoryName(url);
+                    final String[]       sections = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"main list\">", "<input type=\"hidden\" id=\"totalnews\""), "underline\">", "</a>\n</div>");
+                    final List<NewsItem> items    = new ArrayList<>(sections.length);
+                    final String         category = this.getCategoryName(url);
 
                     for (final String section : sections) {
-                        final Item item = new Item();
+                        final NewsItem item = new NewsItem();
 
                         item.setTitle(StringUtils.substringBetween(section, "<div class=\"title\">", SingTaoClient.TAG_CLOSE));
                         item.setLink(SingTaoClient.BASE_URI + StringUtils.substringBetween(section, "<a href=\"", "\">"));
@@ -93,7 +93,7 @@ final class SingTaoClient extends Client {
     @WorkerThread
     @NonNull
     @Override
-    public Maybe<Item> updateItem(@NonNull final Item item) {
+    public Maybe<NewsItem> updateItem(@NonNull final NewsItem item) {
         return Maybe.create(emitter -> {
             if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), item.getLink());
 

@@ -12,4 +12,7 @@
     <item
         name="view_type_item_footer"
         type="id" />
+    <item
+        name="view_type_featured"
+        type="id" />
 </resources>

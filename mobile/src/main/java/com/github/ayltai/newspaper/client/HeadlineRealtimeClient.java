@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -49,19 +50,19 @@ final class HeadlineRealtimeClient extends Client {
     @WorkerThread
     @NonNull
     @Override
-    public Single<List<Item>> getItems(@NonNull final String url) {
+    public Single<List<NewsItem>> getItems(@NonNull final String url) {
         return Single.create(emitter -> this.apiService
             .getHtml(url)
             .compose(RxUtils.applyObservableBackgroundSchedulers())
             .subscribe(
                 html -> {
-                    final String[]   sections = StringUtils.substringsBetween(html, "<div class=\"topic\">", "<p class=\"text-left\">");
-                    final List<Item> items    = new ArrayList<>(sections.length);
-                    final String     category = this.getCategoryName(url);
+                    final String[]       sections = StringUtils.substringsBetween(html, "<div class=\"topic\">", "<p class=\"text-left\">");
+                    final List<NewsItem> items    = new ArrayList<>(sections.length);
+                    final String         category = this.getCategoryName(url);
 
                     for (final String section : sections) {
-                        final Item   item  = new Item();
-                        final String title = StringUtils.substringBetween(section, "<h4>", "</h4>");
+                        final NewsItem item  = new NewsItem();
+                        final String   title = StringUtils.substringBetween(section, "<h4>", "</h4>");
 
                         item.setTitle(StringUtils.substringBetween(title, HeadlineRealtimeClient.TAG_CLOSE, HeadlineRealtimeClient.TAG_LINK));
                         item.setLink(HeadlineRealtimeClient.BASE_URI + StringUtils.substringBetween(title, "<a href=\"", HeadlineRealtimeClient.TAG_CLOSE));
@@ -94,7 +95,7 @@ final class HeadlineRealtimeClient extends Client {
     @WorkerThread
     @NonNull
     @Override
-    public Maybe<Item> updateItem(@NonNull final Item item) {
+    public Maybe<NewsItem> updateItem(@NonNull final NewsItem item) {
         return Maybe.create(emitter -> {
             if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), item.getLink());
 

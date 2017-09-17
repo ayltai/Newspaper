@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
+import com.github.ayltai.newspaper.app.view.binding.FeaturedBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.FooterBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.HeaderBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.ImageBinderFactory;
@@ -50,6 +51,7 @@ public final class CozyItemListView extends ItemListView {
     @Override
     protected UniversalAdapter<Item, ?, ?> createAdapter() {
         return new ItemListAdapter.Builder(this.getContext())
+            .addBinderFactory(new FeaturedBinderFactory())
             .addBinderFactory(new HeaderBinderFactory())
             .addBinderFactory(new ImageBinderFactory())
             .addBinderFactory(new FooterBinderFactory())

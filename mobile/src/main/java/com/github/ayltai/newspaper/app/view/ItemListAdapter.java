@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.ayltai.newspaper.app.widget.FeaturedView;
 import com.github.ayltai.newspaper.app.widget.FooterView;
 import com.github.ayltai.newspaper.app.widget.HeaderView;
 import com.github.ayltai.newspaper.app.widget.ImageView;
@@ -72,6 +73,9 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
     @Override
     public SimpleViewHolder<View> onCreateViewHolder(final ViewGroup parent, final int viewType) {
         switch (viewType) {
+            case FeaturedView.VIEW_TYPE:
+                return new SimpleViewHolder<>(new FeaturedView(this.context));
+
             case HeaderView.VIEW_TYPE:
                 return new SimpleViewHolder<>(new HeaderView(this.context));
 

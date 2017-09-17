@@ -13,6 +13,7 @@ import org.robolectric.RuntimeEnvironment;
 
 import com.github.ayltai.newspaper.NetworkTest;
 import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.SourceFactory;
 import com.github.ayltai.newspaper.util.IOUtils;
 
@@ -42,7 +43,7 @@ public final class AppleDailyClientTest extends NetworkTest {
 
     @Test
     public void Given_AppleDailyUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
-        final List<Item> items = this.client.getItems(AppleDailyClientTest.APPLE_DAILY_URL).blockingGet();
+        final List<NewsItem> items = this.client.getItems(AppleDailyClientTest.APPLE_DAILY_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 28, items.size());
         Assert.assertEquals("Incorrect item title", "教大民主牆令校長好痛心　閉路離奇流出咩居心？", items.get(0).getTitle());

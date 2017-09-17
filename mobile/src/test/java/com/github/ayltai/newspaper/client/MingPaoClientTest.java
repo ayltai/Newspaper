@@ -15,6 +15,7 @@ import org.simpleframework.xml.core.Persister;
 
 import com.github.ayltai.newspaper.NetworkTest;
 import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.SourceFactory;
 import com.github.ayltai.newspaper.rss.RssFeed;
 import com.github.ayltai.newspaper.util.IOUtils;
@@ -46,7 +47,7 @@ public final class MingPaoClientTest extends NetworkTest {
 
     @Test
     public void Given_MingPaoUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
-        final List<Item> items = this.client.getItems(MingPaoClientTest.MING_PAO_URL).blockingGet();
+        final List<NewsItem> items = this.client.getItems(MingPaoClientTest.MING_PAO_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 7, items.size());
         Assert.assertEquals("Incorrect item title", "民主牆「恭喜」蔡若蓮  林鄭譴責濫用言論自由 張仁良：給空間教大自行處理", items.get(0).getTitle());
@@ -66,7 +67,7 @@ public final class MingPaoClientTest extends NetworkTest {
 
     @Test
     public void Given_MingPaoInstantUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
-        final List<Item> items = this.client.getItems(MingPaoClientTest.MING_PAO_INSTANT_URL).blockingGet();
+        final List<NewsItem> items = this.client.getItems(MingPaoClientTest.MING_PAO_INSTANT_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 12, items.size());
         Assert.assertEquals("Incorrect item title", "柴犬西環墮海狗主跳海拯救　人狗無礙同行友人喜極而泣", items.get(0).getTitle());

@@ -107,7 +107,7 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
     @Override
     public void bind(@NonNull final List<M> models) {
         if (TestUtils.isLoggable()) {
-            for (final M model : models) Log.d(this.getClass().getSimpleName(), model.toString());
+            for (final M model : models) Log.v(this.getClass().getSimpleName(), model.toString());
         }
 
         if (this.adapter.getItemCount() == 0 && models.isEmpty()) {

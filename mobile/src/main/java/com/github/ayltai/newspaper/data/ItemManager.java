@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.util.Irrelevant;
 
 import io.reactivex.Single;
@@ -19,19 +19,19 @@ public final class ItemManager extends DataManager {
     }
 
     @NonNull
-    public Single<List<Item>> getItems(@Nullable final String[] sources, @Nullable final String category) {
+    public Single<List<NewsItem>> getItems(@Nullable final String[] sources, @Nullable final String category) {
         return Single.create(emitter -> {
-            final RealmQuery<Item> query = this.getRealm().where(Item.class);
+            final RealmQuery<NewsItem> query = this.getRealm().where(NewsItem.class);
 
-            if (sources != null) query.in(Item.FIELD_SOURCE, sources);
-            if (!TextUtils.isEmpty(category)) query.equalTo(Item.FIELD_CATEGORY, category);
+            if (sources != null) query.in(NewsItem.FIELD_SOURCE, sources);
+            if (!TextUtils.isEmpty(category)) query.equalTo(NewsItem.FIELD_CATEGORY, category);
 
             emitter.onSuccess(query.findAll());
         });
     }
 
     @NonNull
-    public Single<Irrelevant> putItems(@NonNull final List<Item> items) {
+    public Single<Irrelevant> putItems(@NonNull final List<NewsItem> items) {
         return Single.create(emitter -> {
             this.getRealm().beginTransaction();
             this.getRealm().insertOrUpdate(items);

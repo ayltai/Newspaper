@@ -13,6 +13,7 @@ import org.robolectric.RuntimeEnvironment;
 
 import com.github.ayltai.newspaper.NetworkTest;
 import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.SourceFactory;
 import com.github.ayltai.newspaper.util.IOUtils;
 
@@ -36,7 +37,7 @@ public final class SingTaoClientTest extends NetworkTest {
 
     @Test
     public void Given_SingTaoUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
-        final List<Item> items = this.client.getItems(SingTaoClientTest.SING_TAO_URL).blockingGet();
+        final List<NewsItem> items = this.client.getItems(SingTaoClientTest.SING_TAO_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 13, items.size());
         Assert.assertEquals("Incorrect item title", "教大生傳被永不錄用 楊潤雄：未有聽聞", items.get(0).getTitle());
