@@ -56,7 +56,6 @@
     </string-array>
     <string name="pref_categories">Categories</string>
     <string-array name="pref_category_items">
-        <item>焦點</item>
         <item>港聞</item>
         <item>國際</item>
         <item>兩岸</item>
@@ -82,7 +81,6 @@
         <item>香港電台</item>
     </string-array>
     <string-array name="categories">
-        <item>焦點</item>
         <item>港聞</item>
         <item>國際</item>
         <item>兩岸</item>
