@@ -45,19 +45,25 @@ abstract class FileDataSubscriber extends BaseDataSubscriber<CloseableReference<
 
             try {
                 mainFileCache.insert(cacheKey, outputStream -> {
-                    InputStream inputStream = null;
+                    final CloseableReference<PooledByteBuffer> reference = dataSource.getResult();
 
-                    try {
-                        inputStream = new PooledByteBufferInputStream(dataSource.getResult().get());
+                    if (reference == null) {
+                        this.onFailureImpl(dataSource);
+                    } else {
+                        InputStream inputStream = null;
 
-                        IOUtils.copy(inputStream, outputStream);
+                        try {
+                            inputStream = new PooledByteBufferInputStream(reference.get());
 
-                        this.isFinished = true;
+                            IOUtils.copy(inputStream, outputStream);
 
-                        this.onSuccess(file);
-                    } finally {
-                        IOUtils.closeQuietly(inputStream);
-                        IOUtils.closeQuietly(outputStream);
+                            this.isFinished = true;
+
+                            this.onSuccess(file);
+                        } finally {
+                            IOUtils.closeQuietly(inputStream);
+                            IOUtils.closeQuietly(outputStream);
+                        }
                     }
                 });
             } catch (final IOException e) {
