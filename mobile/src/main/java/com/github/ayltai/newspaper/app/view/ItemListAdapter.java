@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -17,7 +19,7 @@ import com.github.ayltai.newspaper.app.widget.FooterView;
 import com.github.ayltai.newspaper.app.widget.HeaderView;
 import com.github.ayltai.newspaper.app.widget.ImageView;
 import com.github.ayltai.newspaper.data.model.Item;
-import com.github.ayltai.newspaper.util.ViewUtils;
+import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.view.SimpleUniversalAdapter;
 import com.github.ayltai.newspaper.view.binding.BinderFactory;
 import com.github.ayltai.newspaper.view.binding.FullBinderFactory;
@@ -67,7 +69,7 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
     @NonNull
     @Override
     protected Iterable<Animator> getItemAnimators(@NonNull final View view) {
-        return ViewUtils.createDefaultAnimators(view);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled() ? super.getItemAnimators(view) : Animations.createDefaultAnimators(view);
     }
 
     @Override

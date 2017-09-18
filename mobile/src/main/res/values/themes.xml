@@ -22,6 +22,7 @@
         <item name="windowBackground">@color/windowBackgroundLight</item>
         <item name="cardBackground">@color/cardBackgroundLight</item>
         <item name="indicatorColor">@color/indicatorColorLight</item>
+        <item name="placeholderTextColor">@color/placeholderTextColorLight</item>
         <item name="ic_up_24dp">@drawable/ic_up_black_24dp</item>
         <item name="ic_refresh_24dp">@drawable/ic_refresh_black_24dp</item>
         <item name="ic_filter_24dp">@drawable/ic_filter_black_24dp</item>
@@ -36,6 +37,7 @@
         <item name="windowBackground">@color/windowBackgroundDark</item>
         <item name="cardBackground">@color/cardBackgroundDark</item>
         <item name="indicatorColor">@color/indicatorColorDark</item>
+        <item name="placeholderTextColor">@color/placeholderTextColorDark</item>
         <item name="ic_up_24dp">@drawable/ic_up_white_24dp</item>
         <item name="ic_refresh_24dp">@drawable/ic_refresh_white_24dp</item>
         <item name="ic_filter_24dp">@drawable/ic_filter_white_24dp</item>

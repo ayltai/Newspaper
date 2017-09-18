@@ -10,8 +10,8 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/space8"
-        android:layout_marginRight="@dimen/space8"
+        android:layout_marginStart="@dimen/space8"
+        android:layout_marginEnd="@dimen/space8"
         android:layout_marginTop="-16dp"
         android:foreground="?attr/selectableItemBackground"
         app:cardCornerRadius="4dp"
@@ -20,8 +20,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/space16"
-            android:paddingRight="@dimen/space16"
+            android:paddingStart="@dimen/space16"
+            android:paddingEnd="@dimen/space16"
             android:paddingTop="@dimen/space12"
             android:paddingBottom="@dimen/space12"
             android:orientation="vertical">

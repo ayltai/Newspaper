@@ -10,8 +10,8 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/cozy_item_header_padded_height"
-        android:layout_marginLeft="@dimen/space8"
-        android:layout_marginRight="@dimen/space8"
+        android:layout_marginStart="@dimen/space8"
+        android:layout_marginEnd="@dimen/space8"
         android:layout_marginTop="@dimen/space4"
         android:foreground="?attr/selectableItemBackground"
         app:cardCornerRadius="4dp"
@@ -25,20 +25,17 @@
                 android:layout_width="@dimen/cozy_avatar_size"
                 android:layout_height="@dimen/cozy_avatar_size"
                 android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginLeft="@dimen/space16"
-                android:layout_marginRight="@dimen/space16" />
+                android:layout_marginStart="@dimen/space16"
+                android:layout_marginEnd="@dimen/space16" />
             <TextView
                 android:id="@+id/source"
-                android:layout_toRightOf="@+id/avatar"
                 android:layout_toEndOf="@+id/avatar"
                 android:layout_alignTop="@+id/avatar"
                 tools:text="Proin rutrum ipsum"
                 style="@style/Source.Normal" />
             <TextView
                 android:id="@+id/publish_date"
-                android:layout_toRightOf="@+id/avatar"
                 android:layout_toEndOf="@+id/avatar"
                 android:layout_alignBottom="@+id/avatar"
                 tools:text="Phasellus at aliquam dolor"

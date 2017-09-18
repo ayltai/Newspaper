@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper.app.screen;
 
+import android.animation.ValueAnimator;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.view.animation.AnimationUtils;
 import com.google.auto.value.AutoValue;
 
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.github.ayltai.newspaper.widget.Screen;
@@ -208,10 +210,17 @@ public final class MainScreen extends Screen implements MainPresenter.View {
     private void hideMoreActions() {
         this.isMoreActionsShown = false;
 
-        this.moreAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_anti_clockwise));
-        this.upAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_close));
-        this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_close));
-        this.filterAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_close));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled()) {
+            this.moreAction.setVisibility(View.INVISIBLE);
+            this.upAction.setVisibility(View.INVISIBLE);
+            this.refreshAction.setVisibility(View.INVISIBLE);
+            this.filterAction.setVisibility(View.INVISIBLE);
+        } else {
+            this.moreAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.rotate_anti_clockwise, R.integer.fab_animation_duration));
+            this.upAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
+            this.refreshAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
+            this.filterAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
+        }
 
         this.upAction.setClickable(false);
         this.refreshAction.setClickable(false);

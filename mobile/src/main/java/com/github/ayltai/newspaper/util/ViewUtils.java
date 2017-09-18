@@ -1,9 +1,5 @@
 package com.github.ayltai.newspaper.util;
 
-import java.util.Arrays;
-
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -55,12 +51,5 @@ public final class ViewUtils {
 
             if (view instanceof ShimmerLayout) ((ShimmerLayout)view).startShimmerAnimation();
         }
-    }
-
-    public static Iterable<Animator> createDefaultAnimators(@NonNull final View view) {
-        return Arrays.asList(
-            ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
-            ObjectAnimator.ofFloat(view, "translationY", view.getMeasuredHeight(), 0f)
-        );
     }
 }
