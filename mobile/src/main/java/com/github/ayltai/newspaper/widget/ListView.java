@@ -137,6 +137,18 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
     }
 
     @Override
+    public void up() {
+        this.recyclerView.smoothScrollToPosition(0);
+    }
+
+    @Override
+    public void refresh() {
+        this.swipeRefreshLayout.setRefreshing(true);
+        this.recyclerView.scrollToPosition(0);
+        this.pullToRefreshes.onNext(Irrelevant.INSTANCE);
+    }
+
+    @Override
     public void showEmptyView() {
         this.recyclerView.setVisibility(View.GONE);
 

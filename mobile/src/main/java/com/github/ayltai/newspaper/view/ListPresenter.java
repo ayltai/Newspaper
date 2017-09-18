@@ -19,6 +19,10 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
 
         void clear();
 
+        void up();
+
+        void refresh();
+
         void showEmptyView();
 
         void showLoadingView();
@@ -58,9 +62,9 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
     public void onViewAttached(@NonNull final V view, final boolean isFirstAttached) {
         super.onViewAttached(view, isFirstAttached);
 
-        view.showLoadingView();
-
         if (isFirstAttached) {
+            view.showLoadingView();
+
             this.manageDisposable(this.load()
                 .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
                 .subscribe(
@@ -68,9 +72,9 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
                     error -> {
                         if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                     }));
-
-            this.subscribePullToRefreshes(view);
         }
+
+        this.subscribePullToRefreshes(view);
     }
 
     private void subscribePullToRefreshes(@NonNull final V view) {

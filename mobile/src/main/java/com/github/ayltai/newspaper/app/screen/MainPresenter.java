@@ -9,8 +9,12 @@ import io.reactivex.Flowable;
 
 public class MainPresenter extends ScreenPresenter<MainPresenter.View> {
     public interface View extends ScreenPresenter.View {
+        void up();
+
+        void refresh();
+
         @NonNull
-        Flowable<Irrelevant> goTopActions();
+        Flowable<Irrelevant> upActions();
 
         @NonNull
         Flowable<Irrelevant> refreshActions();
@@ -20,5 +24,13 @@ public class MainPresenter extends ScreenPresenter<MainPresenter.View> {
 
         @NonNull
         Flowable<Integer> pageSelections();
+    }
+
+    @Override
+    public void onViewAttached(@NonNull final View view, final boolean isFirstTimeAttachment) {
+        super.onViewAttached(view, isFirstTimeAttachment);
+
+        this.manageDisposable(view.upActions().subscribe(irrelevant -> view.up()));
+        this.manageDisposable(view.refreshActions().subscribe(irrelevant -> view.refresh()));
     }
 }

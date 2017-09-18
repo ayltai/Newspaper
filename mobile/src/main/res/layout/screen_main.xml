@@ -49,7 +49,7 @@
         app:layout_anchorGravity="end|bottom"
         app:layout_behavior="com.github.ayltai.newspaper.view.FloatingActionButtonBehavior">
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/action_go_top"
+            android:id="@+id/action_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space8"

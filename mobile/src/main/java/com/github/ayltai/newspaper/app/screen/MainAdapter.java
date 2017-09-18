@@ -8,6 +8,7 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.github.ayltai.newspaper.app.widget.CozyItemListView;
 import com.github.ayltai.newspaper.app.widget.ItemListView;
 import com.github.ayltai.newspaper.config.UserConfig;
 import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.widget.ListView;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -48,6 +50,14 @@ public class MainAdapter extends PagerAdapter implements LifecycleObserver {
     @Override
     public CharSequence getPageTitle(final int position) {
         return this.categories.get(position);
+    }
+
+    @Nullable
+    public ListView getItem(final int position) {
+        final WeakReference<View> view = this.views.get(position);
+
+        if (view == null) return null;
+        return (ListView)view.get();
     }
 
     @Override

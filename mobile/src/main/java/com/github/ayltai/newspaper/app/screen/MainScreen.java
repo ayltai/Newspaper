@@ -22,6 +22,7 @@ import com.google.auto.value.AutoValue;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.widget.ListView;
 import com.github.ayltai.newspaper.widget.Screen;
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -43,7 +44,7 @@ public final class MainScreen extends Screen implements MainPresenter.View {
 
     //region Subscriptions
 
-    private final FlowableProcessor<Irrelevant> goTopActions   = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> upActions      = PublishProcessor.create();
     private final FlowableProcessor<Irrelevant> refreshActions = PublishProcessor.create();
     private final FlowableProcessor<Irrelevant> filterActions  = PublishProcessor.create();
     private final FlowableProcessor<Integer>    pageSelections = PublishProcessor.create();
@@ -53,7 +54,7 @@ public final class MainScreen extends Screen implements MainPresenter.View {
     //region Components
 
     private Toolbar              toolbar;
-    private FloatingActionButton goTopAction;
+    private FloatingActionButton upAction;
     private FloatingActionButton refreshAction;
     private FloatingActionButton filterAction;
     private FloatingActionButton moreAction;
@@ -94,8 +95,8 @@ public final class MainScreen extends Screen implements MainPresenter.View {
 
     @NonNull
     @Override
-    public Flowable<Irrelevant> goTopActions() {
-        return this.goTopActions;
+    public Flowable<Irrelevant> upActions() {
+        return this.upActions;
     }
 
     @NonNull
@@ -120,33 +121,33 @@ public final class MainScreen extends Screen implements MainPresenter.View {
 
     @Override
     protected void onAttachedToWindow() {
+        this.manageDisposable(RxView.clicks(this.moreAction).subscribe(irrelevant -> {
+            if (this.isMoreActionsShown) {
+                this.hideMoreActions();
+            } else {
+                this.showMoreActions();
+            }
+        }));
+
+        this.manageDisposable(RxView.clicks(this.upAction).subscribe(irrelevant -> {
+            this.hideMoreActions();
+
+            this.upActions.onNext(Irrelevant.INSTANCE);
+        }));
+
+        this.manageDisposable(RxView.clicks(this.refreshAction).subscribe(irrelevant -> {
+            this.hideMoreActions();
+
+            this.refreshActions.onNext(Irrelevant.INSTANCE);
+        }));
+
+        this.manageDisposable(RxView.clicks(this.filterAction).subscribe(irrelevant -> {
+            this.hideMoreActions();
+
+            this.filterActions.onNext(Irrelevant.INSTANCE);
+        }));
+
         if (this.isFirstTimeAttachment) {
-            this.manageDisposable(RxView.clicks(this.moreAction).subscribe(irrelevant -> {
-                if (this.isMoreActionsShown) {
-                    this.hideMoreActions();
-                } else {
-                    this.showMoreActions();
-                }
-            }));
-
-            this.manageDisposable(RxView.clicks(this.goTopAction).subscribe(irrelevant -> {
-                this.hideMoreActions();
-
-                this.goTopActions.onNext(Irrelevant.INSTANCE);
-            }));
-
-            this.manageDisposable(RxView.clicks(this.refreshAction).subscribe(irrelevant -> {
-                this.hideMoreActions();
-
-                this.refreshActions.onNext(Irrelevant.INSTANCE);
-            }));
-
-            this.manageDisposable(RxView.clicks(this.filterAction).subscribe(irrelevant -> {
-                this.hideMoreActions();
-
-                this.filterActions.onNext(Irrelevant.INSTANCE);
-            }));
-
             this.adapter = new MainAdapter(this.getContext());
 
             final LifecycleOwner lifecycleOwner = this.getLifecycleOwner();
@@ -161,11 +162,25 @@ public final class MainScreen extends Screen implements MainPresenter.View {
         super.onAttachedToWindow();
     }
 
+    //region Methods
+
+    @Override
+    public void up() {
+        final ListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
+        if (view != null) view.up();
+    }
+
+    @Override
+    public void refresh() {
+        final ListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
+        if (view != null) view.refresh();
+    }
+
     private void init() {
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, true);
 
         this.toolbar       = view.findViewById(R.id.toolbar);
-        this.goTopAction   = view.findViewById(R.id.action_go_top);
+        this.upAction = view.findViewById(R.id.action_up);
         this.refreshAction = view.findViewById(R.id.action_refresh);
         this.filterAction  = view.findViewById(R.id.action_filter);
         this.moreAction    = view.findViewById(R.id.action_more);
@@ -181,11 +196,11 @@ public final class MainScreen extends Screen implements MainPresenter.View {
         this.isMoreActionsShown = true;
 
         this.moreAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_clockwise));
-        this.goTopAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+        this.upAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
         this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
         this.filterAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
 
-        this.goTopAction.setClickable(true);
+        this.upAction.setClickable(true);
         this.refreshAction.setClickable(true);
         this.filterAction.setClickable(true);
     }
@@ -194,12 +209,14 @@ public final class MainScreen extends Screen implements MainPresenter.View {
         this.isMoreActionsShown = false;
 
         this.moreAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_anti_clockwise));
-        this.goTopAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_close));
+        this.upAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_close));
         this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_close));
         this.filterAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_close));
 
-        this.goTopAction.setClickable(false);
+        this.upAction.setClickable(false);
         this.refreshAction.setClickable(false);
         this.filterAction.setClickable(false);
     }
+
+    //endregion
 }
