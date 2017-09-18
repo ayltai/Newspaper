@@ -31,7 +31,7 @@
         name="indicatorColor"
         format="color" />
     <attr
-        name="ic_go_top_24dp"
+        name="ic_up_24dp"
         format="reference" />
     <attr
         name="ic_refresh_24dp"
