@@ -13,8 +13,8 @@
         android:layout_marginEnd="@dimen/space8"
         android:layout_marginTop="-16dp"
         android:foreground="?attr/selectableItemBackground"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="3dp"
+        app:cardCornerRadius="@dimen/cozy_card_radius"
+        app:cardElevation="@dimen/cozy_card_elevation"
         app:cardUseCompatPadding="true">
         <com.github.piasy.biv.view.BigImageView
             android:id="@+id/image"

@@ -4,43 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/cozy_item_header_height"
+    android:layout_height="wrap_content"
     android:clipChildren="true">
     <android.support.v7.widget.CardView
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/cozy_item_header_padded_height"
-        android:layout_marginStart="@dimen/space8"
-        android:layout_marginEnd="@dimen/space8"
-        android:layout_marginTop="@dimen/space4"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space16"
         android:foreground="?attr/selectableItemBackground"
-        app:cardCornerRadius="@dimen/cozy_card_radius"
-        app:cardElevation="@dimen/cozy_card_elevation"
-        app:cardUseCompatPadding="true">
+        app:cardCornerRadius="@dimen/compact_card_radius"
+        app:cardElevation="@dimen/compact_card_elevation">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/cozy_item_header_height">
+            android:layout_height="wrap_content">
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/avatar"
-                android:layout_width="@dimen/cozy_avatar_size"
-                android:layout_height="@dimen/cozy_avatar_size"
+                android:layout_width="@dimen/compact_avatar_size"
+                android:layout_height="@dimen/compact_avatar_size"
+                android:layout_marginStart="@dimen/space16"
                 android:layout_marginEnd="@dimen/space16"
-                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/space16"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true" />
             <TextView
                 android:id="@+id/source"
+                android:layout_marginEnd="@dimen/space16"
                 android:layout_toEndOf="@+id/avatar"
                 android:layout_alignTop="@+id/avatar"
                 android:layout_alignWithParentIfMissing="true"
                 tools:text="Proin rutrum ipsum"
-                style="@style/Source.Normal" />
+                style="@style/Source.Small" />
             <TextView
                 android:id="@+id/publish_date"
+                android:layout_marginEnd="@dimen/space16"
+                android:layout_marginBottom="@dimen/space24"
                 android:layout_toEndOf="@+id/avatar"
-                android:layout_alignBottom="@+id/avatar"
+                android:layout_below="@+id/source"
                 android:layout_alignWithParentIfMissing="true"
                 tools:text="Phasellus at aliquam dolor"
-                style="@style/Subhead.Normal" />
+                style="@style/Subhead.Small" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </FrameLayout>

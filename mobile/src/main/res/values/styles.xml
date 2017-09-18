@@ -12,6 +12,9 @@
     <style name="Source.Normal">
         <item name="android:textSize">@dimen/textNormal</item>
     </style>
+    <style name="Source.Small">
+        <item name="android:textSize">@dimen/textSmall</item>
+    </style>
     <style
         name="Subhead"
         parent="TextAppearance.AppCompat.Subhead">
@@ -22,6 +25,9 @@
         <item name="android:textColor">?attr/textColorHint</item>
     </style>
     <style name="Subhead.Normal">
+        <item name="android:textSize">@dimen/textSmall</item>
+    </style>
+    <style name="Subhead.Small">
         <item name="android:textSize">@dimen/textSmall</item>
     </style>
     <style

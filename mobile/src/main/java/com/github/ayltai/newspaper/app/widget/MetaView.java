@@ -14,8 +14,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.DateUtils;
 
-public final class HeaderView extends ItemView {
-    public static final int VIEW_TYPE = R.id.view_type_item_header;
+public final class MetaView extends ItemView {
+    public static final int VIEW_TYPE = R.id.view_type_item_meta;
 
     //region Components
 
@@ -25,10 +25,10 @@ public final class HeaderView extends ItemView {
 
     //endregion
 
-    public HeaderView(@NonNull final Context context) {
+    public MetaView(@NonNull final Context context) {
         super(context);
 
-        final View view = LayoutInflater.from(context).inflate(R.layout.view_news_cozy_header, this, true);
+        final View view = LayoutInflater.from(context).inflate(R.layout.view_news_compact_meta, this, true);
 
         this.container   = view.findViewById(R.id.container);
         this.avatar      = view.findViewById(R.id.avatar);

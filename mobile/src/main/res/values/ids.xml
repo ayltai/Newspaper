@@ -13,6 +13,12 @@
         name="view_type_item_footer"
         type="id" />
     <item
+        name="view_type_item_content"
+        type="id" />
+    <item
+        name="view_type_item_meta"
+        type="id" />
+    <item
         name="view_type_featured"
         type="id" />
 </resources>

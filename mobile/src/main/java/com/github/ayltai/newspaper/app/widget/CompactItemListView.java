@@ -12,6 +12,8 @@ import android.util.AttributeSet;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
+import com.github.ayltai.newspaper.app.view.binding.ContentBinderFactory;
+import com.github.ayltai.newspaper.app.view.binding.MetaBinderFactory;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
@@ -47,6 +49,8 @@ public final class CompactItemListView extends ItemListView {
     @Override
     protected UniversalAdapter<Item, ?, ?> createAdapter() {
         return new ItemListAdapter.Builder(this.getContext())
+            .addBinderFactory(new ContentBinderFactory())
+            .addBinderFactory(new MetaBinderFactory())
             .build();
     }
 }

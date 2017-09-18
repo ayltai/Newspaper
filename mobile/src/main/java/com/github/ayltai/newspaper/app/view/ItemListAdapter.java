@@ -14,10 +14,12 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.ayltai.newspaper.app.widget.ContentView;
 import com.github.ayltai.newspaper.app.widget.FeaturedView;
 import com.github.ayltai.newspaper.app.widget.FooterView;
 import com.github.ayltai.newspaper.app.widget.HeaderView;
 import com.github.ayltai.newspaper.app.widget.ImageView;
+import com.github.ayltai.newspaper.app.widget.MetaView;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.view.SimpleUniversalAdapter;
@@ -86,6 +88,12 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
 
             case FooterView.VIEW_TYPE:
                 return new SimpleViewHolder<>(new FooterView(this.context));
+
+            case ContentView.VIEW_TYPE:
+                return new SimpleViewHolder<>(new ContentView(this.context));
+
+            case MetaView.VIEW_TYPE:
+                return new SimpleViewHolder<>(new MetaView(this.context));
 
             default:
                 throw new IllegalArgumentException("Unsupported view type: " + viewType);
