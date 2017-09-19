@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.util.Irrelevant;
@@ -19,12 +18,12 @@ public final class ItemManager extends DataManager {
     }
 
     @NonNull
-    public Single<List<NewsItem>> getItems(@Nullable final String[] sources, @Nullable final String category) {
+    public Single<List<NewsItem>> getItems(@Nullable final String[] sources, @Nullable final String[] categories) {
         return Single.create(emitter -> {
             final RealmQuery<NewsItem> query = this.getRealm().where(NewsItem.class);
 
             if (sources != null) query.in(NewsItem.FIELD_SOURCE, sources);
-            if (!TextUtils.isEmpty(category)) query.equalTo(NewsItem.FIELD_CATEGORY, category);
+            if (categories != null) query.in(NewsItem.FIELD_CATEGORY, categories);
 
             emitter.onSuccess(query.findAll());
         });

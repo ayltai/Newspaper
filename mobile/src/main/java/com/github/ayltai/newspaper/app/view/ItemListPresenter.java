@@ -21,10 +21,10 @@ public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.Vie
     public interface View extends ListPresenter.View<Item> {
     }
 
-    private final String category;
+    private final List<String> categories;
 
-    public ItemListPresenter(@NonNull final String category) {
-        this.category = category;
+    public ItemListPresenter(@NonNull final List<String> categories) {
+        this.categories = categories;
     }
 
     @Override
@@ -34,7 +34,8 @@ public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.Vie
         final Activity activity = this.getView().getActivity();
         if (activity == null) return Flowable.just(Collections.emptyList());
 
-        final ItemListLoader.Builder builder = new ItemListLoader.Builder((AppCompatActivity)activity).setCategory(this.category);
+        final ItemListLoader.Builder builder = new ItemListLoader.Builder((AppCompatActivity)activity);
+        for (final String category : this.categories) builder.addCategory(category);
         for (final String source : UserConfig.getSources(this.getView().getContext())) builder.addSource(source);
 
         return builder.build()

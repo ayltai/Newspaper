@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.github.ayltai.newspaper.Constants;
@@ -22,6 +21,7 @@ import com.github.ayltai.newspaper.data.model.Category;
 import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.SourceFactory;
 import com.github.ayltai.newspaper.util.RxUtils;
+import com.github.ayltai.newspaper.util.StringUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.BackpressureStrategy;
@@ -34,8 +34,8 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
 
     public static final int ID = ItemListLoader.class.hashCode();
 
-    private static final String KEY_SOURCE   = "source";
-    private static final String KEY_CATEGORY = "category";
+    private static final String KEY_SOURCES    = "sources";
+    private static final String KEY_CATEGORIES = "categories";
 
     //endregion
 
@@ -49,33 +49,33 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
 
         @NonNull
         public ItemListLoader.Builder addSource(@NonNull final String source) {
-            ArrayList<String> sources = this.args.getStringArrayList(ItemListLoader.KEY_SOURCE);
+            ArrayList<String> sources = this.args.getStringArrayList(ItemListLoader.KEY_SOURCES);
             if (sources == null) sources = new ArrayList<>();
 
             if (!sources.contains(source)) sources.add(source);
-            this.args.putStringArrayList(ItemListLoader.KEY_SOURCE, sources);
+            this.args.putStringArrayList(ItemListLoader.KEY_SOURCES, sources);
 
             return this;
         }
 
         @NonNull
-        public ItemListLoader.Builder setCategory(@Nullable final String category) {
-            if (TextUtils.isEmpty(category)) {
-                this.args.remove(ItemListLoader.KEY_CATEGORY);
-            } else {
-                this.args.putString(ItemListLoader.KEY_CATEGORY, category);
-            }
+        public ItemListLoader.Builder addCategory(@Nullable final String category) {
+            ArrayList<String> categories = this.args.getStringArrayList(ItemListLoader.KEY_CATEGORIES);
+            if (categories == null) categories = new ArrayList<>();
+
+            if (!categories.contains(category)) categories.add(category);
+            this.args.putStringArrayList(ItemListLoader.KEY_CATEGORIES, categories);
 
             return this;
         }
 
         @NonNull
         public Flowable<List<NewsItem>> build() {
-            final String category = this.args.getString(ItemListLoader.KEY_CATEGORY);
+            final ArrayList<String> categories = this.args.getStringArrayList(ItemListLoader.KEY_CATEGORIES);
 
             return Flowable.create(emitter -> this.activity
                 .getSupportLoaderManager()
-                .restartLoader(category == null ? ItemListLoader.ID : category.hashCode(), this.args, new LoaderManager.LoaderCallbacks<List<NewsItem>>() {
+                .restartLoader(ItemListLoader.ID + (categories == null ? 0 : categories.toString().hashCode()), this.args, new LoaderManager.LoaderCallbacks<List<NewsItem>>() {
                     @Override
                     public Loader<List<NewsItem>> onCreateLoader(final int id, final Bundle args) {
                         return new ItemListLoader(ItemListLoader.Builder.this.activity, args);
@@ -102,9 +102,7 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
     protected Observable<List<NewsItem>> loadFromLocalSource(@NonNull final Context context, @Nullable final Bundle args) {
         if (this.getRealm() == null) return Observable.error(new IllegalStateException("Realm instance is null"));
 
-        final String category = ItemListLoader.getCategory(args);
-
-        return Observable.create(emitter -> new ItemManager(this.getRealm()).getItems(ItemListLoader.getSources(args).toArray(new String[0]), category)
+        return Observable.create(emitter -> new ItemManager(this.getRealm()).getItems(ItemListLoader.getSources(args).toArray(StringUtils.EMPTY_ARRAY), ItemListLoader.getCategories(args).toArray(StringUtils.EMPTY_ARRAY))
             .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
             .map(items -> this.getRealm().copyFromRealm(items))
             .map(items -> {
@@ -119,18 +117,19 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
     @Override
     protected Observable<List<NewsItem>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
         return Observable.create(emitter -> {
-            final List<Single<List<NewsItem>>> singles      = new ArrayList<>();
-            final String                       categoryName = ItemListLoader.getCategory(args);
+            final List<Single<List<NewsItem>>> singles    = new ArrayList<>();
+            final List<String>                 categories = ItemListLoader.getCategories(args);
 
             for (final String source : ItemListLoader.getSources(args)) {
                 for (final Category category : SourceFactory.getInstance(context).getSource(source).getCategories()) {
-                    if (category.getName().equals(categoryName)) {
+                    if (ItemListLoader.containsCategory(categories, category)) {
                         final Client client = ClientFactory.getInstance(context).getClient(source);
 
                         if (client != null) singles.add(client.getItems(category.getUrl())
                             .timeout(Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
                             .onErrorResumeNext(error -> {
-                                if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                                if (TestUtils.isLoggable())
+                                    Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
 
                                 return Single.just(Collections.emptyList());
                             }));
@@ -176,12 +175,21 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
 
     @NonNull
     private static List<String> getSources(@Nullable final Bundle args) {
-        final List<String> sources = args == null ? Collections.emptyList() : args.getStringArrayList(ItemListLoader.KEY_SOURCE);
+        final List<String> sources = args == null ? Collections.emptyList() : args.getStringArrayList(ItemListLoader.KEY_SOURCES);
         return sources == null ? Collections.emptyList() : sources;
     }
 
-    @Nullable
-    private static String getCategory(@Nullable final Bundle args) {
-        return args == null ? null : args.getString(ItemListLoader.KEY_CATEGORY);
+    @NonNull
+    private static List<String> getCategories(@Nullable final Bundle args) {
+        final List<String> categories = args == null ? Collections.emptyList() : args.getStringArrayList(ItemListLoader.KEY_CATEGORIES);
+        return categories == null ? Collections.emptyList() : categories;
+    }
+
+    private static boolean containsCategory(@NonNull final List<String> categories, @NonNull final Category category) {
+        for (final String categoryName : categories) {
+            if (category.getName().equals(categoryName)) return true;
+        }
+
+        return false;
     }
 }

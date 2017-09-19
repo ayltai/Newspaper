@@ -16,6 +16,11 @@ public class Category extends RealmObject implements Parcelable {
 
     //endregion
 
+    @NonNull
+    public static String toDisplayName(@NonNull final String name) {
+        return name.startsWith("即時") ? name.substring(2) : name;
+    }
+
     //region Constructors
 
     public Category() {

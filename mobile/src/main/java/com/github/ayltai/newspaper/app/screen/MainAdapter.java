@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.app.screen;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.arch.lifecycle.Lifecycle;
@@ -21,20 +22,24 @@ import com.github.ayltai.newspaper.app.widget.CompactItemListView;
 import com.github.ayltai.newspaper.app.widget.CozyItemListView;
 import com.github.ayltai.newspaper.app.widget.ItemListView;
 import com.github.ayltai.newspaper.config.UserConfig;
+import com.github.ayltai.newspaper.data.model.Category;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.widget.ListView;
 
 import io.reactivex.disposables.CompositeDisposable;
 
 public class MainAdapter extends PagerAdapter implements LifecycleObserver {
-    private final SparseArrayCompat<String>              categories = new SparseArrayCompat<>();
+    private final List<String>                           categories = new ArrayList<>();
     private final SparseArrayCompat<WeakReference<View>> views      = new SparseArrayCompat<>();
 
     private CompositeDisposable disposables;
 
     public MainAdapter(@NonNull final Context context) {
         final List<String> categories = UserConfig.getCategories(context);
-        for (int i = 0; i < categories.size(); i++) this.categories.put(i, categories.get(i));
+        for (final String category : categories) {
+            final String name = Category.toDisplayName(category);
+            if (!this.categories.contains(name)) this.categories.add(name);
+        }
     }
 
     @Override
@@ -62,7 +67,11 @@ public class MainAdapter extends PagerAdapter implements LifecycleObserver {
 
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
-        final ItemListPresenter presenter = new ItemListPresenter(this.categories.get(position));
+        final List<String> categories = new ArrayList<>(2);
+        categories.add(this.categories.get(position));
+        categories.add("即時" + this.categories.get(position));
+
+        final ItemListPresenter presenter = new ItemListPresenter(categories);
         final ItemListView      view      = UserConfig.getViewStyle(container.getContext()) == Constants.VIEW_STYLE_COZY ? new CozyItemListView(container.getContext()) : new CompactItemListView(container.getContext());
 
         if (this.disposables == null) this.disposables = new CompositeDisposable();
