@@ -16,8 +16,7 @@
         app:cardElevation="@dimen/compact_card_elevation">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/compact_item_content_item_height"
-            android:orientation="horizontal">
+            android:layout_height="@dimen/compact_item_content_item_height">
             <com.github.piasy.biv.view.BigImageView
                 android:id="@+id/image"
                 android:layout_width="@dimen/compact_item_content_image_size"
@@ -26,6 +25,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginEnd="@dimen/space16"
                 android:layout_marginTop="@dimen/space16"
+                android:background="?attr/placeholderImage"
                 app:initScaleType="centerCrop" />
             <TextView
                 android:id="@+id/title"

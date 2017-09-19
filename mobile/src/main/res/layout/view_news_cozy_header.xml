@@ -27,7 +27,8 @@
                 android:layout_marginStart="@dimen/space16"
                 android:layout_marginEnd="@dimen/space16"
                 android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                app:placeholderImage="?attr/placeholderImage" />
             <TextView
                 android:id="@+id/source"
                 android:layout_toEndOf="@+id/avatar"

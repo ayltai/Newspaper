@@ -34,6 +34,9 @@
         name="placeholderTextColor"
         format="color" />
     <attr
+        name="placeholderImage"
+        format="reference" />
+    <attr
         name="ic_up_24dp"
         format="reference" />
     <attr
