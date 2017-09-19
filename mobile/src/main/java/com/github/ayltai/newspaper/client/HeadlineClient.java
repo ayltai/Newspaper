@@ -39,7 +39,7 @@ public final class HeadlineClient extends RssClient {
     public static final String CATEGORY_SPORTS        = "?category=sports";
 
     private static final String IMAGE_URI = "http://static.stheadline.com";
-    private static final String HTTP      = "http";
+    private static final String HTTP      = "http:";
 
     //endregion
 

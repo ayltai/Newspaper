@@ -32,7 +32,7 @@ final class HeadlineRealtimeClient extends Client {
     private static final String TAG_LINK  = "</a>";
     private static final String TAG_QUOTE = "\"";
     private static final String TAG_CLOSE = "\">";
-    private static final String HTTP      = "http";
+    private static final String HTTP      = "http:";
 
     //endregion
 
