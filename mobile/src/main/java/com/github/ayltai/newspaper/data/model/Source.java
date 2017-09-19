@@ -2,10 +2,12 @@ package com.github.ayltai.newspaper.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 public class Source extends RealmObject implements Parcelable {
@@ -14,6 +16,9 @@ public class Source extends RealmObject implements Parcelable {
     @PrimaryKey
     private String              name;
     private RealmList<Category> categories;
+    @DrawableRes
+    @Ignore
+    private int avatar;
 
     //endregion
 
@@ -30,9 +35,10 @@ public class Source extends RealmObject implements Parcelable {
     public Source() {
     }
 
-    public Source(@NonNull final String name, @NonNull final RealmList<Category> categories) {
+    public Source(@NonNull final String name, @NonNull final RealmList<Category> categories, @DrawableRes final int avatar) {
         this.name       = name;
         this.categories = categories;
+        this.avatar     = avatar;
     }
 
     //endregion
@@ -47,6 +53,11 @@ public class Source extends RealmObject implements Parcelable {
     @NonNull
     public RealmList<Category> getCategories() {
         return this.categories;
+    }
+
+    @DrawableRes
+    public int getAvatar() {
+        return avatar;
     }
 
     //endregion
@@ -68,6 +79,7 @@ public class Source extends RealmObject implements Parcelable {
     public void writeToParcel(@NonNull final Parcel dest, final int flags) {
         dest.writeString(this.name);
         dest.writeTypedList(this.categories);
+        dest.writeInt(this.avatar);
     }
 
     protected Source(@NonNull final Parcel in) {
@@ -75,6 +87,8 @@ public class Source extends RealmObject implements Parcelable {
         this.categories = new RealmList<>();
 
         for (final Category category : in.createTypedArrayList(Category.CREATOR)) this.categories.add(category);
+
+        this.avatar = in.readInt();
     }
 
     public static final Parcelable.Creator<Source> CREATOR = new Parcelable.Creator<Source>() {

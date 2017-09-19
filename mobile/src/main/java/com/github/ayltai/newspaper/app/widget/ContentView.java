@@ -56,9 +56,11 @@ public final class ContentView extends ItemView {
     public void setDescription(@Nullable final CharSequence description) {
         if (TextUtils.isEmpty(description)) {
             this.description.setVisibility(View.GONE);
+            this.title.setMaxLines(2);
         } else {
             this.description.setVisibility(View.VISIBLE);
             this.description.setText(description);
+            this.title.setMaxLines(1);
         }
     }
 

@@ -32,6 +32,8 @@
                 android:layout_toEndOf="@+id/avatar"
                 android:layout_alignTop="@+id/avatar"
                 android:layout_alignWithParentIfMissing="true"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
                 tools:text="Proin rutrum ipsum"
                 style="@style/Source.Small" />
             <TextView

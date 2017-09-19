@@ -3,12 +3,14 @@ package com.github.ayltai.newspaper.app.view;
 import java.util.Date;
 import java.util.List;
 
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.SourceFactory;
 import com.github.ayltai.newspaper.data.model.Video;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.Presenter;
@@ -20,7 +22,7 @@ import io.reactivex.Flowable;
 public class ItemPresenter extends PresentationBinder<Item, ItemPresenter.View> implements Binder<ItemPresenter.View> {
     public interface View extends Presenter.View {
         @UiThread
-        void setAvatar(@Nullable String avatarUri);
+        void setAvatar(@DrawableRes int avatar);
 
         @UiThread
         void setSource(@Nullable CharSequence source);
@@ -83,7 +85,7 @@ public class ItemPresenter extends PresentationBinder<Item, ItemPresenter.View> 
         super.bindModel(model);
 
         if (this.getView() != null) {
-            this.getView().setAvatar(null); // TODO
+            this.getView().setAvatar(SourceFactory.getInstance(this.getView().getContext()).getSource(model.getSource()).getAvatar());
             this.getView().setSource(model.getSource());
             this.getView().setPublishDate(model.getPublishDate());
             this.getView().setTitle(model.getTitle());

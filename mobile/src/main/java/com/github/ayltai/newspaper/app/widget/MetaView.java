@@ -3,6 +3,7 @@ package com.github.ayltai.newspaper.app.widget;
 import java.util.Date;
 
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -39,12 +40,8 @@ public final class MetaView extends ItemView {
     //region Properties
 
     @Override
-    public void setAvatar(@Nullable final String avatarUri) {
-        if (TextUtils.isEmpty(avatarUri)) {
-            this.avatar.setImageResource(0); // TODO
-        } else {
-            this.avatar.setImageURI(avatarUri);
-        }
+    public void setAvatar(@DrawableRes final int avatar) {
+        this.avatar.setImageResource(avatar);
     }
 
     @Override

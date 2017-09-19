@@ -73,7 +73,7 @@ public final class SourceFactory {
             new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/chinainternational/home/0", date), categories[11]),
             new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/finance/home/0", date), categories[13]),
             new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/entertainment/home/0", date), categories[15]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[16])));
+            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[16])), R.drawable.avatar_apple_daily);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -85,7 +85,7 @@ public final class SourceFactory {
             new Category("http://orientaldaily.on.cc/rss/finance.xml", categories[4]),
             new Category("http://orientaldaily.on.cc/rss/entertainment.xml", categories[6]),
             new Category("http://orientaldaily.on.cc/rss/lifestyle.xml", categories[8]),
-            new Category("http://orientaldaily.on.cc/rss/sport.xml", categories[7])));
+            new Category("http://orientaldaily.on.cc/rss/sport.xml", categories[7])), R.drawable.avatar_oriental_daily);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -98,7 +98,7 @@ public final class SourceFactory {
             new Category("http://std.stheadline.com/daily/section-list.php?cat=15", categories[4]),
             new Category("http://std.stheadline.com/daily/section-list.php?cat=20", categories[5]),
             new Category("http://std.stheadline.com/daily/section-list.php?cat=17", categories[6]),
-            new Category("http://std.stheadline.com/daily/section-list.php?cat=14", categories[7])));
+            new Category("http://std.stheadline.com/daily/section-list.php?cat=14", categories[7])), R.drawable.avatar_singtao);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -111,7 +111,7 @@ public final class SourceFactory {
             new Category("http://std.stheadline.com/instant/articles/listview/%E7%B6%93%E6%BF%9F/", categories[13]),
             new Category("http://std.stheadline.com/instant/articles/listview/%E5%9C%B0%E7%94%A2/", categories[14]),
             new Category("http://std.stheadline.com/instant/articles/listview/%E5%A8%9B%E6%A8%82/", categories[15]),
-            new Category("http://std.stheadline.com/instant/articles/listview/%E9%AB%94%E8%82%B2/", categories[16])));
+            new Category("http://std.stheadline.com/instant/articles/listview/%E9%AB%94%E8%82%B2/", categories[16])), R.drawable.avatar_singtao);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -119,7 +119,7 @@ public final class SourceFactory {
     private static Source createEconomicTimesSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[4], new RealmList<>(
             new Category("https://topick.hket.com/srat006/%E6%96%B0%E8%81%9E", categories[1]),
-            new Category("https://topick.hket.com/srat055/%E4%BC%91%E9%96%92", categories[8])));
+            new Category("https://topick.hket.com/srat055/%E4%BC%91%E9%96%92", categories[8])), R.drawable.avatar_hket);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -131,7 +131,7 @@ public final class SourceFactory {
             new Category("https://www.singpao.com.hk/index.php?fi=news3", categories[4]),
             new Category("https://www.singpao.com.hk/index.php?fi=news4", categories[6]),
             new Category("https://www.singpao.com.hk/index.php?fi=news5", categories[7]),
-            new Category("https://www.singpao.com.hk/index.php?fi=news7", categories[8])));
+            new Category("https://www.singpao.com.hk/index.php?fi=news7", categories[8])), R.drawable.avatar_singpao);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -153,7 +153,7 @@ public final class SourceFactory {
             new Category("https://news.mingpao.com/rss/ins/s00002.xml", categories[13]),
             new Category("https://news.mingpao.com/rss/ins/s00003.xml", categories[14]),
             new Category("https://news.mingpao.com/rss/ins/s00007.xml", categories[15]),
-            new Category("https://news.mingpao.com/rss/ins/s00006.xml", categories[16])));
+            new Category("https://news.mingpao.com/rss/ins/s00006.xml", categories[16])), R.drawable.avatar_mingpao);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -167,7 +167,7 @@ public final class SourceFactory {
             new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_PROPERTY, categories[5]),
             new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_ENTERTAINMENT, categories[6]),
             new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_SUPPLEMENT, categories[8]),
-            new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_SPORTS, categories[7])));
+            new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_SPORTS, categories[7])), R.drawable.avatar_headline);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -180,7 +180,7 @@ public final class SourceFactory {
             new Category("http://hd.stheadline.com/news/realtime/fin/", categories[13]),
             new Category("http://hd.stheadline.com/news/realtime/pp/", categories[14]),
             new Category("http://hd.stheadline.com/news/realtime/ent/", categories[15]),
-            new Category("http://hd.stheadline.com/news/realtime/spt/", categories[16])));
+            new Category("http://hd.stheadline.com/news/realtime/spt/", categories[16])), R.drawable.avatar_headline);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -193,13 +193,13 @@ public final class SourceFactory {
             new Category("http://skypost.ulifestyle.com.hk/rss/sras002", categories[6]),
             new Category("http://skypost.ulifestyle.com.hk/rss/sras005", categories[7]),
             new Category("http://skypost.ulifestyle.com.hk/rss/sras006", categories[8]),
-            new Category("http://skypost.ulifestyle.com.hk/rss/sras007", categories[9])));
+            new Category("http://skypost.ulifestyle.com.hk/rss/sras007", categories[9])), R.drawable.avatar_skypost);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createEconomicJournalSource(@NonNull final String[] sources, @NonNull final String[] categories) {
-        return new Source(sources[10], new RealmList<>(new Category("http://www.hkej.com/rss/onlinenews.xml", categories[14])));
+        return new Source(sources[10], new RealmList<>(new Category("http://www.hkej.com/rss/onlinenews.xml", categories[14])), R.drawable.avatar_hkej);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -210,6 +210,6 @@ public final class SourceFactory {
             new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cinternational.xml", categories[11]),
             new Category("http://rthk.hk/rthk/news/rss/c_expressnews_greaterchina.xml", categories[12]),
             new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cfinance.xml", categories[13]),
-            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_csport.xml", categories[16])));
+            new Category("http://rthk.hk/rthk/news/rss/c_expressnews_csport.xml", categories[16])), R.drawable.avatar_rthk);
     }
 }
