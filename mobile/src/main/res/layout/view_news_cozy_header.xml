@@ -32,15 +32,19 @@
             <TextView
                 android:id="@+id/source"
                 android:layout_toEndOf="@+id/avatar"
+                android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/avatar"
                 android:layout_alignWithParentIfMissing="true"
+                android:layout_marginEnd="@dimen/space16"
                 tools:text="Proin rutrum ipsum"
                 style="@style/Source.Normal" />
             <TextView
                 android:id="@+id/publish_date"
                 android:layout_toEndOf="@+id/avatar"
+                android:layout_alignParentEnd="true"
                 android:layout_alignBottom="@+id/avatar"
                 android:layout_alignWithParentIfMissing="true"
+                android:layout_marginEnd="@dimen/space16"
                 tools:text="Phasellus at aliquam dolor"
                 style="@style/Subhead.Normal" />
         </RelativeLayout>

@@ -11,6 +11,7 @@
     <dimen name="textNormal">16sp</dimen>
     <dimen name="textSmall">14sp</dimen>
     <dimen name="fabSize">56dp</dimen>
+    <dimen name="iconSmall">24dp</dimen>
     <dimen name="cozy_card_radius">4dp</dimen>
     <dimen name="compact_card_radius">0dp</dimen>
     <dimen name="cozy_card_elevation">3dp</dimen>

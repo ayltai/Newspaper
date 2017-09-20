@@ -67,8 +67,19 @@
     <style
         name="Button"
         parent="Widget.AppCompat.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="Button.Primary">
         <item name="colorButtonNormal">?attr/primaryColor</item>
+    </style>
+    <style
+        name="Icon"
+        parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:tint">?attr/indicatorColor</item>
+    </style>
+    <style name="Icon.Small">
+        <item name="android:layout_width">@dimen/iconSmall</item>
+        <item name="android:layout_height">@dimen/iconSmall</item>
     </style>
 </resources>

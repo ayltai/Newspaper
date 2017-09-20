@@ -61,8 +61,6 @@
                 tools:text="You can read more news in other categories, or you can refresh to try again." />
             <Button
                 android:id="@+id/empty_action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 tools:text="Try again"
                 style="@style/Button.Primary" />
         </LinearLayout>
