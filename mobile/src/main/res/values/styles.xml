@@ -64,4 +64,11 @@
         <item name="android:maxLines">5</item>
         <item name="android:textSize">@dimen/textNormal</item>
     </style>
+    <style
+        name="Button"
+        parent="Widget.AppCompat.Button">
+    </style>
+    <style name="Button.Primary">
+        <item name="colorButtonNormal">?attr/primaryColor</item>
+    </style>
 </resources>

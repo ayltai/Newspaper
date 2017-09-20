@@ -119,7 +119,7 @@ ext {
     exoPlayerVersion      = 'r2.5.2'
     autoValueVersion      = '1.5'
     autoValueGsonVersion  = '0.5.0'
-    leakCanaryVersion     = '1.5.3'
+    leakCanaryVersion     = '1.5.1'
     robolectricVersion    = '3.4.2'
     powerMockVersion      = '1.7.3'
     espressoVersion       = '3.0.1'
