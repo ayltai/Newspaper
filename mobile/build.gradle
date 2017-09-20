@@ -109,7 +109,7 @@ ext {
     multidexVersion       = '1.0.2'
     supportLibraryVersion = '26.1.0'
     architectureVersion   = '1.0.0-alpha9-1'
-    firebaseSdkVersion    = '11.2.2'
+    firebaseSdkVersion    = '11.4.0'
     daggerVersion         = '2.11'
     rxBindingVersion      = '2.0.0'
     okhttpVersion         = '3.9.0'
@@ -121,7 +121,7 @@ ext {
     autoValueGsonVersion  = '0.5.0'
     leakCanaryVersion     = '1.5.1'
     robolectricVersion    = '3.4.2'
-    powerMockVersion      = '1.7.1'
+    powerMockVersion      = '1.7.3'
     espressoVersion       = '3.0.1'
 }
 
