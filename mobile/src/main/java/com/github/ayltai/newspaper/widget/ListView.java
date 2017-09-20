@@ -143,8 +143,11 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     @Override
     public void refresh() {
+        this.showLoadingView();
         this.swipeRefreshLayout.setRefreshing(true);
-        this.recyclerView.scrollToPosition(0);
+
+        if (this.recyclerView.getAdapter() != null && this.recyclerView.getAdapter().getItemCount() > 0) this.recyclerView.scrollToPosition(0);
+
         this.pullToRefreshes.onNext(Irrelevant.INSTANCE);
     }
 
@@ -250,6 +253,8 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
         this.loadingView = view.findViewById(this.getLoadingViewId());
         this.emptyView   = view.findViewById(this.getEmptyViewId());
+
+        this.emptyView.setVisibility(View.GONE);
 
         this.addView(view);
     }

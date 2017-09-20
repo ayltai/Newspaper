@@ -3,8 +3,6 @@
     <string name="app_name">Newspaper</string>
     <string name="app_version">Version %s</string>
     <string name="error_no_connection">No internet connection</string>
-    <string name="empty_news_title">We couldn\'t find any news for you</string>
-    <string name="empty_news_description">Please try again later</string>
     <string name="empty_bookmark_title">You don\'t have any favorite news yet</string>
     <string name="empty_bookmark_description">Tap on the bookmark icon to collect news here</string>
     <string name="view_via">View via…</string>
@@ -33,6 +31,11 @@
     <string name="action_share">Share</string>
     <string name="action_about">About</string>
     <string name="action_refresh">Refresh</string>
+
+    <!-- Empty states -->
+    <string name="empty_news_title">Nothing here</string>
+    <string name="empty_news_description">You can read more news in other categories, or you can refresh to try again.</string>
+    <string name="empty_news_action">Try again</string>
 
     <!-- Preferences -->
     <string name="pref_general">General</string>

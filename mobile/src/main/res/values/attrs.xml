@@ -37,6 +37,15 @@
         name="placeholderImage"
         format="reference" />
     <attr
+        name="emptyBackground"
+        format="reference" />
+    <attr
+        name="emptyBackgroundTop"
+        format="color" />
+    <attr
+        name="emptyBackgroundBottom"
+        format="color" />
+    <attr
         name="ic_up_24dp"
         format="reference" />
     <attr

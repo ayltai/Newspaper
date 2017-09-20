@@ -3,8 +3,6 @@
     <string name="app_name">報紙</string>
     <string name="app_version">版本 %s</string>
     <string name="error_no_connection">沒有網絡連接</string>
-    <string name="empty_news_title">我們找不到任何新聞</string>
-    <string name="empty_news_description">請稍後再試</string>
     <string name="empty_bookmark_title">你還沒有任何喜歡的新聞</string>
     <string name="empty_bookmark_description">點擊書籤圖標可收集新聞到此處</string>
     <string name="view_via">查看通過…</string>
@@ -33,6 +31,11 @@
     <string name="action_share">分享</string>
     <string name="action_about">關於</string>
     <string name="action_refresh">更新</string>
+
+    <!-- Empty states -->
+    <string name="empty_news_title">這裡什麼都沒有</string>
+    <string name="empty_news_description">您可以在其他類別中閱讀更多新聞，也可以刷新再次嘗試。</string>
+    <string name="empty_news_action">再試一次</string>
 
     <!-- Preferences -->
     <string name="pref_general">一般</string>

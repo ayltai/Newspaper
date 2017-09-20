@@ -23,6 +23,10 @@
     <color name="textProtectionScrimBottom">#99000000</color>
     <color name="placeholderTextColorLight">#aab2bd</color>
     <color name="placeholderTextColorDark">#656d78</color>
+    <color name="emptyBackgroundTopLight">#cacaca</color>
+    <color name="emptyBackgroundTopDark">#bababa</color>
+    <color name="emptyBackgroundBottomLight">#888888</color>
+    <color name="emptyBackgroundBottomDark">#666666</color>
     <color name="shadowStart">#003c3b3d</color>
     <color name="shadowEnd">#9f323133</color>
 </resources>
