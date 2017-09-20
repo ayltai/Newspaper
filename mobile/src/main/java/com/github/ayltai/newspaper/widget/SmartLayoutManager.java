@@ -8,26 +8,18 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class SmartLayoutManager extends LinearLayoutManager {
-    private final Context context;
-
     //region Constructors
 
     public SmartLayoutManager(final Context context) {
         super(context);
-
-        this.context = context;
     }
 
     public SmartLayoutManager(final Context context, final int orientation, final boolean reverseLayout) {
         super(context, orientation, reverseLayout);
-
-        this.context = context;
     }
 
     public SmartLayoutManager(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-
-        this.context = context;
     }
 
     //endregion

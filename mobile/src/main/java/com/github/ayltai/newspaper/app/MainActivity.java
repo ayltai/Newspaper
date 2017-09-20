@@ -3,9 +3,9 @@ package com.github.ayltai.newspaper.app;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 
-import com.github.ayltai.newspaper.LifecycleActivity;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.data.DataModule;
@@ -16,7 +16,7 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import io.reactivex.Single;
 import io.realm.Realm;
 
-public final class MainActivity extends LifecycleActivity {
+public final class MainActivity extends AppCompatActivity {
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }

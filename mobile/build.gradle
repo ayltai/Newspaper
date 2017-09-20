@@ -119,7 +119,7 @@ ext {
     exoPlayerVersion      = 'r2.5.2'
     autoValueVersion      = '1.5'
     autoValueGsonVersion  = '0.5.0'
-    leakCanaryVersion     = '1.5.1'
+    leakCanaryVersion     = '1.5.3'
     robolectricVersion    = '3.4.2'
     powerMockVersion      = '1.7.3'
     espressoVersion       = '3.0.1'
@@ -139,7 +139,7 @@ dependencies {
     androidTestCompile "com.android.support:multidex-instrumentation:$multidexVersion"
 
     // Android Architecture libraries
-    compile ("android.arch.lifecycle:runtime:$architectureVersion") {
+    compile ('android.arch.lifecycle:runtime:1.0.0') {
         exclude group : 'com.android.support'
     }
     compile ("android.arch.lifecycle:extensions:$architectureVersion") {
@@ -210,7 +210,6 @@ dependencies {
     compile 'io.supercharge:shimmerlayout:1.0.2'
     compile 'com.fujiyuu75:sequent:0.2.1'
     compile 'com.sackcentury:shinebutton:0.1.9'
-    compile 'com.github.ybq:Android-SpinKit:1.1.0'
     compile 'io.github.inflationx:calligraphy3:3.0.0'
 
     // Eye candies
@@ -222,7 +221,7 @@ dependencies {
     provided            "com.jakewharton.auto.value:auto-value-annotations:$autoValueVersion"
     annotationProcessor "com.google.auto.value:auto-value:$autoValueVersion"
     annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
-    compile             'com.google.code.gson:gson:2.8.1'
+    compile             'com.google.code.gson:gson:2.8.2'
 
     // Fabric
     compile('io.fabric.sdk.android:fabric:1.3.17@aar') {
