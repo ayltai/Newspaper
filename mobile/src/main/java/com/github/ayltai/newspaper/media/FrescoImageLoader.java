@@ -8,6 +8,7 @@ import java.util.List;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -41,8 +42,6 @@ import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 
 public class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObserver {
-    private static final String TAG = FrescoImageLoader.class.getSimpleName();
-
     private static final Handler          HANDLER = new Handler(Looper.getMainLooper());
     private static final List<DataSource> SOURCES = new ArrayList<>();
 
@@ -51,16 +50,19 @@ public class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObser
     private static ExecutorSupplier executorSupplier;
 
     @NonNull
-    public static FrescoImageLoader getInstance() {
+    public static FrescoImageLoader getInstance(@NonNull final Context context) {
         if (FrescoImageLoader.instance == null) {
             FrescoImageLoader.executorSupplier = new DefaultExecutorSupplier(Runtime.getRuntime().availableProcessors());
-            FrescoImageLoader.instance         = new FrescoImageLoader();
+            FrescoImageLoader.instance         = new FrescoImageLoader(context);
         }
 
         return FrescoImageLoader.instance;
     }
 
-    protected FrescoImageLoader() {
+    protected final Context context;
+
+    protected FrescoImageLoader(@NonNull final Context context) {
+        this.context = context;
     }
 
     @Override
@@ -82,7 +84,7 @@ public class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObser
             final ImagePipeline                                    pipeline = Fresco.getImagePipeline();
             final DataSource<CloseableReference<PooledByteBuffer>> source   = pipeline.fetchEncodedImage(request, true);
 
-            source.subscribe(new FileDataSubscriber(request) {
+            source.subscribe(new FileDataSubscriber(this.context) {
                 @WorkerThread
                 @Override
                 protected void onProgress(final int progress) {

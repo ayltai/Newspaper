@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.media;
 
-import javax.inject.Singleton;
+import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.github.piasy.biv.loader.ImageLoader;
 
@@ -9,9 +10,14 @@ import dagger.Provides;
 
 @Module
 public final class ImageModule {
-    @Singleton
+    private final Context context;
+
+    public ImageModule(@NonNull final Context context) {
+        this.context = context;
+    }
+
     @Provides
-    static ImageLoader provideImageLoader() {
-        return FrescoImageLoader.getInstance();
+    public ImageLoader provideImageLoader() {
+        return FrescoImageLoader.getInstance(this.context);
     }
 }

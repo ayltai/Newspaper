@@ -1,36 +1,32 @@
 package com.github.ayltai.newspaper.media;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.UUID;
 
 import android.arch.lifecycle.LifecycleObserver;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
-import com.facebook.binaryresource.FileBinaryResource;
-import com.facebook.cache.common.CacheKey;
-import com.facebook.cache.disk.FileCache;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferInputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.BaseDataSubscriber;
 import com.facebook.datasource.DataSource;
-import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
-import com.facebook.imagepipeline.core.ImagePipelineFactory;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.github.ayltai.newspaper.util.IOUtils;
 
 abstract class FileDataSubscriber extends BaseDataSubscriber<CloseableReference<PooledByteBuffer>> implements LifecycleObserver {
-    private final ImageRequest request;
+    private final Context context;
 
     private volatile boolean isFinished;
 
-    protected FileDataSubscriber(@NonNull final ImageRequest request) {
-        this.request = request;
+    protected FileDataSubscriber(@NonNull final Context context) {
+        this.context = context;
     }
 
-    @SuppressWarnings("CheckStyle")
+    @SuppressWarnings("magicnumber")
     @Override
     public void onProgressUpdate(@NonNull final DataSource<CloseableReference<PooledByteBuffer>> dataSource) {
         if (!this.isFinished) this.onProgress((int)(dataSource.getProgress() * 100f + 0.5f));
@@ -38,36 +34,32 @@ abstract class FileDataSubscriber extends BaseDataSubscriber<CloseableReference<
 
     @Override
     protected void onNewResultImpl(@NonNull final DataSource<CloseableReference<PooledByteBuffer>> dataSource) {
-        if (dataSource.isFinished() && dataSource.getResult() != null) {
-            final FileCache mainFileCache = ImagePipelineFactory.getInstance().getMainFileCache();
-            final CacheKey  cacheKey      = DefaultCacheKeyFactory.getInstance().getEncodedCacheKey(this.request, false);
-            final File      file          = mainFileCache.hasKey(cacheKey) ? ((FileBinaryResource)mainFileCache.getResource(cacheKey)).getFile() : this.request.getSourceFile();
+        if (dataSource.isFinished()) {
+            final CloseableReference<PooledByteBuffer> reference = dataSource.getResult();
 
-            try {
-                mainFileCache.insert(cacheKey, outputStream -> {
-                    final CloseableReference<PooledByteBuffer> reference = dataSource.getResult();
+            if (reference == null) {
+                this.onFailureImpl(dataSource);
+            } else {
+                final File file = new File(this.context.getCacheDir(), UUID.randomUUID().toString() + ".jpg");
 
-                    if (reference == null) {
-                        this.onFailureImpl(dataSource);
-                    } else {
-                        InputStream inputStream = null;
+                PooledByteBufferInputStream inputStream  = null;
+                FileOutputStream            outputStream = null;
 
-                        try {
-                            inputStream = new PooledByteBufferInputStream(reference.get());
+                try {
+                    inputStream  = new PooledByteBufferInputStream(reference.get());
+                    outputStream = new FileOutputStream(file);
 
-                            IOUtils.copy(inputStream, outputStream);
+                    IOUtils.copy(inputStream, outputStream);
 
-                            this.isFinished = true;
+                    this.isFinished = true;
 
-                            this.onSuccess(file);
-                        } finally {
-                            IOUtils.closeQuietly(inputStream);
-                            IOUtils.closeQuietly(outputStream);
-                        }
-                    }
-                });
-            } catch (final IOException e) {
-                this.onFailure(e);
+                    this.onSuccess(file);
+                } catch (final IOException e) {
+                    this.onFailure(e);
+                } finally {
+                    IOUtils.closeQuietly(inputStream);
+                    IOUtils.closeQuietly(outputStream);
+                }
             }
         }
     }

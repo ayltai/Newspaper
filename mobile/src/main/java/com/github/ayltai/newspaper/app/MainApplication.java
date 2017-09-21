@@ -21,7 +21,8 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.debug.ThreadPolicyFactory;
 import com.github.ayltai.newspaper.debug.VmPolicyFactory;
-import com.github.ayltai.newspaper.media.FrescoImageLoader;
+import com.github.ayltai.newspaper.media.DaggerImageComponent;
+import com.github.ayltai.newspaper.media.ImageModule;
 import com.github.ayltai.newspaper.net.DaggerHttpComponent;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.BigImageViewer;
@@ -78,7 +79,10 @@ public final class MainApplication extends MultiDexApplication {
                 .build())
             .build());
 
-        BigImageViewer.initialize(FrescoImageLoader.getInstance());
+        BigImageViewer.initialize(DaggerImageComponent.builder()
+            .imageModule(new ImageModule(this))
+            .build()
+            .imageLoader());
 
         ViewPump.init(ViewPump.builder()
             .addInterceptor(new CalligraphyInterceptor(new CalligraphyConfig.Builder()
