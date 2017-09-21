@@ -18,8 +18,9 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         Flowable<Irrelevant> shareClicks();
     }
 
-    public DetailsPresenter(@NonNull final Item model) {
-        this.setModel(model);
+    @Override
+    public void setModel(final Item model) {
+        super.setModel(model);
     }
 
     @Override
@@ -72,6 +73,6 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         final Flowable<Irrelevant> shareClicks = view.shareClicks();
         if (shareClicks != null) this.manageDisposable(shareClicks.subscribe(irrelevant -> this.onShareClick()));
 
-        if (isFirstTimeAttachment) this.bindModel(this.getModel());
+        this.bindModel(this.getModel());
     }
 }

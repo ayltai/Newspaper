@@ -87,7 +87,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     //endregion
 
     private SmallBang smallBang;
-    private boolean   isBookmarked;
 
     public DetailsScreen(@NonNull final Context context) {
         super(context);
@@ -159,8 +158,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     @Override
     public void setIsBookmarked(final boolean isBookmarked) {
-        this.isBookmarked = isBookmarked;
-
         if (isBookmarked) {
             this.bookmarkAction.setImageResource(R.drawable.ic_bookmark_black_24dp);
             this.bookmarkAction.setClickable(false);

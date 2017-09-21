@@ -70,13 +70,15 @@ final class FlowController {
                         presenter = new MainPresenter();
                         view      = new MainScreen(this.activity);
                     } else if (incomingState.getKey() instanceof DetailsScreen.Key) {
-                        presenter = new DetailsPresenter(((DetailsScreen.Key)incomingState.getKey()).getItem());
+                        presenter = new DetailsPresenter();
                         view      = new DetailsScreen(this.activity);
                     }
                 }
 
                 if (presenter != null && view != null) {
                     this.cache.put(incomingState.getKey(), Pair.create(new WeakReference<>(presenter), new WeakReference<>(view)));
+
+                    if (incomingState.getKey() instanceof DetailsScreen.Key) ((DetailsPresenter)presenter).setModel(((DetailsScreen.Key)incomingState.getKey()).getItem());
 
                     this.subscribe(presenter, view);
                     this.dispatch((View)view, incomingState, callback);

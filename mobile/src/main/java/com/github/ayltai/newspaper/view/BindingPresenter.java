@@ -6,7 +6,7 @@ public class BindingPresenter<M, V extends Presenter.View> extends ObservablePre
     private M model;
 
     protected M getModel() {
-        return model;
+        return this.model;
     }
 
     protected void setModel(final M model) {
