@@ -4,12 +4,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
-import com.github.ayltai.newspaper.app.view.MetaPresenter;
 import com.github.ayltai.newspaper.app.widget.MetaView;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.view.binding.PresentationBinderFactory;
 
-public final class MetaBinderFactory extends PresentationBinderFactory<Item, ItemPresenter.View, MetaPresenter> {
+public final class MetaBinderFactory extends PresentationBinderFactory<Item, MetaView, ItemPresenter<MetaView>> {
     @Override
     public int getPartType() {
         return MetaView.VIEW_TYPE;
@@ -17,8 +16,8 @@ public final class MetaBinderFactory extends PresentationBinderFactory<Item, Ite
 
     @NonNull
     @Override
-    protected MetaPresenter createPresenter() {
-        return new MetaPresenter();
+    protected ItemPresenter<MetaView> createPresenter() {
+        return new ItemPresenter<>();
     }
 
     @Override

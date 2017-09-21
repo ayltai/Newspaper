@@ -93,6 +93,11 @@ public class FeaturedItem implements Item {
 
     //endregion
 
+    @NonNull
+    public Item getItem() {
+        return this.items.get(this.index);
+    }
+
     public void next() {
         this.index = this.index == this.items.size() - 1 ? 0 : this.index + 1;
     }

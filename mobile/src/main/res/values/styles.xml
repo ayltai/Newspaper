@@ -15,6 +15,11 @@
     <style name="Source.Small">
         <item name="android:textSize">@dimen/textSmall</item>
     </style>
+    <style name="Source.Full">
+        <item name="android:maxLines">2147483647</item>
+        <item name="android:ellipsize">none</item>
+        <item name="android:textSize">@dimen/textNormal</item>
+    </style>
     <style
         name="Subhead"
         parent="TextAppearance.AppCompat.Subhead">
@@ -28,6 +33,11 @@
         <item name="android:textSize">@dimen/textSmall</item>
     </style>
     <style name="Subhead.Small">
+        <item name="android:textSize">@dimen/textSmall</item>
+    </style>
+    <style name="Subhead.Full">
+        <item name="android:maxLines">2147483647</item>
+        <item name="android:ellipsize">none</item>
         <item name="android:textSize">@dimen/textSmall</item>
     </style>
     <style
@@ -52,6 +62,14 @@
     <style name="Title.Cozy">
         <item name="android:textSize">@dimen/textHeading3</item>
     </style>
+    <style name="Title.Full">
+        <item name="android:layout_marginStart">@dimen/space16</item>
+        <item name="android:layout_marginEnd">@dimen/space16</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:maxLines">2147483647</item>
+        <item name="android:ellipsize">none</item>
+        <item name="android:textSize">@dimen/textHeading3</item>
+    </style>
     <style
         name="Description"
         parent="TextAppearance.AppCompat.Body1">
@@ -63,6 +81,14 @@
     <style name="Description.Cozy">
         <item name="android:maxLines">5</item>
         <item name="android:textSize">@dimen/textNormal</item>
+    </style>
+    <style name="Description.Full">
+        <item name="android:layout_marginStart">@dimen/space16</item>
+        <item name="android:layout_marginEnd">@dimen/space16</item>
+        <item name="android:maxLines">2147483647</item>
+        <item name="android:ellipsize">none</item>
+        <item name="android:textSize">@dimen/textNormal</item>
+        <item name="android:textColor">?attr/textColor</item>
     </style>
     <style
         name="Button"
@@ -76,7 +102,7 @@
     <style
         name="Icon"
         parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:tint">?attr/indicatorColor</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
     <style name="Icon.Small">
         <item name="android:layout_width">@dimen/iconSmall</item>

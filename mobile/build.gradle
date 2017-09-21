@@ -209,7 +209,7 @@ dependencies {
     // Eye candies
     compile 'io.supercharge:shimmerlayout:1.0.2'
     compile 'com.fujiyuu75:sequent:0.2.1'
-    compile 'com.sackcentury:shinebutton:0.1.9'
+    compile 'hanks.xyz:smallbang-library:0.1.2'
     compile 'io.github.inflationx:calligraphy3:3.0.0'
 
     // Eye candies

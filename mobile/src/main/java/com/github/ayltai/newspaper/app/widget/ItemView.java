@@ -23,7 +23,7 @@ import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
 public class ItemView extends BaseView implements ItemPresenter.View {
-    private final FlowableProcessor<Irrelevant> clicks = PublishProcessor.create();
+    protected final FlowableProcessor<Irrelevant> clicks = PublishProcessor.create();
 
     protected View       container;
     protected Disposable disposable;
@@ -118,7 +118,7 @@ public class ItemView extends BaseView implements ItemPresenter.View {
 
     @Nullable
     @Override
-    public Flowable<Boolean> bookmarkClicks() {
+    public Flowable<Irrelevant> bookmarkClicks() {
         return null;
     }
 

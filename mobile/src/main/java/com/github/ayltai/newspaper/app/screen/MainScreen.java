@@ -37,6 +37,7 @@ import io.reactivex.processors.PublishProcessor;
 public final class MainScreen extends Screen implements MainPresenter.View {
     @AutoValue
     public abstract static class Key extends ClassKey implements Parcelable {
+        @NonNull
         static MainScreen.Key create() {
             return new AutoValue_MainScreen_Key();
         }

@@ -4,13 +4,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
-import com.github.ayltai.newspaper.app.view.FooterPresenter;
-import com.github.ayltai.newspaper.app.widget.FooterView;
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
+import com.github.ayltai.newspaper.app.widget.FooterView;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.view.binding.PresentationBinderFactory;
 
-public class FooterBinderFactory extends PresentationBinderFactory<Item, ItemPresenter.View, FooterPresenter> {
+public class FooterBinderFactory extends PresentationBinderFactory<Item, FooterView, ItemPresenter<FooterView>> {
     @Override
     public int getPartType() {
         return FooterView.VIEW_TYPE;
@@ -18,8 +17,8 @@ public class FooterBinderFactory extends PresentationBinderFactory<Item, ItemPre
 
     @NonNull
     @Override
-    protected FooterPresenter createPresenter() {
-        return new FooterPresenter();
+    protected ItemPresenter<FooterView> createPresenter() {
+        return new ItemPresenter<>();
     }
 
     @Override

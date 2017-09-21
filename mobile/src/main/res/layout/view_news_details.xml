@@ -16,14 +16,12 @@
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/cozy_item_header_height">
+                android:layout_height="wrap_content">
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/cozy_avatar_size"
                     android:layout_height="@dimen/cozy_avatar_size"
-                    android:layout_marginStart="@dimen/space16"
-                    android:layout_marginEnd="@dimen/space16"
-                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/space16"
                     android:layout_alignParentStart="true"
                     app:placeholderImage="?attr/placeholderImage" />
                 <TextView
@@ -33,22 +31,24 @@
                     android:layout_alignTop="@+id/avatar"
                     android:layout_alignWithParentIfMissing="true"
                     tools:text="Proin rutrum ipsum"
-                    style="@style/Source.Normal" />
+                    style="@style/Source.Full" />
                 <TextView
                     android:id="@+id/publish_date"
                     android:layout_toStartOf="@+id/action_bookmark"
                     android:layout_toEndOf="@+id/avatar"
-                    android:layout_alignBottom="@+id/avatar"
+                    android:layout_below="@+id/source"
                     android:layout_alignWithParentIfMissing="true"
+                    android:layout_marginTop="@dimen/space4"
                     tools:text="Phasellus at aliquam dolor"
-                    style="@style/Subhead.Normal" />
+                    style="@style/Subhead.Full" />
                 <ImageView
                     android:id="@+id/action_bookmark"
                     android:layout_margin="@dimen/space16"
                     android:layout_toStartOf="@+id/action_share"
                     android:layout_alignParentTop="true"
                     android:contentDescription="@string/action_bookmark"
-                    app:srcCompat="@drawable/ic_bookmark_border"
+                    android:tint="?attr/textColorHint"
+                    app:srcCompat="@drawable/ic_bookmark_border_black_24dp"
                     style="@style/Icon.Small" />
                 <ImageView
                     android:id="@+id/action_share"
@@ -58,30 +58,30 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
                     android:contentDescription="@string/action_share"
-                    app:srcCompat="@drawable/ic_share"
+                    android:tint="?attr/textColorHint"
+                    app:srcCompat="@drawable/ic_share_black_24dp"
                     style="@style/Icon.Small" />
             </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/space16"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/title"
-                    android:paddingBottom="@dimen/space16"
+                    android:layout_marginBottom="@dimen/space16"
                     tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-                    style="@style/Title.Cozy" />
+                    style="@style/Title.Full" />
                 <TextView
                     android:id="@+id/description"
-                    android:paddingBottom="@dimen/space16"
+                    android:layout_marginBottom="@dimen/space16"
                     tools:text="Sed eu rhoncus enim, sit amet iaculis ante. Sed at finibus lectus, at consequat lacus. Etiam ipsum erat, facilisis vel sagittis sed, scelerisque ut eros. Praesent at mauris laoreet, imperdiet urna imperdiet, sollicitudin erat. Etiam iaculis mauris eu libero dignissim mattis mollis vitae enim. Quisque nec semper arcu. Ut lobortis, justo vitae finibus tempus, mauris elit fermentum mi, at cursus leo nisi et dui. Phasellus turpis diam, mollis at elementum aliquet, ullamcorper in metus. In lobortis scelerisque ante in mollis. Curabitur eget efficitur massa."
-                    style="@style/Description.Cozy" />
+                    style="@style/Description.Full" />
                 <FrameLayout
                     android:id="@+id/video_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <LinearLayout
-                    android:id="@+id/thumbnails_container"
+                    android:id="@+id/images_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
@@ -100,7 +100,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:contentScrim="?attr/colorPrimary">
             <FrameLayout
-                android:id="@+id/thumbnail_container"
+                android:id="@+id/image_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <android.support.v7.widget.Toolbar

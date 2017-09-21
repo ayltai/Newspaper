@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.ayltai.newspaper.app.screen.DetailsPresenter;
+import com.github.ayltai.newspaper.app.screen.DetailsScreen;
 import com.github.ayltai.newspaper.app.screen.MainPresenter;
 import com.github.ayltai.newspaper.app.screen.MainScreen;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -34,7 +36,6 @@ final class FlowController {
         this.activity = activity;
     }
 
-    @SuppressWarnings("unchecked")
     @NonNull
     Context attachNewBase(@NonNull final Context newBase) {
         return Flow.configure(newBase, this.activity)
@@ -68,29 +69,16 @@ final class FlowController {
                     if (incomingState.getKey() instanceof MainScreen.Key) {
                         presenter = new MainPresenter();
                         view      = new MainScreen(this.activity);
-
-                        this.cache.put(incomingState.getKey(), Pair.create(new WeakReference<>(presenter), new WeakReference<>(view)));
+                    } else if (incomingState.getKey() instanceof DetailsScreen.Key) {
+                        presenter = new DetailsPresenter(((DetailsScreen.Key)incomingState.getKey()).getItem());
+                        view      = new DetailsScreen(this.activity);
                     }
                 }
 
                 if (presenter != null && view != null) {
-                    final Presenter      p = presenter;
-                    final Presenter.View v = view;
+                    this.cache.put(incomingState.getKey(), Pair.create(new WeakReference<>(presenter), new WeakReference<>(view)));
 
-                    if (view.attachments() != null) view.attachments().subscribe(
-                        isFirstTimeAttachment -> p.onViewAttached(v, isFirstTimeAttachment),
-                        error -> {
-                            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                        }
-                    );
-
-                    if (view.detachments() != null) view.detachments().subscribe(
-                        irrelevant -> p.onViewDetached(),
-                        error -> {
-                            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                        }
-                    );
-
+                    this.subscribe(presenter, view);
                     this.dispatch((View)view, incomingState, callback);
                 }
             }).build())
@@ -103,11 +91,10 @@ final class FlowController {
      * @return {@code true} if back button pressed event is handled; otherwise, {@code false}.
      */
     boolean onBackPressed() {
-        if (!Flow.get(this.activity).goBack()) {
-            final View view = ((ViewGroup)this.activity.findViewById(android.R.id.content)).getChildAt(0);
+        if (Flow.get(this.activity).goBack()) return true;
 
-            if (view instanceof ScreenPresenter.View) return ((ScreenPresenter.View)view).goBack();
-        }
+        final View view = ((ViewGroup)this.activity.findViewById(android.R.id.content)).getChildAt(0);
+        if (view instanceof ScreenPresenter.View) return ((ScreenPresenter.View)view).goBack();
 
         return false;
     }
@@ -122,5 +109,22 @@ final class FlowController {
         this.activity.setContentView(view);
 
         callback.onTraversalCompleted();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void subscribe(@NonNull final Presenter presenter, @NonNull final Presenter.View view) {
+        if (view.attachments() != null) view.attachments().subscribe(
+            isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
+            error -> {
+                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+            }
+        );
+
+        if (view.detachments() != null) view.detachments().subscribe(
+            irrelevant -> presenter.onViewDetached(),
+            error -> {
+                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+            }
+        );
     }
 }
