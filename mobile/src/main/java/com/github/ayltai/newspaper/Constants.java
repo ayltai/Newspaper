@@ -6,6 +6,7 @@ public final class Constants {
     public static final String ENCODING_UTF8 = "UTF-8";
 
     public static final int CONNECTION_TIMEOUT = 5;
+    public static final int REFRESH_TIMEOUT    = 30;
     public static final int HOUSEKEEP_TIME     = 72 * 60 * 60 * 1000;
 
     public static final int  FILE_BUFFER_SIZE        = 4 * 1024;

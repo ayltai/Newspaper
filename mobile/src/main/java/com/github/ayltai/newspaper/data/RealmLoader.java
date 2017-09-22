@@ -13,12 +13,15 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 
-import io.reactivex.Observable;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.realm.Realm;
 
 public abstract class RealmLoader<D> extends RxLoader<D> {
+    protected static final String KEY_REFRESH = "refresh";
+
     private Realm realm;
 
     protected RealmLoader(@NonNull final Context context) {
@@ -40,7 +43,7 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
     }
 
     protected boolean isValid() {
-        if (this.realm == null || this.realm.isClosed()) {
+        if (this.realm == null) {
             if (TestUtils.isLoggable()) throw new IllegalStateException("No Realm instance is available");
 
             return false;
@@ -51,31 +54,31 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
 
     @NonNull
     @Override
-    protected Observable<D> load(@NonNull final Context context, @Nullable final Bundle args) {
+    protected Flowable<D> load(@NonNull final Context context, @Nullable final Bundle args) {
+        if (RealmLoader.isForceRefresh(args)) return this.loadFromRemoteSource(context, args);
+
         if (this.isValid()) {
-            return Observable.create(emitter -> this.loadFromLocalSource(context, args)
-                .compose(RxUtils.applyObservableSchedulers(this.getScheduler()))
+            return Flowable.create(emitter -> this.loadFromLocalSource(context, args)
+                .compose(RxUtils.applyFlowableSchedulers(this.getScheduler()))
                 .subscribe(
                     data -> {
-                        if (data == null || (data instanceof Collection && ((Collection)data).isEmpty())) {
-                            this.loadFromRemoteSource(context, args).subscribe(emitter::onNext);
-                        } else {
-                            emitter.onNext(data);
-                        }
+                        if (data instanceof Collection && !((Collection)data).isEmpty()) emitter.onNext(data);
+
+                        this.loadFromRemoteSource(context, args).subscribe(emitter::onNext);
                     },
                     error -> {
                         if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                    }));
+                    }), BackpressureStrategy.LATEST);
         }
 
         return this.loadFromRemoteSource(context, args);
     }
 
     @NonNull
-    protected abstract Observable<D> loadFromLocalSource(@NonNull Context context, @Nullable Bundle args);
+    protected abstract Flowable<D> loadFromLocalSource(@NonNull Context context, @Nullable Bundle args);
 
     @NonNull
-    protected abstract Observable<D> loadFromRemoteSource(@NonNull Context context, @Nullable Bundle args);
+    protected abstract Flowable<D> loadFromRemoteSource(@NonNull Context context, @Nullable Bundle args);
 
     @CallSuper
     @Override
@@ -122,5 +125,9 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
                 });
 
         return result;
+    }
+
+    protected static boolean isForceRefresh(@Nullable final Bundle args) {
+        return args != null && args.getBoolean(RealmLoader.KEY_REFRESH, false);
     }
 }

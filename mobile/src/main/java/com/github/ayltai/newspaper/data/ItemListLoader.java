@@ -26,8 +26,8 @@ import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
 public class ItemListLoader extends RealmLoader<List<NewsItem>> {
     //region Constants
@@ -70,6 +70,13 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
         }
 
         @NonNull
+        public ItemListLoader.Builder forceRefresh(final boolean refresh) {
+            this.args.putBoolean(RealmLoader.KEY_REFRESH, refresh);
+
+            return this;
+        }
+
+        @NonNull
         public Flowable<List<NewsItem>> build() {
             final ArrayList<String> categories = this.args.getStringArrayList(ItemListLoader.KEY_CATEGORIES);
 
@@ -99,26 +106,27 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
 
     @NonNull
     @Override
-    protected Observable<List<NewsItem>> loadFromLocalSource(@NonNull final Context context, @Nullable final Bundle args) {
-        if (this.getRealm() == null) return Observable.error(new IllegalStateException("Realm instance is null"));
+    protected Flowable<List<NewsItem>> loadFromLocalSource(@NonNull final Context context, @Nullable final Bundle args) {
+        if (!this.isValid()) return Flowable.error(new IllegalStateException("Realm instance is null"));
 
-        return Observable.create(emitter -> new ItemManager(this.getRealm()).getItems(ItemListLoader.getSources(args).toArray(StringUtils.EMPTY_ARRAY), ItemListLoader.getCategories(args).toArray(StringUtils.EMPTY_ARRAY))
+        return Flowable.create(emitter -> new ItemManager(this.getRealm()).getItems(ItemListLoader.getSources(args).toArray(StringUtils.EMPTY_ARRAY), ItemListLoader.getCategories(args).toArray(StringUtils.EMPTY_ARRAY))
             .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
             .map(items -> this.getRealm().copyFromRealm(items))
             .map(items -> {
                 Collections.sort(items);
                 return items;
             })
-            .subscribe(emitter::onNext));
+            .subscribe(emitter::onNext), BackpressureStrategy.LATEST);
     }
 
     @SuppressWarnings("unchecked")
     @NonNull
     @Override
-    protected Observable<List<NewsItem>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
-        return Observable.create(emitter -> {
-            final List<Single<List<NewsItem>>> singles    = new ArrayList<>();
-            final List<String>                 categories = ItemListLoader.getCategories(args);
+    protected Flowable<List<NewsItem>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
+        return Flowable.create(emitter -> {
+            final List<Single<List<NewsItem>>> singles      = new ArrayList<>();
+            final List<String>                 categories   = ItemListLoader.getCategories(args);
+            final boolean                      forceRefresh = RealmLoader.isForceRefresh(args);
 
             for (final String source : ItemListLoader.getSources(args)) {
                 for (final Category category : SourceFactory.getInstance(context).getSource(source).getCategories()) {
@@ -126,13 +134,15 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
                         final Client client = ClientFactory.getInstance(context).getClient(source);
 
                         if (client != null) singles.add(client.getItems(category.getUrl())
-                            .timeout(Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+                            // TODO: If the previous refresh timestamp is very old, wait for a longer time to refresh
+                            .timeout(forceRefresh ? Constants.REFRESH_TIMEOUT : Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
                             .onErrorResumeNext(error -> {
-                                if (TestUtils.isLoggable())
-                                    Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                                if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
 
                                 return Single.just(Collections.emptyList());
-                            }));
+                            })
+                            .subscribeOn(Schedulers.newThread())
+                            .observeOn(Schedulers.io()));
 
                         break;
                     }
@@ -149,7 +159,6 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
 
                     return combinedList;
                 })
-                .compose(RxUtils.applySingleBackgroundSchedulers())
                 .map(items -> {
                     Collections.sort(items);
                     return items;
@@ -170,7 +179,7 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
                         if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                     }
                 );
-        });
+        }, BackpressureStrategy.LATEST);
     }
 
     @NonNull

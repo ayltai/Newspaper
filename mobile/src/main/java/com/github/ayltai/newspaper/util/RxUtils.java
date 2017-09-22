@@ -22,6 +22,11 @@ public final class RxUtils {
             .subscribeOn(scheduler);
     }
 
+    public static <T> FlowableTransformer<T, T> applyFlowableSchedulers(@NonNull final Scheduler scheduler) {
+        return flowable -> flowable.observeOn(scheduler)
+            .subscribeOn(scheduler);
+    }
+
     public static <T> SingleTransformer<T, T> applySingleSchedulers(@NonNull final Scheduler scheduler) {
         return single -> single.observeOn(scheduler)
             .subscribeOn(scheduler);

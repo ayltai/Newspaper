@@ -11,7 +11,7 @@ import android.util.Log;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class RxLoader<D> extends Loader<D> {
@@ -39,7 +39,7 @@ public abstract class RxLoader<D> extends Loader<D> {
         this.prepareDisposables();
 
         this.disposables.add(this.load(this.getContext(), this.args)
-            .compose(RxUtils.applyObservableBackgroundToMainSchedulers())
+            .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
             .subscribe(
                 this::deliverResult,
                 error -> {
@@ -77,7 +77,7 @@ public abstract class RxLoader<D> extends Loader<D> {
     }
 
     @NonNull
-    protected abstract Observable<D> load(@NonNull Context context, @Nullable Bundle args);
+    protected abstract Flowable<D> load(@NonNull Context context, @Nullable Bundle args);
 
     private void prepareDisposables() {
         if (this.disposables == null) this.disposables = new CompositeDisposable();

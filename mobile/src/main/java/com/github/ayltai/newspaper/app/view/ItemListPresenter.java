@@ -23,8 +23,15 @@ public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.Vie
 
     private final List<String> categories;
 
+    private boolean forceRefresh = false;
+
     public ItemListPresenter(@NonNull final List<String> categories) {
         this.categories = categories;
+    }
+
+    @Override
+    protected void resetState() {
+        this.forceRefresh = true;
     }
 
     @Override
@@ -34,7 +41,7 @@ public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.Vie
         final Activity activity = this.getView().getActivity();
         if (activity == null) return Flowable.just(Collections.emptyList());
 
-        final ItemListLoader.Builder builder = new ItemListLoader.Builder((AppCompatActivity)activity);
+        final ItemListLoader.Builder builder = new ItemListLoader.Builder((AppCompatActivity)activity).forceRefresh(this.forceRefresh);
         for (final String category : this.categories) builder.addCategory(category);
         for (final String source : UserConfig.getSources(this.getView().getContext())) builder.addSource(source);
 

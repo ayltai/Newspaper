@@ -49,10 +49,9 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
         super.bindModel(models);
 
         if (this.getView() != null) {
-            if (models.isEmpty()) {
-                this.getView().showEndOfList();
-            }
+            if (models.isEmpty()) this.getView().showEndOfList();
 
+            this.getView().clear();
             this.getView().bind(models);
         }
     }

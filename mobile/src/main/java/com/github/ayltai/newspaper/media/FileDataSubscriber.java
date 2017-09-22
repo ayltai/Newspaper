@@ -40,7 +40,7 @@ abstract class FileDataSubscriber extends BaseDataSubscriber<CloseableReference<
             if (reference == null) {
                 this.onFailureImpl(dataSource);
             } else {
-                final File file = new File(this.context.getCacheDir(), UUID.randomUUID().toString() + ".jpg");
+                final File file = new File(this.context.getCacheDir(), UUID.randomUUID().toString() + ".tmp");
 
                 PooledByteBufferInputStream inputStream  = null;
                 FileOutputStream            outputStream = null;
