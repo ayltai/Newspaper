@@ -2,7 +2,7 @@ package com.github.ayltai.newspaper.util;
 
 import android.support.annotation.NonNull;
 
-public class Optional<T> {
+public final class Optional<T> {
     public interface Action<T> {
         void apply(T value);
     }

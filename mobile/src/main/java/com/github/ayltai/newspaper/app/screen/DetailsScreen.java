@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.app.screen;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     //endregion
 
-    private final List<Disposable> disposables = new ArrayList<>();
+    private final List<Disposable> disposables = Collections.synchronizedList(new ArrayList<>());
 
     //region Components
 
@@ -259,8 +260,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     }
 
     private void manageDisposable(@NonNull final Disposable disposable) {
-        synchronized (this.disposables) {
-            this.disposables.add(disposable);
-        }
+        this.disposables.add(disposable);
     }
 }

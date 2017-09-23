@@ -137,6 +137,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     protected void onVideoClick() {
     }
 
+    @SuppressWarnings("CyclomaticComplexity")
     @CallSuper
     @Override
     public void onViewAttached(@NonNull final V view, final boolean isFirstTimeAttachment) {

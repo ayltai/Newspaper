@@ -15,7 +15,7 @@ import com.github.ayltai.newspaper.data.model.Video;
 
 import io.realm.RealmList;
 
-public class FeaturedItem implements Item {
+public final class FeaturedItem implements Item {
     private static final ThreadLocal<Random> RANDOM = new ThreadLocal<Random>() {
         @Override
         protected Random initialValue() {

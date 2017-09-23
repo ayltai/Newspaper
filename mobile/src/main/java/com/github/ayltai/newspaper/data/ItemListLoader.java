@@ -100,7 +100,7 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
         }
     }
 
-    protected ItemListLoader(@NonNull final Context context, @Nullable final Bundle args) {
+    private ItemListLoader(@NonNull final Context context, @Nullable final Bundle args) {
         super(context, args);
     }
 
@@ -123,63 +123,65 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
     @NonNull
     @Override
     protected Flowable<List<NewsItem>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
-        return Flowable.create(emitter -> {
-            final List<Single<List<NewsItem>>> singles      = new ArrayList<>();
-            final List<String>                 categories   = ItemListLoader.getCategories(args);
-            final boolean                      forceRefresh = RealmLoader.isForceRefresh(args);
+        return Flowable.create(emitter -> Single.zip(
+            this.createSingles(context, args),
+            lists -> {
+                final List<NewsItem> combinedList = new ArrayList<>();
+                for (final Object list : lists) combinedList.addAll((List<NewsItem>)list);
 
-            for (final String source : ItemListLoader.getSources(args)) {
-                for (final Category category : SourceFactory.getInstance(context).getSource(source).getCategories()) {
-                    if (ItemListLoader.containsCategory(categories, category)) {
-                        final Client client = ClientFactory.getInstance(context).getClient(source);
+                Collections.sort(combinedList);
 
-                        if (client != null) singles.add(client.getItems(category.getUrl())
-                            // TODO: If the previous refresh timestamp is very old, wait for a longer time to refresh
-                            .timeout(forceRefresh ? Constants.REFRESH_TIMEOUT : Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
-                            .onErrorResumeNext(error -> {
-                                if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                return combinedList;
+            })
+            .map(items -> {
+                Collections.sort(items);
+                return items;
+            })
+            .doOnSuccess(items -> {
+                if (this.getRealm() != null) new ItemManager(this.getRealm()).putItems(items)
+                    .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
+                    .subscribe(
+                        irrelevant -> {
+                        },
+                        error -> {
+                            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        });
+            })
+            .subscribe(
+                emitter::onNext,
+                error -> {
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                }
+            ), BackpressureStrategy.LATEST);
+    }
 
-                                return Single.just(Collections.emptyList());
-                            })
-                            .subscribeOn(Schedulers.newThread())
-                            .observeOn(Schedulers.io()));
+    private List<Single<List<NewsItem>>> createSingles(@NonNull final Context context, @Nullable final Bundle args) {
+        final List<Single<List<NewsItem>>> singles      = new ArrayList<>();
+        final List<String>                 categories   = ItemListLoader.getCategories(args);
+        final boolean                      forceRefresh = RealmLoader.isForceRefresh(args);
 
-                        break;
-                    }
+        for (final String source : ItemListLoader.getSources(args)) {
+            for (final Category category : SourceFactory.getInstance(context).getSource(source).getCategories()) {
+                if (ItemListLoader.containsCategory(categories, category)) {
+                    final Client client = ClientFactory.getInstance(context).getClient(source);
+
+                    if (client != null) singles.add(client.getItems(category.getUrl())
+                        // TODO: If the previous refresh timestamp is very old, wait for a longer time to refresh
+                        .timeout(forceRefresh ? Constants.REFRESH_TIMEOUT : Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+                        .onErrorResumeNext(error -> {
+                            if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+
+                            return Single.just(Collections.emptyList());
+                        })
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(Schedulers.io()));
+
+                    break;
                 }
             }
+        }
 
-            Single.zip(
-                singles,
-                lists -> {
-                    final List<NewsItem> combinedList = new ArrayList<>();
-                    for (final Object list : lists) combinedList.addAll((List<NewsItem>)list);
-
-                    Collections.sort(combinedList);
-
-                    return combinedList;
-                })
-                .map(items -> {
-                    Collections.sort(items);
-                    return items;
-                })
-                .doOnSuccess(items -> {
-                    if (this.getRealm() != null) new ItemManager(this.getRealm()).putItems(items)
-                        .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
-                        .subscribe(
-                            irrelevant -> {
-                            },
-                            error -> {
-                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                            });
-                })
-                .subscribe(
-                    emitter::onNext,
-                    error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                    }
-                );
-        }, BackpressureStrategy.LATEST);
+        return singles;
     }
 
     @NonNull

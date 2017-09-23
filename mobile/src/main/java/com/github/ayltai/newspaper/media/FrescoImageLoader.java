@@ -62,7 +62,7 @@ public class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObser
     protected final Context context;
 
     protected FrescoImageLoader(@NonNull final Context context) {
-        this.context = context;
+        this.context = context.getApplicationContext();
     }
 
     @Override

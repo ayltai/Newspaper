@@ -21,6 +21,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+@SuppressWarnings("MethodCount")
 public class NewsItem extends RealmObject implements Item, Parcelable {
     //region Constants
 
@@ -182,7 +183,7 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
 
         if (this.publishDate != 0 && item.getPublishDate() != null) return (int)(item.getPublishDate().getTime() - this.publishDate);
 
-        return this.title.compareTo(item.getTitle());
+        return item.getTitle() == null ? 1 : this.title.compareTo(item.getTitle());
     }
 
     @Override

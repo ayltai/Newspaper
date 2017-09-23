@@ -12,7 +12,7 @@ public final class Sets {
 
     @NonNull
     public static <T> Set<T> from(@NonNull final T[] items) {
-        final Set<T> set = new HashSet<T>();
+        final Set<T> set = new HashSet<>();
         Collections.addAll(set, items);
         return set;
     }

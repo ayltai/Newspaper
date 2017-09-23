@@ -18,7 +18,7 @@ public final class Lists {
      * @param function The transformation to apply to each element in {@code fromList}.
      * @return A list that applies {@code function} to each element of {@code fromList}.
      */
-    public static <F, T> List<T> transform(@NonNull final List<F> fromList, Function<? super F, ? extends T> function) {
+    public static <F, T> List<T> transform(@NonNull final List<F> fromList, @NonNull final Function<? super F, ? extends T> function) {
         final List<T> toList = new ArrayList<>();
 
         for (final F element : fromList) toList.add(function.apply(element));
