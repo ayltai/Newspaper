@@ -7,6 +7,8 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.os.Parcelable;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
@@ -23,11 +25,13 @@ import android.widget.TextView;
 import com.google.auto.value.AutoValue;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.widget.ItemView;
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Video;
+import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -71,8 +75,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     //region Components
 
-    private final List<BigImageView> images = new ArrayList<>();
-
     private final Toolbar          toolbar;
     private final ViewGroup        imageContainer;
     private final SimpleDraweeView avatar;
@@ -92,7 +94,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     public DetailsScreen(@NonNull final Context context) {
         super(context);
 
-        final View view = LayoutInflater.from(context).inflate(R.layout.view_news_details, this, true);
+        final View view = LayoutInflater.from(context).inflate(R.layout.screen_news_details, this, true);
 
         this.toolbar         = view.findViewById(R.id.toolbar);
         this.imageContainer  = view.findViewById(R.id.image_container);
@@ -161,6 +163,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     public void setIsBookmarked(final boolean isBookmarked) {
         if (isBookmarked) {
             this.bookmarkAction.setImageResource(R.drawable.ic_bookmark_black_24dp);
+            this.bookmarkAction.setImageTintList(ColorStateList.valueOf(ContextUtils.getColor(this.getContext(), R.attr.primaryColor)));
             this.bookmarkAction.setClickable(false);
 
             this.smallBang.bang(this.bookmarkAction, new SmallBangListener() {
@@ -175,16 +178,28 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             });
         } else {
             this.bookmarkAction.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+            this.bookmarkAction.setImageTintList(ColorStateList.valueOf(ContextUtils.getColor(this.getContext(), R.attr.textColorHint)));
         }
     }
 
     @Override
     public void setImages(@NonNull final List<Image> images) {
-        // TODO
+        this.imageContainer.removeAllViews();
+        this.imagesContainer.removeAllViews();
+
+        if (!images.isEmpty()) {
+            this.subscribeImage(this.imageContainer, images.get(0));
+
+            if (images.size() > 1) {
+                for (final Image image : images.subList(1, images.size() - 1)) this.subscribeImage(this.imagesContainer, image);
+            }
+        }
     }
 
     @Override
     public void setVideo(@Nullable final Video video) {
+        this.videoContainer.removeAllViews();
+
         // TODO
     }
 
@@ -261,5 +276,18 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     private void manageDisposable(@NonNull final Disposable disposable) {
         this.disposables.add(disposable);
+    }
+
+    private void subscribeImage(@NonNull final ViewGroup parent, @NonNull final Image image) {
+        final BigImageView imageView = (BigImageView)LayoutInflater.from(this.getContext()).inflate(R.layout.widget_image, parent, false);
+        imageView.getSSIV().setMaxScale(Constants.IMAGE_ZOOM_MAX);
+        imageView.getSSIV().setPanEnabled(false);
+        imageView.getSSIV().setZoomEnabled(false);
+
+        imageView.showImage(Uri.parse(image.getUrl()));
+
+        this.manageDisposable(RxView.clicks(imageView).subscribe(irrelevant -> this.imageClicks.onNext(image)));
+
+        parent.addView(imageView);
     }
 }
