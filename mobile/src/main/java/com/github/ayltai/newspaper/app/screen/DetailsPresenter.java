@@ -19,11 +19,6 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     }
 
     @Override
-    public void setModel(final Item model) {
-        super.setModel(model);
-    }
-
-    @Override
     public void bindModel(final Item model) {
         // TODO: Gets the full news item description
 
@@ -68,11 +63,9 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     @CallSuper
     @Override
     public void onViewAttached(@NonNull final DetailsPresenter.View view, final boolean isFirstTimeAttachment) {
-        super.onViewAttached(view, isFirstTimeAttachment);
-
         final Flowable<Irrelevant> shareClicks = view.shareClicks();
         if (shareClicks != null) this.manageDisposable(shareClicks.subscribe(irrelevant -> this.onShareClick()));
 
-        this.bindModel(this.getModel());
+        super.onViewAttached(view, isFirstTimeAttachment);
     }
 }

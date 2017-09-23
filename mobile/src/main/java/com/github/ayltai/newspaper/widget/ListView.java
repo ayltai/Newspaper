@@ -26,7 +26,6 @@ import com.github.ayltai.newspaper.view.ListPresenter;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
 import io.reactivex.Flowable;
-import io.reactivex.processors.BehaviorProcessor;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
@@ -38,7 +37,7 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
     protected final FlowableProcessor<Integer>    bestVisibleItemPositionChanges = PublishProcessor.create();
     protected final FlowableProcessor<Irrelevant> pullToRefreshes                = PublishProcessor.create();
     protected final FlowableProcessor<Irrelevant> infiniteLoads                  = PublishProcessor.create();
-    protected final FlowableProcessor<Boolean>    attachments                    = BehaviorProcessor.create();
+    protected final FlowableProcessor<Boolean>    attachments                    = PublishProcessor.create();
     protected final FlowableProcessor<Irrelevant> detachments                    = PublishProcessor.create();
 
     //endregion

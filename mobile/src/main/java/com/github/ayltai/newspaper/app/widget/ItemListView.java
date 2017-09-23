@@ -1,5 +1,9 @@
 package com.github.ayltai.newspaper.app.widget;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.AttrRes;
@@ -21,7 +25,9 @@ import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.jakewharton.rxbinding2.view.RxView;
 
-public abstract class ItemListView extends ListView<Item> implements ItemListPresenter.View {
+import io.reactivex.disposables.Disposable;
+
+public abstract class ItemListView extends ListView<Item> implements ItemListPresenter.View, Disposable, LifecycleObserver {
     private Button emptyAction;
 
     //region Constructors
@@ -48,6 +54,11 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
     }
 
     //endregion
+
+    @Override
+    public boolean isDisposed() {
+        return false;
+    }
 
     @LayoutRes
     @Override
@@ -85,6 +96,15 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
         ViewUtils.startShimmerAnimation(this.loadingView);
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    @Override
+    public void dispose() {
+        if (this.adapter instanceof Disposable) {
+            final Disposable disposable = (Disposable)this.adapter;
+            if (!disposable.isDisposed()) disposable.dispose();
+        }
+    }
+
     @CallSuper
     @Override
     protected void onAttachedToWindow() {
@@ -99,5 +119,8 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
 
         this.emptyAction = this.emptyView.findViewById(R.id.empty_action);
         this.emptyAction.setText(R.string.empty_news_action);
+
+        final LifecycleOwner owner = this.getLifecycleOwner();
+        if (owner != null) owner.getLifecycle().addObserver(this);
     }
 }

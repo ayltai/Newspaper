@@ -2,18 +2,30 @@ package com.github.ayltai.newspaper.view.binding;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 
 import com.github.ayltai.newspaper.view.BindingPresenter;
 import com.github.ayltai.newspaper.view.Presenter;
 
-public abstract class PresentationBinder<M, V extends Presenter.View> extends BindingPresenter<M, V> implements Binder<V> {
+import io.reactivex.disposables.Disposable;
+
+public abstract class PresentationBinder<M, V extends Presenter.View> extends BindingPresenter<M, V> implements Binder<V>, Disposable {
+    @Override
+    public boolean isDisposed() {
+        return false;
+    }
+
+    @UiThread
     @CallSuper
     @Override
     public void bindView(@NonNull final V view) {
-        super.bindModel(this.getModel());
-
+        this.onViewDetached();
         this.onViewAttached(view, false);
+        this.bindModel(this.getModel());
+    }
 
-        if (this.getModel() != null) this.bindModel(this.getModel());
+    @Override
+    public void dispose() {
+        this.onViewDetached();
     }
 }

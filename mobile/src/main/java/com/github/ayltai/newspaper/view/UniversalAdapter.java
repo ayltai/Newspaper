@@ -19,6 +19,8 @@ import com.github.ayltai.newspaper.view.binding.FullBinderFactory;
 import com.github.ayltai.newspaper.view.binding.PartBinderFactory;
 import com.github.ayltai.newspaper.view.binding.ViewBinderUtils;
 
+import io.reactivex.disposables.Disposable;
+
 public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<T> {
     public static final int          DEFAULT_ANIMATION_DURATION     = 600;
     public static final Interpolator DEFAULT_ANIMATION_INTERPOLATOR = new AccelerateDecelerateInterpolator();
@@ -72,6 +74,13 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
     }
 
     public void clear() {
+        for (final Pair<PartBinderFactory<M, V>, Binder<V>> binder : this.binders) {
+            if (binder.second instanceof Disposable) {
+                final Disposable disposable = (Disposable)binder.second;
+                if (!disposable.isDisposed()) disposable.dispose();
+            }
+        }
+
         this.binders.clear();
 
         this.notifyDataSetChanged();
@@ -119,6 +128,12 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
      * @param position Position of the item that has changed.
      */
     public void onItemChanged(@Nullable final M item, final int position) {
+        final Pair<PartBinderFactory<M, V>, Binder<V>> binder = this.binders.get(position);
+        if (binder.second instanceof Disposable) {
+            final Disposable disposable = (Disposable)binder.second;
+            if (!disposable.isDisposed()) disposable.dispose();
+        }
+
         this.binders.set(position, ViewBinderUtils.<M, V>createViewBinders(Collections.singletonList(item), this.factories).iterator().next());
 
         this.notifyItemChanged(position);
@@ -132,7 +147,19 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
     public void onItemRangeChanged(@NonNull final Collection<M> items, final int positionStart) {
         int i = 0;
 
-        for (final Pair<PartBinderFactory<M, V>, Binder<V>> binder : ViewBinderUtils.<M, V>createViewBinders(items, this.factories)) this.binders.set(positionStart + i++, binder);
+        for (final Pair<PartBinderFactory<M, V>, Binder<V>> binder : ViewBinderUtils.<M, V>createViewBinders(items, this.factories)) {
+            final int position = positionStart + i;
+
+            final Pair<PartBinderFactory<M, V>, Binder<V>> b = this.binders.get(position);
+            if (b.second instanceof Disposable) {
+                final Disposable disposable = (Disposable)b.second;
+                if (!disposable.isDisposed()) disposable.dispose();
+            }
+
+            this.binders.set(position, binder);
+
+            i++;
+        }
 
         this.notifyItemRangeChanged(positionStart, items.size());
     }
@@ -175,6 +202,12 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
      * @param position Position of the item that has now been removed.
      */
     public void onItemRemoved(final int position) {
+        final Pair<PartBinderFactory<M, V>, Binder<V>> binder = this.binders.get(position);
+        if (binder.second instanceof Disposable) {
+            final Disposable disposable = (Disposable)binder.second;
+            if (!disposable.isDisposed()) disposable.dispose();
+        }
+
         this.binders.remove(position);
 
         this.notifyItemRemoved(position);
@@ -186,7 +219,15 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
      * @param itemCount Number of items removed from the data set.
      */
     public void onItemRangeRemoved(final int positionStart, final int itemCount) {
-        this.binders.subList(positionStart, positionStart + itemCount).clear();
+        final List<Pair<PartBinderFactory<M, V>, Binder<V>>> subList = this.binders.subList(positionStart, positionStart + itemCount);
+        for (final Pair<PartBinderFactory<M, V>, Binder<V>> binder : subList) {
+            if (binder.second instanceof Disposable) {
+                final Disposable disposable = (Disposable)binder.second;
+                if (!disposable.isDisposed()) disposable.dispose();
+            }
+        }
+
+        subList.clear();
 
         this.notifyItemRangeRemoved(positionStart, itemCount);
     }

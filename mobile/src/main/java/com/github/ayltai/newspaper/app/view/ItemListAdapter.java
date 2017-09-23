@@ -62,7 +62,7 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
 
     private final Context context;
 
-    public ItemListAdapter(@NonNull final Context context, @NonNull final List<FullBinderFactory<Item>> factories) {
+    private ItemListAdapter(@NonNull final Context context, @NonNull final List<FullBinderFactory<Item>> factories) {
         super(factories);
 
         this.context = context;

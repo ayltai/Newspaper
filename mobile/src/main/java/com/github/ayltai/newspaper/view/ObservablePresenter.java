@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.view;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.support.annotation.CallSuper;
@@ -12,7 +13,7 @@ import com.github.ayltai.newspaper.util.RxUtils;
 import io.reactivex.disposables.Disposable;
 
 public class ObservablePresenter<V extends Presenter.View> extends Presenter<V> {
-    private final List<Disposable> disposables = new ArrayList<>();
+    private final List<Disposable> disposables = Collections.synchronizedList(new ArrayList<>());
 
     protected void manageDisposable(@NonNull final Disposable disposable) {
         synchronized (this.disposables) {

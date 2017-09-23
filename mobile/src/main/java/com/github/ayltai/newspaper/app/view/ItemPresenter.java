@@ -99,9 +99,6 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
             this.getView().setIsBookmarked(model.isBookmarked());
             this.getView().setImages(model.getImages());
             this.getView().setVideo(model.getVideo());
-
-            final Flowable<Irrelevant> clicks = this.getView().clicks();
-            if (clicks != null) this.manageDisposable(clicks.subscribe(irrelevant -> this.onClick()));
         }
     }
 
@@ -145,6 +142,9 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     public void onViewAttached(@NonNull final V view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
+        final Flowable<Irrelevant> clicks = view.clicks();
+        if (clicks != null) this.manageDisposable(clicks.subscribe(irrelevant -> this.onClick()));
+
         final Flowable<Irrelevant> avatarClicks = view.avatarClicks();
         if (avatarClicks != null) this.manageDisposable(avatarClicks.subscribe(irrelevant -> this.onAvatarClick()));
 
@@ -171,5 +171,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
 
         final Flowable<Irrelevant> videoClick = view.videoClick();
         if (videoClick != null) this.manageDisposable(videoClick.subscribe(irrelevant -> this.onVideoClick()));
+
+        this.bindModel(this.getModel());
     }
 }

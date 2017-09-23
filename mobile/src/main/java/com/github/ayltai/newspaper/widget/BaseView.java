@@ -17,7 +17,6 @@ import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.ayltai.newspaper.view.Presenter;
 
 import io.reactivex.Flowable;
-import io.reactivex.processors.BehaviorProcessor;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
@@ -25,7 +24,7 @@ public class BaseView extends PartView implements Presenter.View {
     //region Subscriptions
 
     protected final FlowableProcessor<Boolean>    attachments = PublishProcessor.create();
-    protected final FlowableProcessor<Irrelevant> detachments = BehaviorProcessor.create();
+    protected final FlowableProcessor<Irrelevant> detachments = PublishProcessor.create();
 
     //endregion
 

@@ -9,13 +9,16 @@ public abstract class PresentationBinderFactory<M, V extends Presenter.View, P e
     @NonNull
     protected abstract P createPresenter();
 
-    @NonNull
+    @Nullable
     @Override
     public Binder<V> create(@Nullable final M model) {
-        final P presenter = this.createPresenter();
+        if (this.isNeeded(model)) {
+            final P presenter = this.createPresenter();
+            presenter.bindModel(model);
 
-        if (this.isNeeded(model)) presenter.bindModel(model);
+            return presenter;
+        }
 
-        return presenter;
+        return new NoOpBinder<>();
     }
 }

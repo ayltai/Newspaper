@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.app;
 
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.Map;
 
 import android.app.Activity;
@@ -18,6 +19,7 @@ import com.github.ayltai.newspaper.app.screen.DetailsScreen;
 import com.github.ayltai.newspaper.app.screen.MainPresenter;
 import com.github.ayltai.newspaper.app.screen.MainScreen;
 import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.view.BindingPresenter;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.ScreenPresenter;
 
@@ -26,9 +28,11 @@ import flow.KeyDispatcher;
 import flow.KeyParceler;
 import flow.State;
 import flow.TraversalCallback;
+import io.reactivex.disposables.Disposable;
 
 final class FlowController {
-    private final Map<Object, Pair<WeakReference<Presenter>, WeakReference<Presenter.View>>> cache = new ArrayMap<>();
+    private final Map<Object, Pair<WeakReference<Presenter>, WeakReference<Presenter.View>>> cache       = Collections.synchronizedMap(new ArrayMap<>());
+    private final Map<Object, Disposable>                                                    disposables = Collections.synchronizedMap(new ArrayMap<>());
 
     private final Activity activity;
 
@@ -36,6 +40,7 @@ final class FlowController {
         this.activity = activity;
     }
 
+    @SuppressWarnings("unchecked")
     @NonNull
     Context attachNewBase(@NonNull final Context newBase) {
         return Flow.configure(newBase, this.activity)
@@ -65,7 +70,7 @@ final class FlowController {
                     view      = pair.second.get();
                 }
 
-                if (pair == null || presenter == null || view == null) {
+                if (presenter == null || view == null) {
                     if (incomingState.getKey() instanceof MainScreen.Key) {
                         presenter = new MainPresenter();
                         view      = new MainScreen(this.activity);
@@ -76,9 +81,11 @@ final class FlowController {
                 }
 
                 if (presenter != null && view != null) {
-                    this.cache.put(incomingState.getKey(), Pair.create(new WeakReference<>(presenter), new WeakReference<>(view)));
+                    if (pair == null) this.cache.put(incomingState.getKey(), Pair.create(new WeakReference<>(presenter), new WeakReference<>(view)));
 
-                    if (incomingState.getKey() instanceof DetailsScreen.Key) ((DetailsPresenter)presenter).setModel(((DetailsScreen.Key)incomingState.getKey()).getItem());
+                    presenter.onViewDetached();
+
+                    if (incomingState.getKey() instanceof DetailsScreen.Key && presenter instanceof BindingPresenter) ((BindingPresenter)presenter).bindModel(((DetailsScreen.Key)incomingState.getKey()).getItem());
 
                     this.subscribe(presenter, view);
                     this.dispatch((View)view, incomingState, callback);
@@ -96,13 +103,14 @@ final class FlowController {
         if (Flow.get(this.activity).goBack()) return true;
 
         final View view = ((ViewGroup)this.activity.findViewById(android.R.id.content)).getChildAt(0);
-        if (view instanceof ScreenPresenter.View) return ((ScreenPresenter.View)view).goBack();
-
-        return false;
+        return view instanceof ScreenPresenter.View && ((ScreenPresenter.View)view).goBack();
     }
 
     void onDestroy() {
         this.cache.clear();
+
+        for (final Disposable disposable : this.disposables.values()) disposable.dispose();
+        this.disposables.clear();
     }
 
     private void dispatch(@NonNull final View view, @NonNull final State incomingState, @NonNull final TraversalCallback callback) {
@@ -115,18 +123,24 @@ final class FlowController {
 
     @SuppressWarnings("unchecked")
     private void subscribe(@NonNull final Presenter presenter, @NonNull final Presenter.View view) {
-        if (view.attachments() != null) view.attachments().subscribe(
+        if (view.attachments() != null) this.manageDisposable(view.attachments(), view.attachments().subscribe(
             isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
             error -> {
                 if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
             }
-        );
+        ));
 
-        if (view.detachments() != null) view.detachments().subscribe(
+        if (view.detachments() != null) this.manageDisposable(view.detachments(), view.detachments().subscribe(
             irrelevant -> presenter.onViewDetached(),
             error -> {
                 if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
             }
-        );
+        ));
+    }
+
+    private void manageDisposable(@NonNull final Object key, @NonNull final Disposable disposable) {
+        if (this.disposables.containsKey(key)) this.disposables.get(key).dispose();
+
+        this.disposables.put(key, disposable);
     }
 }

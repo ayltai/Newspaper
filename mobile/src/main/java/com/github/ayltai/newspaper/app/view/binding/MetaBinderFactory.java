@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.app.widget.MetaView;
 import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.view.binding.PresentationBinderFactory;
 
 public final class MetaBinderFactory extends PresentationBinderFactory<Item, MetaView, ItemPresenter<MetaView>> {
@@ -22,6 +23,6 @@ public final class MetaBinderFactory extends PresentationBinderFactory<Item, Met
 
     @Override
     public boolean isNeeded(@Nullable final Item model) {
-        return model != null;
+        return model instanceof NewsItem;
     }
 }
