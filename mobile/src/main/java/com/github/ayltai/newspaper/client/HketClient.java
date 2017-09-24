@@ -24,7 +24,6 @@ import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 
-import io.reactivex.Maybe;
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 
@@ -108,11 +107,11 @@ final class HketClient extends Client {
     @WorkerThread
     @NonNull
     @Override
-    public Maybe<NewsItem> updateItem(@NonNull final NewsItem item) {
+    public Single<NewsItem> updateItem(@NonNull final NewsItem item) {
         final boolean isChinaNews  = item.getLink().startsWith(HketClient.CHINA_BASE_URI);
         final boolean isInvestNews = item.getLink().startsWith(HketClient.INVEST_BASE_URI);
 
-        return Maybe.create(emitter -> this.apiService
+        return Single.create(emitter -> this.apiService
             .getHtml(item.getLink())
             .compose(RxUtils.applyObservableBackgroundSchedulers())
             .subscribe(

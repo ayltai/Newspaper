@@ -22,8 +22,8 @@ import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 
-import io.reactivex.Maybe;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 
 final class MingPaoClient extends RssClient {
@@ -52,7 +52,7 @@ final class MingPaoClient extends RssClient {
     @WorkerThread
     @NonNull
     @Override
-    public Maybe<NewsItem> updateItem(@NonNull final NewsItem item) {
+    public Single<NewsItem> updateItem(@NonNull final NewsItem item) {
         final String[] tokens    = item.getLink().substring(MingPaoClient.BASE_URI.length()).split(MingPaoClient.SLASH);
         final boolean  isInstant = item.getLink().contains("/ins/");
 
@@ -65,7 +65,7 @@ final class MingPaoClient extends RssClient {
             .map(html -> MingPaoClient.BASE_URI + MingPaoClient.DATA + tokens[0] + MingPaoClient.SLASH + tokens[0] + MingPaoClient.UNDERSCORE + tokens[2] + MingPaoClient.SLASH + tokens[3] + MingPaoClient.ONE_SLASH + tokens[4] + new JSONObject(html).getJSONObject((tokens[0] + MingPaoClient.UNDERSCORE + tokens[2]).toUpperCase()).getJSONObject("1 " + tokens[4]).getString("E").toLowerCase() + "/todaycontent_" + tokens[6] + MingPaoClient.JS_EXTENSION)
             .flatMap(this.apiService::getHtml);
 
-        return Maybe.create(emitter -> url.compose(RxUtils.applyObservableBackgroundSchedulers())
+        return Single.create(emitter -> url.compose(RxUtils.applyObservableBackgroundSchedulers())
             .map(JSONObject::new)
             .subscribe(
                 json -> {

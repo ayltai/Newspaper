@@ -20,7 +20,6 @@ import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.util.TestUtils;
 
-import io.reactivex.Maybe;
 import io.reactivex.MaybeEmitter;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
@@ -48,7 +47,7 @@ public abstract class Client {
 
     @WorkerThread
     @NonNull
-    public abstract Maybe<NewsItem> updateItem(@NonNull NewsItem item);
+    public abstract Single<NewsItem> updateItem(@NonNull NewsItem item);
 
     @Nullable
     protected final String getCategoryName(@NonNull final String url) {

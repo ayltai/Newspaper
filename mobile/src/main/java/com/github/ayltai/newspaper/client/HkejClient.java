@@ -14,7 +14,7 @@ import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 
-import io.reactivex.Maybe;
+import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 
 final class HkejClient extends RssClient {
@@ -33,8 +33,8 @@ final class HkejClient extends RssClient {
     @WorkerThread
     @NonNull
     @Override
-    public Maybe<NewsItem> updateItem(@NonNull final NewsItem item) {
-        return Maybe.create(emitter -> this.apiService
+    public Single<NewsItem> updateItem(@NonNull final NewsItem item) {
+        return Single.create(emitter -> this.apiService
             .getHtml(item.getLink())
             .compose(RxUtils.applyObservableBackgroundSchedulers())
             .subscribe(

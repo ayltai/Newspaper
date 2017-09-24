@@ -137,15 +137,19 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
                 Collections.sort(items);
                 return items;
             })
-            .doOnSuccess(items -> {
-                if (this.getRealm() != null) new ItemManager(this.getRealm()).putItems(items)
-                    .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
-                    .subscribe(
-                        irrelevant -> {
-                        },
-                        error -> {
-                            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                        });
+            .flatMap(items -> {
+                if (this.isValid()) {
+                    return Single.create(e -> new ItemManager(this.getRealm())
+                        .putItems(items)
+                        .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
+                        .subscribe(
+                            e::onSuccess,
+                            error -> {
+                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            }));
+                } else {
+                    return Single.just(items);
+                }
             })
             .subscribe(
                 emitter::onNext,
