@@ -22,6 +22,7 @@ import android.view.animation.AnimationUtils;
 import com.google.auto.value.AutoValue;
 
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.app.widget.FilterView;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.ListView;
@@ -177,6 +178,11 @@ public final class MainScreen extends Screen implements MainPresenter.View {
     public void refresh() {
         final ListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
         if (view != null) view.refresh();
+    }
+
+    @Override
+    public void filter() {
+        new FilterView(this.getContext()).show();
     }
 
     private void init() {

@@ -46,6 +46,12 @@
         name="emptyBackgroundBottom"
         format="color" />
     <attr
+        name="roundedRectangle"
+        format="reference" />
+    <attr
+        name="textOption"
+        format="reference" />
+    <attr
         name="ic_up_24dp"
         format="reference" />
     <attr

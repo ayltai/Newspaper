@@ -206,6 +206,7 @@ dependencies {
     compile "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
 
     compile 'com.squareup.flow:flow:1.0.0-alpha3'
+    compile 'com.nex3z:flow-layout:1.0.0'
 
     // Eye candies
     compile 'io.supercharge:shimmerlayout:1.0.2'
