@@ -31,6 +31,8 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         @Nullable
         Flowable<Irrelevant> shareClicks();
 
+        void share(@NonNull String url);
+
         void showImage(@NonNull String url);
     }
 
@@ -91,7 +93,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     }
 
     protected void onShareClick() {
-        // TODO: Shows a bottom sheet dialog
+        if (this.getView() != null) this.getView().share(this.getModel().getLink());
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Build;
@@ -236,6 +237,11 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.videoContainer.removeAllViews();
 
         // TODO
+    }
+
+    @Override
+    public void share(@NonNull final String url) {
+        this.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT, url).setType("text/plain"), this.getContext().getText(R.string.share_to)));
     }
 
     @Override

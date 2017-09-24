@@ -5,7 +5,7 @@
     <string name="error_no_connection">沒有網絡連接</string>
     <string name="empty_bookmark_title">你還沒有任何喜歡的新聞</string>
     <string name="empty_bookmark_description">點擊書籤圖標可收集新聞到此處</string>
-    <string name="view_via">查看通過…</string>
+    <string name="view_via">查看…</string>
     <string name="share_to">分享給…</string>
     <string name="update_indicator">有新的新聞</string>
     <string name="loading_indicator">下載中…</string>
