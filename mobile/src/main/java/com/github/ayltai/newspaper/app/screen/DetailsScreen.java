@@ -17,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,6 +150,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setTitle(@Nullable final CharSequence title) {
         if (TextUtils.isEmpty(title)) {
@@ -156,18 +158,19 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             this.collapsingToolbarLayout.setTitle("");
         } else {
             this.title.setVisibility(View.VISIBLE);
-            this.title.setText(title);
-            this.collapsingToolbarLayout.setTitle(title);
+            this.title.setText(Html.fromHtml(title.toString()));
+            this.collapsingToolbarLayout.setTitle(Html.fromHtml(title.toString()));
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setDescription(@Nullable final CharSequence description) {
         if (TextUtils.isEmpty(description)) {
             this.description.setVisibility(View.GONE);
         } else {
             this.description.setVisibility(View.VISIBLE);
-            this.description.setText(description);
+            this.description.setText(Html.fromHtml(description.toString()));
         }
     }
 
@@ -199,6 +202,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setImages(@NonNull final List<Image> images) {
         this.imageContainer.removeAllViews();
@@ -210,7 +214,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             if (TextUtils.isEmpty(images.get(0).getDescription())) {
                 this.toolbarBackground.setVisibility(View.GONE);
             } else {
-                this.toolbarTitle.setText(images.get(0).getDescription());
+                this.toolbarTitle.setText(Html.fromHtml(images.get(0).getDescription()));
                 this.toolbarBackground.setVisibility(View.VISIBLE);
             }
 
@@ -224,7 +228,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
                     this.subscribeImage(imageView, image);
 
-                    if (!TextUtils.isEmpty(image.getDescription())) description.setText(image.getDescription());
+                    if (!TextUtils.isEmpty(image.getDescription())) description.setText(Html.fromHtml(image.getDescription()));
 
                     this.imagesContainer.addView(view);
                 }

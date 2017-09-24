@@ -6,6 +6,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,16 +43,18 @@ public final class ContentView extends ItemView {
         this.image.getSSIV().setZoomEnabled(false);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setTitle(@Nullable final CharSequence title) {
         if (TextUtils.isEmpty(title)) {
             this.title.setVisibility(View.GONE);
         } else {
             this.title.setVisibility(View.VISIBLE);
-            this.title.setText(title);
+            this.title.setText(Html.fromHtml(title.toString()));
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setDescription(@Nullable final CharSequence description) {
         if (TextUtils.isEmpty(description)) {
@@ -59,7 +62,7 @@ public final class ContentView extends ItemView {
             this.title.setMaxLines(2);
         } else {
             this.description.setVisibility(View.VISIBLE);
-            this.description.setText(description);
+            this.description.setText(Html.fromHtml(description.toString()));
             this.title.setMaxLines(1);
         }
     }
