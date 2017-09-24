@@ -31,6 +31,8 @@ public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.Vie
 
     @Override
     protected void resetState() {
+        super.resetState();
+
         this.forceRefresh = true;
     }
 

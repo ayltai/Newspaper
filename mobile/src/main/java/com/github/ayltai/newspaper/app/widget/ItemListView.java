@@ -90,6 +90,11 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
     }
 
     @Override
+    public void scrollTo(final int scrollPosition) {
+        if (scrollPosition > 0) this.recyclerView.scrollToPosition(scrollPosition);
+    }
+
+    @Override
     public void showLoadingView() {
         super.showLoadingView();
 

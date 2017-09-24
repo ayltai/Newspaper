@@ -23,6 +23,8 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
 
         void refresh();
 
+        void scrollTo(int scrollPosition);
+
         void showEmptyView();
 
         void showLoadingView();
@@ -39,9 +41,12 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
         Flowable<Integer> bestVisibleItemPositionChanges();
     }
 
+    private int scrollPosition;
+
     public abstract Flowable<List<M>> load();
 
     protected void resetState() {
+        this.scrollPosition = 0;
     }
 
     @Override
@@ -71,9 +76,13 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
                     error -> {
                         if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                     }));
+        } else {
+            view.scrollTo(this.scrollPosition);
         }
 
         this.subscribePullToRefreshes(view);
+
+        this.manageDisposable(view.bestVisibleItemPositionChanges().subscribe(scrollPosition -> this.scrollPosition = scrollPosition));
     }
 
     private void subscribePullToRefreshes(@NonNull final V view) {

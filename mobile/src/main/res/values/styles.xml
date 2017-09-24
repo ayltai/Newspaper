@@ -111,6 +111,6 @@
     <style
         name="TransparentText"
         parent="@android:style/TextAppearance">
-        <item name="android:textColor">#00000000</item>
+        <item name="android:textColor">#00ffffff</item>
     </style>
 </resources>
