@@ -108,4 +108,9 @@
         <item name="android:layout_width">@dimen/iconSmall</item>
         <item name="android:layout_height">@dimen/iconSmall</item>
     </style>
+    <style
+        name="TransparentText"
+        parent="@android:style/TextAppearance">
+        <item name="android:textColor">#00000000</item>
+    </style>
 </resources>

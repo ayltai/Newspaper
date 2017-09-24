@@ -9,12 +9,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,17 +76,21 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     //region Components
 
-    private final Toolbar          toolbar;
-    private final ViewGroup        imageContainer;
-    private final SimpleDraweeView avatar;
-    private final TextView         source;
-    private final TextView         publishDate;
-    private final TextView         title;
-    private final TextView         description;
-    private final ImageView        bookmarkAction;
-    private final ImageView        shareAction;
-    private final ViewGroup        imagesContainer;
-    private final ViewGroup        videoContainer;
+    private final CollapsingToolbarLayout collapsingToolbarLayout;
+    private final View                    toolbarView;
+    private final BigImageView            toolbarImage;
+    private final TextView                toolbarTitle;
+    private final View                    toolbarBackground;
+    private final ViewGroup               imageContainer;
+    private final SimpleDraweeView        avatar;
+    private final TextView                source;
+    private final TextView                publishDate;
+    private final TextView                title;
+    private final TextView                description;
+    private final ImageView               bookmarkAction;
+    private final ImageView               shareAction;
+    private final ViewGroup               imagesContainer;
+    private final ViewGroup               videoContainer;
 
     //endregion
 
@@ -96,17 +101,24 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         final View view = LayoutInflater.from(context).inflate(R.layout.screen_news_details, this, true);
 
-        this.toolbar         = view.findViewById(R.id.toolbar);
-        this.imageContainer  = view.findViewById(R.id.image_container);
-        this.avatar          = view.findViewById(R.id.avatar);
-        this.source          = view.findViewById(R.id.source);
-        this.publishDate     = view.findViewById(R.id.publish_date);
-        this.title           = view.findViewById(R.id.title);
-        this.description     = view.findViewById(R.id.description);
-        this.bookmarkAction  = view.findViewById(R.id.action_bookmark);
-        this.shareAction     = view.findViewById(R.id.action_share);
-        this.imagesContainer = view.findViewById(R.id.images_container);
-        this.videoContainer  = view.findViewById(R.id.video_container);
+        this.collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbarLayout);
+        this.imageContainer          = view.findViewById(R.id.image_container);
+        this.avatar                  = view.findViewById(R.id.avatar);
+        this.source                  = view.findViewById(R.id.source);
+        this.publishDate             = view.findViewById(R.id.publish_date);
+        this.title                   = view.findViewById(R.id.title);
+        this.description             = view.findViewById(R.id.description);
+        this.bookmarkAction          = view.findViewById(R.id.action_bookmark);
+        this.shareAction             = view.findViewById(R.id.action_share);
+        this.imagesContainer         = view.findViewById(R.id.images_container);
+        this.videoContainer          = view.findViewById(R.id.video_container);
+
+        this.toolbarView       = LayoutInflater.from(this.getContext()).inflate(R.layout.widget_toolbar, this.imageContainer, false);
+        this.toolbarImage      = this.toolbarView.findViewById(R.id.image);
+        this.toolbarTitle      = this.toolbarView.findViewById(R.id.title);
+        this.toolbarBackground = this.toolbarView.findViewById(R.id.title_background);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) this.collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.TransparentText);
     }
 
     @Override
@@ -138,9 +150,11 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     public void setTitle(@Nullable final CharSequence title) {
         if (TextUtils.isEmpty(title)) {
             this.title.setVisibility(View.GONE);
+            this.collapsingToolbarLayout.setTitle("");
         } else {
             this.title.setVisibility(View.VISIBLE);
             this.title.setText(title);
+            this.collapsingToolbarLayout.setTitle(title);
         }
     }
 
@@ -188,10 +202,29 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.imagesContainer.removeAllViews();
 
         if (!images.isEmpty()) {
-            this.subscribeImage(this.imageContainer, images.get(0));
+            this.subscribeImage(this.toolbarImage, images.get(0));
+
+            if (TextUtils.isEmpty(images.get(0).getDescription())) {
+                this.toolbarBackground.setVisibility(View.GONE);
+            } else {
+                this.toolbarTitle.setText(images.get(0).getDescription());
+                this.toolbarBackground.setVisibility(View.VISIBLE);
+            }
+
+            this.imageContainer.addView(this.toolbarView);
 
             if (images.size() > 1) {
-                for (final Image image : images.subList(1, images.size() - 1)) this.subscribeImage(this.imagesContainer, image);
+                for (final Image image : images.subList(1, images.size() - 1)) {
+                    final View         view        = LayoutInflater.from(this.getContext()).inflate(R.layout.widget_image, this.imagesContainer, false);
+                    final BigImageView imageView   = view.findViewById(R.id.image);
+                    final TextView     description = view.findViewById(R.id.description);
+
+                    this.subscribeImage(imageView, image);
+
+                    if (!TextUtils.isEmpty(image.getDescription())) description.setText(image.getDescription());
+
+                    this.imagesContainer.addView(view);
+                }
             }
         }
     }
@@ -278,8 +311,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.disposables.add(disposable);
     }
 
-    private void subscribeImage(@NonNull final ViewGroup parent, @NonNull final Image image) {
-        final BigImageView imageView = (BigImageView)LayoutInflater.from(this.getContext()).inflate(R.layout.widget_image, parent, false);
+    private void subscribeImage(@NonNull final BigImageView imageView, @NonNull final Image image) {
         imageView.getSSIV().setMaxScale(Constants.IMAGE_ZOOM_MAX);
         imageView.getSSIV().setPanEnabled(false);
         imageView.getSSIV().setZoomEnabled(false);
@@ -287,7 +319,5 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         imageView.showImage(Uri.parse(image.getUrl()));
 
         this.manageDisposable(RxView.clicks(imageView).subscribe(irrelevant -> this.imageClicks.onNext(image)));
-
-        parent.addView(imageView);
     }
 }
