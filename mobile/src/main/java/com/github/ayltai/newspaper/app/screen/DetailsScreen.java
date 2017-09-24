@@ -1,7 +1,5 @@
 package com.github.ayltai.newspaper.app.screen;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -35,14 +33,12 @@ import com.github.ayltai.newspaper.data.model.Video;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.view.ScreenPresenter;
 import com.github.piasy.biv.view.BigImageView;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import flow.ClassKey;
 import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 import xyz.hanks.library.SmallBang;
@@ -71,8 +67,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     private final FlowableProcessor<Irrelevant> backNavigations = PublishProcessor.create();
 
     //endregion
-
-    private final List<Disposable> disposables = Collections.synchronizedList(new ArrayList<>());
 
     //region Components
 
@@ -300,15 +294,9 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     @CallSuper
     @Override
     protected void onDetachedFromWindow() {
-        RxUtils.resetDisposables(this.disposables);
+        super.onDetachedFromWindow();
 
         this.smallBang = null;
-
-        super.onDetachedFromWindow();
-    }
-
-    private void manageDisposable(@NonNull final Disposable disposable) {
-        this.disposables.add(disposable);
     }
 
     private void subscribeImage(@NonNull final BigImageView imageView, @NonNull final Image image) {

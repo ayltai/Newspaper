@@ -30,12 +30,9 @@ import com.github.ayltai.newspaper.util.TestUtils;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Single;
-import io.reactivex.disposables.Disposable;
 
 public final class FeaturedView extends ItemView {
     public static final int VIEW_TYPE = R.id.view_type_featured;
-
-    private Disposable disposable;
 
     //region Components
 
@@ -117,19 +114,8 @@ public final class FeaturedView extends ItemView {
     @CallSuper
     @Override
     protected void onAttachedToWindow() {
-        this.disposable = RxView.clicks(this.image).subscribe(irrelevant -> this.clicks.onNext(Irrelevant.INSTANCE));
+        this.manageDisposable(RxView.clicks(this.image).subscribe(irrelevant -> this.clicks.onNext(Irrelevant.INSTANCE)));
 
         super.onAttachedToWindow();
-    }
-
-    @CallSuper
-    @Override
-    protected void onDetachedFromWindow() {
-        if (this.disposable != null && this.disposable.isDisposed()) {
-            this.disposable.dispose();
-            this.disposable = null;
-        }
-
-        super.onDetachedFromWindow();
     }
 }

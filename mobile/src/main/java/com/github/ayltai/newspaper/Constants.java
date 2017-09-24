@@ -17,7 +17,8 @@ public final class Constants {
     public static final long CACHE_SIZE_MAX_SMALLER  = 8 * 1024 * 1024;
     public static final long CACHE_SIZE_MAX_SMALLEST = 4 * 1024 * 1024;
 
-    public static final int IMAGE_ZOOM_MAX = 8;
+    public static final int FEATURED_IMAGE_ROTATION = 5;
+    public static final int IMAGE_ZOOM_MAX          = 8;
 
     public static final int VIEW_STYLE_COMPACT = 0;
     public static final int VIEW_STYLE_COZY    = 1;

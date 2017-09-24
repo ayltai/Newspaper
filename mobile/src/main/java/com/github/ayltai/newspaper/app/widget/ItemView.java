@@ -14,19 +14,17 @@ import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.Video;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.widget.BaseView;
+import com.github.ayltai.newspaper.widget.ObservableView;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public class ItemView extends BaseView implements ItemPresenter.View {
+public class ItemView extends ObservableView implements ItemPresenter.View {
     protected final FlowableProcessor<Irrelevant> clicks = PublishProcessor.create();
 
-    protected View       container;
-    protected Disposable disposable;
+    protected View container;
 
     public ItemView(@NonNull final Context context) {
         super(context);
@@ -136,26 +134,11 @@ public class ItemView extends BaseView implements ItemPresenter.View {
 
     //endregion
 
-    //region Lifecycle
-
     @CallSuper
     @Override
     protected void onAttachedToWindow() {
-        if (this.container != null) this.disposable = RxView.clicks(this.container).subscribe(irrelevant -> this.clicks.onNext(Irrelevant.INSTANCE));
+        if (this.container != null) this.manageDisposable(RxView.clicks(this.container).subscribe(irrelevant -> this.clicks.onNext(Irrelevant.INSTANCE)));
 
         super.onAttachedToWindow();
     }
-
-    @CallSuper
-    @Override
-    protected void onDetachedFromWindow() {
-        if (this.disposable != null && this.disposable.isDisposed()) {
-            this.disposable.dispose();
-            this.disposable = null;
-        }
-
-        super.onDetachedFromWindow();
-    }
-
-    //endregion
 }
