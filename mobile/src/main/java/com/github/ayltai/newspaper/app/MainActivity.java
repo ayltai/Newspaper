@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.view.MenuItem;
 
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
@@ -62,6 +63,17 @@ public final class MainActivity extends AppCompatActivity {
         if (this.controller == null) this.controller = new FlowController(this);
 
         super.attachBaseContext(this.controller.attachNewBase(ViewPumpContextWrapper.wrap(newBase)));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.onBackPressed();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

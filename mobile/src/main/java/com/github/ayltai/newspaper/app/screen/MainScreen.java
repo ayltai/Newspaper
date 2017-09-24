@@ -183,7 +183,7 @@ public final class MainScreen extends Screen implements MainPresenter.View {
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, true);
 
         this.toolbar       = view.findViewById(R.id.toolbar);
-        this.upAction = view.findViewById(R.id.action_up);
+        this.upAction      = view.findViewById(R.id.action_up);
         this.refreshAction = view.findViewById(R.id.action_refresh);
         this.filterAction  = view.findViewById(R.id.action_filter);
         this.moreAction    = view.findViewById(R.id.action_more);
