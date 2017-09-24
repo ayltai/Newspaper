@@ -30,6 +30,8 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     public interface View extends ItemPresenter.View {
         @Nullable
         Flowable<Irrelevant> shareClicks();
+
+        void showImage(@NonNull String url);
     }
 
     @UiThread
@@ -94,7 +96,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
 
     @Override
     protected void onImageClick(@NonNull final Image image) {
-        // TODO
+        if (this.getView() != null) this.getView().showImage(image.getUrl());
     }
 
     @Override

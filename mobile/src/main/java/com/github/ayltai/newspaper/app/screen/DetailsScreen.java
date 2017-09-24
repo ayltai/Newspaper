@@ -39,6 +39,7 @@ import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.ayltai.newspaper.view.ScreenPresenter;
 import com.github.piasy.biv.view.BigImageView;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import flow.ClassKey;
 import io.reactivex.Flowable;
@@ -238,6 +239,13 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     }
 
     @Override
+    public void showImage(@NonNull final String url) {
+        new ImageViewer.Builder<>(this.getContext(), new String[] { url })
+            .allowSwipeToDismiss(false)
+            .show();
+    }
+
+    @Override
     public boolean goBack() {
         this.backNavigations.onNext(Irrelevant.INSTANCE);
 
@@ -320,6 +328,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         imageView.showImage(Uri.parse(image.getUrl()));
 
-        this.manageDisposable(RxView.clicks(imageView).subscribe(irrelevant -> this.imageClicks.onNext(image)));
+        imageView.setOnClickListener(view -> this.imageClicks.onNext(image));
+        this.manageDisposable(RxView.clicks((View)imageView.getParent()).subscribe(irrelevant -> this.imageClicks.onNext(image)));
     }
 }

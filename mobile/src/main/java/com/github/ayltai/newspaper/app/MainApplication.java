@@ -62,6 +62,7 @@ public final class MainApplication extends MultiDexApplication {
                 .build()
                 .httpClient())
             .setDownsampleEnabled(true)
+            .setResizeAndRotateEnabledForNetwork(true)
             .setExecutorSupplier(new DefaultExecutorSupplier(Runtime.getRuntime().availableProcessors()))
             .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
             .setRequestListeners(Collections.singleton(new RequestLoggingListener()))
