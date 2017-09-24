@@ -14,11 +14,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.data.model.Video;
 import com.github.ayltai.newspaper.net.ApiService;
+import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 
@@ -62,8 +64,10 @@ final class MingPaoClient extends RssClient {
             : this.apiService
             .getHtml(MingPaoClient.BASE_URI + MingPaoClient.DATA + tokens[0] + "/issuelist" + MingPaoClient.JS_EXTENSION)
             .compose(RxUtils.applyObservableBackgroundSchedulers())
+            .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
             .map(html -> MingPaoClient.BASE_URI + MingPaoClient.DATA + tokens[0] + MingPaoClient.SLASH + tokens[0] + MingPaoClient.UNDERSCORE + tokens[2] + MingPaoClient.SLASH + tokens[3] + MingPaoClient.ONE_SLASH + tokens[4] + new JSONObject(html).getJSONObject((tokens[0] + MingPaoClient.UNDERSCORE + tokens[2]).toUpperCase()).getJSONObject("1 " + tokens[4]).getString("E").toLowerCase() + "/todaycontent_" + tokens[6] + MingPaoClient.JS_EXTENSION)
-            .flatMap(this.apiService::getHtml);
+            .flatMap(this.apiService::getHtml)
+            .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry));
 
         return Single.create(emitter -> url.compose(RxUtils.applyObservableBackgroundSchedulers())
             .map(JSONObject::new)
@@ -86,7 +90,7 @@ final class MingPaoClient extends RssClient {
                     emitter.onSuccess(item);
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
                     emitter.onError(error);
                 }

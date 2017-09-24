@@ -15,11 +15,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.data.model.Video;
 import com.github.ayltai.newspaper.net.ApiService;
+import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -57,6 +59,7 @@ final class AppleDailyClient extends Client {
         return Single.create(emitter -> this.apiService
             .getHtml(url)
             .compose(RxUtils.applyObservableBackgroundSchedulers())
+            .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
             .subscribe(
                 html -> {
                     final String[]       sections = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"itemContainer\">", "<div class=\"clear\"></div>"), "div class=\"item\">", AppleDailyClient.TAG_DIV);
@@ -92,7 +95,7 @@ final class AppleDailyClient extends Client {
                     emitter.onSuccess(this.filter(items));
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
 
                     emitter.onError(error);
                 }
@@ -109,6 +112,7 @@ final class AppleDailyClient extends Client {
             this.apiService
                 .getHtml(item.getLink())
                 .compose(RxUtils.applyObservableBackgroundSchedulers())
+                .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
                 .subscribe(
                     fullHtml -> {
                         final String      html            = StringUtils.substringBetween(fullHtml, "!-- START ARTILCLE CONTENT -->", "<!-- END ARTILCLE CONTENT -->");
@@ -141,7 +145,7 @@ final class AppleDailyClient extends Client {
                         emitter.onSuccess(item);
                     },
                     error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
                         emitter.onError(error);
                     }

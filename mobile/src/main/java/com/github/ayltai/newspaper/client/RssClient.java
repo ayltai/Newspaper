@@ -8,9 +8,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.net.ApiService;
+import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.rss.RssFeed;
 import com.github.ayltai.newspaper.rss.RssItem;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -33,6 +35,7 @@ public abstract class RssClient extends Client {
         return Single.create(emitter -> this.apiService
             .getFeed(url)
             .compose(RxUtils.applyObservableBackgroundSchedulers())
+            .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
             .map(feed -> this.filter(url, feed))
             .subscribe(
                 items -> {
@@ -46,7 +49,7 @@ public abstract class RssClient extends Client {
                     emitter.onSuccess(items);
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
 
                     emitter.onError(error);
                 }

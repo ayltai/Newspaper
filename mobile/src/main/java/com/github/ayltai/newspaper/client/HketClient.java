@@ -14,12 +14,14 @@ import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.data.model.Video;
 import com.github.ayltai.newspaper.net.ApiService;
+import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -68,6 +70,7 @@ final class HketClient extends Client {
         return Single.create(emitter -> this.apiService
             .getHtml(url)
             .compose(RxUtils.applyObservableBackgroundSchedulers())
+            .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
             .subscribe(
                 html -> {
                     final String[]       sections = StringUtils.substringsBetween(StringUtils.substringBetween(html, "<div class=\"section-listing-widget\">", "<div class=\"pagination-widget\">"), "<div class=\"article-listing\">", "</a>");
@@ -100,6 +103,11 @@ final class HketClient extends Client {
                     }
 
                     emitter.onSuccess(this.filter(items));
+                },
+                error -> {
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
+
+                    emitter.onError(error);
                 }
             ));
     }
@@ -114,6 +122,7 @@ final class HketClient extends Client {
         return Single.create(emitter -> this.apiService
             .getHtml(item.getLink())
             .compose(RxUtils.applyObservableBackgroundSchedulers())
+            .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
             .subscribe(
                 html -> {
                     html = StringUtils.substringBetween(html, isChinaNews || isInvestNews ? "<div id=\"content-main\">" : "<div class=\"article-detail\">", isChinaNews ? "<div class=\"fb-like\"" : isInvestNews ? "<div class=\"fb-page-like\">" : "<div class=\"article-detail_facebook-like\">");
@@ -140,7 +149,7 @@ final class HketClient extends Client {
                     }
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
                     emitter.onError(error);
                 }

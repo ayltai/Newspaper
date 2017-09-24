@@ -9,10 +9,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Source;
 import com.github.ayltai.newspaper.net.ApiService;
+import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -43,6 +45,7 @@ final class SkyPostClient extends RssClient {
         return Single.create(emitter -> this.apiService
             .getHtml(item.getLink())
             .compose(RxUtils.applyObservableBackgroundSchedulers())
+            .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
             .subscribe(
                 html -> {
                     html = StringUtils.substringBetween(html, "<div class=\"article-title-widget\">", "<div class=\"article-detail_extra-info\">");
@@ -86,7 +89,7 @@ final class SkyPostClient extends RssClient {
                     emitter.onSuccess(item);
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
                     emitter.onError(error);
                 }

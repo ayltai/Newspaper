@@ -1,16 +1,20 @@
 package com.github.ayltai.newspaper.util;
 
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import io.reactivex.FlowableTransformer;
 import io.reactivex.MaybeTransformer;
+import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Scheduler;
 import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public final class RxUtils {
@@ -114,5 +118,21 @@ public final class RxUtils {
         }
 
         disposables.clear();
+    }
+
+    public static Function<Observable<? extends Throwable>, Observable<?>> exponentialBackoff(final int initialDelayInSeconds, final int maxRetries, final Function<Throwable, Boolean> retryIf) {
+        return observable -> observable.zipWith(Observable.range(0, maxRetries), (error, count) -> {
+            if (count == maxRetries) return Pair.create(error, maxRetries);
+
+            if (retryIf.apply(error)) return Pair.create(error, count);
+
+            return Pair.create(error, maxRetries);
+        }).flatMap(pair -> {
+            final int count = pair.second;
+
+            if (count == maxRetries) return Observable.error(pair.first);
+
+            return Observable.timer((long)Math.pow(initialDelayInSeconds, count), TimeUnit.SECONDS);
+        });
     }
 }
