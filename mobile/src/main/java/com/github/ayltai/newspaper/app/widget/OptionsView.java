@@ -12,20 +12,20 @@ import android.view.View;
 
 import com.github.ayltai.newspaper.R;
 
-public final class FilterView extends BottomSheetDialog {
+public final class OptionsView extends BottomSheetDialog {
     //region Constructors
 
-    public FilterView(@NonNull final Context context) {
+    public OptionsView(@NonNull final Context context) {
         super(context);
         this.init();
     }
 
-    public FilterView(@NonNull final Context context, @StyleRes final int theme) {
+    public OptionsView(@NonNull final Context context, @StyleRes final int theme) {
         super(context, theme);
         this.init();
     }
 
-    public FilterView(@NonNull final Context context, final boolean cancelable, final OnCancelListener cancelListener) {
+    public OptionsView(@NonNull final Context context, final boolean cancelable, final OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
         this.init();
     }
@@ -34,7 +34,7 @@ public final class FilterView extends BottomSheetDialog {
 
     @SuppressLint("InflateParams")
     private void init() {
-        final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_filter, null);
+        final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_options, null);
 
         final ViewPager viewPager = view.findViewById(R.id.viewPager);
         viewPager.setAdapter(new FilterAdapter(this.getContext()));

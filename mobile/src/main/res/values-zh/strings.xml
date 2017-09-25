@@ -40,7 +40,7 @@
     <!-- Preferences -->
     <string name="pref_general">一般</string>
     <string name="pref_design">設計</string>
-    <string name="pref_compact_layout">密集設計</string>
+    <string name="pref_cozy_layout">舒適設計</string>
     <string name="pref_dark_theme">深色主題</string>
     <string name="pref_header_image_enabled">顯示標題圖像</string>
     <string name="pref_panorama_enabled">啟用全景效果</string>
