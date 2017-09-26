@@ -73,7 +73,7 @@ public final class TextOptionsView extends ObservableView implements OptionsPres
     }
 
     private void init() {
-        final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_flow_layout, this, true);
+        final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.widget_flow_layout, this, true);
         this.container = view.findViewById(R.id.flowLayout);
     }
 

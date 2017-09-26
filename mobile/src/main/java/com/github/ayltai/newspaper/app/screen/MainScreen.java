@@ -1,8 +1,10 @@
 package com.github.ayltai.newspaper.app.screen;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.AttrRes;
@@ -22,6 +24,7 @@ import android.view.animation.AnimationUtils;
 import com.google.auto.value.AutoValue;
 
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.widget.OptionsView;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.Irrelevant;
@@ -182,7 +185,19 @@ public final class MainScreen extends Screen implements MainPresenter.View {
 
     @Override
     public void filter() {
-        new OptionsView(this.getContext()).show();
+        final OptionsView view = new OptionsView(this.getContext());
+
+        this.manageDisposable(view.cancelClicks().subscribe(irrelevant -> view.dismiss()));
+        this.manageDisposable(view.okClicks().subscribe(irrelevant -> {
+            view.dismiss();
+
+            final Activity activity = this.getActivity();
+            if (activity != null) activity.finish();
+
+            this.getContext().startActivity(new Intent(this.getContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+        }));
+
+        view.show();
     }
 
     private void init() {

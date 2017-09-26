@@ -76,7 +76,7 @@ public final class SwitchOptionsView extends ObservableView implements OptionsPr
     }
 
     private void init() {
-        final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_linear_layout, this, true);
+        final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.widget_linear_layout, this, true);
         this.container = view.findViewById(R.id.linearLayout);
     }
 
