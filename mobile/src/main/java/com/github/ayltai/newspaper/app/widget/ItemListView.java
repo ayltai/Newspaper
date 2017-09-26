@@ -22,7 +22,6 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.util.ViewUtils;
-import com.github.ayltai.newspaper.view.UniversalAdapter;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.jakewharton.rxbinding2.view.RxView;
 
@@ -59,12 +58,6 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
     @Override
     public boolean isDisposed() {
         return false;
-    }
-
-    @Nullable
-    @Override
-    public UniversalAdapter<Item, ?, ?> getAdapter() {
-        return super.getAdapter();
     }
 
     @LayoutRes

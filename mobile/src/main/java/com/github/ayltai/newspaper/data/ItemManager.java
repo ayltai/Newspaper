@@ -5,10 +5,12 @@ import java.util.List;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.github.ayltai.newspaper.data.model.NewsItem;
 
 import io.reactivex.Single;
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
@@ -63,6 +65,24 @@ public final class ItemManager extends DataManager {
             this.getRealm().commitTransaction();
 
             emitter.onSuccess(newItems);
+        });
+    }
+
+    @NonNull
+    public Single<List<NewsItem>> filter(@Nullable final CharSequence searchText, @Nullable final String[] sources, @Nullable final String[] categories) {
+        return Single.create(emitter -> {
+            final RealmQuery<NewsItem> query = this.getRealm().where(NewsItem.class);
+
+            if (!TextUtils.isEmpty(searchText)) query.beginGroup()
+                .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
+                .or()
+                .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
+                .endGroup();
+
+            if (sources != null) query.in(NewsItem.FIELD_SOURCE, sources);
+            if (categories != null) query.in(NewsItem.FIELD_CATEGORY, categories);
+
+            emitter.onSuccess(this.getRealm().copyFromRealm(query.findAll()));
         });
     }
 }

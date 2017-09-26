@@ -25,6 +25,8 @@ import io.realm.annotations.PrimaryKey;
 public class NewsItem extends RealmObject implements Item, Parcelable {
     //region Constants
 
+    public static final String FIELD_TITLE        = "title";
+    public static final String FIELD_DESCRIPTION  = "description";
     public static final String FIELD_SOURCE       = "source";
     public static final String FIELD_CATEGORY     = "category";
     public static final String FIELD_LINK         = "link";

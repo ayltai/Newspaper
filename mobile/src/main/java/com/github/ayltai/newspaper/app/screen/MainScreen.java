@@ -139,7 +139,7 @@ public final class MainScreen extends Screen implements MainPresenter.View {
         }
 
         this.manageDisposable(RxSearchView.queryTextChanges(this.searchView).subscribe(newText -> {
-            //this.adapter.getFilter().filter(newText);
+            if (this.adapter != null) this.adapter.getFilter().filter(newText);
         }));
 
         this.manageDisposable(RxView.clicks(this.moreAction).subscribe(irrelevant -> {
@@ -175,7 +175,11 @@ public final class MainScreen extends Screen implements MainPresenter.View {
             if (lifecycleOwner != null) lifecycleOwner.getLifecycle().addObserver(this.adapter);
 
             this.viewPager.setAdapter(this.adapter);
-            this.manageDisposable(RxViewPager.pageSelections(this.viewPager).subscribe(this.pageSelections::onNext));
+            this.manageDisposable(RxViewPager.pageSelections(this.viewPager).subscribe(index -> {
+                this.adapter.setCurrentPosition(index);
+
+                this.pageSelections.onNext(index);
+            }));
 
             this.pageSelections.onNext(0);
         }
