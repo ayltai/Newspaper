@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
 
@@ -51,7 +52,12 @@ public final class MainApplication extends MultiDexApplication {
                 .build())
             .build());
 
-        FirebaseCrash.setCrashCollectionEnabled(!TestUtils.isLoggable());
+        //noinspection CheckStyle
+        try {
+            FirebaseCrash.setCrashCollectionEnabled(!TestUtils.isLoggable());
+        } catch (final RuntimeException e) {
+            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+        }
 
         FLog.setMinimumLoggingLevel(TestUtils.isLoggable() ? FLog.INFO : FLog.ERROR);
 
