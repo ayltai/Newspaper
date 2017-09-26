@@ -19,6 +19,9 @@
         name="textColorInverse"
         format="color" />
     <attr
+        name="textColorDialog"
+        format="color" />
+    <attr
         name="windowBackground"
         format="color" />
     <attr

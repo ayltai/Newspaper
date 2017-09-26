@@ -12,6 +12,7 @@
         android:layout_height="@dimen/compact_item_content_padded_height"
         android:layout_marginBottom="@dimen/space16"
         android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="?attr/cardBackground"
         app:cardCornerRadius="@dimen/compact_card_radius"
         app:cardElevation="@dimen/compact_card_elevation">
         <RelativeLayout

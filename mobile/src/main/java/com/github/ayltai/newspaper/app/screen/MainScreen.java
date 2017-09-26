@@ -23,9 +23,11 @@ import android.view.animation.AnimationUtils;
 
 import com.google.auto.value.AutoValue;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.widget.OptionsView;
+import com.github.ayltai.newspaper.config.UserConfig;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.ListView;
@@ -185,9 +187,10 @@ public final class MainScreen extends Screen implements MainPresenter.View {
 
     @Override
     public void filter() {
-        final OptionsView view = new OptionsView(this.getContext());
+        final OptionsView view = new OptionsView(this.getContext(), UserConfig.getTheme(this.getContext()) == Constants.THEME_LIGHT ? R.style.AppDialogTheme_Light : R.style.AppDialogTheme_Dark);
 
         this.manageDisposable(view.cancelClicks().subscribe(irrelevant -> view.dismiss()));
+
         this.manageDisposable(view.okClicks().subscribe(irrelevant -> {
             view.dismiss();
 

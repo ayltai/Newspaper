@@ -14,6 +14,7 @@
         android:layout_marginEnd="@dimen/space8"
         android:layout_marginTop="@dimen/space4"
         android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="?attr/cardBackground"
         app:cardCornerRadius="@dimen/cozy_card_radius"
         app:cardElevation="@dimen/cozy_card_elevation"
         app:cardUseCompatPadding="true">

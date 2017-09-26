@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
 
+import com.github.ayltai.newspaper.Constants;
+import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.config.UserConfig;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.data.DataModule;
@@ -28,6 +31,8 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.setTheme(UserConfig.getTheme(this) == Constants.THEME_LIGHT ? R.style.AppTheme_Light : R.style.AppTheme_Dark);
 
         Single.<Realm>create(emitter -> emitter.onSuccess(DaggerDataComponent.builder()
             .dataModule(new DataModule(this))

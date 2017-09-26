@@ -111,7 +111,7 @@
         <item name="fontPath">fonts/Lato-Bold.ttf</item>
     </style>
     <style name="Button.Dialog.Primary">
-        <item name="android:textColor">?attr/primaryColor</item>
+        <item name="android:textColor">?attr/textColorDialog</item>
     </style>
     <style
         name="Icon"
