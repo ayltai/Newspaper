@@ -82,6 +82,11 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     //region Properties
 
+    @Nullable
+    protected UniversalAdapter<M, ?, ?> getAdapter() {
+        return this.adapter;
+    }
+
     @LayoutRes
     protected abstract int getLayoutId();
 

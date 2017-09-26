@@ -13,6 +13,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.github.ayltai.newspaper.app.widget.ContentView;
 import com.github.ayltai.newspaper.app.widget.FeaturedView;
@@ -27,7 +29,7 @@ import com.github.ayltai.newspaper.view.binding.BinderFactory;
 import com.github.ayltai.newspaper.view.binding.FullBinderFactory;
 import com.github.ayltai.newspaper.widget.SimpleViewHolder;
 
-public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, SimpleViewHolder<View>> {
+public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, SimpleViewHolder<View>> implements Filterable {
     public static final class Builder {
         private final Collection<BinderFactory<Item>> factories = new ArrayList<>();
         private final Context                         context;
@@ -61,6 +63,8 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
     }
 
     private final Context context;
+
+    private Filter filter;
 
     private ItemListAdapter(@NonNull final Context context, @NonNull final List<FullBinderFactory<Item>> factories) {
         super(factories);
@@ -98,5 +102,11 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
             default:
                 throw new IllegalArgumentException("Unsupported view type: " + viewType);
         }
+    }
+
+    @NonNull
+    @Override
+    public Filter getFilter() {
+        return this.filter == null ? this.filter = null : this.filter;
     }
 }

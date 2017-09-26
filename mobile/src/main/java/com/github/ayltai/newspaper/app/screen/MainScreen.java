@@ -2,6 +2,7 @@ package com.github.ayltai.newspaper.app.screen;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.SearchManager;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.support.annotation.StyleRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -33,6 +35,7 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.github.ayltai.newspaper.widget.Screen;
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import flow.ClassKey;
@@ -62,12 +65,11 @@ public final class MainScreen extends Screen implements MainPresenter.View {
 
     //region Components
 
-    private Toolbar              toolbar;
+    private SearchView           searchView;
     private FloatingActionButton upAction;
     private FloatingActionButton refreshAction;
     private FloatingActionButton filterAction;
     private FloatingActionButton moreAction;
-    private TabLayout            tabLayout;
     private ViewPager            viewPager;
 
     //endregion
@@ -130,6 +132,16 @@ public final class MainScreen extends Screen implements MainPresenter.View {
 
     @Override
     protected void onAttachedToWindow() {
+        final Activity activity = this.getActivity();
+        if (activity != null) {
+            final SearchManager manager = (SearchManager)this.getContext().getSystemService(Context.SEARCH_SERVICE);
+            this.searchView.setSearchableInfo(manager.getSearchableInfo(activity.getComponentName()));
+        }
+
+        this.manageDisposable(RxSearchView.queryTextChanges(this.searchView).subscribe(newText -> {
+            //this.adapter.getFilter().filter(newText);
+        }));
+
         this.manageDisposable(RxView.clicks(this.moreAction).subscribe(irrelevant -> {
             if (this.isMoreActionsShown) {
                 this.hideMoreActions();
@@ -187,7 +199,7 @@ public final class MainScreen extends Screen implements MainPresenter.View {
 
     @Override
     public void filter() {
-        final OptionsView view = new OptionsView(this.getContext(), UserConfig.getTheme(this.getContext()) == Constants.THEME_LIGHT ? R.style.AppDialogTheme_Light : R.style.AppDialogTheme_Dark);
+        final OptionsView view = new OptionsView(this.getContext(), UserConfig.getTheme(this.getContext()) == Constants.THEME_LIGHT ? R.style.AppDialogThemeLight : R.style.AppDialogThemeDark);
 
         this.manageDisposable(view.cancelClicks().subscribe(irrelevant -> view.dismiss()));
 
@@ -206,17 +218,21 @@ public final class MainScreen extends Screen implements MainPresenter.View {
     private void init() {
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, true);
 
-        this.toolbar       = view.findViewById(R.id.toolbar);
         this.upAction      = view.findViewById(R.id.action_up);
         this.refreshAction = view.findViewById(R.id.action_refresh);
         this.filterAction  = view.findViewById(R.id.action_filter);
         this.moreAction    = view.findViewById(R.id.action_more);
-        this.tabLayout     = view.findViewById(R.id.tabLayout);
         this.viewPager     = view.findViewById(R.id.viewPager);
 
-        this.toolbar.inflateMenu(R.menu.main);
+        final Toolbar toolbar = view.findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.main);
 
-        this.tabLayout.setupWithViewPager(this.viewPager, true);
+        this.searchView = (SearchView)toolbar.getMenu().findItem(R.id.action_search).getActionView();
+        this.searchView.setQueryHint(this.getContext().getText(R.string.search_hint));
+        this.searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        final TabLayout tabLayout = view.findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(this.viewPager, true);
     }
 
     private void showMoreActions() {

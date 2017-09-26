@@ -39,6 +39,9 @@
     <string name="empty_news_description">You can read more news in other categories, or you can refresh to try again.</string>
     <string name="empty_news_action">Try again</string>
 
+    <!-- Search -->
+    <string name="search_hint">Search news</string>
+
     <!-- Preferences -->
     <string name="pref_cozy_layout">Cozy layout</string>
     <string name="pref_dark_theme">Dark theme</string>

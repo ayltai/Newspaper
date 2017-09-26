@@ -39,6 +39,9 @@
     <string name="empty_news_description">您可以在其他類別中閱讀更多新聞，也可以刷新再次嘗試。</string>
     <string name="empty_news_action">再試一次</string>
 
+    <!-- Search -->
+    <string name="search_hint">搜尋新聞</string>
+
     <!-- Preferences -->
     <string name="pref_cozy_layout">舒適設計</string>
     <string name="pref_dark_theme">深色主題</string>

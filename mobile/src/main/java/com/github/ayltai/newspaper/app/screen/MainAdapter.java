@@ -15,6 +15,8 @@ import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
@@ -28,11 +30,12 @@ import com.github.ayltai.newspaper.widget.ListView;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-public class MainAdapter extends PagerAdapter implements LifecycleObserver {
+public class MainAdapter extends PagerAdapter implements Filterable, LifecycleObserver {
     private final List<String>                           categories = new ArrayList<>();
     private final SparseArrayCompat<WeakReference<View>> views      = new SparseArrayCompat<>();
 
     private CompositeDisposable disposables;
+    private Filter              filter;
 
     public MainAdapter(@NonNull final Context context) {
         final List<String> categories = UserConfig.getCategories(context);
@@ -40,6 +43,12 @@ public class MainAdapter extends PagerAdapter implements LifecycleObserver {
             final String name = Category.toDisplayName(category);
             if (!this.categories.contains(name)) this.categories.add(name);
         }
+    }
+
+    @NonNull
+    @Override
+    public Filter getFilter() {
+        return this.filter == null ? this.filter = null : this.filter;
     }
 
     @Override
@@ -67,12 +76,9 @@ public class MainAdapter extends PagerAdapter implements LifecycleObserver {
 
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
-        final List<String> categories = new ArrayList<>(2);
-        categories.add(this.categories.get(position));
-        categories.add("即時" + this.categories.get(position));
-
-        final ItemListPresenter presenter = new ItemListPresenter(categories);
-        final ItemListView      view      = UserConfig.getViewStyle(container.getContext()) == Constants.VIEW_STYLE_COZY ? new CozyItemListView(container.getContext()) : new CompactItemListView(container.getContext());
+        final List<String>      categories = new ArrayList<>(Category.fromDisplayName(this.categories.get(position)));
+        final ItemListPresenter presenter  = new ItemListPresenter(categories);
+        final ItemListView      view       = UserConfig.getViewStyle(container.getContext()) == Constants.VIEW_STYLE_COZY ? new CozyItemListView(container.getContext()) : new CompactItemListView(container.getContext());
 
         if (this.disposables == null) this.disposables = new CompositeDisposable();
 
