@@ -1,5 +1,8 @@
 package com.github.ayltai.newspaper.data.model;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -8,6 +11,8 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class Category extends RealmObject implements Parcelable {
+    private static final String REALTIME = "即時";
+
     //region Fields
 
     @PrimaryKey
@@ -18,7 +23,12 @@ public class Category extends RealmObject implements Parcelable {
 
     @NonNull
     public static String toDisplayName(@NonNull final String name) {
-        return name.startsWith("即時") ? name.substring(2) : name;
+        return name.startsWith(Category.REALTIME) ? name.substring(2) : name;
+    }
+
+    @NonNull
+    public static Collection<String> fromDisplayName(@NonNull final String name) {
+        return Arrays.asList(name, Category.REALTIME + name);
     }
 
     //region Constructors

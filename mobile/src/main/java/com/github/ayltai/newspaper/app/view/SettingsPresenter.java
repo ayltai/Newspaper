@@ -17,6 +17,14 @@ import com.github.ayltai.newspaper.view.OptionsPresenter;
 import io.reactivex.Single;
 
 public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresenter.View> {
+    //region Constants
+
+    private static final int INDEX_LAYOUT    = 0;
+    private static final int INDEX_THEME     = 1;
+    private static final int INDEX_AUTO_PLAY = 2;
+
+    //endregion
+
     @NonNull
     @Override
     protected Single<List<Boolean>> load() {
@@ -32,7 +40,24 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
         super.onViewAttached(view, isFirstTimeAttachment);
 
         this.manageDisposable(view.optionsChanges().subscribe(
-            index -> this.optionsChanges.onNext(this.getSettings()),
+            index -> {
+                switch (index) {
+                    case SettingsPresenter.INDEX_LAYOUT:
+                        UserConfig.setViewStyle(view.getContext(), this.getSettings().get(SettingsPresenter.INDEX_LAYOUT) ? Constants.VIEW_STYLE_COMPACT : Constants.VIEW_STYLE_COZY);
+                        break;
+
+                    case SettingsPresenter.INDEX_THEME:
+                        UserConfig.setTheme(view.getContext(), this.getSettings().get(SettingsPresenter.INDEX_THEME) ? Constants.THEME_LIGHT : Constants.THEME_DARK);
+                        break;
+
+                    case SettingsPresenter.INDEX_AUTO_PLAY:
+                        UserConfig.setAutoPlayEnabled(view.getContext(), !this.getSettings().get(SettingsPresenter.INDEX_AUTO_PLAY));
+                        break;
+
+                    default:
+                        break;
+                }
+            },
             error -> {
                 if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
             }
@@ -43,9 +68,9 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
                 .compose(RxUtils.applySingleBackgroundToMainSchedulers())
                 .subscribe(
                     settings -> {
-                        view.addOption(view.getContext().getText(R.string.pref_cozy_layout), settings.get(0));
-                        view.addOption(view.getContext().getText(R.string.pref_dark_theme), settings.get(1));
-                        view.addOption(view.getContext().getText(R.string.pref_auto_play), settings.get(2));
+                        view.addOption(view.getContext().getText(R.string.pref_cozy_layout), settings.get(SettingsPresenter.INDEX_LAYOUT));
+                        view.addOption(view.getContext().getText(R.string.pref_dark_theme), settings.get(SettingsPresenter.INDEX_THEME));
+                        view.addOption(view.getContext().getText(R.string.pref_auto_play), settings.get(SettingsPresenter.INDEX_AUTO_PLAY));
                     },
                     error -> {
                         if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);

@@ -3,11 +3,14 @@ package com.github.ayltai.newspaper.app.view;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArraySet;
 import android.util.Log;
 
 import com.github.ayltai.newspaper.config.UserConfig;
+import com.github.ayltai.newspaper.data.model.Category;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.view.OptionsPresenter;
@@ -25,11 +28,12 @@ public class CategoriesPresenter extends OptionsPresenter<String, OptionsPresent
         if (this.getView() == null) return Single.just(Collections.emptyList());
 
         return Single.create(emitter -> {
-            final List<String> categories = new ArrayList<>(UserConfig.getDefaultCategories(this.getView().getContext()));
+            final List<String> categories   = new ArrayList<>(UserConfig.getDefaultCategories(this.getView().getContext()));
+            final Set<String>  displayNames = new ArraySet<>();
 
-            Collections.sort(categories);
+            for (final String category : categories) displayNames.add(Category.toDisplayName(category));
 
-            emitter.onSuccess(categories);
+            emitter.onSuccess(new ArrayList<>(displayNames));
         });
     }
 
@@ -44,10 +48,10 @@ public class CategoriesPresenter extends OptionsPresenter<String, OptionsPresent
                 final List<String> categories = new ArrayList<>();
 
                 for (int i = 0; i < this.categories.size(); i++) {
-                    if (this.selectedCategories.get(i)) categories.add(this.categories.get(i));
+                    if (this.selectedCategories.get(i)) categories.addAll(Category.fromDisplayName(this.categories.get(i)));
                 }
 
-                this.optionsChanges.onNext(categories);
+                UserConfig.setCategories(view.getContext(), categories);
             },
             error -> {
                 if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);

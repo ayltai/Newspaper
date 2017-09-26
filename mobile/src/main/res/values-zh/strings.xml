@@ -31,6 +31,8 @@
     <string name="action_share">分享</string>
     <string name="action_about">關於</string>
     <string name="action_refresh">更新</string>
+    <string name="action_close">關閉</string>
+    <string name="action_apply">立即套用</string>
 
     <!-- Empty states -->
     <string name="empty_news_title">這裡什麼都沒有</string>

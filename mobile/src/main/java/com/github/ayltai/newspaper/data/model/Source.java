@@ -1,5 +1,9 @@
 package com.github.ayltai.newspaper.data.model;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
@@ -11,6 +15,15 @@ import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 public class Source extends RealmObject implements Parcelable {
+    //region Constants
+
+    private static final String SING_TAO_DAILY    = "星島日報";
+    private static final String SING_TAO_REALTIME = "星島即時";
+    private static final String HEADLINE_DAILY    = "頭條日報";
+    private static final String HEADLINE_REALTIME = "頭條即時";
+
+    //endregion
+
     //region Fields
 
     @PrimaryKey
@@ -24,10 +37,18 @@ public class Source extends RealmObject implements Parcelable {
 
     @NonNull
     public static String toDisplayName(@NonNull final String name) {
-        if ("星島即時".equals(name)) return "星島日報";
-        if ("頭條即時".equals(name)) return "頭條日報";
+        if (Source.SING_TAO_REALTIME.equals(name)) return Source.SING_TAO_DAILY;
+        if (Source.HEADLINE_REALTIME.equals(name)) return Source.HEADLINE_DAILY;
 
         return name;
+    }
+
+    @NonNull
+    public static Collection<String> fromDisplayName(@NonNull final String name) {
+        if (name.equals(Source.SING_TAO_DAILY)) return Arrays.asList(name, Source.SING_TAO_REALTIME);
+        if (name.equals(Source.HEADLINE_DAILY)) return Arrays.asList(name, Source.HEADLINE_REALTIME);
+
+        return Collections.singletonList(name);
     }
 
     //region Constructors

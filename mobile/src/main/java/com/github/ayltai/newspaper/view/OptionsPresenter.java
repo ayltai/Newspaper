@@ -17,13 +17,6 @@ public abstract class OptionsPresenter<M, V extends OptionsPresenter.View> exten
         Flowable<Integer> optionsChanges();
     }
 
-    protected final FlowableProcessor<List<M>> optionsChanges = PublishProcessor.create();
-
-    @NonNull
-    public Flowable<List<M>> optionsChanges() {
-        return this.optionsChanges;
-    }
-
     @NonNull
     protected abstract Single<List<M>> load();
 }

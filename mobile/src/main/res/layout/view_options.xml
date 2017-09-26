@@ -29,14 +29,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space8"
-                android:text="@android:string/cancel"
+                android:text="@string/action_close"
                 style="@style/Widget.AppCompat.Button.Borderless" />
             <Button
                 android:id="@+id/action_ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space8"
-                android:text="@android:string/ok"
+                android:text="@string/action_apply"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored" />
         </LinearLayout>
     </LinearLayout>
