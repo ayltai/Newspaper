@@ -10,15 +10,12 @@ import android.util.Log;
 import com.github.ayltai.newspaper.config.UserConfig;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
-import com.github.ayltai.newspaper.view.TextOptionsPresenter;
+import com.github.ayltai.newspaper.view.OptionsPresenter;
 
 import io.reactivex.Single;
 
-public class CategoryFilterPresenter extends TextOptionsPresenter<String, CategoryFilterPresenter.View> {
-    public interface View extends TextOptionsPresenter.View {
-    }
-
-    private final List<Boolean> selected = new ArrayList<>();
+public class CategoriesPresenter extends OptionsPresenter<String, OptionsPresenter.View> {
+    private final List<Boolean> selectedCategories = new ArrayList<>();
 
     private List<String> categories;
 
@@ -37,20 +34,20 @@ public class CategoryFilterPresenter extends TextOptionsPresenter<String, Catego
     }
 
     @Override
-    public void onViewAttached(@NonNull final CategoryFilterPresenter.View view, final boolean isFirstTimeAttachment) {
+    public void onViewAttached(@NonNull final OptionsPresenter.View view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
-        this.manageDisposable(view.selects().subscribe(
+        this.manageDisposable(view.optionsChanges().subscribe(
             index -> {
-                this.selected.set(index, !this.selected.get(index));
+                this.selectedCategories.set(index, !this.selectedCategories.get(index));
 
                 final List<String> categories = new ArrayList<>();
 
                 for (int i = 0; i < this.categories.size(); i++) {
-                    if (this.selected.get(i)) categories.add(this.categories.get(i));
+                    if (this.selectedCategories.get(i)) categories.add(this.categories.get(i));
                 }
 
-                this.selectionChanges.onNext(categories);
+                this.optionsChanges.onNext(categories);
             },
             error -> {
                 if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
@@ -63,14 +60,14 @@ public class CategoryFilterPresenter extends TextOptionsPresenter<String, Catego
                 .subscribe(
                     categories -> {
                         this.categories = categories;
-                        this.selected.clear();
+                        this.selectedCategories.clear();
 
                         final List<String> selectedCategories = UserConfig.getCategories(view.getContext());
 
                         for (int i = 0; i < categories.size(); i++) {
-                            this.selected.add(selectedCategories.contains(categories.get(i)));
+                            this.selectedCategories.add(selectedCategories.contains(categories.get(i)));
 
-                            view.addText(categories.get(i), this.selected.get(i));
+                            view.addOption(categories.get(i), this.selectedCategories.get(i));
                         }
                     },
                     error -> {

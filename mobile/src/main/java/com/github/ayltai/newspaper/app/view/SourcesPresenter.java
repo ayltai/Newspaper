@@ -11,15 +11,12 @@ import android.util.Log;
 import com.github.ayltai.newspaper.config.UserConfig;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
-import com.github.ayltai.newspaper.view.TextOptionsPresenter;
+import com.github.ayltai.newspaper.view.OptionsPresenter;
 
 import io.reactivex.Single;
 
-public class SourceFilterPresenter extends TextOptionsPresenter<String, SourceFilterPresenter.View> {
-    public interface View extends TextOptionsPresenter.View {
-    }
-
-    private final List<Boolean> selected = new ArrayList<>();
+public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.View> {
+    private final List<Boolean> selectedSources = new ArrayList<>();
 
     private List<String> sources;
 
@@ -38,20 +35,20 @@ public class SourceFilterPresenter extends TextOptionsPresenter<String, SourceFi
     }
 
     @Override
-    public void onViewAttached(@NonNull final SourceFilterPresenter.View view, final boolean isFirstTimeAttachment) {
+    public void onViewAttached(@NonNull final OptionsPresenter.View view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
-        this.manageDisposable(view.selects().subscribe(
+        this.manageDisposable(view.optionsChanges().subscribe(
             index -> {
-                this.selected.set(index, !this.selected.get(index));
+                this.selectedSources.set(index, !this.selectedSources.get(index));
 
                 final List<String> sources = new ArrayList<>();
 
                 for (int i = 0; i < this.sources.size(); i++) {
-                    if (this.selected.get(i)) sources.add(this.sources.get(i));
+                    if (this.selectedSources.get(i)) sources.add(this.sources.get(i));
                 }
 
-                this.selectionChanges.onNext(sources);
+                this.optionsChanges.onNext(sources);
             },
             error -> {
                 if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
@@ -64,14 +61,14 @@ public class SourceFilterPresenter extends TextOptionsPresenter<String, SourceFi
                 .subscribe(
                     sources -> {
                         this.sources = sources;
-                        this.selected.clear();
+                        this.selectedSources.clear();
 
                         final Set<String> selectedSources = UserConfig.getSources(view.getContext());
 
                         for (int i = 0; i < sources.size(); i++) {
-                            this.selected.add(selectedSources.contains(sources.get(i)));
+                            this.selectedSources.add(selectedSources.contains(sources.get(i)));
 
-                            view.addText(sources.get(i), this.selected.get(i));
+                            view.addOption(sources.get(i), this.selectedSources.get(i));
                         }
                     },
                     error -> {

@@ -37,7 +37,7 @@ public final class OptionsView extends BottomSheetDialog {
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_options, null);
 
         final ViewPager viewPager = view.findViewById(R.id.viewPager);
-        viewPager.setAdapter(new FilterAdapter(this.getContext()));
+        viewPager.setAdapter(new OptionsAdapter(this.getContext()));
 
         final TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);

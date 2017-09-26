@@ -1,8 +1,5 @@
 package com.github.ayltai.newspaper.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
@@ -11,21 +8,21 @@ import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.view.TextOptionsPresenter;
+import com.github.ayltai.newspaper.view.OptionsPresenter;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.nex3z.flowlayout.FlowLayout;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public class TextOptionsView extends ObservableView implements TextOptionsPresenter.View {
-    private final FlowableProcessor<Integer> selects = PublishProcessor.create();
+public final class TextOptionsView extends ObservableView implements OptionsPresenter.View {
+    private final FlowableProcessor<Integer> optionChanges = PublishProcessor.create();
 
-    private FlowLayout flowLayout;
+    private ViewGroup container;
 
     //region Constructors
 
@@ -52,51 +49,39 @@ public class TextOptionsView extends ObservableView implements TextOptionsPresen
     //endregion
 
     @Override
-    public void addText(@NonNull final CharSequence text, final boolean selected) {
-        final TextView view = (TextView)LayoutInflater.from(this.getContext()).inflate(R.layout.view_text_option, this.flowLayout, false);
+    public void addOption(@NonNull final CharSequence text, final boolean selected) {
+        final TextView view = (TextView)LayoutInflater.from(this.getContext()).inflate(R.layout.view_text_option, this.container, false);
         view.setText(text);
         view.setSelected(selected);
 
         this.subscribeToView(view);
 
-        this.flowLayout.addView(view);
-    }
-
-    @NonNull
-    protected List<View> getTextOptions() {
-        final List<View> views = new ArrayList<>(this.flowLayout.getChildCount());
-
-        for (int i = 0; i < this.flowLayout.getChildCount(); i++) views.add(this.flowLayout.getChildAt(i));
-
-        return views;
+        this.container.addView(view);
     }
 
     @NonNull
     @Override
-    public Flowable<Integer> selects() {
-        return this.selects;
-    }
-
-    protected void onSelect(@NonNull final View view) {
+    public Flowable<Integer> optionsChanges() {
+        return this.optionChanges;
     }
 
     @Override
     protected void onAttachedToWindow() {
-        for (int i = 0; i < this.flowLayout.getChildCount(); i++) this.subscribeToView(this.flowLayout.getChildAt(i));
+        for (int i = 0; i < this.container.getChildCount(); i++) this.subscribeToView(this.container.getChildAt(i));
 
         super.onAttachedToWindow();
     }
 
     private void init() {
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_flow_layout, this, true);
-        this.flowLayout = view.findViewById(R.id.flowLayout);
+        this.container = view.findViewById(R.id.flowLayout);
     }
 
     private void subscribeToView(@NonNull final View view) {
         this.manageDisposable(RxView.clicks(view).subscribe(irrelevant -> {
-            this.onSelect(view);
+            view.setSelected(!view.isSelected());
 
-            this.selects.onNext(this.flowLayout.indexOfChild(view));
+            this.optionChanges.onNext(this.container.indexOfChild(view));
         }));
     }
 }

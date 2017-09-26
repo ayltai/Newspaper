@@ -38,12 +38,9 @@
     <string name="empty_news_action">Try again</string>
 
     <!-- Preferences -->
-    <string name="pref_general">General</string>
-    <string name="pref_design">Design</string>
     <string name="pref_cozy_layout">Cozy layout</string>
     <string name="pref_dark_theme">Dark theme</string>
-    <string name="pref_header_image_enabled">Show header image</string>
-    <string name="pref_panorama_enabled">Enable panorama effect</string>
+    <string name="pref_auto_play">Play video news automatically</string>
     <string name="pref_sources">Sources</string>
     <string-array name="pref_source_items">
         <item>蘋果日報</item>
@@ -102,7 +99,6 @@
         <item>即時體育</item>
         <item>即時副刊</item>
     </string-array>
-    <string name="pref_auto_play">Play video news automatically</string>
 
     <!-- Sources -->
     <string name="source_apple_daily">Apple Daily</string>
