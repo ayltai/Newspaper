@@ -13,6 +13,7 @@ import com.github.ayltai.newspaper.config.UserConfig;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.data.DataModule;
+import com.github.ayltai.newspaper.media.FrescoImageLoader;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 
@@ -40,6 +41,8 @@ public final class MainActivity extends AppCompatActivity {
             .realm()))
             .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
             .subscribe(realm -> this.realm = realm);
+
+        this.getLifecycle().addObserver(FrescoImageLoader.getInstance(this));
     }
 
     @Override
