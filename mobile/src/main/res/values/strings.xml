@@ -41,6 +41,7 @@
     <string name="pref_cozy_layout">Cozy layout</string>
     <string name="pref_dark_theme">Dark theme</string>
     <string name="pref_auto_play">Play video news automatically</string>
+    <string name="pref_settings">Settings</string>
     <string name="pref_sources">Sources</string>
     <string-array name="pref_source_items">
         <item>蘋果日報</item>

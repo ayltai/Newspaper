@@ -43,6 +43,7 @@
     <string name="pref_sources">報紙</string>
     <string name="pref_categories">分類</string>
     <string name="pref_auto_play">自動播放視頻新聞</string>
+    <string name="pref_settings">設置</string>
 
     <!-- Sources -->
     <string name="source_apple_daily">蘋果日報</string>

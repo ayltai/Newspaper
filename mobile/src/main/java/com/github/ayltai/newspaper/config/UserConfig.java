@@ -16,9 +16,15 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Sets;
 
 public final class UserConfig {
+    //region Constants
+
     private static final String KEY_SOURCES    = "sources";
     private static final String KEY_CATEGORIES = "categories";
     private static final String KEY_VIEW_STYLE = "viewStyle";
+    private static final String KEY_THEME      = "theme";
+    private static final String KEY_AUTO_PLAY  = "autoPlay";
+
+    //endregion
 
     private UserConfig() {
     }
@@ -58,6 +64,28 @@ public final class UserConfig {
     @SuppressWarnings("WrongConstant")
     @Constants.ViewStyle
     public static int getViewStyle(@NonNull final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(UserConfig.KEY_VIEW_STYLE, Constants.VIEW_STYLE_COZY);
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(UserConfig.KEY_VIEW_STYLE, Constants.VIEW_STYLE_DEFAULT);
+    }
+
+    public static void setViewStyle(@NonNull final Context context, @Constants.ViewStyle final int viewStyle) {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(UserConfig.KEY_VIEW_STYLE, viewStyle).apply();
+    }
+
+    @SuppressWarnings("WrongConstant")
+    @Constants.Theme
+    public static int getTheme(@NonNull final Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(UserConfig.KEY_THEME, Constants.THEME_DEFAULT);
+    }
+
+    public static void setTheme(@NonNull final Context context, @Constants.Theme final int theme) {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(UserConfig.KEY_THEME, theme).apply();
+    }
+
+    public static boolean isAutoPlayEnabled(@NonNull final Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(UserConfig.KEY_AUTO_PLAY, Constants.AUTO_PLAY_DEFAULT);
+    }
+
+    public static void setAutoPlayEnabled(@NonNull final Context context, final boolean enabled) {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(UserConfig.KEY_AUTO_PLAY, enabled).apply();
     }
 }

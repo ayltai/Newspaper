@@ -22,10 +22,21 @@ public final class Constants {
 
     public static final int VIEW_STYLE_COMPACT = 0;
     public static final int VIEW_STYLE_COZY    = 1;
+    public static final int VIEW_STYLE_DEFAULT = VIEW_STYLE_COZY;
 
     @IntDef({ Constants.VIEW_STYLE_COMPACT, Constants.VIEW_STYLE_COZY })
     public @interface ViewStyle {
     }
+
+    public static final int THEME_LIGHT   = 0;
+    public static final int THEME_DARK    = 1;
+    public static final int THEME_DEFAULT = THEME_LIGHT;
+
+    @IntDef({ Constants.THEME_LIGHT, Constants.THEME_DARK })
+    public @interface Theme {
+    }
+
+    public static final boolean AUTO_PLAY_DEFAULT = true;
 
     private Constants() {
     }
