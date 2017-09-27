@@ -16,6 +16,7 @@ import android.support.annotation.StyleRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
@@ -65,6 +66,7 @@ public final class MainScreen extends Screen implements MainPresenter.View {
 
     //region Components
 
+    private Toolbar              toolbar;
     private SearchView           searchView;
     private FloatingActionButton upAction;
     private FloatingActionButton refreshAction;
@@ -133,7 +135,14 @@ public final class MainScreen extends Screen implements MainPresenter.View {
     @Override
     protected void onAttachedToWindow() {
         final Activity activity = this.getActivity();
+
         if (activity != null) {
+            if (activity instanceof AppCompatActivity) {
+                final AppCompatActivity appCompatActivity = (AppCompatActivity)activity;
+                appCompatActivity.setSupportActionBar(this.toolbar);
+                if (appCompatActivity.getSupportActionBar() != null) appCompatActivity.getSupportActionBar().setTitle(R.string.app_name);
+            }
+
             final SearchManager manager = (SearchManager)this.getContext().getSystemService(Context.SEARCH_SERVICE);
             this.searchView.setSearchableInfo(manager.getSearchableInfo(activity.getComponentName()));
         }
@@ -228,8 +237,8 @@ public final class MainScreen extends Screen implements MainPresenter.View {
         this.moreAction    = view.findViewById(R.id.action_more);
         this.viewPager     = view.findViewById(R.id.viewPager);
 
-        final Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.main);
+        this.toolbar = view.findViewById(R.id.toolbar);
+        this.toolbar.inflateMenu(R.menu.main);
 
         this.searchView = (SearchView)toolbar.getMenu().findItem(R.id.action_search).getActionView();
         this.searchView.setQueryHint(this.getContext().getText(R.string.search_hint));
