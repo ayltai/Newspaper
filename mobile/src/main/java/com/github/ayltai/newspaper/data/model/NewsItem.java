@@ -25,14 +25,13 @@ import io.realm.annotations.PrimaryKey;
 public class NewsItem extends RealmObject implements Item, Parcelable {
     //region Constants
 
-    public static final String FIELD_TITLE        = "title";
-    public static final String FIELD_DESCRIPTION  = "description";
-    public static final String FIELD_SOURCE       = "source";
-    public static final String FIELD_CATEGORY     = "category";
-    public static final String FIELD_LINK         = "link";
-    public static final String FIELD_PUBLISH_DATE = "publishDate";
-    public static final String FIELD_VIDEO        = "video";
-    public static final String FIELD_BOOKMARKED   = "bookmarked";
+    public static final String FIELD_TITLE              = "title";
+    public static final String FIELD_DESCRIPTION        = "description";
+    public static final String FIELD_SOURCE             = "source";
+    public static final String FIELD_CATEGORY           = "category";
+    public static final String FIELD_LINK               = "link";
+    public static final String FIELD_BOOKMARKED         = "bookmarked";
+    public static final String FIELD_LAST_ACCESSED_DATE = "lastAccessedDate";
 
     private static final ThreadLocal<DateFormat> DATE_FORMAT = new ThreadLocal<DateFormat>() {
         @Override
@@ -55,6 +54,7 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
     private String  category;
     private Video   video;
     private boolean bookmarked;
+    private long    lastAccessedDate;
 
     private RealmList<Image> images = new RealmList<>();
 
@@ -128,9 +128,7 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
 
     @Nullable
     public Date getPublishDate() {
-        if (this.publishDate == 0) return null;
-
-        return new Date(this.publishDate);
+        return this.publishDate == 0 ? null : new Date(this.publishDate);
     }
 
     public void setPublishDate(@Nullable final Date publishDate) {
@@ -177,6 +175,14 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
         this.bookmarked = bookmarked;
     }
 
+    public Date getLastAccessedDate() {
+        return this.lastAccessedDate == 0 ? null : new Date(this.lastAccessedDate);
+    }
+
+    public void setLastAccessedDate(final Date lastAccessedDate) {
+        this.lastAccessedDate = lastAccessedDate == null ? 0 : lastAccessedDate.getTime();
+    }
+
     //endregion
 
     @Override
@@ -210,10 +216,11 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
         item.setDescription(this.description);
         item.setIsFullDescription(this.isFullDescription);
         item.setLink(this.link);
-        item.setPublishDate(new Date(this.publishDate));
+        item.setPublishDate(this.publishDate == 0 ? null : new Date(this.publishDate));
         item.getImages().addAll(this.images);
         item.setVideo(this.video);
         item.setBookmarked(this.bookmarked);
+        item.setLastAccessedDate(this.lastAccessedDate == 0 ? null : new Date(this.lastAccessedDate));
         item.setSource(this.source);
         item.setCategory(this.category);
 
@@ -228,7 +235,7 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return "Item { link = '" + this.link + "', title = '" + this.title + "', description = '" + this.description + "', isFullDescription = " + this.isFullDescription + ", publishDate = " + this.publishDate + ", source = '" + this.source + "', category = '" + this.category + "', video = " + this.video + ", bookmarked = " + this.bookmarked + ", images = " + RealmLists.toString(this.images) + " }";
+        return "Item { link = '" + this.link + "', title = '" + this.title + "', description = '" + this.description + "', isFullDescription = " + this.isFullDescription + ", publishDate = " + this.publishDate + ", source = '" + this.source + "', category = '" + this.category + "', video = " + this.video + ", bookmarked = " + this.bookmarked + ", lastAccessedDate = " + this.lastAccessedDate + ", images = " + RealmLists.toString(this.images) + " }";
     }
 
     //region Parcelable
@@ -250,6 +257,7 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
         dest.writeTypedList(this.images);
         dest.writeParcelable(this.video, 0);
         dest.writeInt(this.bookmarked ? 1 : 0);
+        dest.writeLong(this.lastAccessedDate);
     }
 
     protected NewsItem(@NonNull final Parcel in) {
@@ -264,8 +272,9 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
         this.images = new RealmList<>();
         this.images.addAll(in.createTypedArrayList(Image.CREATOR));
 
-        this.video      = in.readParcelable(Video.class.getClassLoader());
-        this.bookmarked = in.readInt() == 1;
+        this.video            = in.readParcelable(Video.class.getClassLoader());
+        this.bookmarked       = in.readInt() == 1;
+        this.lastAccessedDate = in.readLong();
     }
 
     public static final Parcelable.Creator<NewsItem> CREATOR = new Parcelable.Creator<NewsItem>() {
