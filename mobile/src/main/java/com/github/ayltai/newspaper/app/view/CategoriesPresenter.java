@@ -3,10 +3,8 @@ package com.github.ayltai.newspaper.app.view;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.ArraySet;
 import android.util.Log;
 
 import com.github.ayltai.newspaper.config.UserConfig;
@@ -29,9 +27,12 @@ public class CategoriesPresenter extends OptionsPresenter<String, OptionsPresent
 
         return Single.create(emitter -> {
             final List<String> categories   = new ArrayList<>(UserConfig.getDefaultCategories(this.getView().getContext()));
-            final Set<String>  displayNames = new ArraySet<>();
+            final List<String> displayNames = new ArrayList<>();
 
-            for (final String category : categories) displayNames.add(Category.toDisplayName(category));
+            for (final String category : categories) {
+                final String displayName = Category.toDisplayName(category);
+                if (!displayNames.contains(displayName)) displayNames.add(displayName);
+            }
 
             emitter.onSuccess(new ArrayList<>(displayNames));
         });
