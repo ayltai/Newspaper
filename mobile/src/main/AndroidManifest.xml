@@ -23,15 +23,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity><!--
+        </activity>
         <activity
-            android:name=".setting.SettingsActivity"
-            android:label="@string/action_settings"
-            android:theme="@style/SettingsTheme.Light" />
-        <activity
-            android:name=".video.VideoActivity"
+            android:name=".app.VideoActivity"
             android:theme="@style/AppTheme.Dark"
-            android:screenOrientation="landscape" />-->
+            android:screenOrientation="landscape" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="3852232f6854cd891d91a69732ab35097b757d0e" />

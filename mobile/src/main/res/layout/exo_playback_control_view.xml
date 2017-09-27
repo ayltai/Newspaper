@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:gravity="center_vertical"
+    android:layoutDirection="ltr"
+    android:background="#cc000000"
+    android:orientation="horizontal">
+    <ImageButton
+        android:id="@id/exo_play"
+        android:tint="?attr/indicatorColor"
+        android:scaleType="center"
+        app:srcCompat="@drawable/ic_play_arrow"
+        style="@style/ExoPlayerControlButton" />
+    <ImageButton
+        android:id="@id/exo_pause"
+        android:tint="?attr/indicatorColor"
+        android:scaleType="center"
+        app:srcCompat="@drawable/ic_pause"
+        style="@style/ExoPlayerControlButton" />
+    <TextView
+        android:id="@id/exo_position"
+        style="@style/ExoPlayerControlItem" />
+    <com.google.android.exoplayer2.ui.DefaultTimeBar
+        android:id="@id/exo_progress"
+        android:layout_width="0dp"
+        android:layout_height="26dp"
+        android:layout_weight="1" />
+    <TextView
+        android:id="@id/exo_duration"
+        style="@style/ExoPlayerControlItem" />
+    <ImageButton
+        android:id="@+id/exo_fullscreen"
+        android:tint="?attr/indicatorColor"
+        android:scaleType="center"
+        app:srcCompat="@drawable/ic_fullscreen"
+        style="@style/ExoPlayerControlButton" />
+    <ImageButton
+        android:id="@+id/exo_fullscreen_exit"
+        android:tint="?attr/indicatorColor"
+        android:scaleType="center"
+        app:srcCompat="@drawable/ic_fullscreen_exit"
+        style="@style/ExoPlayerControlButton" />
+</LinearLayout>

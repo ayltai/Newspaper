@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper.app.screen;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -19,24 +21,40 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.google.auto.value.AutoValue;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.app.VideoActivity;
 import com.github.ayltai.newspaper.app.widget.ItemView;
+import com.github.ayltai.newspaper.config.UserConfig;
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Video;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.RxUtils;
+import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.ayltai.newspaper.view.ScreenPresenter;
 import com.github.piasy.biv.view.BigImageView;
@@ -45,6 +63,7 @@ import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import flow.ClassKey;
 import io.reactivex.Flowable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 import xyz.hanks.library.SmallBang;
@@ -61,6 +80,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             return new AutoValue_DetailsScreen_Key(item);
         }
     }
+
+    private final List<Disposable> videoDisposables = Collections.synchronizedList(new ArrayList<>());
 
     //region Subscriptions
 
@@ -93,6 +114,13 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     private final ViewGroup               imagesContainer;
     private final ViewGroup               videoContainer;
 
+    private ViewGroup           videoThumbnailContainer;
+    private View                videoPlay;
+    private View                videoFullScreen;
+    private View                videoFullScreenExit;
+    private SimpleExoPlayerView videoPlayerView;
+    private SimpleExoPlayer     videoPlayer;
+
     //endregion
 
     private SmallBang smallBang;
@@ -124,6 +152,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         this.setLayoutParams(ViewUtils.createMatchParentLayoutParams());
     }
+
+    //region Properties
 
     @Override
     public void setAvatar(@DrawableRes final int avatar) {
@@ -239,9 +269,46 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     @Override
     public void setVideo(@Nullable final Video video) {
         this.videoContainer.removeAllViews();
+        this.releaseVideoPlayer();
 
-        // TODO
+        if (video != null) {
+            this.setUpVideoThumbnail(video);
+
+            if (!DetailsScreen.isYouTube(video.getVideoUrl())) {
+                if (this.videoPlayerView == null) this.videoPlayerView = (SimpleExoPlayerView)LayoutInflater.from(this.getContext()).inflate(R.layout.widget_video_player, this.videoContainer, false);
+
+                this.videoPlayer = ExoPlayerFactory.newSimpleInstance(this.getContext(), new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(null)));
+                this.videoPlayerView.setPlayer(this.videoPlayer);
+
+                this.videoFullScreen     = this.videoPlayerView.findViewById(R.id.exo_fullscreen);
+                this.videoFullScreenExit = this.videoPlayerView.findViewById(R.id.exo_fullscreen_exit);
+
+                this.videoFullScreen.setVisibility(View.VISIBLE);
+                this.videoFullScreenExit.setVisibility(View.GONE);
+
+                this.videoDisposables.add(RxView.clicks(videoFullScreen).subscribe(
+                    dummy -> {
+                        final boolean isPlaying    = this.videoPlayer.getPlaybackState() == Player.STATE_READY && this.videoPlayer.getPlayWhenReady();
+                        final long    seekPosition = this.videoPlayer.getCurrentPosition();
+
+                        this.videoPlayer.setPlayWhenReady(false);
+
+                        this.getContext().startActivity(VideoActivity.createIntent(this.getContext(), video.getVideoUrl(), isPlaying, seekPosition));
+                    },
+                    error -> {
+                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    }));
+
+                this.videoPlayer.prepare(new ExtractorMediaSource(Uri.parse(video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
+
+                if (UserConfig.isAutoPlayEnabled(this.getContext())) this.startVideoPlayer();
+            }
+        }
     }
+
+    //endregion
+
+    //region Methods
 
     @Override
     public void share(@NonNull final String url) {
@@ -261,6 +328,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         return false;
     }
+
+    //endregion
 
     //region Events
 
@@ -302,6 +371,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     //endregion
 
+    //region Lifecycle
+
     @CallSuper
     @Override
     protected void onAttachedToWindow() {
@@ -328,8 +399,12 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
+        this.releaseVideoPlayer();
+
         this.smallBang = null;
     }
+
+    //endregion
 
     private void subscribeImage(@NonNull final BigImageView imageView, @NonNull final Image image) {
         imageView.getSSIV().setMaxScale(Constants.IMAGE_ZOOM_MAX);
@@ -340,5 +415,76 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         imageView.setOnClickListener(view -> this.imageClicks.onNext(image));
         this.manageDisposable(RxView.clicks((View)imageView.getParent()).subscribe(irrelevant -> this.imageClicks.onNext(image)));
+    }
+
+    private void setUpVideoThumbnail(@NonNull final Video video) {
+        this.videoThumbnailContainer = (ViewGroup)LayoutInflater.from(this.getContext()).inflate(R.layout.widget_video_thumbnail, this.videoContainer, false);
+        this.videoPlay               = this.videoThumbnailContainer.findViewById(R.id.play);
+
+        this.videoDisposables.add(RxView.clicks(this.videoPlay).subscribe(irrelevant -> {
+            this.startPlayer(video);
+
+            this.videoClicks.onNext(Irrelevant.INSTANCE);
+        }));
+
+        final BigImageView imageView = this.videoThumbnailContainer.findViewById(R.id.image);
+
+        imageView.getSSIV().setMaxScale(Constants.IMAGE_ZOOM_MAX);
+        imageView.getSSIV().setPanEnabled(false);
+        imageView.getSSIV().setZoomEnabled(false);
+
+        imageView.showImage(Uri.parse(video.getThumbnailUrl()));
+        imageView.setOnClickListener(irrelevant -> {
+            this.startPlayer(video);
+
+            this.videoClicks.onNext(Irrelevant.INSTANCE);
+        });
+
+        this.videoContainer.addView(this.videoThumbnailContainer);
+    }
+
+    private void startPlayer(@NonNull final Video video) {
+        if (DetailsScreen.isYouTube(video.getVideoUrl())) {
+            this.startYouTubePlayer(video.getVideoUrl());
+        } else {
+            this.startVideoPlayer();
+        }
+    }
+
+    private void startVideoPlayer() {
+        this.videoPlayerView.setVisibility(View.VISIBLE);
+        this.videoThumbnailContainer.setVisibility(View.GONE);
+
+        this.videoPlayer.setPlayWhenReady(true);
+
+        this.videoDisposables.add(UserConfig.videoSeekPositionChanges().subscribe(seekPosition -> {
+            if (this.videoPlayer != null) {
+                this.videoPlayerView.setVisibility(View.VISIBLE);
+                this.videoThumbnailContainer.setVisibility(View.GONE);
+
+                this.videoPlayer.seekTo(seekPosition);
+
+                if (UserConfig.isVideoPlaying()) this.videoPlayer.setPlayWhenReady(true);
+            }
+        }));
+    }
+
+    private void releaseVideoPlayer() {
+        RxUtils.resetDisposables(this.videoDisposables);
+
+        if (this.videoPlayerView != null) this.videoPlayerView = null;
+
+        if (this.videoPlayer != null) {
+            this.videoPlayer.release();
+            this.videoPlayer = null;
+        }
+    }
+
+    private void startYouTubePlayer(@NonNull final String videoUrl) {
+        this.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl)), this.getContext().getText(R.string.view_via)));
+    }
+
+    private static boolean isYouTube(@NonNull final String url) {
+        return url.startsWith("https://www.youtube.com/");
     }
 }
