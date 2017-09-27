@@ -198,7 +198,7 @@ public final class SourceFactory {
     @SuppressWarnings("checkstyle:magicnumber")
     @NonNull
     private static Source createEconomicJournalSource(@NonNull final String[] sources, @NonNull final String[] categories) {
-        return new Source(sources[10], new RealmList<>(new Category("http://www.hkej.com/rss/onlinenews.xml", categories[14])), R.drawable.avatar_hkej);
+        return new Source(sources[10], new RealmList<>(new Category("http://www.hkej.com/rss/onlinenews.xml", categories[12])), R.drawable.avatar_hkej);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
