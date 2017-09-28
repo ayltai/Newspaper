@@ -11,6 +11,7 @@ import android.support.annotation.UiThread;
 
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.screen.DetailsScreen;
+import com.github.ayltai.newspaper.config.UserConfig;
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.data.model.Item;
 import com.github.ayltai.newspaper.data.model.NewsItem;
@@ -105,6 +106,9 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     protected void onClick() {
         if (this.getView() != null) {
             final Item item = this.getModel();
+
+            UserConfig.setVideoPlaying(false);
+            UserConfig.setVideoSeekPosition(0);
 
             Flow.get(this.getView().getContext()).set(DetailsScreen.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem()));
         }

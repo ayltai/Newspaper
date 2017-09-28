@@ -274,6 +274,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.releaseVideoPlayer();
 
         if (video != null) {
+            this.setUpVideoThumbnail(video);
+
             if (!DetailsScreen.isYouTube(video.getVideoUrl())) {
                 if (this.videoPlayerView == null) this.videoPlayerView = (SimpleExoPlayerView)LayoutInflater.from(this.getContext()).inflate(R.layout.widget_video_player, this.videoContainer, false);
 
@@ -309,10 +311,10 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
                 this.videoPlayerView.setLayoutParams(params);
                 this.videoContainer.addView(this.videoPlayerView);
 
-                if (UserConfig.isAutoPlayEnabled(this.getContext())) this.startVideoPlayer();
+                if (UserConfig.isAutoPlayEnabled(this.getContext()) || UserConfig.isVideoPlaying()) this.startVideoPlayer();
             }
 
-            this.setUpVideoThumbnail(video);
+            this.videoContainer.addView(this.videoThumbnailContainer);
         }
     }
 
@@ -449,8 +451,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
             this.videoClicks.onNext(Irrelevant.INSTANCE);
         });
-
-        this.videoContainer.addView(this.videoThumbnailContainer);
     }
 
     private void startPlayer(@NonNull final Video video) {
@@ -466,6 +466,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.videoPlayerView.findViewById(R.id.exo_playback_control_view).setVisibility(View.VISIBLE);
         this.videoThumbnailContainer.setVisibility(View.GONE);
 
+        if (UserConfig.getVideoSeekPosition() > 0) this.videoPlayer.seekTo(UserConfig.getVideoSeekPosition());
         this.videoPlayer.setPlayWhenReady(true);
 
         this.videoDisposables.add(UserConfig.videoSeekPositionChanges().subscribe(seekPosition -> {

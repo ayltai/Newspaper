@@ -67,7 +67,7 @@ public final class VideoActivity extends AppCompatActivity {
 
         this.videoPlayer = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(null)));
 
-        final SimpleExoPlayerView videoPlayerView = (SimpleExoPlayerView)this.findViewById(R.id.video);
+        final SimpleExoPlayerView videoPlayerView = this.findViewById(R.id.video);
         videoPlayerView.setPlayer(this.videoPlayer);
 
         final View videoFullScreen     = videoPlayerView.findViewById(R.id.exo_fullscreen);
@@ -87,6 +87,8 @@ public final class VideoActivity extends AppCompatActivity {
 
         this.videoPlayer.prepare(new ExtractorMediaSource(Uri.parse(videoUrl), new DefaultDataSourceFactory(this, Util.getUserAgent(this, BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
         this.videoPlayer.seekTo(seekPosition);
+
+        this.findViewById(R.id.exo_playback_control_view).setVisibility(View.VISIBLE);
 
         if (isPlaying) this.videoPlayer.setPlayWhenReady(true);
     }
@@ -113,7 +115,7 @@ public final class VideoActivity extends AppCompatActivity {
 
         this.videoPlayer.setPlayWhenReady(false);
 
-        UserConfig.setVideoSeekPosition(seekPosition);
         UserConfig.setVideoPlaying(isPlaying);
+        UserConfig.setVideoSeekPosition(seekPosition);
     }
 }
