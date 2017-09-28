@@ -20,6 +20,8 @@ public final class Constants {
     public static final int FEATURED_IMAGE_ROTATION = 8;
     public static final int IMAGE_ZOOM_MAX          = 8;
 
+    public static final double VIDEO_ASPECT_RATIO = 16.0 / 9.0;
+
     public static final int VIEW_STYLE_COMPACT = 0;
     public static final int VIEW_STYLE_COZY    = 1;
     public static final int VIEW_STYLE_DEFAULT = VIEW_STYLE_COZY;
@@ -36,7 +38,7 @@ public final class Constants {
     public @interface Theme {
     }
 
-    public static final boolean AUTO_PLAY_DEFAULT = true;
+    public static final boolean AUTO_PLAY_DEFAULT = false;
 
     private Constants() {
     }

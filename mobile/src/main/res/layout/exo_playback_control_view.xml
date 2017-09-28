@@ -2,13 +2,16 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/exo_playback_control_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="0dp"
     android:layout_gravity="bottom"
     android:gravity="center_vertical"
+    android:background="#232323"
     android:layoutDirection="ltr"
-    android:background="#cc000000"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:visibility="invisible">
     <ImageButton
         android:id="@id/exo_play"
         android:tint="?attr/indicatorColor"

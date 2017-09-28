@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
@@ -52,6 +53,7 @@ import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.model.Video;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
+import com.github.ayltai.newspaper.util.DeviceUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -272,8 +274,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.releaseVideoPlayer();
 
         if (video != null) {
-            this.setUpVideoThumbnail(video);
-
             if (!DetailsScreen.isYouTube(video.getVideoUrl())) {
                 if (this.videoPlayerView == null) this.videoPlayerView = (SimpleExoPlayerView)LayoutInflater.from(this.getContext()).inflate(R.layout.widget_video_player, this.videoContainer, false);
 
@@ -301,8 +301,18 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
                 this.videoPlayer.prepare(new ExtractorMediaSource(Uri.parse(video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
 
+                final Point                  size   = DeviceUtils.getScreenSize(this.getContext());
+                final ViewGroup.LayoutParams params = this.videoPlayerView.getLayoutParams();
+                params.width  = size.x - 2 * this.getContext().getResources().getDimensionPixelSize(R.dimen.space16);
+                params.height = (int)Math.round(size.x / Constants.VIDEO_ASPECT_RATIO);
+
+                this.videoPlayerView.setLayoutParams(params);
+                this.videoContainer.addView(this.videoPlayerView);
+
                 if (UserConfig.isAutoPlayEnabled(this.getContext())) this.startVideoPlayer();
             }
+
+            this.setUpVideoThumbnail(video);
         }
     }
 
@@ -453,6 +463,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     private void startVideoPlayer() {
         this.videoPlayerView.setVisibility(View.VISIBLE);
+        this.videoPlayerView.findViewById(R.id.exo_playback_control_view).setVisibility(View.VISIBLE);
         this.videoThumbnailContainer.setVisibility(View.GONE);
 
         this.videoPlayer.setPlayWhenReady(true);

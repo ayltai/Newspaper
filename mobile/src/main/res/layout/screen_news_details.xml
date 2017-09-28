@@ -80,7 +80,7 @@
                     android:id="@+id/video_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal" />
+                    android:gravity="center" />
                 <LinearLayout
                     android:id="@+id/images_container"
                     android:layout_width="match_parent"
