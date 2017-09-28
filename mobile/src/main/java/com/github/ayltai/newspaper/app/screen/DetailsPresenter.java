@@ -42,28 +42,45 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     @UiThread
     @Override
     public void bindModel(final Item model) {
-        super.bindModel(model);
+        if (this.getView() == null) {
+            super.bindModel(model);
+        } else {
+            if (model instanceof NewsItem) {
+                final NewsItem newsItem = (NewsItem)model;
 
-        if (this.getView() != null && model instanceof NewsItem) {
-            this.manageDisposable((model.isFullDescription()
-                ? DetailsPresenter.updateItem(this.getView().getContext(), (NewsItem)model)
-                : Single.<NewsItem>create(
-                    emitter -> {
-                        final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(model.getSource());
+                if (newsItem.isFullDescription()) {
+                    super.bindModel(model);
 
-                        if (client == null) {
-                            emitter.onError(new IllegalArgumentException("Unrecognized source " + model.getSource()));
-                        } else {
-                            client.updateItem((NewsItem)model).subscribe(emitter::onSuccess);
-                        }
-                    })
-                    .compose(RxUtils.applySingleBackgroundSchedulers())
-                    .flatMap(item -> DetailsPresenter.updateItem(this.getView().getContext(), item))).compose(RxUtils.applySingleBackgroundToMainSchedulers())
-                    .subscribe(
-                        items -> super.bindModel(items.get(0)),
-                        error -> {
-                            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                        }));
+                    this.manageDisposable(DetailsPresenter.updateItem(this.getView().getContext(), newsItem)
+                        .compose(RxUtils.applySingleBackgroundToMainSchedulers())
+                        .subscribe(
+                            items -> {
+                            },
+                            error -> {
+                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            }));
+                } else {
+                    this.manageDisposable(Single.<NewsItem>create(
+                        emitter -> {
+                            final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(model.getSource());
+
+                            if (client == null) {
+                                emitter.onError(new IllegalArgumentException("Unrecognized source " + model.getSource()));
+                            } else {
+                                client.updateItem((NewsItem)model).subscribe(emitter::onSuccess);
+                            }
+                        })
+                        .compose(RxUtils.applySingleBackgroundSchedulers())
+                        .flatMap(item -> DetailsPresenter.updateItem(this.getView().getContext(), item)).compose(RxUtils.applySingleBackgroundToMainSchedulers())
+                        .subscribe(
+                            items -> super.bindModel(items.get(0)),
+                            error -> {
+                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            }));
+                }
+            } else {
+                super.bindModel(model);
+            }
         }
     }
 
