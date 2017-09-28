@@ -31,12 +31,14 @@ import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.widget.OptionsView;
 import com.github.ayltai.newspaper.config.UserConfig;
 import com.github.ayltai.newspaper.util.Animations;
+import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.github.ayltai.newspaper.widget.Screen;
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.roughike.bottombar.BottomBar;
 
 import flow.ClassKey;
 import io.reactivex.Flowable;
@@ -66,6 +68,7 @@ public final class MainScreen extends Screen implements MainPresenter.View {
     //region Components
 
     private SearchView           searchView;
+    private BottomBar            bottomBar;
     private FloatingActionButton upAction;
     private FloatingActionButton refreshAction;
     private FloatingActionButton filterAction;
@@ -238,6 +241,10 @@ public final class MainScreen extends Screen implements MainPresenter.View {
 
         final TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(this.viewPager, true);
+
+        this.bottomBar = view.findViewById(R.id.bottomBar);
+        for (int i = 0; i < this.bottomBar.getTabCount(); i++) this.bottomBar.getTabAtPosition(i).setBarColorWhenSelected(ContextUtils.getColor(this.getContext(), R.attr.tabBarBackgroundColor));
+        this.bottomBar.selectTabAtPosition(0);
     }
 
     private void showMoreActions() {

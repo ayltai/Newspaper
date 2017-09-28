@@ -7,7 +7,8 @@
     android:fitsSystemWindows="true">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/bottombar_height"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <android.support.design.widget.TabLayout
@@ -24,7 +25,8 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
     </LinearLayout>
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -46,9 +48,21 @@
                 style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
+    <com.roughike.bottombar.BottomBar
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottombar_with_shadow_height"
+        android:layout_gravity="bottom"
+        app:bb_showShadow="true"
+        app:bb_activeTabColor="?attr/tabActiveColor"
+        app:bb_inActiveTabColor="?attr/tabInactiveColor"
+        app:bb_activeTabAlpha="1"
+        app:bb_inActiveTabAlpha="1"
+        app:bb_tabXmlResource="@xml/bottombar" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/bottombar_height"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_anchor="@+id/viewPager"

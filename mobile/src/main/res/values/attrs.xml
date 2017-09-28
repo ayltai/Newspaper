@@ -34,6 +34,15 @@
         name="indicatorColor"
         format="color" />
     <attr
+        name="tabActiveColor"
+        format="color" />
+    <attr
+        name="tabInactiveColor"
+        format="color" />
+    <attr
+        name="tabBarBackgroundColor"
+        format="color" />
+    <attr
         name="placeholderTextColor"
         format="color" />
     <attr

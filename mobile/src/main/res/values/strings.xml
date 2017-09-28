@@ -33,6 +33,8 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_close">Close</string>
     <string name="action_apply">Apply changes</string>
+    <string name="action_news">News</string>
+    <string name="action_history">History</string>
 
     <!-- Empty states -->
     <string name="empty_news_title">Nothing here</string>

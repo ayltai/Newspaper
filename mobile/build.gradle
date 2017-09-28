@@ -204,19 +204,18 @@ dependencies {
     compile "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
     compile "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
 
+    // UI components
     compile 'com.squareup.flow:flow:1.0.0-alpha3'
     compile 'com.nex3z:flow-layout:1.0.0'
-
-    // Eye candies
-    compile 'io.supercharge:shimmerlayout:1.0.2'
-    compile 'com.fujiyuu75:sequent:0.2.1'
-    compile 'hanks.xyz:smallbang-library:0.1.2'
-    compile 'io.github.inflationx:calligraphy3:3.0.0'
+    compile 'com.roughike:bottom-bar:2.3.1'
 
     // Eye candies
     compile 'jp.wasabeef:recyclerview-animators:2.2.7'
+    compile 'io.supercharge:shimmerlayout:1.0.2'
+    compile 'com.fujiyuu75:sequent:0.2.1'
+    compile 'hanks.xyz:smallbang-library:0.1.2'
     compile 'com.flaviofaria:kenburnsview:1.0.7'
-    compile 'com.gjiazhe:PanoramaImageView:1.0'
+    compile 'io.github.inflationx:calligraphy3:3.0.0'
 
     // Code generation tools
     provided            "com.jakewharton.auto.value:auto-value-annotations:$autoValueVersion"

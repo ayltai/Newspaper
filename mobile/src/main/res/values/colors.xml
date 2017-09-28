@@ -8,7 +8,7 @@
     <color name="accentColorDark">#263238</color>
     <color name="textColorLight">#323133</color>
     <color name="textColorDark">#e6e9ed</color>
-    <color name="textColorHintLight">#656D78</color>
+    <color name="textColorHintLight">#656d78</color>
     <color name="textColorHintDark">#aab2bd</color>
     <color name="textColorInverseLight">#ffffff</color>
     <color name="textColorInverseDark">#323133</color>
@@ -18,6 +18,12 @@
     <color name="cardBackgroundDark">#3f4b5c</color>
     <color name="indicatorColorLight">#ffffff</color>
     <color name="indicatorColorDark">#ffffff</color>
+    <color name="tabActiveColorLight">#e04a19</color>
+    <color name="tabActiveColorDark">#ffffff</color>
+    <color name="tabInactiveColorLight">#656d78</color>
+    <color name="tabInactiveColorDark">#aab2bd</color>
+    <color name="tabBarBackgroundColorLight">#fafafa</color>
+    <color name="tabBarBackgroundColorDark">#1c282e</color>
     <color name="textProtectionScrimTop">#00000000</color>
     <color name="textProtectionScrimCenter">#44000000</color>
     <color name="textProtectionScrimBottom">#99000000</color>
