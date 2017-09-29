@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.AttrRes;
+import android.support.annotation.CallSuper;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -19,8 +21,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 
 import com.google.auto.value.AutoValue;
@@ -28,24 +32,34 @@ import com.google.auto.value.AutoValue;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.MainActivity;
+import com.github.ayltai.newspaper.app.widget.ItemListView;
 import com.github.ayltai.newspaper.app.widget.OptionsView;
 import com.github.ayltai.newspaper.config.UserConfig;
+import com.github.ayltai.newspaper.data.DaggerDataComponent;
+import com.github.ayltai.newspaper.data.DataManager;
+import com.github.ayltai.newspaper.data.DataModule;
+import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.RxUtils;
+import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.github.ayltai.newspaper.widget.Screen;
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import flow.ClassKey;
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
+import io.realm.Realm;
 
-public final class MainScreen extends Screen implements MainPresenter.View {
+public final class MainScreen extends Screen implements MainPresenter.View, OnTabSelectListener {
     @AutoValue
     public abstract static class Key extends ClassKey implements Parcelable {
         @NonNull
@@ -67,6 +81,8 @@ public final class MainScreen extends Screen implements MainPresenter.View {
 
     //region Components
 
+    private ViewGroup            content;
+    private ItemListView         itemListView;
     private SearchView           searchView;
     private BottomBar            bottomBar;
     private FloatingActionButton upAction;
@@ -134,6 +150,43 @@ public final class MainScreen extends Screen implements MainPresenter.View {
     //endregion
 
     @Override
+    public void onTabSelected(@IdRes final int tabId) {
+        if (this.itemListView != null) this.content.removeView(this.itemListView);
+
+        if (tabId == R.id.action_about) {
+            // TODO: Creates about view
+        } else {
+            Single.<Realm>create(emitter -> emitter.onSuccess(DaggerDataComponent.builder()
+                .dataModule(new DataModule(this.getContext()))
+                .build()
+                .realm()))
+                .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
+                .subscribe(
+                    realm -> {
+                        (tabId == R.id.action_history
+                            ? new ItemManager(realm).getLastAccessedItems(null, null)
+                            : new ItemManager(realm).getBookmarkedItems(null, null))
+                            .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
+                            .subscribe(
+                                items -> {
+                                    // TODO: Creates ItemListView
+                                },
+                                error -> {
+                                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                }
+                            );
+                    },
+                    error -> {
+                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    }
+                );
+        }
+    }
+
+    //region Lifecycle
+
+    @CallSuper
+    @Override
     protected void onAttachedToWindow() {
         final Activity activity = this.getActivity();
 
@@ -145,6 +198,8 @@ public final class MainScreen extends Screen implements MainPresenter.View {
         this.manageDisposable(RxSearchView.queryTextChanges(this.searchView).subscribe(newText -> {
             if (this.adapter != null) this.adapter.getFilter().filter(newText);
         }));
+
+        this.bottomBar.setOnTabSelectListener(this);
 
         this.manageDisposable(RxView.clicks(this.moreAction).subscribe(irrelevant -> {
             if (this.isMoreActionsShown) {
@@ -191,6 +246,16 @@ public final class MainScreen extends Screen implements MainPresenter.View {
         super.onAttachedToWindow();
     }
 
+    @CallSuper
+    @Override
+    protected void onDetachedFromWindow() {
+        this.bottomBar.removeOnTabSelectListener();
+
+        super.onDetachedFromWindow();
+    }
+
+    //endregion
+
     //region Methods
 
     @Override
@@ -226,6 +291,7 @@ public final class MainScreen extends Screen implements MainPresenter.View {
     private void init() {
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, true);
 
+        this.content       = view.findViewById(R.id.content);
         this.upAction      = view.findViewById(R.id.action_up);
         this.refreshAction = view.findViewById(R.id.action_refresh);
         this.filterAction  = view.findViewById(R.id.action_filter);

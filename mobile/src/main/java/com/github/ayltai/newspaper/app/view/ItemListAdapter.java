@@ -101,7 +101,7 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
                     .build()
                     .realm()))
                     .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
-                    .flatMap(realm -> new ItemManager(realm).filter(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY)))
+                    .flatMap(realm -> new ItemManager(realm).getItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY)))
                     .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
                     .blockingGet();
 
@@ -178,6 +178,6 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
     @NonNull
     @Override
     public Filter getFilter() {
-        return this.filter == null ? this.filter = new ItemListFilter() : this.filter;
+        return this.filter == null ? this.filter = new ItemListAdapter.ItemListFilter() : this.filter;
     }
 }

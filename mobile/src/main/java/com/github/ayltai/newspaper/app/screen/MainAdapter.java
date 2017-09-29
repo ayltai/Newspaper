@@ -91,7 +91,7 @@ class MainAdapter extends PagerAdapter implements Filterable, LifecycleObserver 
     @NonNull
     @Override
     public Filter getFilter() {
-        return this.filter == null ? this.filter = new MainFilter() : this.filter;
+        return this.filter == null ? this.filter = new MainAdapter.MainFilter() : this.filter;
     }
 
     @Override
