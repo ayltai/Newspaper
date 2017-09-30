@@ -78,6 +78,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     private final CollapsingToolbarLayout collapsingToolbarLayout;
     private final Toolbar                 toolbar;
+    private final TextView                defaultToolbarTitle;
     private final View                    toolbarView;
     private final BigImageView            toolbarImage;
     private final TextView                toolbarTitle;
@@ -106,6 +107,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         this.collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbarLayout);
         this.toolbar                 = view.findViewById(R.id.toolbar);
+        this.defaultToolbarTitle     = view.findViewById(R.id.toolbar_title);
         this.imageContainer          = view.findViewById(R.id.image_container);
         this.avatar                  = view.findViewById(R.id.avatar);
         this.source                  = view.findViewById(R.id.source);
@@ -159,11 +161,11 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     public void setTitle(@Nullable final CharSequence title) {
         if (TextUtils.isEmpty(title)) {
             this.title.setVisibility(View.GONE);
-            this.collapsingToolbarLayout.setTitle("");
+            this.defaultToolbarTitle.setText("");
         } else {
             this.title.setVisibility(View.VISIBLE);
             this.title.setText(Html.fromHtml(title.toString()));
-            this.collapsingToolbarLayout.setTitle(Html.fromHtml(title.toString()));
+            this.defaultToolbarTitle.setText(Html.fromHtml(title.toString()));
         }
     }
 
@@ -218,6 +220,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             if (TextUtils.isEmpty(images.get(0).getDescription())) {
                 this.toolbarBackground.setVisibility(View.GONE);
             } else {
+                this.defaultToolbarTitle.setText("");
                 this.toolbarTitle.setText(Html.fromHtml(images.get(0).getDescription()));
                 this.toolbarBackground.setVisibility(View.VISIBLE);
             }
