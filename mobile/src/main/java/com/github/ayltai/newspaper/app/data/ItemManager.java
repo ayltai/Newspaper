@@ -111,10 +111,11 @@ public final class ItemManager extends DataManager {
         });
     }
 
+    @SuppressWarnings("CyclomaticComplexity")
     @NonNull
     public Single<List<NewsItem>> putItems(@NonNull final List<NewsItem> newsItems) {
         return Single.create(emitter -> {
-            this.getRealm().beginTransaction();
+            if (!this.getRealm().isInTransaction()) this.getRealm().beginTransaction();
 
             final List<NewsItem> newItems = new ArrayList<>();
 
@@ -131,7 +132,14 @@ public final class ItemManager extends DataManager {
                     final NewsItem item = items.first();
 
                     if (item.isFullDescription()) {
-                        newItems.add(this.getRealm().copyFromRealm(item));
+                        if (newsItem.isFullDescription()) {
+                            if (newsItem.getLastAccessedDate().getTime() > item.getLastAccessedDate().getTime()) item.setLastAccessedDate(newsItem.getLastAccessedDate());
+                            item.setBookmarked(newsItem.isBookmarked());
+
+                            this.getRealm().insertOrUpdate(item);
+                        }
+
+                        newItems.add(RealmObject.isManaged(item) ? this.getRealm().copyFromRealm(item) : item);
                     } else {
                         this.getRealm().insertOrUpdate(newsItem);
 
@@ -140,7 +148,7 @@ public final class ItemManager extends DataManager {
                 }
             }
 
-            this.getRealm().commitTransaction();
+            if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
 
             emitter.onSuccess(newItems);
         });

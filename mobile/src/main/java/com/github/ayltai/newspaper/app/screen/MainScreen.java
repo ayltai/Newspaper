@@ -142,7 +142,11 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
             this.newsView = (NewsPresenter.View)this.cachedViews.get(tabId).get();
 
             if (this.newsView != null) {
-                if (this.content.indexOfChild((View)this.newsView) < 0) this.content.addView((View)this.newsView);
+                if (this.content.indexOfChild((View)this.newsView) < 0) {
+                    this.content.addView((View)this.newsView);
+
+                    this.newsView.refresh();
+                }
 
                 isCached = true;
             }

@@ -175,11 +175,12 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
         this.bookmarked = bookmarked;
     }
 
+    @Nullable
     public Date getLastAccessedDate() {
         return this.lastAccessedDate == 0 ? null : new Date(this.lastAccessedDate);
     }
 
-    public void setLastAccessedDate(final Date lastAccessedDate) {
+    public void setLastAccessedDate(@Nullable final Date lastAccessedDate) {
         this.lastAccessedDate = lastAccessedDate == null ? 0 : lastAccessedDate.getTime();
     }
 

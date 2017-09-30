@@ -96,18 +96,17 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         if (this.getView() != null && this.getModel() instanceof NewsItem) {
             final NewsItem item = (NewsItem)this.getModel();
             item.setBookmarked(!this.getModel().isBookmarked());
+            item.setLastAccessedDate(new Date());
 
-            ItemManager.create(this.getView().getContext())
+            this.manageDisposable(DetailsPresenter.updateItem(this.getView().getContext(), item)
                 .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
-                .flatMap(manager -> manager.putItems(Collections.singletonList(item))
-                    .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER)))
                 .subscribe(
                     items -> {
                     },
                     error -> {
                         if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                     }
-                );
+                ));
         }
 
         if (this.getView() != null) this.getView().setIsBookmarked(this.getModel().isBookmarked());
