@@ -29,6 +29,7 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.RealmObject;
 
 public class ItemListLoader extends RealmLoader<List<NewsItem>> {
     //region Constants
@@ -112,7 +113,7 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
 
         return Flowable.create(emitter -> ItemManager.create(this.getRealm()).getItems(ItemListLoader.getSources(args).toArray(StringUtils.EMPTY_ARRAY), ItemListLoader.getCategories(args).toArray(StringUtils.EMPTY_ARRAY))
             .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
-            .map(items -> this.getRealm().copyFromRealm(items))
+            .map(items -> items.isEmpty() ? items : RealmObject.isManaged(items.get(0)) ? this.getRealm().copyFromRealm(items) : items)
             .map(items -> {
                 Collections.sort(items);
                 return items;

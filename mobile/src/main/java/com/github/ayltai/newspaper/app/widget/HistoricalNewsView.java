@@ -7,9 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.view.HistoricalItemListPresenter;
+import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.config.UserConfig;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -56,5 +59,22 @@ public final class HistoricalNewsView extends NewsView {
         );
 
         return view;
+    }
+
+    @Override
+    public void search(@Nullable final CharSequence newText) {
+        if (this.listView.getAdapter() instanceof Filterable) {
+            final Filter filter = ((Filterable)this.listView.getAdapter()).getFilter();
+
+            if (filter instanceof ItemListAdapter.ItemListFilter) {
+                final ItemListAdapter.ItemListFilter itemListFilter = (ItemListAdapter.ItemListFilter)filter;
+
+                itemListFilter.setCategories(this.categories);
+                itemListFilter.setSources(this.sources);
+                itemListFilter.setHistorical(true);
+            }
+
+            if (filter != null) filter.filter(newText);
+        }
     }
 }
