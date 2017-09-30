@@ -18,7 +18,7 @@ import com.github.ayltai.newspaper.app.view.binding.MetaBinderFactory;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
-public final class CompactItemListView extends ItemListView {
+public class CompactItemListView extends ItemListView {
     //region Constructors
 
     public CompactItemListView(@NonNull final Context context) {

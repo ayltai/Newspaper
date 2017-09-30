@@ -1,6 +1,6 @@
 package com.github.ayltai.newspaper.app.widget;
 
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +43,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
 
                     filter.setCategories(new ArrayList<>(Category.fromDisplayName(UserConfig.getCategories(listView.getContext()).get(PagerNewsAdapter.this.position))));
                     filter.setSources(UserConfig.getSources(listView.getContext()));
+                    filter.setFeatured(true);
 
                     PagerNewsAdapter.this.filterResults.put(i, filter.performFiltering(searchText));
                 }
@@ -62,6 +63,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
 
                     filter.setCategories(new ArrayList<>(Category.fromDisplayName(UserConfig.getCategories(listView.getContext()).get(PagerNewsAdapter.this.position))));
                     filter.setSources(UserConfig.getSources(listView.getContext()));
+                    filter.setFeatured(true);
                     filter.publishResults(searchText, results);
                 }
             }
@@ -69,7 +71,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
     }
 
     private final List<String>                           categories    = new ArrayList<>();
-    private final SparseArrayCompat<WeakReference<View>> views         = new SparseArrayCompat<>();
+    private final SparseArrayCompat<SoftReference<View>> views         = new SparseArrayCompat<>();
     private final SparseArrayCompat<Object>              filterResults = new SparseArrayCompat<>();
 
     private CompositeDisposable disposables;
@@ -109,7 +111,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
 
     @Nullable
     public ListView getItem(final int position) {
-        final WeakReference<View> view = this.views.get(position);
+        final SoftReference<View> view = this.views.get(position);
 
         if (view == null) return null;
         return (ListView)view.get();
@@ -142,7 +144,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
             }
         ));
 
-        this.views.put(position, new WeakReference<>(view));
+        this.views.put(position, new SoftReference<>(view));
         container.addView(view);
 
         if (!TextUtils.isEmpty(this.searchText) && view.getAdapter() instanceof Filterable && ((Filterable)view.getAdapter()).getFilter() != null) ((Filterable)view.getAdapter()).getFilter().filter(this.searchText);
@@ -152,7 +154,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
 
     @Override
     public void destroyItem(final ViewGroup container, final int position, final Object object) {
-        final WeakReference<View> reference = this.views.get(position);
+        final SoftReference<View> reference = this.views.get(position);
 
         if (reference != null) {
             final View view = reference.get();

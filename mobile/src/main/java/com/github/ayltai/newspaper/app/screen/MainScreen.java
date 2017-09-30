@@ -1,5 +1,8 @@
 package com.github.ayltai.newspaper.app.screen;
 
+import java.lang.ref.SoftReference;
+import java.util.Map;
+
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.SearchManager;
@@ -14,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
@@ -61,6 +65,8 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
     private final FlowableProcessor<Irrelevant> filterActions  = PublishProcessor.create();
 
     //endregion
+
+    private Map<Integer, SoftReference<View>> cachedViews = new ArrayMap<>();
 
     //region Components
 
@@ -125,11 +131,22 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
 
     //endregion
 
+    @SuppressWarnings("CyclomaticComplexity")
     @Override
     public void onTabSelected(@IdRes final int tabId) {
-        this.searchView.setIconified(true);
+        this.toolbar.getMenu().findItem(R.id.action_search).collapseActionView();
 
-        if (this.newsView != null) this.content.removeView((View)this.newsView);
+        boolean isCached = false;
+
+        if (this.cachedViews.containsKey(tabId)) {
+            this.newsView = (NewsPresenter.View)this.cachedViews.get(tabId).get();
+
+            if (this.newsView != null) {
+                if (this.content.indexOfChild((View)this.newsView) < 0) this.content.addView((View)this.newsView);
+
+                isCached = true;
+            }
+        }
 
         if (tabId == R.id.action_about) {
             this.upAction.setVisibility(View.GONE);
@@ -138,6 +155,10 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
             this.moreAction.setVisibility(View.GONE);
 
             this.toolbar.getMenu().findItem(R.id.action_search).setVisible(false);
+
+            if (!isCached) {
+                // TODO: Creates about view
+            }
         } else {
             this.upAction.setVisibility(View.INVISIBLE);
             this.refreshAction.setVisibility(View.INVISIBLE);
@@ -147,17 +168,16 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
             if (this.isMoreActionsShown) this.hideMoreActions();
 
             this.toolbar.getMenu().findItem(R.id.action_search).setVisible(true);
+
+            if (!isCached) {
+                this.newsView = tabId == R.id.action_news ? new PagerNewsView(this.getContext()) : tabId == R.id.action_history ? new HistoricalNewsView(this.getContext()) : new BookmarkedNewsView(this.getContext());
+                this.content.addView((View)this.newsView);
+
+                this.cachedViews.put(tabId, new SoftReference<>((View)this.newsView));
+            }
         }
 
-        if (tabId == R.id.action_about) {
-            // TODO: Creates about view
-        } else if (tabId == R.id.action_news) {
-            this.newsView = new PagerNewsView(this.getContext());
-            this.content.addView((View)this.newsView);
-        } else {
-            this.newsView = tabId == R.id.action_history ? new HistoricalNewsView(this.getContext()) : new BookmarkedNewsView(this.getContext());
-            this.content.addView((View)this.newsView);
-        }
+        if (this.content.getChildCount() > 1) this.content.removeViewAt(0);
     }
 
     //region Lifecycle
@@ -260,11 +280,11 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
         this.moreAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_clockwise));
         this.upAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
         this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
-        this.filterAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+        if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.filterAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
 
         this.upAction.setClickable(true);
         this.refreshAction.setClickable(true);
-        this.filterAction.setClickable(true);
+        if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.filterAction.setClickable(true);
     }
 
     private void hideMoreActions() {

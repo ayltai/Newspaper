@@ -255,8 +255,8 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
         this.recyclerView.setLayoutManager(new SmartLayoutManager(this.getContext()));
         this.recyclerView.setAdapter(this.adapter);
 
-        this.loadingView = view.findViewById(this.getLoadingViewId());
-        this.emptyView   = view.findViewById(this.getEmptyViewId());
+        if (this.getLoadingViewId() > 0) this.loadingView = view.findViewById(this.getLoadingViewId());
+        if (this.getEmptyViewId() > 0) this.emptyView = view.findViewById(this.getEmptyViewId());
 
         this.emptyView.setVisibility(View.GONE);
 

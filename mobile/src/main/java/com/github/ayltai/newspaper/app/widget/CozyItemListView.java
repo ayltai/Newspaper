@@ -19,7 +19,7 @@ import com.github.ayltai.newspaper.app.view.binding.ImageBinderFactory;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
-public final class CozyItemListView extends ItemListView {
+public class CozyItemListView extends ItemListView {
     //region Constructors
 
     public CozyItemListView(@NonNull final Context context) {

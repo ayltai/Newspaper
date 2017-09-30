@@ -1,6 +1,6 @@
 package com.github.ayltai.newspaper.app;
 
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 import java.util.Collections;
 import java.util.Map;
 
@@ -31,7 +31,7 @@ import flow.TraversalCallback;
 import io.reactivex.disposables.Disposable;
 
 final class FlowController {
-    private final Map<Object, Pair<WeakReference<Presenter>, WeakReference<Presenter.View>>> cache       = Collections.synchronizedMap(new ArrayMap<>());
+    private final Map<Object, Pair<SoftReference<Presenter>, SoftReference<Presenter.View>>> cache       = Collections.synchronizedMap(new ArrayMap<>());
     private final Map<Object, Disposable>                                                    disposables = Collections.synchronizedMap(new ArrayMap<>());
 
     private final Activity activity;
@@ -63,7 +63,7 @@ final class FlowController {
                 Presenter      presenter = null;
                 Presenter.View view      = null;
 
-                final Pair<WeakReference<Presenter>, WeakReference<Presenter.View>> pair = this.cache.get(incomingState.getKey());
+                final Pair<SoftReference<Presenter>, SoftReference<Presenter.View>> pair = this.cache.get(incomingState.getKey());
 
                 if (pair != null) {
                     presenter = pair.first.get();
@@ -81,7 +81,7 @@ final class FlowController {
                 }
 
                 if (presenter != null && view != null) {
-                    if (pair == null) this.cache.put(incomingState.getKey(), Pair.create(new WeakReference<>(presenter), new WeakReference<>(view)));
+                    if (pair == null) this.cache.put(incomingState.getKey(), Pair.create(new SoftReference<>(presenter), new SoftReference<>(view)));
 
                     presenter.onViewDetached();
 

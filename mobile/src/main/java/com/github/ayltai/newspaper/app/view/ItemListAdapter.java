@@ -12,6 +12,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +78,7 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
         private Set<String>  sources;
         private boolean      isHistorical;
         private boolean      isBookmarked;
+        private boolean      isFeatured;
 
         public void setCategories(@NonNull final List<String> categories) {
             this.categories = categories;
@@ -92,6 +94,10 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
 
         public void setBookmarked(final boolean isBookmarked) {
             this.isBookmarked = isBookmarked;
+        }
+
+        public void setFeatured(final boolean isFeatured) {
+            this.isFeatured = isFeatured;
         }
 
         @SuppressWarnings("IllegalCatch")
@@ -138,10 +144,14 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
                 if (results.count > 0) {
                     Collections.sort(items);
 
-                    final List<Item> featuredItems = new ArrayList<>(items);
-                    featuredItems.add(0, FeaturedItem.create(items));
+                    if (this.isFeatured && TextUtils.isEmpty(searchText)) {
+                        final List<Item> featuredItems = new ArrayList<>(items);
+                        featuredItems.add(0, FeaturedItem.create(items));
 
-                    ItemListAdapter.this.onDataSetChanged(featuredItems);
+                        ItemListAdapter.this.onDataSetChanged(featuredItems);
+                    } else {
+                        ItemListAdapter.this.onDataSetChanged(items);
+                    }
                 }
             }
         }

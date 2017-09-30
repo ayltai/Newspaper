@@ -11,6 +11,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.github.ayltai.newspaper.Constants;
+import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.view.BookmarkedItemListPresenter;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
@@ -41,8 +42,31 @@ public final class BookmarkedNewsView extends NewsView {
     @NonNull
     @Override
     public ItemListView createItemListView() {
-        final ItemListView      view      = UserConfig.getViewStyle(this.getContext()) == Constants.VIEW_STYLE_COZY ? new CozyItemListView(this.getContext()) : new CompactItemListView(this.getContext());
         final ItemListPresenter presenter = new BookmarkedItemListPresenter(UserConfig.getCategories(this.getContext()));
+
+        final ItemListView view = UserConfig.getViewStyle(this.getContext()) == Constants.VIEW_STYLE_COZY
+            ? new CozyItemListView(this.getContext()) {
+                @Override
+                protected int getLayoutId() {
+                    return R.layout.view_list_cozy_local;
+                }
+
+                @Override
+                    protected int getLoadingViewId() {
+                    return 0;
+                }
+                }
+            : new CompactItemListView(this.getContext()) {
+                @Override
+                protected int getLayoutId() {
+                    return R.layout.view_list_compact_local;
+                }
+
+                @Override
+                protected int getLoadingViewId() {
+                    return 0;
+                }
+            };
 
         view.attachments().subscribe(
             isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
