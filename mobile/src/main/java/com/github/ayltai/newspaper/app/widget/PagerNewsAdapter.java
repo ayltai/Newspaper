@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.app.screen;
+package com.github.ayltai.newspaper.app.widget;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -20,50 +20,47 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.github.ayltai.newspaper.Constants;
+import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
-import com.github.ayltai.newspaper.app.widget.CompactItemListView;
-import com.github.ayltai.newspaper.app.widget.CozyItemListView;
-import com.github.ayltai.newspaper.app.widget.ItemListView;
 import com.github.ayltai.newspaper.config.UserConfig;
-import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.widget.ListView;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-class MainAdapter extends PagerAdapter implements Filterable, LifecycleObserver {
+class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObserver {
     private final class MainFilter extends Filter {
         @Nullable
         @Override
         protected FilterResults performFiltering(@Nullable final CharSequence searchText) {
-            MainAdapter.this.searchText = searchText;
+            PagerNewsAdapter.this.searchText = searchText;
 
-            for (int i = 0; i < MainAdapter.this.getCount(); i++) {
-                final ListView listView = MainAdapter.this.getItem(i);
+            for (int i = 0; i < PagerNewsAdapter.this.getCount(); i++) {
+                final ListView listView = PagerNewsAdapter.this.getItem(i);
                 if (listView != null && listView.getAdapter() instanceof Filterable && ((Filterable)listView.getAdapter()).getFilter() instanceof ItemListAdapter.ItemListFilter) {
                     final ItemListAdapter.ItemListFilter filter = (ItemListAdapter.ItemListFilter)((Filterable)listView.getAdapter()).getFilter();
 
-                    filter.setCategories(new ArrayList<>(Category.fromDisplayName(UserConfig.getCategories(listView.getContext()).get(MainAdapter.this.position))));
+                    filter.setCategories(new ArrayList<>(Category.fromDisplayName(UserConfig.getCategories(listView.getContext()).get(PagerNewsAdapter.this.position))));
                     filter.setSources(UserConfig.getSources(listView.getContext()));
 
-                    MainAdapter.this.filterResults.put(i, filter.performFiltering(searchText));
+                    PagerNewsAdapter.this.filterResults.put(i, filter.performFiltering(searchText));
                 }
             }
 
-            return (FilterResults)MainAdapter.this.filterResults.get(MainAdapter.this.position);
+            return (FilterResults)PagerNewsAdapter.this.filterResults.get(PagerNewsAdapter.this.position);
         }
 
         @Override
         protected void publishResults(@Nullable final CharSequence searchText, @Nullable final FilterResults filterResults) {
-            for (int i = 0; i < MainAdapter.this.getCount(); i++) {
-                final ListView listView = MainAdapter.this.getItem(i);
+            for (int i = 0; i < PagerNewsAdapter.this.getCount(); i++) {
+                final ListView listView = PagerNewsAdapter.this.getItem(i);
 
                 if (listView != null && listView.getAdapter() instanceof Filterable && ((Filterable)listView.getAdapter()).getFilter() instanceof ItemListAdapter.ItemListFilter) {
-                    final FilterResults                  results = (FilterResults)MainAdapter.this.filterResults.get(i);
+                    final FilterResults                  results = (FilterResults)PagerNewsAdapter.this.filterResults.get(i);
                     final ItemListAdapter.ItemListFilter filter  = (ItemListAdapter.ItemListFilter)((Filterable)listView.getAdapter()).getFilter();
 
-                    filter.setCategories(new ArrayList<>(Category.fromDisplayName(UserConfig.getCategories(listView.getContext()).get(MainAdapter.this.position))));
+                    filter.setCategories(new ArrayList<>(Category.fromDisplayName(UserConfig.getCategories(listView.getContext()).get(PagerNewsAdapter.this.position))));
                     filter.setSources(UserConfig.getSources(listView.getContext()));
                     filter.publishResults(searchText, results);
                 }
@@ -80,7 +77,7 @@ class MainAdapter extends PagerAdapter implements Filterable, LifecycleObserver 
     private int                 position;
     private CharSequence        searchText;
 
-    MainAdapter(@NonNull final Context context) {
+    PagerNewsAdapter(@NonNull final Context context) {
         final List<String> categories = UserConfig.getCategories(context);
         for (final String category : categories) {
             final String name = Category.toDisplayName(category);
@@ -91,7 +88,7 @@ class MainAdapter extends PagerAdapter implements Filterable, LifecycleObserver 
     @NonNull
     @Override
     public Filter getFilter() {
-        return this.filter == null ? this.filter = new MainAdapter.MainFilter() : this.filter;
+        return this.filter == null ? this.filter = new PagerNewsAdapter.MainFilter() : this.filter;
     }
 
     @Override

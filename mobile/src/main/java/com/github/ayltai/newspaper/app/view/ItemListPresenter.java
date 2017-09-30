@@ -21,7 +21,7 @@ public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.Vie
     public interface View extends ListPresenter.View<Item> {
     }
 
-    private final List<String> categories;
+    protected final List<String> categories;
 
     private boolean forceRefresh = false;
 
@@ -36,6 +36,7 @@ public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.Vie
         this.forceRefresh = true;
     }
 
+    @NonNull
     @Override
     public Flowable<List<Item>> load() {
         if (this.getView() == null) return Flowable.just(Collections.emptyList());

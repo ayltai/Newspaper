@@ -23,9 +23,6 @@ public class MainPresenter extends ScreenPresenter<MainPresenter.View> {
 
         @NonNull
         Flowable<Irrelevant> filterActions();
-
-        @NonNull
-        Flowable<Integer> pageSelections();
     }
 
     @Override

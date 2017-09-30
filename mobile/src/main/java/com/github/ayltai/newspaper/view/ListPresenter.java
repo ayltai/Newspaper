@@ -43,6 +43,7 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
 
     private int scrollPosition;
 
+    @NonNull
     public abstract Flowable<List<M>> load();
 
     protected void resetState() {
@@ -94,18 +95,20 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
 
                 final AtomicBoolean hasCleared = new AtomicBoolean(false);
 
-                this.manageDisposable(this.load().subscribe(
-                    models -> {
-                        if (!hasCleared.get()) {
-                            hasCleared.set(true);
-                            view.clear();
-                        }
+                this.manageDisposable(this.load()
+                    .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
+                    .subscribe(
+                        models -> {
+                            if (!hasCleared.get()) {
+                                hasCleared.set(true);
+                                view.clear();
+                            }
 
-                        this.bindModel(models);
-                    },
-                    error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                    }));
+                            this.bindModel(models);
+                        },
+                        error -> {
+                            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        }));
             },
             error -> {
                 if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);

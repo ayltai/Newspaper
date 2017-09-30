@@ -20,6 +20,7 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public final class ItemManager extends DataManager {
     @NonNull
@@ -72,14 +73,14 @@ public final class ItemManager extends DataManager {
     }
 
     @NonNull
-    public Single<List<NewsItem>> getLastAccessedItems(@Nullable final String[] sources, @Nullable final String[] categories) {
+    public Single<List<NewsItem>> getHistoricalItems(@Nullable final String[] sources, @Nullable final String[] categories) {
         return Single.create(emitter -> {
-            final RealmQuery<NewsItem> query = this.getRealm().where(NewsItem.class).isNotNull(NewsItem.FIELD_LAST_ACCESSED_DATE);
+            final RealmQuery<NewsItem> query = this.getRealm().where(NewsItem.class).greaterThan(NewsItem.FIELD_LAST_ACCESSED_DATE, 0);
 
             if (sources != null) query.in(NewsItem.FIELD_SOURCE, sources);
             if (categories != null) query.in(NewsItem.FIELD_CATEGORY, categories);
 
-            emitter.onSuccess(this.getRealm().copyFromRealm(query.findAll()));
+            emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
         });
     }
 
@@ -91,7 +92,7 @@ public final class ItemManager extends DataManager {
             if (sources != null) query.in(NewsItem.FIELD_SOURCE, sources);
             if (categories != null) query.in(NewsItem.FIELD_CATEGORY, categories);
 
-            emitter.onSuccess(this.getRealm().copyFromRealm(query.findAll()));
+            emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
         });
     }
 

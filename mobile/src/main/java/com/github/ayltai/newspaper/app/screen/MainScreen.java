@@ -3,9 +3,7 @@ package com.github.ayltai.newspaper.app.screen;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.SearchManager;
-import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.AttrRes;
@@ -16,8 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
@@ -28,18 +24,15 @@ import android.view.animation.AnimationUtils;
 
 import com.google.auto.value.AutoValue;
 
-import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.app.MainActivity;
-import com.github.ayltai.newspaper.app.widget.ItemListView;
-import com.github.ayltai.newspaper.app.widget.OptionsView;
-import com.github.ayltai.newspaper.config.UserConfig;
+import com.github.ayltai.newspaper.app.view.NewsPresenter;
+import com.github.ayltai.newspaper.app.widget.BookmarkedNewsView;
+import com.github.ayltai.newspaper.app.widget.HistoricalNewsView;
+import com.github.ayltai.newspaper.app.widget.PagerNewsView;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.widget.ListView;
 import com.github.ayltai.newspaper.widget.Screen;
-import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.roughike.bottombar.BottomBar;
@@ -66,26 +59,24 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
     private final FlowableProcessor<Irrelevant> upActions      = PublishProcessor.create();
     private final FlowableProcessor<Irrelevant> refreshActions = PublishProcessor.create();
     private final FlowableProcessor<Irrelevant> filterActions  = PublishProcessor.create();
-    private final FlowableProcessor<Integer>    pageSelections = PublishProcessor.create();
 
     //endregion
 
     //region Components
 
-    private ViewGroup            content;
-    private ItemListView         itemListView;
+    private Toolbar              toolbar;
     private SearchView           searchView;
+    private ViewGroup            content;
+    private NewsPresenter.View   newsView;
     private BottomBar            bottomBar;
     private FloatingActionButton upAction;
     private FloatingActionButton refreshAction;
     private FloatingActionButton filterAction;
     private FloatingActionButton moreAction;
-    private ViewPager            viewPager;
 
     //endregion
 
-    private MainAdapter adapter;
-    private boolean     isMoreActionsShown;
+    private boolean isMoreActionsShown;
 
     //region Constructors
 
@@ -132,22 +123,40 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
         return this.filterActions;
     }
 
-    @NonNull
-    @Override
-    public Flowable<Integer> pageSelections() {
-        return this.pageSelections;
-    }
-
     //endregion
 
     @Override
     public void onTabSelected(@IdRes final int tabId) {
-        if (this.itemListView != null) this.content.removeView(this.itemListView);
+        this.searchView.setIconified(true);
+
+        if (this.newsView != null) this.content.removeView((View)this.newsView);
+
+        if (tabId == R.id.action_about) {
+            this.upAction.setVisibility(View.GONE);
+            this.refreshAction.setVisibility(View.GONE);
+            this.filterAction.setVisibility(View.GONE);
+            this.moreAction.setVisibility(View.GONE);
+
+            this.toolbar.getMenu().findItem(R.id.action_search).setVisible(false);
+        } else {
+            this.upAction.setVisibility(View.INVISIBLE);
+            this.refreshAction.setVisibility(View.INVISIBLE);
+            this.filterAction.setVisibility(tabId == R.id.action_news ? View.INVISIBLE : View.GONE);
+            this.moreAction.setVisibility(View.VISIBLE);
+
+            if (this.isMoreActionsShown) this.hideMoreActions();
+
+            this.toolbar.getMenu().findItem(R.id.action_search).setVisible(true);
+        }
 
         if (tabId == R.id.action_about) {
             // TODO: Creates about view
+        } else if (tabId == R.id.action_news) {
+            this.newsView = new PagerNewsView(this.getContext());
+            this.content.addView((View)this.newsView);
         } else {
-            // TODO: Creates a tab for last accessed news or bookmarked news
+            this.newsView = tabId == R.id.action_history ? new HistoricalNewsView(this.getContext()) : new BookmarkedNewsView(this.getContext());
+            this.content.addView((View)this.newsView);
         }
     }
 
@@ -157,14 +166,13 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
     @Override
     protected void onAttachedToWindow() {
         final Activity activity = this.getActivity();
-
         if (activity != null) {
             final SearchManager manager = (SearchManager)this.getContext().getSystemService(Context.SEARCH_SERVICE);
             this.searchView.setSearchableInfo(manager.getSearchableInfo(activity.getComponentName()));
         }
 
         this.manageDisposable(RxSearchView.queryTextChanges(this.searchView).subscribe(newText -> {
-            if (this.adapter != null) this.adapter.getFilter().filter(newText);
+            if (this.newsView != null) this.newsView.search(newText);
         }));
 
         this.bottomBar.setOnTabSelectListener(this);
@@ -195,22 +203,6 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
             this.filterActions.onNext(Irrelevant.INSTANCE);
         }));
 
-        if (this.isFirstTimeAttachment) {
-            this.adapter = new MainAdapter(this.getContext());
-
-            final LifecycleOwner lifecycleOwner = this.getLifecycleOwner();
-            if (lifecycleOwner != null) lifecycleOwner.getLifecycle().addObserver(this.adapter);
-
-            this.viewPager.setAdapter(this.adapter);
-            this.manageDisposable(RxViewPager.pageSelections(this.viewPager).subscribe(index -> {
-                this.adapter.setCurrentPosition(index);
-
-                this.pageSelections.onNext(index);
-            }));
-
-            this.pageSelections.onNext(0);
-        }
-
         super.onAttachedToWindow();
     }
 
@@ -228,32 +220,17 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
 
     @Override
     public void up() {
-        final ListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
-        if (view != null) view.up();
+        this.newsView.up();
     }
 
     @Override
     public void refresh() {
-        final ListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
-        if (view != null) view.refresh();
+        this.newsView.refresh();
     }
 
     @Override
     public void filter() {
-        final OptionsView view = new OptionsView(this.getContext(), UserConfig.getTheme(this.getContext()) == Constants.THEME_LIGHT ? R.style.AppDialogThemeLight : R.style.AppDialogThemeDark);
-
-        this.manageDisposable(view.cancelClicks().subscribe(irrelevant -> view.dismiss()));
-
-        this.manageDisposable(view.okClicks().subscribe(irrelevant -> {
-            view.dismiss();
-
-            final Activity activity = this.getActivity();
-            if (activity != null) activity.finish();
-
-            this.getContext().startActivity(new Intent(this.getContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
-        }));
-
-        view.show();
+        if (this.newsView instanceof PagerNewsView) ((PagerNewsView)this.newsView).filter();
     }
 
     private void init() {
@@ -264,17 +241,13 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
         this.refreshAction = view.findViewById(R.id.action_refresh);
         this.filterAction  = view.findViewById(R.id.action_filter);
         this.moreAction    = view.findViewById(R.id.action_more);
-        this.viewPager     = view.findViewById(R.id.viewPager);
 
-        final Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.main);
+        this.toolbar = view.findViewById(R.id.toolbar);
+        this.toolbar.inflateMenu(R.menu.main);
 
-        this.searchView = (SearchView)toolbar.getMenu().findItem(R.id.action_search).getActionView();
+        this.searchView = (SearchView)this.toolbar.getMenu().findItem(R.id.action_search).getActionView();
         this.searchView.setQueryHint(this.getContext().getText(R.string.search_hint));
         this.searchView.setMaxWidth(Integer.MAX_VALUE);
-
-        final TabLayout tabLayout = view.findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(this.viewPager, true);
 
         this.bottomBar = view.findViewById(R.id.bottomBar);
         for (int i = 0; i < this.bottomBar.getTabCount(); i++) this.bottomBar.getTabAtPosition(i).setBarColorWhenSelected(ContextUtils.getColor(this.getContext(), R.attr.tabBarBackgroundColor));
