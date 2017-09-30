@@ -28,7 +28,7 @@ import com.google.android.exoplayer2.util.Util;
 
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.config.UserConfig;
+import com.github.ayltai.newspaper.config.AppConfig;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.jakewharton.rxbinding2.view.RxView;
 
@@ -115,7 +115,7 @@ public final class VideoActivity extends AppCompatActivity {
 
         this.videoPlayer.setPlayWhenReady(false);
 
-        UserConfig.setVideoPlaying(isPlaying);
-        UserConfig.setVideoSeekPosition(seekPosition);
+        AppConfig.setVideoPlaying(isPlaying);
+        AppConfig.setVideoSeekPosition(seekPosition);
     }
 }

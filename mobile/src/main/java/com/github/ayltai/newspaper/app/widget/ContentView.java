@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.data.model.Image;
+import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.piasy.biv.view.BigImageView;
 
 public final class ContentView extends ItemView {

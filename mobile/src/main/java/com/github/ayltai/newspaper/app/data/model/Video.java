@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.data.model;
+package com.github.ayltai.newspaper.app.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

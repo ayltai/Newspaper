@@ -11,8 +11,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
-import com.github.ayltai.newspaper.data.model.Image;
-import com.github.ayltai.newspaper.data.model.Video;
+import com.github.ayltai.newspaper.app.data.model.Image;
+import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.ObservableView;
 import com.jakewharton.rxbinding2.view.RxView;

@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.app.widget.ImageView;
-import com.github.ayltai.newspaper.data.model.Item;
-import com.github.ayltai.newspaper.data.model.NewsItem;
+import com.github.ayltai.newspaper.app.data.model.Item;
+import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.view.binding.PresentationBinderFactory;
 
 public final class ImageBinderFactory extends PresentationBinderFactory<Item, ImageView, ItemPresenter<ImageView>> {

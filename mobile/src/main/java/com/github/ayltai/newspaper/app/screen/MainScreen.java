@@ -21,7 +21,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,15 +34,9 @@ import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.widget.ItemListView;
 import com.github.ayltai.newspaper.app.widget.OptionsView;
 import com.github.ayltai.newspaper.config.UserConfig;
-import com.github.ayltai.newspaper.data.DaggerDataComponent;
-import com.github.ayltai.newspaper.data.DataManager;
-import com.github.ayltai.newspaper.data.DataModule;
-import com.github.ayltai.newspaper.data.ItemManager;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.github.ayltai.newspaper.widget.Screen;
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
@@ -54,10 +47,8 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 import flow.ClassKey;
 import io.reactivex.Flowable;
-import io.reactivex.Single;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
-import io.realm.Realm;
 
 public final class MainScreen extends Screen implements MainPresenter.View, OnTabSelectListener {
     @AutoValue
@@ -156,30 +147,7 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
         if (tabId == R.id.action_about) {
             // TODO: Creates about view
         } else {
-            Single.<Realm>create(emitter -> emitter.onSuccess(DaggerDataComponent.builder()
-                .dataModule(new DataModule(this.getContext()))
-                .build()
-                .realm()))
-                .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
-                .subscribe(
-                    realm -> {
-                        (tabId == R.id.action_history
-                            ? new ItemManager(realm).getLastAccessedItems(null, null)
-                            : new ItemManager(realm).getBookmarkedItems(null, null))
-                            .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
-                            .subscribe(
-                                items -> {
-                                    // TODO: Creates ItemListView
-                                },
-                                error -> {
-                                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                                }
-                            );
-                    },
-                    error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                    }
-                );
+            // TODO: Creates a tab for last accessed news or bookmarked news
         }
     }
 

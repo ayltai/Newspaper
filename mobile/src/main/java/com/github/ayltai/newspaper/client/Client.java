@@ -14,9 +14,9 @@ import android.util.Log;
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.github.ayltai.newspaper.Constants;
-import com.github.ayltai.newspaper.data.model.Category;
-import com.github.ayltai.newspaper.data.model.NewsItem;
-import com.github.ayltai.newspaper.data.model.Source;
+import com.github.ayltai.newspaper.app.data.model.Category;
+import com.github.ayltai.newspaper.app.data.model.NewsItem;
+import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.util.TestUtils;
 

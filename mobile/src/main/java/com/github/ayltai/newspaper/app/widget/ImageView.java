@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.data.model.Image;
+import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
 import com.jakewharton.rxbinding2.view.RxView;

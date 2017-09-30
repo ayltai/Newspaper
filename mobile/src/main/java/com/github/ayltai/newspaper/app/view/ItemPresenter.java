@@ -10,13 +10,13 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
+import com.github.ayltai.newspaper.app.data.model.Image;
+import com.github.ayltai.newspaper.app.data.model.Item;
+import com.github.ayltai.newspaper.app.data.model.NewsItem;
+import com.github.ayltai.newspaper.app.data.model.SourceFactory;
+import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.screen.DetailsScreen;
-import com.github.ayltai.newspaper.config.UserConfig;
-import com.github.ayltai.newspaper.data.model.Image;
-import com.github.ayltai.newspaper.data.model.Item;
-import com.github.ayltai.newspaper.data.model.NewsItem;
-import com.github.ayltai.newspaper.data.model.SourceFactory;
-import com.github.ayltai.newspaper.data.model.Video;
+import com.github.ayltai.newspaper.config.AppConfig;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.binding.Binder;
@@ -107,8 +107,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         if (this.getView() != null) {
             final Item item = this.getModel();
 
-            UserConfig.setVideoPlaying(false);
-            UserConfig.setVideoSeekPosition(0);
+            AppConfig.setVideoPlaying(false);
+            AppConfig.setVideoSeekPosition(0);
 
             Flow.get(this.getView().getContext()).set(DetailsScreen.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem()));
         }

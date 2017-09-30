@@ -18,19 +18,17 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import com.github.ayltai.newspaper.app.data.ItemManager;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
+import com.github.ayltai.newspaper.app.data.model.Item;
+import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.widget.ContentView;
 import com.github.ayltai.newspaper.app.widget.FeaturedView;
 import com.github.ayltai.newspaper.app.widget.FooterView;
 import com.github.ayltai.newspaper.app.widget.HeaderView;
 import com.github.ayltai.newspaper.app.widget.ImageView;
 import com.github.ayltai.newspaper.app.widget.MetaView;
-import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
-import com.github.ayltai.newspaper.data.DataModule;
-import com.github.ayltai.newspaper.data.ItemManager;
-import com.github.ayltai.newspaper.data.model.Item;
-import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
@@ -40,9 +38,6 @@ import com.github.ayltai.newspaper.view.binding.BinderFactory;
 import com.github.ayltai.newspaper.view.binding.FullBinderFactory;
 import com.github.ayltai.newspaper.widget.DelegatingFilter;
 import com.github.ayltai.newspaper.widget.SimpleViewHolder;
-
-import io.reactivex.Single;
-import io.realm.Realm;
 
 public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, SimpleViewHolder<View>> implements Filterable {
     public static final class Builder {
@@ -96,13 +91,10 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
             final FilterResults results = new FilterResults();
 
             try {
-                final List<NewsItem> items = Single.<Realm>create(emitter -> emitter.onSuccess(DaggerDataComponent.builder()
-                    .dataModule(new DataModule(ItemListAdapter.this.context))
-                    .build()
-                    .realm()))
+                final List<NewsItem> items = ItemManager.create(ItemListAdapter.this.context)
                     .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
-                    .flatMap(realm -> new ItemManager(realm).getItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY)))
-                    .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
+                    .flatMap(manager -> manager.getItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
+                        .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER)))
                     .blockingGet();
 
                 results.values = items;

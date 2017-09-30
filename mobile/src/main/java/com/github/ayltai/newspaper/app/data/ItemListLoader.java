@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.data;
+package com.github.ayltai.newspaper.app.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,9 +17,10 @@ import android.util.Log;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.client.ClientFactory;
-import com.github.ayltai.newspaper.data.model.Category;
-import com.github.ayltai.newspaper.data.model.NewsItem;
-import com.github.ayltai.newspaper.data.model.SourceFactory;
+import com.github.ayltai.newspaper.app.data.model.Category;
+import com.github.ayltai.newspaper.app.data.model.NewsItem;
+import com.github.ayltai.newspaper.app.data.model.SourceFactory;
+import com.github.ayltai.newspaper.data.RealmLoader;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -109,7 +110,7 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
     protected Flowable<List<NewsItem>> loadFromLocalSource(@NonNull final Context context, @Nullable final Bundle args) {
         if (!this.isValid()) return Flowable.error(new IllegalStateException("Realm instance is null"));
 
-        return Flowable.create(emitter -> new ItemManager(this.getRealm()).getItems(ItemListLoader.getSources(args).toArray(StringUtils.EMPTY_ARRAY), ItemListLoader.getCategories(args).toArray(StringUtils.EMPTY_ARRAY))
+        return Flowable.create(emitter -> ItemManager.create(this.getRealm()).getItems(ItemListLoader.getSources(args).toArray(StringUtils.EMPTY_ARRAY), ItemListLoader.getCategories(args).toArray(StringUtils.EMPTY_ARRAY))
             .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
             .map(items -> this.getRealm().copyFromRealm(items))
             .map(items -> {
@@ -139,7 +140,7 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
             })
             .flatMap(items -> {
                 if (this.isValid()) {
-                    return Single.create(e -> new ItemManager(this.getRealm())
+                    return Single.create(e -> ItemManager.create(this.getRealm())
                         .putItems(items)
                         .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
                         .subscribe(

@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.data.model;
+package com.github.ayltai.newspaper.app.data.model;
 
 import java.util.Arrays;
 import java.util.Collection;

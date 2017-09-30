@@ -16,7 +16,7 @@ import com.github.ayltai.newspaper.app.view.binding.FeaturedBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.FooterBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.HeaderBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.ImageBinderFactory;
-import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
 public final class CozyItemListView extends ItemListView {

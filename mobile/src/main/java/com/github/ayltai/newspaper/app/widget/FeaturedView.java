@@ -22,7 +22,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.data.model.Image;
+import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.Optional;
 import com.github.ayltai.newspaper.util.RxUtils;

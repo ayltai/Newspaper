@@ -9,10 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.github.ayltai.newspaper.data.model.Image;
-import com.github.ayltai.newspaper.data.model.Item;
-import com.github.ayltai.newspaper.data.model.Video;
-
 import io.realm.RealmList;
 
 public final class FeaturedItem implements Item {

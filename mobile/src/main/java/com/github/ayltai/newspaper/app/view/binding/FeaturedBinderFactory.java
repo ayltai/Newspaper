@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.view.FeaturedPresenter;
 import com.github.ayltai.newspaper.app.widget.FeaturedView;
-import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.view.binding.PresentationBinderFactory;
 
 public class FeaturedBinderFactory extends PresentationBinderFactory<Item, FeaturedView, FeaturedPresenter> {

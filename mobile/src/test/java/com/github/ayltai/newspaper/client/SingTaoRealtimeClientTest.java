@@ -12,9 +12,9 @@ import org.mockito.Mockito;
 import org.robolectric.RuntimeEnvironment;
 
 import com.github.ayltai.newspaper.NetworkTest;
-import com.github.ayltai.newspaper.data.model.Item;
-import com.github.ayltai.newspaper.data.model.NewsItem;
-import com.github.ayltai.newspaper.data.model.SourceFactory;
+import com.github.ayltai.newspaper.app.data.model.Item;
+import com.github.ayltai.newspaper.app.data.model.NewsItem;
+import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.util.IOUtils;
 
 import io.reactivex.Observable;

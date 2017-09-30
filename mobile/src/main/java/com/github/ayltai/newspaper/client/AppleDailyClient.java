@@ -16,10 +16,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.github.ayltai.newspaper.Constants;
-import com.github.ayltai.newspaper.data.model.Image;
-import com.github.ayltai.newspaper.data.model.NewsItem;
-import com.github.ayltai.newspaper.data.model.Source;
-import com.github.ayltai.newspaper.data.model.Video;
+import com.github.ayltai.newspaper.app.data.model.Image;
+import com.github.ayltai.newspaper.app.data.model.NewsItem;
+import com.github.ayltai.newspaper.app.data.model.Source;
+import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.RxUtils;

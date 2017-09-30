@@ -26,7 +26,7 @@ import com.github.ayltai.newspaper.app.widget.CompactItemListView;
 import com.github.ayltai.newspaper.app.widget.CozyItemListView;
 import com.github.ayltai.newspaper.app.widget.ItemListView;
 import com.github.ayltai.newspaper.config.UserConfig;
-import com.github.ayltai.newspaper.data.model.Category;
+import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.widget.ListView;
 

@@ -14,9 +14,9 @@ import org.robolectric.RuntimeEnvironment;
 import org.simpleframework.xml.core.Persister;
 
 import com.github.ayltai.newspaper.NetworkTest;
-import com.github.ayltai.newspaper.data.model.Item;
-import com.github.ayltai.newspaper.data.model.NewsItem;
-import com.github.ayltai.newspaper.data.model.SourceFactory;
+import com.github.ayltai.newspaper.app.data.model.Item;
+import com.github.ayltai.newspaper.app.data.model.NewsItem;
+import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.rss.RssFeed;
 import com.github.ayltai.newspaper.util.IOUtils;
 

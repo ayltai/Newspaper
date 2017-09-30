@@ -1,13 +1,18 @@
-package com.github.ayltai.newspaper.data;
+package com.github.ayltai.newspaper.app.data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.github.ayltai.newspaper.data.model.NewsItem;
+import com.github.ayltai.newspaper.app.data.model.NewsItem;
+import com.github.ayltai.newspaper.data.DaggerDataComponent;
+import com.github.ayltai.newspaper.data.DataManager;
+import com.github.ayltai.newspaper.data.DataModule;
+import com.github.ayltai.newspaper.util.RxUtils;
 
 import io.reactivex.Single;
 import io.realm.Case;
@@ -17,7 +22,22 @@ import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public final class ItemManager extends DataManager {
-    public ItemManager(@NonNull final Realm realm) {
+    @NonNull
+    public static Single<ItemManager> create(@NonNull final Context context) {
+        return Single.<Realm>create(emitter -> emitter.onSuccess(DaggerDataComponent.builder()
+            .dataModule(new DataModule(context))
+            .build()
+            .realm()))
+            .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
+            .map(ItemManager::create);
+    }
+
+    @NonNull
+    public static ItemManager create(@NonNull final Realm realm) {
+        return new ItemManager(realm);
+    }
+
+    private ItemManager(@NonNull final Realm realm) {
         super(realm);
     }
 

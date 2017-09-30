@@ -11,23 +11,20 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.util.Log;
 
+import com.github.ayltai.newspaper.app.data.ItemManager;
+import com.github.ayltai.newspaper.app.data.model.Image;
+import com.github.ayltai.newspaper.app.data.model.Item;
+import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.client.ClientFactory;
-import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
-import com.github.ayltai.newspaper.data.DataModule;
-import com.github.ayltai.newspaper.data.ItemManager;
-import com.github.ayltai.newspaper.data.model.Image;
-import com.github.ayltai.newspaper.data.model.Item;
-import com.github.ayltai.newspaper.data.model.NewsItem;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
-import io.realm.Realm;
 
 public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     public interface View extends ItemPresenter.View {
@@ -100,12 +97,10 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
             final NewsItem item = (NewsItem)this.getModel();
             item.setBookmarked(!this.getModel().isBookmarked());
 
-            Single.<Realm>create(emitter -> emitter.onSuccess(DaggerDataComponent.builder()
-                .dataModule(new DataModule(this.getView().getContext()))
-                .build()
-                .realm()))
+            ItemManager.create(this.getView().getContext())
                 .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
-                .flatMap(realm -> new ItemManager(realm).putItems(Collections.singletonList(item)).compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER)))
+                .flatMap(manager -> manager.putItems(Collections.singletonList(item))
+                    .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER)))
                 .subscribe(
                     items -> {
                     },
@@ -144,19 +139,9 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     private static Single<List<NewsItem>> updateItem(@NonNull final Context context, @NonNull final NewsItem item) {
         item.setLastAccessedDate(new Date());
 
-        return Single.<Realm>create(emitter -> emitter.onSuccess(DaggerDataComponent.builder()
-            .dataModule(new DataModule(context))
-            .build()
-            .realm()))
+        return ItemManager.create(context)
             .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
-            .flatMap(
-                realm -> {
-                    item.setLastAccessedDate(new Date());
-
-                    return new ItemManager(realm)
-                        .putItems(Collections.singletonList(item))
-                        .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
-                }
-            );
+            .flatMap(manager -> manager.putItems(Collections.singletonList(item))
+                .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER)));
     }
 }

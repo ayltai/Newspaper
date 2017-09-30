@@ -3,8 +3,6 @@ package com.github.ayltai.newspaper.config;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
@@ -17,10 +15,6 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Sets;
 
-import io.reactivex.Flowable;
-import io.reactivex.processors.FlowableProcessor;
-import io.reactivex.processors.PublishProcessor;
-
 public final class UserConfig {
     //region Constants
 
@@ -29,20 +23,6 @@ public final class UserConfig {
     private static final String KEY_VIEW_STYLE = "viewStyle";
     private static final String KEY_THEME      = "theme";
     private static final String KEY_AUTO_PLAY  = "autoPlay";
-
-    //endregion
-
-    //region Subscriptions
-
-    private static final FlowableProcessor<Boolean> VIDEO_PLAYBACK_STATE_CHANGES = PublishProcessor.create();
-    private static final FlowableProcessor<Long>    VIDEO_SEEK_POSITION_CHANGES  = PublishProcessor.create();
-
-    //endregion
-
-    //region Global app states
-
-    private static final AtomicBoolean VIDEO_IS_PLAYING    = new AtomicBoolean(false);
-    private static final AtomicLong    VIDEO_SEEK_POSITION = new AtomicLong(0);
 
     //endregion
 
@@ -107,35 +87,5 @@ public final class UserConfig {
 
     public static void setAutoPlayEnabled(@NonNull final Context context, final boolean enabled) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(UserConfig.KEY_AUTO_PLAY, enabled).apply();
-    }
-
-    public static boolean isVideoPlaying() {
-        return VIDEO_IS_PLAYING.get();
-    }
-
-    public static void setVideoPlaying(final boolean isPlaying) {
-        VIDEO_IS_PLAYING.set(isPlaying);
-
-        UserConfig.VIDEO_PLAYBACK_STATE_CHANGES.onNext(isPlaying);
-    }
-
-    public static long getVideoSeekPosition() {
-        return VIDEO_SEEK_POSITION.get();
-    }
-
-    public static void setVideoSeekPosition(final long seekPosition) {
-        VIDEO_SEEK_POSITION.set(seekPosition);
-
-        UserConfig.VIDEO_SEEK_POSITION_CHANGES.onNext(seekPosition);
-    }
-
-    @NonNull
-    public static Flowable<Boolean> videoPlaybackStateChanges() {
-        return UserConfig.VIDEO_PLAYBACK_STATE_CHANGES;
-    }
-
-    @NonNull
-    public static Flowable<Long> videoSeekPositionChanges() {
-        return UserConfig.VIDEO_SEEK_POSITION_CHANGES;
     }
 }

@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.config.UserConfig;
-import com.github.ayltai.newspaper.data.ItemListLoader;
-import com.github.ayltai.newspaper.data.model.Item;
+import com.github.ayltai.newspaper.app.data.ItemListLoader;
+import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.util.Lists;
 import com.github.ayltai.newspaper.view.ListPresenter;
 
