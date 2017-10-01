@@ -1,0 +1,201 @@
+version: 2
+
+references:
+
+  cache_key: &cache_key
+    key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum  "mobile/build.gradle" }}-{{ checksum "wear/build.gradle" }}
+  restore_cache: &restore_cache
+    restore_cache:
+      <<: *cache_key
+  save_cache: &save_cache
+    save_cache:
+      <<: *cache_key
+      paths:
+        - ~/.gradle
+        - ~/.m2
+
+  workspace: &workspace
+    ~/workspace
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace
+  persist_to_workspace: &persist_to_workspace
+    persist_to_workspace:
+      root: *workspace
+      paths:
+        - mobile/build
+
+  android_config: &android_config
+    working_directory: *workspace
+    docker:
+      - image: circleci/android:api-26-alpha
+    environment:
+      TERM: dumb
+      _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+  gcloud_config: &gcloud_config
+    working_directory: *workspace
+    docker:
+      - image: google/cloud-sdk:latest
+    environment:
+      TERM: dumb
+
+  export_android_key: &export_android_key
+    run:
+      name: Export Android key store environment variable
+      command: echo 'export ANDROID_KEY_STORE="$ANDROID_KEY_STORE"' >> $BASH_ENV
+  decode_android_key: &decode_android_key
+    run:
+      name: Decode Android key store
+      command: echo $ANDROID_KEY_STORE | base64 -di > key-store.jks
+
+  export_gservices_key: &export_gservices_key
+    run:
+      name: Export Google Services key environment variable
+      command: echo 'export GOOGLE_SERVICES_KEY="$GOOGLE_SERVICES_KEY"' >> $BASH_ENV
+  decode_gservices_key: &decode_gservices_key
+    run:
+      name: Decode Google Services key
+      command: echo $GOOGLE_SERVICES_KEY | base64 -di > mobile/google-services.json
+
+  export_gcloud_key: &export_gcloud_key
+    run:
+      name: Export Google Cloud Service key environment variable
+      command: echo 'export GCLOUD_SERVICE_KEY="$GCLOUD_SERVICE_KEY"' >> $BASH_ENV
+  decode_gcloud_key: &decode_gcloud_key
+    run:
+      name: Decode Google Cloud credentials
+      command: echo $GCLOUD_SERVICE_KEY | base64 -di > ${HOME}/client-secret.json
+
+  export_fabric_key: &export_fabric_key
+    run:
+      name: Export Fabric key
+      command: echo 'export FABRIC_KEY="$FABRIC_KEY"' >> $BASH_ENV
+  decode_fabric_key: &decode_fabric_key
+    run:
+      name: Decode Fabric key
+      command: echo $FABRIC_KEY | base64 -di > mobile/fabric.properties && echo $FABRIC_KEY | base64 -di > wear/fabric.properties
+
+jobs:
+
+  build_debug:
+    <<: *android_config
+    steps:
+      - checkout
+      - *restore_cache
+      - run:
+          name: Download dependencies
+          command: ./gradlew androidDependencies
+      - *save_cache
+      - *export_gservices_key
+      - *decode_gservices_key
+      - run:
+          name: Gradle build (debug)
+          command: ./gradlew -PciBuild=true :mobile:assembleDebug :mobile:assembleAndroidTest
+      - *persist_to_workspace
+      - store_artifacts:
+          path: mobile/build/outputs/apk/
+          destination: /apk/
+
+  build_release:
+    <<: *android_config
+    steps:
+      - checkout
+      - *restore_cache
+      - run:
+          name: Download dependencies
+          command: ./gradlew androidDependencies
+      - *save_cache
+      - *export_android_key
+      - *decode_android_key
+      - *export_gservices_key
+      - *decode_gservices_key
+      - *export_fabric_key
+      - *decode_fabric_key
+      - run:
+          name: Gradle build (release)
+          command: ./gradlew -PciBuild=true :mobile:assembleRelease
+      - *persist_to_workspace
+      - store_artifacts:
+          path: mobile/build/outputs/apk/
+          destination: /apk/
+      - store_artifacts:
+          path: mobile/build/outputs/mapping/
+          destination: /mapping/
+
+  test_unit:
+    <<: *android_config
+    steps:
+      - checkout
+      - *restore_cache
+      - run:
+          name: Download dependencies
+          command: ./gradlew androidDependencies
+      - *save_cache
+      - *export_gservices_key
+      - *decode_gservices_key
+      - run:
+          name: Run unit tests
+          command: ./gradlew -PciBuild=true :mobile:testDebugUnitTest :mobile:jacocoTestReport
+      - store_artifacts:
+          path: mobile/build/reports/
+          destination: /reports/
+      - store_test_results:
+          path: mobile/build/test-results/
+          destination: /test-results/
+
+  test_instrumented:
+    <<: *gcloud_config
+    steps:
+      - *attach_workspace
+      - *export_gcloud_key
+      - *decode_gcloud_key
+      - run:
+          name: Set Google Cloud target project
+          command: gcloud config set project newspaper-84169
+      - run:
+          name: Authenticate with Google Cloud
+          command: gcloud auth activate-service-account firebase-adminsdk-p9qvk@newspaper-84169.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
+      - run:
+          name: Run instrumented test on Firebase Test Lab
+          command: gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=Nexus5X,version=26,locale=en_US,orientation=portrait --timeout 10m
+      - run:
+          name: Create directory to store test results
+          command: mkdir firebase
+      - run:
+          name: Download instrumented test results from Firebase Test Lab
+          command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-3udbiqpdyp0d0-miwcp7d69v80m | tail -1`*" /root/workspace/firebase/
+      - store_artifacts:
+          path: firebase/
+          destination: /firebase/
+
+  deploy:
+    <<: *android_config
+    steps:
+      - checkout
+      - *attach_workspace
+      - *restore_cache
+      - *export_fabric_key
+      - *decode_fabric_key
+      - run:
+          name: Deploy to Fabric Beta
+          command: ./gradlew -PciBuild=true :mobile:crashlyticsUploadDistributionRelease
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - build_debug
+      - build_release
+      - test_unit
+      - test_instrumented:
+          requires:
+            - build_debug
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - build_release
+            - test_unit
+            - test_instrumented

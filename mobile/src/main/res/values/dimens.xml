@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="space4">4dp</dimen>
+    <dimen name="space8">8dp</dimen>
+    <dimen name="space12">12dp</dimen>
+    <dimen name="space16">16dp</dimen>
+    <dimen name="space24">24dp</dimen>
+    <dimen name="space32">32dp</dimen>
+    <dimen name="textHeading1">45sp</dimen>
+    <dimen name="textHeading2">34sp</dimen>
+    <dimen name="textHeading3">24sp</dimen>
+    <dimen name="textNormal">16sp</dimen>
+    <dimen name="textSmall">14sp</dimen>
+    <dimen name="bottombar_height">56dp</dimen>
+    <dimen name="bottombar_with_shadow_height">60dp</dimen>
+    <dimen name="fabSize">56dp</dimen>
+    <dimen name="fabMargin">0dp</dimen>
+    <dimen name="fabMarginLarge">0dp</dimen>
+    <dimen name="iconSmall">24dp</dimen>
+    <dimen name="iconNormal">40dp</dimen>
+    <dimen name="cozy_card_radius">4dp</dimen>
+    <dimen name="compact_card_radius">0dp</dimen>
+    <dimen name="cozy_card_elevation">3dp</dimen>
+    <dimen name="compact_card_elevation">2dp</dimen>
+    <dimen name="featured_image_height">240dp</dimen>
+    <dimen name="featured_title_height">96dp</dimen>
+    <dimen name="cozy_item_header_clipped_height">80dp</dimen>
+    <dimen name="cozy_item_header_padded_height">108dp</dimen>
+    <dimen name="cozy_item_header_height">72dp</dimen>
+    <dimen name="cozy_item_image_padded_height">232dp</dimen>
+    <dimen name="cozy_item_image_height">200dp</dimen>
+    <dimen name="cozy_avatar_size">40dp</dimen>
+    <dimen name="compact_item_content_item_height">120dp</dimen>
+    <dimen name="compact_item_content_padded_height">136dp</dimen>
+    <dimen name="compact_item_content_image_size">80dp</dimen>
+    <dimen name="compact_avatar_size">32dp</dimen>
+</resources>

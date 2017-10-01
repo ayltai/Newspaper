@@ -1,0 +1,35 @@
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.github.ayltai.newspaper">
+    <uses-sdk tools:overrideLibrary="android.support.v7.appcompat,android.support.v7.preference,android.support.graphics.drawable,android.support.compat,android.support.v4,android.support.coreutils,android.support.mediacompat,android.support.coreui,android.support.fragment,android.support.v7.recyclerview" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application
+        android:name=".app.MainApplication"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/AppTheme.Light"
+        android:supportsRtl="true"
+        android:allowBackup="true"
+        tools:replace="android:supportsRtl,android:allowBackup">
+        <activity
+            android:name=".app.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.Light"
+            android:configChanges="density|fontScale|locale|orientation|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".app.VideoActivity"
+            android:theme="@style/AppTheme.Dark"
+            android:screenOrientation="landscape" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="3852232f6854cd891d91a69732ab35097b757d0e" />
+    </application>
+</manifest>

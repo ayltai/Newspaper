@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>default_list_view_type</key>
+        <value>2</value>
+    </entry>
+    <entry>
+        <key>update_interval</key>
+        <value>180</value>
+    </entry>
+</defaultsMap>

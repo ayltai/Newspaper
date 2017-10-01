@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Newspaper</string>
+    <string name="app_version">Version %s</string>
+    <string name="error_no_connection">No internet connection</string>
+    <string name="empty_bookmark_title">You don\'t have any favorite news yet</string>
+    <string name="empty_bookmark_description">Tap on the bookmark icon to collect news here</string>
+    <string name="view_via">View via…</string>
+    <string name="share_to">Share to…</string>
+    <string name="update_indicator">New news available</string>
+    <string name="loading_indicator">Loading…</string>
+
+    <!-- About -->
+    <string name="about_visit">Visit website</string>
+    <string name="about_contact">Contact developer</string>
+    <string name="about_rate">Rate this app</string>
+    <string name="about_report">Report issue</string>
+
+    <!-- Time namings -->
+    <string name="time_ago_now">Just now</string>
+    <string name="time_ago_minute">A minute ago</string>
+    <string name="time_ago_minutes">%s minutes ago</string>
+    <string name="time_ago_hour">An hour ago</string>
+    <string name="time_ago_hours">%s hours ago</string>
+    <string name="time_ago_day">Yesterday</string>
+    <string name="time_ago_days">%s days ago</string>
+
+    <string name="title_bookmark">Bookmark</string>
+    <string name="go_back">Previous category</string>
+    <string name="go_next">Next category</string>
+
+    <!-- Actions -->
+    <string name="action_search">Search</string>
+    <string name="action_filter">Filter</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_bookmark">Bookmark</string>
+    <string name="action_share">Share</string>
+    <string name="action_about">About</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_close">Close</string>
+    <string name="action_apply">Apply changes</string>
+    <string name="action_news">News</string>
+    <string name="action_history">History</string>
+
+    <!-- Empty states -->
+    <string name="empty_news_title">Nothing here</string>
+    <string name="empty_news_description">You can read more news in other categories, or you can refresh to try again.</string>
+
+    <!-- Search -->
+    <string name="search_hint">Search news</string>
+
+    <!-- Preferences -->
+    <string name="pref_cozy_layout">Cozy layout</string>
+    <string name="pref_dark_theme">Dark theme</string>
+    <string name="pref_auto_play">Play video news automatically</string>
+    <string name="pref_settings">Settings</string>
+    <string name="pref_sources">Sources</string>
+    <string name="pref_categories">Categories</string>
+    <string-array name="sources">
+        <item>蘋果日報</item>
+        <item>東方日報</item>
+        <item>星島日報</item>
+        <item>星島即時</item>
+        <item>經濟日報</item>
+        <item>成報</item>
+        <item>明報</item>
+        <item>頭條日報</item>
+        <item>頭條即時</item>
+        <item>晴報</item>
+        <item>信報</item>
+        <item>香港電台</item>
+    </string-array>
+    <string-array name="categories">
+        <item>港聞</item>
+        <item>國際</item>
+        <item>兩岸</item>
+        <item>經濟</item>
+        <item>地產</item>
+        <item>娛樂</item>
+        <item>體育</item>
+        <item>副刊</item>
+        <item>教育</item>
+        <item>即時港聞</item>
+        <item>即時國際</item>
+        <item>即時兩岸</item>
+        <item>即時經濟</item>
+        <item>即時地產</item>
+        <item>即時娛樂</item>
+        <item>即時體育</item>
+        <item>即時副刊</item>
+    </string-array>
+
+    <!-- Sources -->
+    <string name="source_apple_daily">Apple Daily</string>
+    <string name="source_oriental_daily">Oriental Daily</string>
+    <string name="source_sing_tao_daily">Sing Tao Daily</string>
+    <string name="source_hket">Hong Kong Economic Times</string>
+    <string name="source_sing_pao_daily">Sing Pao Daily News</string>
+    <string name="source_ming_pao">Ming Pao</string>
+    <string name="source_headline_daily">Headline Daily</string>
+    <string name="source_sky_post">Sky Post</string>
+    <string name="source_hkej">Hong Kong Economic Journal</string>
+    <string name="source_rthk">Radio Television Hong Kong</string>
+</resources>
