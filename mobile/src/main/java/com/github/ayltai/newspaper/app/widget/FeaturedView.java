@@ -98,7 +98,11 @@ public final class FeaturedView extends ItemView {
                 .compose(RxUtils.applySingleBackgroundToMainSchedulers())
                 .subscribe(
                     bitmap -> {
-                        if (bitmap.isPresent()) this.image.setImageBitmap(bitmap.get());
+                        if (bitmap.isPresent()) {
+                            this.image.setImageBitmap(bitmap.get());
+
+                            if (TestUtils.isRunningInstrumentedTest()) this.image.pause();
+                        }
                     },
                     error -> {
                         if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);

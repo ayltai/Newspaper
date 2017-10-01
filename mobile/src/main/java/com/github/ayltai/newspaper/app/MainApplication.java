@@ -46,7 +46,7 @@ public final class MainApplication extends MultiDexApplication {
             if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
         }
 
-        if (!TestUtils.isLoggable()) Fabric.with(this, new Crashlytics.Builder()
+        if (!TestUtils.isLoggable() && !TestUtils.isRunningTests()) Fabric.with(this, new Crashlytics.Builder()
             .core(new CrashlyticsCore.Builder()
                 .disabled(TestUtils.isLoggable())
                 .build())
