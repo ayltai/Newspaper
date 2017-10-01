@@ -63,7 +63,9 @@
         <item name="android:textSize">@dimen/textHeading3</item>
     </style>
     <style name="Title.Full">
+        <item name="android:layout_marginLeft">@dimen/space16</item>
         <item name="android:layout_marginStart">@dimen/space16</item>
+        <item name="android:layout_marginRight">@dimen/space16</item>
         <item name="android:layout_marginEnd">@dimen/space16</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:maxLines">2147483647</item>
@@ -83,7 +85,9 @@
         <item name="android:textSize">@dimen/textNormal</item>
     </style>
     <style name="Description.Full">
+        <item name="android:layout_marginLeft">@dimen/space16</item>
         <item name="android:layout_marginStart">@dimen/space16</item>
+        <item name="android:layout_marginRight">@dimen/space16</item>
         <item name="android:layout_marginEnd">@dimen/space16</item>
         <item name="android:maxLines">2147483647</item>
         <item name="android:ellipsize">none</item>
@@ -138,7 +142,9 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">@dimen/space8</item>
+        <item name="android:paddingStart">@dimen/space8</item>
         <item name="android:paddingRight">@dimen/space8</item>
+        <item name="android:paddingEnd">@dimen/space8</item>
         <item name="android:textSize">@dimen/textSmall</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#bebebe</item>

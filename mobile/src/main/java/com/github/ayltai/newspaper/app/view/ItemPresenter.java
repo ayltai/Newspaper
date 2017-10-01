@@ -13,6 +13,7 @@ import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
+import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.screen.DetailsScreen;
@@ -92,7 +93,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
 
         if (this.getView() != null && model != null) {
             this.getView().setAvatar(SourceFactory.getInstance(this.getView().getContext()).getSource(model.getSource()).getAvatar());
-            this.getView().setSource(model.getSource());
+            this.getView().setSource(Source.toDisplayName(model.getSource()));
             this.getView().setPublishDate(model.getPublishDate());
             this.getView().setTitle(model.getTitle());
             this.getView().setDescription(model.getDescription());
