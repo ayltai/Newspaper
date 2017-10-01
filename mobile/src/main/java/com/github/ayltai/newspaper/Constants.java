@@ -22,6 +22,9 @@ public final class Constants {
 
     public static final double VIDEO_ASPECT_RATIO = 16.0 / 9.0;
 
+    public static final int ANIMATION_DURATION = 500;
+    public static final int ANIMATION_OFFSET   = 100;
+
     public static final int VIEW_STYLE_COMPACT = 0;
     public static final int VIEW_STYLE_COZY    = 1;
     public static final int VIEW_STYLE_DEFAULT = VIEW_STYLE_COZY;

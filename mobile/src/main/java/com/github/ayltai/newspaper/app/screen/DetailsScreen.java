@@ -38,9 +38,11 @@ import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.widget.ItemView;
 import com.github.ayltai.newspaper.app.widget.VideoView;
+import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.ayltai.newspaper.view.ScreenPresenter;
 import com.github.piasy.biv.view.BigImageView;
@@ -79,39 +81,40 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     //region Components
 
-    private final CollapsingToolbarLayout collapsingToolbarLayout;
-    private final Toolbar                 toolbar;
-    private final TextView                defaultToolbarTitle;
-    private final View                    toolbarView;
-    private final BigImageView            toolbarImage;
-    private final TextView                toolbarTitle;
-    private final View                    toolbarBackground;
-    private final ViewGroup               imageContainer;
-    private final SimpleDraweeView        avatar;
-    private final TextView                source;
-    private final TextView                publishDate;
-    private final TextView                title;
-    private final TextView                description;
-    private final ImageView               bookmarkAction;
-    private final ImageView               shareAction;
-    private final ViewGroup               imagesContainer;
-    private final ViewGroup               videoContainer;
+    private final Toolbar          toolbar;
+    private final TextView         defaultToolbarTitle;
+    private final View             toolbarView;
+    private final BigImageView     toolbarImage;
+    private final TextView         toolbarTitle;
+    private final View             toolbarBackground;
+    private final ViewGroup        imageContainer;
+    private final ViewGroup        container;
+    private final SimpleDraweeView avatar;
+    private final TextView         source;
+    private final TextView         publishDate;
+    private final TextView         title;
+    private final TextView         description;
+    private final ImageView        bookmarkAction;
+    private final ImageView        shareAction;
+    private final ViewGroup        imagesContainer;
+    private final ViewGroup        videoContainer;
 
     private VideoView videoView;
 
     //endregion
 
     private SmallBang smallBang;
+    private boolean   hasAnimated;
 
     public DetailsScreen(@NonNull final Context context) {
         super(context);
 
         final View view = LayoutInflater.from(context).inflate(R.layout.screen_news_details, this, true);
 
-        this.collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbarLayout);
         this.toolbar                 = view.findViewById(R.id.toolbar);
         this.defaultToolbarTitle     = view.findViewById(R.id.toolbar_title);
         this.imageContainer          = view.findViewById(R.id.image_container);
+        this.container               = view.findViewById(R.id.container);
         this.avatar                  = view.findViewById(R.id.avatar);
         this.source                  = view.findViewById(R.id.source);
         this.publishDate             = view.findViewById(R.id.publish_date);
@@ -127,7 +130,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.toolbarTitle      = this.toolbarView.findViewById(R.id.title);
         this.toolbarBackground = this.toolbarView.findViewById(R.id.title_background);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) this.collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.TransparentText);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) ((CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout)).setExpandedTitleTextAppearance(R.style.TransparentText);
 
         this.setLayoutParams(ViewUtils.createMatchParentLayoutParams());
     }
@@ -258,6 +261,12 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
             this.videoContainer.addView(this.videoView);
         }
+
+        if (!TestUtils.isRunningInstrumentedTest() && !this.hasAnimated) {
+            this.hasAnimated = true;
+
+            Animations.animateViewGroup(this.container);
+        }
     }
 
     //endregion
@@ -332,6 +341,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     protected void onAttachedToWindow() {
         final Activity activity = this.getActivity();
         this.smallBang = activity == null ? null : SmallBang.attach2Window(activity);
+
+        this.hasAnimated = false;
 
         this.toolbarImage.getSSIV().setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
 

@@ -11,8 +11,13 @@ import android.support.annotation.AnimRes;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+
+import com.fujiyuu75.sequent.Sequent;
+import com.github.ayltai.newspaper.Constants;
+import com.github.ayltai.newspaper.R;
 
 public final class Animations {
     private Animations() {
@@ -37,5 +42,14 @@ public final class Animations {
             ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
             ObjectAnimator.ofFloat(view, "translationY", view.getMeasuredHeight(), 0f)
         );
+    }
+
+    public static void animateViewGroup(@NonNull final ViewGroup container) {
+        Sequent.origin(container)
+            .delay(0)
+            .offset(Constants.ANIMATION_OFFSET)
+            .duration(Constants.ANIMATION_DURATION)
+            .anim(container.getContext(), R.anim.fade_in_up)
+            .start();
     }
 }

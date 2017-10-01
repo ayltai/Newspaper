@@ -170,7 +170,7 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
     @NonNull
     @Override
     protected Iterable<Animator> getItemAnimators(@NonNull final View view) {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled() ? super.getItemAnimators(view) : Animations.createDefaultAnimators(view);
+        return TestUtils.isRunningInstrumentedTest() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled() ? super.getItemAnimators(view) : Animations.createDefaultAnimators(view);
     }
 
     @Override
