@@ -23,7 +23,7 @@ import io.reactivex.Observable;
 
 public final class OrientalDailyClientTest extends NetworkTest {
     private static final String ORIENTAL_DAILY_URL         = "http://orientaldaily.on.cc/rss/news.xml";
-    private static final String ORIENTAL_DAILY_DETAILS_URL = "\n                http://orientaldaily.on.cc/cnt/news/20170909/00176_010.html?pubdate=20170909\n            ";
+    private static final String ORIENTAL_DAILY_DETAILS_URL = "http://orientaldaily.on.cc/cnt/news/20170909/00174_001.html?pubdate=20170909";
 
     private OrientalDailyClient client;
 
@@ -43,17 +43,14 @@ public final class OrientalDailyClientTest extends NetworkTest {
         final List<NewsItem> items = this.client.getItems(OrientalDailyClientTest.ORIENTAL_DAILY_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 20, items.size());
-        Assert.assertEquals("Incorrect item title", "\n                中大周竪峰辱華罵內地生「支那人」\n            ", items.get(0).getTitle());
+        Assert.assertEquals("Incorrect item title", "大學教育教出雙毒", items.get(0).getTitle());
         Assert.assertEquals("Incorrect item link", OrientalDailyClientTest.ORIENTAL_DAILY_DETAILS_URL, items.get(0).getLink());
-        Assert.assertEquals("Incorrect item description", "\n" +
-            "                \n" +
-            "                <div style=\"float:left;padding-right:10px;\">\n" +
-            "                        <div><a title=\"中大周竪峰辱華罵內地生「支那人」\" href=\"http://orientaldaily.on.cc/cnt/news/20170909/00176_010.html?pubdate=20170909\"><img style=\"border-color:#B3B3B3;border-width:0 1px 1px;border-style:none solid solid;\" height=\"200\" width=\"200\" title=\"中大周竪峰辱華罵內地生「支那人」\" alt=\"中大周竪峰辱華罵內地生「支那人」\" src=\"http://orientaldaily.on.cc/cnt/news/20170909/photo/0909-00176-010p1g1.jpg\"/></a></div>\n" +
+        Assert.assertEquals("Incorrect item description", "<div style=\"float:left;padding-right:10px;\">\n" +
+            "                        <div><a title=\"大學教育教出雙毒\" href=\"http://orientaldaily.on.cc/cnt/news/20170909/00174_001.html?pubdate=20170909\"><img style=\"border-color:#B3B3B3;border-width:0 1px 1px;border-style:none solid solid;\" height=\"200\" width=\"200\" title=\"大學教育教出雙毒\" alt=\"大學教育教出雙毒\" src=\"http://orientaldaily.on.cc/cnt/news/20170909/photo/0909-00174-001p1g1.jpg\"/></a></div>\n" +
             "                    </div>\n" +
             "                <div style=\"float:left;\">\n" +
-            "                    繼青年新政游蕙禎和梁頌恆宣誓引發辱華風波後，昨日再爆出中文大學學生辱華事件。中大日前出現「香港獨立」橫額及海報後，惹來反對港獨團體前日到中大文化廣場示威，並與支持港獨的學生爆發衝突。其後網上流傳數段影片，看到中大學生會前會長周竪峰以粗言穢語辱罵內地學生，更以帶有侮辱性的「支那人」來稱呼對方。周竪峰昨日承認曾指罵他人，但未有為事件道歉。中大校方表示將會展開調查，嚴肅處理事件。\n" +
-            "                </div>\n" +
-            "            ", items.get(0).getDescription());
+            "                    專責培育下一代教師的香港教育大學，竟有人在教育局副局長蔡若蓮長子墮樓離世後，於校內民主牆張貼奚落蔡若蓮喪子的字句，令社會嘩然，涉事兩名年輕男子的外貌昨日曝光！本報獲得事發時的閉路電視畫面截圖，可見兩人張貼有關冷血字句後帶笑離開。多個團體昨日先後發表聲明及到教大請願，促校方徹查及嚴懲涉事者。有學者指近日本港多間大學校園湧現違法「港獨」標語，現再出現這種「歹毒」言行，「播港獨心腸又毒」，反映大學教育出了問題，部分學生已無仁義道德及禮教可言。\n" +
+            "                </div>", items.get(0).getDescription());
     }
 
     @Test
@@ -64,7 +61,7 @@ public final class OrientalDailyClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect image URL", "http://orientaldaily.on.cc/cnt/news/20170909/photo/0909-00176-010b2.jpg", item.getImages().get(1).getUrl());
         Assert.assertEquals("Incorrect image description", "周竪峰情緒激動，與疑似內地生對罵期間企圖衝前，似有所行動。", item.getImages().get(1).getDescription());
         Assert.assertNotNull("item.getVideo() is null", item.getVideo());
-        Assert.assertEquals("Incorrect video URL", "http://video.cdn.on.cc/Video/201709/OBK170908-14357-17-M_ipad.mp4", item.getVideo().getVideoUrl());
+        Assert.assertEquals("Incorrect video URL", "http://video.cdn.on.cc/Video/201709/ONS170908-14006-77-M_ipad.mp4", item.getVideo().getVideoUrl());
         Assert.assertEquals("Incorrect item full description", "繼青年新政游蕙禎和梁頌恆宣誓引發辱華風波後，昨日再爆出中文大學學生辱華事件。中大日前出現「香港獨立」橫額及海報後，惹來反對港獨團體前日到中大文化廣場示威，並與支持港獨的學生爆發衝突。其後網上流傳數段影", item.getDescription().substring(0, 100));
     }
 

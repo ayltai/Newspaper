@@ -44,73 +44,71 @@ public final class ItemManager extends DataManager {
     }
 
     @NonNull
-    public Single<List<NewsItem>> getItems(@Nullable final String[] sources, @Nullable final String[] categories) {
+    public Single<List<NewsItem>> getItems(@NonNull final String[] sources, @NonNull final String[] categories) {
         return this.getItems(null, sources, categories);
     }
 
     @NonNull
-    public Single<List<NewsItem>> getItems(@Nullable final CharSequence searchText, @Nullable final String[] sources, @Nullable final String[] categories) {
+    public Single<List<NewsItem>> getItems(@Nullable final CharSequence searchText, @NonNull final String[] sources, @NonNull final String[] categories) {
         return Single.create(emitter -> {
-            final RealmQuery<NewsItem> query = this.getRealm().where(NewsItem.class);
+            final RealmQuery<NewsItem> query = this.getRealm()
+                .where(NewsItem.class)
+                .in(NewsItem.FIELD_SOURCE, sources)
+                .in(NewsItem.FIELD_CATEGORY, categories);
 
             if (!TextUtils.isEmpty(searchText)) query.beginGroup()
                 .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
                 .or()
                 .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
                 .endGroup();
-
-            if (sources != null) query.in(NewsItem.FIELD_SOURCE, sources);
-            if (categories != null) query.in(NewsItem.FIELD_CATEGORY, categories);
 
             emitter.onSuccess(this.getRealm().copyFromRealm(query.findAll()));
         });
     }
 
     @NonNull
-    public Single<List<NewsItem>> getHistoricalItems(@Nullable final String[] sources, @Nullable final String[] categories) {
+    public Single<List<NewsItem>> getHistoricalItems(@NonNull final String[] sources, @NonNull final String[] categories) {
         return this.getHistoricalItems(null, sources, categories);
     }
 
     @NonNull
-    public Single<List<NewsItem>> getHistoricalItems(@Nullable final CharSequence searchText, @Nullable final String[] sources, @Nullable final String[] categories) {
+    public Single<List<NewsItem>> getHistoricalItems(@Nullable final CharSequence searchText, @NonNull final String[] sources, @NonNull final String[] categories) {
         return Single.create(emitter -> {
             final RealmQuery<NewsItem> query = this.getRealm()
                 .where(NewsItem.class)
-                .greaterThan(NewsItem.FIELD_LAST_ACCESSED_DATE, 0);
+                .greaterThan(NewsItem.FIELD_LAST_ACCESSED_DATE, 0)
+                .in(NewsItem.FIELD_SOURCE, sources)
+                .in(NewsItem.FIELD_CATEGORY, categories);
 
             if (!TextUtils.isEmpty(searchText)) query.beginGroup()
                 .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
                 .or()
                 .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
                 .endGroup();
-
-            if (sources != null) query.in(NewsItem.FIELD_SOURCE, sources);
-            if (categories != null) query.in(NewsItem.FIELD_CATEGORY, categories);
 
             emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
         });
     }
 
     @NonNull
-    public Single<List<NewsItem>> getBookmarkedItems(@Nullable final String[] sources, @Nullable final String[] categories) {
+    public Single<List<NewsItem>> getBookmarkedItems(@NonNull final String[] sources, @NonNull final String[] categories) {
         return this.getBookmarkedItems(null, sources, categories);
     }
 
     @NonNull
-    public Single<List<NewsItem>> getBookmarkedItems(@Nullable final CharSequence searchText, @Nullable final String[] sources, @Nullable final String[] categories) {
+    public Single<List<NewsItem>> getBookmarkedItems(@Nullable final CharSequence searchText, @NonNull final String[] sources, @NonNull final String[] categories) {
         return Single.create(emitter -> {
             final RealmQuery<NewsItem> query = this.getRealm()
                 .where(NewsItem.class)
-                .equalTo(NewsItem.FIELD_BOOKMARKED, true);
+                .equalTo(NewsItem.FIELD_BOOKMARKED, true)
+                .in(NewsItem.FIELD_SOURCE, sources)
+                .in(NewsItem.FIELD_CATEGORY, categories);
 
             if (!TextUtils.isEmpty(searchText)) query.beginGroup()
                 .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
                 .or()
                 .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
                 .endGroup();
-
-            if (sources != null) query.in(NewsItem.FIELD_SOURCE, sources);
-            if (categories != null) query.in(NewsItem.FIELD_CATEGORY, categories);
 
             emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
         });

@@ -54,7 +54,7 @@ public final class SingTaoClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect image URL", "http://static.stheadline.com/stheadline/news_res/2017/09/10/248310/i_491x369_704530316.jpg", item.getImages().get(0).getUrl());
         Assert.assertEquals("Incorrect image description", "教大民主牆被貼冷血大字報風波持續，有傳個別校長表明永不錄用教大生。", item.getImages().get(0).getDescription());
         Assert.assertNull("item.getVideo() is not null", item.getVideo());
-        Assert.assertEquals("Incorrect item full description", "　　(星島日報報道)教育大學民主牆日前出現「恭喜」教育局副局長蔡若蓮長子自殺標語後，各界高調譴責。風波未平，教大學生會會長黎曉晴��引述，日前參與教大內部師生會議時校方曾匯報接獲大量聯署投訴，有其他校", item.getDescription().substring(0, 100));
+        Assert.assertEquals("Incorrect item full description", "　　(星島日報報道)教育大學民主牆日前出現「恭喜」教育局副局長蔡若蓮長子自殺標語後，各界高調譴責。風", item.getDescription().substring(0, 50));
     }
 
     @NonNull

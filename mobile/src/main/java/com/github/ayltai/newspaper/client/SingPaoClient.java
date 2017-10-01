@@ -30,7 +30,7 @@ final class SingPaoClient extends Client {
     //region Constants
 
     private static final String BASE_URI = "https://www.singpao.com.hk/";
-    private static final String TAG      = "\"";
+    private static final String TAG      = "'";
     private static final String FONT     = "</font>";
 
     //endregion
@@ -57,22 +57,22 @@ final class SingPaoClient extends Client {
             .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
             .subscribe(
                 html -> {
-                    final String[]       sections = StringUtils.substringsBetween(html, "<tr valign=\"top\"><td width=\"220\">", "</td></tr>");
+                    final String[]       sections = StringUtils.substringsBetween(html, "<tr valign='top'><td width='220'>", "</td></tr>");
                     final List<NewsItem> items    = new ArrayList<>(sections.length);
                     final String         category = this.getCategoryName(url);
 
                     for (final String section : sections) {
                         final NewsItem item = new NewsItem();
 
-                        item.setTitle(StringUtils.substringBetween(section, "class=\"list_title\">", "</a>"));
-                        item.setLink(SingPaoClient.BASE_URI + StringUtils.substringBetween(section, "<td><a href=\"", SingPaoClient.TAG));
+                        item.setTitle(StringUtils.substringBetween(section, "class='list_title'>", "</a>"));
+                        item.setLink(SingPaoClient.BASE_URI + StringUtils.substringBetween(section, "<td><a href='", SingPaoClient.TAG));
                         item.setDescription(StringUtils.substringBetween(section, "<br><br>\n", SingPaoClient.FONT));
                         item.setSource(this.source.getName());
                         if (category != null) item.setCategory(category);
-                        item.getImages().add(new Image(SingPaoClient.BASE_URI + StringUtils.substringBetween(section, "<img src=\"", SingPaoClient.TAG)));
+                        item.getImages().add(new Image(SingPaoClient.BASE_URI + StringUtils.substringBetween(section, "<img src='", SingPaoClient.TAG)));
 
                         try {
-                            item.setPublishDate(SingPaoClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<font class=\"list_date\">", "<br>")));
+                            item.setPublishDate(SingPaoClient.DATE_FORMAT.get().parse(StringUtils.substringBetween(section, "<font class='list_date'>", "<br>")));
 
                             items.add(item);
                         } catch (final ParseException e) {
@@ -103,11 +103,11 @@ final class SingPaoClient extends Client {
                 .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
                 .subscribe(
                     html -> {
-                        html = StringUtils.substringBetween(html, "<td class=\"news_title\">", "您可能有興趣:");
+                        html = StringUtils.substringBetween(html, "<td class='news_title'>", "您可能有興趣:");
 
                         final List<Image> images            = new ArrayList<>();
-                        final String[]    imageUrls         = StringUtils.substringsBetween(html, "target=\"_blank\"><img src=\"", SingPaoClient.TAG);
-                        final String[]    imageDescriptions = StringUtils.substringsBetween(html, "<font size=\"4\">", SingPaoClient.FONT);
+                        final String[]    imageUrls         = StringUtils.substringsBetween(html, "target='_blank'><img src='", SingPaoClient.TAG);
+                        final String[]    imageDescriptions = StringUtils.substringsBetween(html, "<font size='4'>", SingPaoClient.FONT);
 
                         for (int i = 0; i < imageUrls.length; i++) {
                             final Image image = new Image(SingPaoClient.BASE_URI + imageUrls[i], imageDescriptions[i]);

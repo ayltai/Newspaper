@@ -150,6 +150,8 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
                                 e::onSuccess,
                                 error -> {
                                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+
+                                    e.onError(error);
                                 }));
                     } else {
                         return Single.just(items);
