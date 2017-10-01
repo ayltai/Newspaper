@@ -8,7 +8,7 @@ public final class Constants {
     public static final int INITIAL_RETRY_DELAY = 2;
     public static final int MAX_RETRIES         = 5;
     public static final int CONNECTION_TIMEOUT  = 5;
-    public static final int REFRESH_TIMEOUT     = 30;
+    public static final int REFRESH_TIMEOUT     = 10;
     public static final int HOUSEKEEP_TIME      = 72 * 60 * 60 * 1000;
 
     public static final int  FILE_BUFFER_SIZE        = 4 * 1024;

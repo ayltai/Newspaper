@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.google.auto.value.AutoValue;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
@@ -331,6 +332,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     protected void onAttachedToWindow() {
         final Activity activity = this.getActivity();
         this.smallBang = activity == null ? null : SmallBang.attach2Window(activity);
+
+        this.toolbarImage.getSSIV().setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
 
         this.manageDisposable(RxView.clicks(this.avatar).subscribe(irrelevant -> this.avatarClicks.onNext(Irrelevant.INSTANCE)));
         this.manageDisposable(RxView.clicks(this.source).subscribe(irrelevant -> this.sourceClicks.onNext(Irrelevant.INSTANCE)));
