@@ -61,7 +61,7 @@ public final class AppleDailyClientTest extends NetworkTest {
         Assert.assertNotNull("item.getVideo() is null", item.getVideo());
         Assert.assertEquals("Incorrect video URL", "http://video.appledaily.com.hk/mcp/encode/2017/09/09/3437461/20170908_news_53_newADAD_w.mp4", item.getVideo().getVideoUrl());
         Assert.assertEquals("Incorrect video thumbnail URL", "http://static.apple.nextmedia.com/images/apple-photos/video/20170909/org/1504900568_d1c2.jpg", item.getVideo().getThumbnailUrl());
-        Assert.assertEquals("Incorrect item full description", "<p class=\"ArticleIntro\">\r\n                                \t【本報訊】教育局副局長蔡若蓮長子周四跳樓身亡，教育大學學生會民主牆出現冒犯性標語，", item.getDescription().substring(0, 100));
+        Assert.assertEquals("Incorrect item full description", "<p class=\"ArticleIntro\">\n                                \t【本報訊】教育局副局長蔡若蓮長子周四跳樓身亡，教育大學學生會民主牆出現冒犯性標語，行", item.getDescription().substring(0, 100));
     }
 
     @NonNull
