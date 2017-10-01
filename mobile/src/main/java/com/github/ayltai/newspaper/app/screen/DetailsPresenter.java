@@ -57,6 +57,8 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                                 if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                             }));
                 } else {
+                    super.bindModel(model);
+
                     this.manageDisposable(Single.<NewsItem>create(
                         emitter -> {
                             final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(model.getSource());
