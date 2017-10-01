@@ -136,6 +136,9 @@ jobs:
       - run:
           name: Run unit tests
           command: ./gradlew -PciBuild=true :mobile:testDebugUnitTest :mobile:jacocoTestReport
+      - run:
+          name: Upload unit tests results to CodeCov
+          command: bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: mobile/build/reports/
           destination: /reports/
