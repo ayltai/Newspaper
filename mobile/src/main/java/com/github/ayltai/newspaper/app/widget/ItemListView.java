@@ -7,7 +7,6 @@ import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.AttrRes;
-import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -15,21 +14,17 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.app.data.model.Item;
+import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.ayltai.newspaper.widget.ListView;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.disposables.Disposable;
 
 public abstract class ItemListView extends ListView<Item> implements ItemListPresenter.View, Disposable, LifecycleObserver {
-    private Button emptyAction;
-
     //region Constructors
 
     public ItemListView(@NonNull final Context context) {
@@ -110,20 +105,9 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
         }
     }
 
-    @CallSuper
-    @Override
-    protected void onAttachedToWindow() {
-        this.manageDisposable(RxView.clicks(this.emptyAction).subscribe(irrelevant -> this.refresh()));
-
-        super.onAttachedToWindow();
-    }
-
     private void init() {
         ((TextView)this.emptyView.findViewById(R.id.empty_title)).setText(R.string.empty_news_title);
         ((TextView)this.emptyView.findViewById(R.id.empty_description)).setText(R.string.empty_news_description);
-
-        this.emptyAction = this.emptyView.findViewById(R.id.empty_action);
-        this.emptyAction.setText(R.string.empty_news_action);
 
         final LifecycleOwner owner = this.getLifecycleOwner();
         if (owner != null) owner.getLifecycle().addObserver(this);

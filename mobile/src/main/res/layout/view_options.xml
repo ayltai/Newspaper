@@ -21,7 +21,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/space8"
             android:paddingStart="@dimen/space8"
+            android:paddingRight="@dimen/space8"
             android:paddingEnd="@dimen/space8"
             android:paddingTop="@dimen/space32"
             android:paddingBottom="@dimen/space8"
@@ -29,11 +31,13 @@
             android:orientation="horizontal">
             <Button
                 android:id="@+id/action_cancel"
+                android:layout_marginLeft="@dimen/space8"
                 android:layout_marginStart="@dimen/space8"
                 android:text="@string/action_close"
                 style="@style/Button.Dialog" />
             <Button
                 android:id="@+id/action_ok"
+                android:layout_marginLeft="@dimen/space8"
                 android:layout_marginStart="@dimen/space8"
                 android:text="@string/action_apply"
                 style="@style/Button.Dialog.Primary" />

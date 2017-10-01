@@ -39,7 +39,6 @@
     <!-- Empty states -->
     <string name="empty_news_title">這裡什麼都沒有</string>
     <string name="empty_news_description">您可以在其他類別中閱讀更多新聞，也可以刷新再次嘗試。</string>
-    <string name="empty_news_action">再試一次</string>
 
     <!-- Search -->
     <string name="search_hint">搜尋新聞</string>

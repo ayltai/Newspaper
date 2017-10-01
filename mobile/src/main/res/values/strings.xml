@@ -39,7 +39,6 @@
     <!-- Empty states -->
     <string name="empty_news_title">Nothing here</string>
     <string name="empty_news_description">You can read more news in other categories, or you can refresh to try again.</string>
-    <string name="empty_news_action">Try again</string>
 
     <!-- Search -->
     <string name="search_hint">Search news</string>

@@ -22,15 +22,20 @@
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/compact_avatar_size"
                 android:layout_height="@dimen/compact_avatar_size"
+                android:layout_marginLeft="@dimen/space16"
                 android:layout_marginStart="@dimen/space16"
+                android:layout_marginRight="@dimen/space16"
                 android:layout_marginEnd="@dimen/space16"
                 android:layout_marginBottom="@dimen/space16"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 app:placeholderImage="?attr/placeholderImage" />
             <TextView
                 android:id="@+id/source"
+                android:layout_marginRight="@dimen/space16"
                 android:layout_marginEnd="@dimen/space16"
+                android:layout_toRightOf="@+id/avatar"
                 android:layout_toEndOf="@+id/avatar"
                 android:layout_alignTop="@+id/avatar"
                 android:layout_alignWithParentIfMissing="true"
@@ -40,8 +45,10 @@
                 style="@style/Source.Small" />
             <TextView
                 android:id="@+id/publish_date"
+                android:layout_marginRight="@dimen/space16"
                 android:layout_marginEnd="@dimen/space16"
                 android:layout_marginBottom="@dimen/space24"
+                android:layout_toRightOf="@+id/avatar"
                 android:layout_toEndOf="@+id/avatar"
                 android:layout_below="@+id/source"
                 android:layout_alignWithParentIfMissing="true"

@@ -59,10 +59,6 @@
                 android:textSize="@dimen/textNormal"
                 android:textColor="@color/textColorDark"
                 tools:text="You can read more news in other categories, or you can refresh to try again." />
-            <Button
-                android:id="@+id/empty_action"
-                tools:text="Try again"
-                style="@style/Button.Primary" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
