@@ -9,6 +9,7 @@
     android:layout_marginRight="@dimen/space8"
     android:layout_marginEnd="@dimen/space8"
     android:layout_marginTop="@dimen/space4"
+    app:cardBackgroundColor="?attr/cardBackground"
     app:cardCornerRadius="4dp"
     app:cardElevation="3dp"
     app:cardUseCompatPadding="true">

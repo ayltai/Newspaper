@@ -78,12 +78,4 @@ public final class ContentView extends ItemView {
             this.image.showImage(Uri.parse(images.get(0).getUrl()));
         }
     }
-
-    @CallSuper
-    @Override
-    protected void onAttachedToWindow() {
-        this.image.getSSIV().setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
-
-        super.onAttachedToWindow();
-    }
 }
