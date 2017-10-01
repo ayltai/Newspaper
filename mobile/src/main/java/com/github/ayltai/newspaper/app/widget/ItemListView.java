@@ -93,7 +93,7 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
     public void showLoadingView() {
         super.showLoadingView();
 
-        ViewUtils.startShimmerAnimation(this.loadingView);
+        if (this.loadingView != null) ViewUtils.startShimmerAnimation(this.loadingView);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
