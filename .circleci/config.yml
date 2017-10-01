@@ -154,7 +154,7 @@ jobs:
           command: gcloud config set project dry-talk
       - run:
           name: Authenticate with Google Cloud
-          command: gcloud auth activate-service-account firebase-adminsdk-qlzqs@dry-talk.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
+          command: gcloud auth activate-service-account circleci@newspaper-84169.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
       - run:
           name: Run instrumented test on Firebase Test Lab
           command: gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=Nexus5X,version=26,locale=en_US,orientation=portrait --timeout 10m
