@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
-import com.github.ayltai.newspaper.config.UserConfig;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.ItemListLoader;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.util.Irrelevant;

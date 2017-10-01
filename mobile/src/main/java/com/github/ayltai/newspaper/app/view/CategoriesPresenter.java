@@ -7,7 +7,7 @@ import java.util.List;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.github.ayltai.newspaper.config.UserConfig;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;

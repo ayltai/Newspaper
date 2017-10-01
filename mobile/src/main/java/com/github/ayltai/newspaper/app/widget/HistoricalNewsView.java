@@ -15,7 +15,7 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.view.HistoricalItemListPresenter;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
-import com.github.ayltai.newspaper.config.UserConfig;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.util.TestUtils;
 
 public final class HistoricalNewsView extends NewsView {

@@ -15,7 +15,7 @@ import com.google.firebase.perf.metrics.Trace;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.config.UserConfig;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.data.DataModule;

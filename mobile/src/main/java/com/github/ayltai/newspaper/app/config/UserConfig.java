@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.config;
+package com.github.ayltai.newspaper.app.config;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.Set;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,7 +33,7 @@ public final class UserConfig {
     @NonNull
     public static Set<String> getSources(@NonNull final Context context) {
         final Set<String> sources = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(UserConfig.KEY_SOURCES, null);
-        return sources == null ? UserConfig.getDefaultSources(context) : sources;
+        return sources == null || sources.isEmpty() ? UserConfig.getDefaultSources(context) : sources;
     }
 
     public static void setSources(@NonNull final Context context, @NonNull final Set<String> sources) {
@@ -47,7 +48,7 @@ public final class UserConfig {
     @NonNull
     public static List<String> getCategories(@NonNull final Context context) {
         final String json = PreferenceManager.getDefaultSharedPreferences(context).getString(UserConfig.KEY_CATEGORIES, null);
-        if (json == null) return UserConfig.getDefaultCategories(context);
+        if (TextUtils.isEmpty(json)) return UserConfig.getDefaultCategories(context);
 
         return new Gson().fromJson(json, new TypeToken<List<String>>() {}.getType());
     }

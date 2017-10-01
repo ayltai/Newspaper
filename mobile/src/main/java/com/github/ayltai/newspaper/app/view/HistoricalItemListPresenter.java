@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.github.ayltai.newspaper.app.data.ItemManager;
 import com.github.ayltai.newspaper.app.data.model.Item;
-import com.github.ayltai.newspaper.config.UserConfig;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.Lists;

@@ -17,7 +17,7 @@ import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.screen.DetailsScreen;
-import com.github.ayltai.newspaper.config.AppConfig;
+import com.github.ayltai.newspaper.app.config.AppConfig;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.binding.Binder;

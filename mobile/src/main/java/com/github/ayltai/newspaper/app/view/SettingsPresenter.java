@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.config.UserConfig;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.view.OptionsPresenter;

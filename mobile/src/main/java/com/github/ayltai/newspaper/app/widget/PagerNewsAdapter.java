@@ -23,7 +23,7 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
-import com.github.ayltai.newspaper.config.UserConfig;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.widget.ListView;
 

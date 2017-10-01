@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.config;
+package com.github.ayltai.newspaper.app.config;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
