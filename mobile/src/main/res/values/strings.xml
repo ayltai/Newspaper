@@ -10,6 +10,12 @@
     <string name="update_indicator">New news available</string>
     <string name="loading_indicator">Loading…</string>
 
+    <!-- About -->
+    <string name="about_visit">Visit website</string>
+    <string name="about_contact">Contact developer</string>
+    <string name="about_rate">Rate this app</string>
+    <string name="about_report">Report issue</string>
+
     <!-- Time namings -->
     <string name="time_ago_now">Just now</string>
     <string name="time_ago_minute">A minute ago</string>

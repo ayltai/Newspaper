@@ -10,6 +10,12 @@
     <string name="update_indicator">有新的新聞</string>
     <string name="loading_indicator">下載中…</string>
 
+    <!-- About -->
+    <string name="about_visit">訪問網站</string>
+    <string name="about_contact">聯繫開發人員</string>
+    <string name="about_rate">評價這個軟件</string>
+    <string name="about_report">報告問題</string>
+
     <!-- Time nameings -->
     <string name="time_ago_now">現在</string>
     <string name="time_ago_minute">1分鐘前</string>

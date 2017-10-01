@@ -150,4 +150,36 @@
         <item name="android:textColor">#bebebe</item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
+    <!-- About -->
+    <style name="AboutContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    <style name="AboutIcon">
+        <item name="android:layout_width">@dimen/iconSmall</item>
+        <item name="android:layout_height">@dimen/iconSmall</item>
+        <item name="android:layout_margin">@dimen/space8</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:tint">?attr/textColorHint</item>
+    </style>
+    <style name="AboutAction">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/space8</item>
+    </style>
+    <style name="AboutSeparator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:layout_marginLeft">48dp</item>
+        <item name="android:layout_marginStart">48dp</item>
+        <item name="android:layout_marginRight">@dimen/space8</item>
+        <item name="android:layout_marginEnd">@dimen/space8</item>
+        <item name="android:layout_marginTop">@dimen/space8</item>
+        <item name="android:layout_marginBottom">@dimen/space8</item>
+        <item name="android:background">?attr/textColorHint</item>
+    </style>
 </resources>

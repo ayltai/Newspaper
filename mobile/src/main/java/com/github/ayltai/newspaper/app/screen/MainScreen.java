@@ -29,7 +29,9 @@ import android.view.animation.AnimationUtils;
 import com.google.auto.value.AutoValue;
 
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.app.view.AboutPresenter;
 import com.github.ayltai.newspaper.app.view.NewsPresenter;
+import com.github.ayltai.newspaper.app.widget.AboutView;
 import com.github.ayltai.newspaper.app.widget.BookmarkedNewsView;
 import com.github.ayltai.newspaper.app.widget.HistoricalNewsView;
 import com.github.ayltai.newspaper.app.widget.PagerNewsView;
@@ -144,22 +146,6 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
     public void onTabSelected(@IdRes final int tabId) {
         this.toolbar.getMenu().findItem(R.id.action_search).collapseActionView();
 
-        boolean isCached = false;
-
-        if (this.cachedViews.containsKey(tabId)) {
-            this.newsView = (NewsPresenter.View)this.cachedViews.get(tabId).get();
-
-            if (this.newsView != null) {
-                if (this.content.indexOfChild((View)this.newsView) < 0) {
-                    this.content.addView((View)this.newsView);
-
-                    this.newsView.refresh();
-                }
-
-                isCached = true;
-            }
-        }
-
         if (tabId == R.id.action_about) {
             this.upAction.setVisibility(View.GONE);
             this.refreshAction.setVisibility(View.GONE);
@@ -169,10 +155,30 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
 
             this.toolbar.getMenu().findItem(R.id.action_search).setVisible(false);
 
-            if (!isCached) {
-                // TODO: Creates about view
-            }
+            final AboutView      view      = new AboutView(this.getContext());
+            final AboutPresenter presenter = new AboutPresenter();
+
+            view.attachments().subscribe(isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment));
+            view.detachments().subscribe(irrelevant -> presenter.onViewDetached());
+
+            this.content.addView(view);
         } else {
+            boolean isCached = false;
+
+            if (this.cachedViews.containsKey(tabId)) {
+                this.newsView = (NewsPresenter.View)this.cachedViews.get(tabId).get();
+
+                if (this.newsView != null) {
+                    if (this.content.indexOfChild((View)this.newsView) < 0) {
+                        this.content.addView((View)this.newsView);
+
+                        this.newsView.refresh();
+                    }
+
+                    isCached = true;
+                }
+            }
+
             this.upAction.setVisibility(View.INVISIBLE);
             this.refreshAction.setVisibility(View.INVISIBLE);
             this.filterAction.setVisibility(tabId == R.id.action_news ? View.INVISIBLE : View.GONE);
