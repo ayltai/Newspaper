@@ -21,6 +21,7 @@ import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.data.RealmLoader;
+import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -125,40 +126,44 @@ public class ItemListLoader extends RealmLoader<List<NewsItem>> {
     @NonNull
     @Override
     protected Flowable<List<NewsItem>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
-        return Flowable.create(emitter -> Single.zip(
-            this.createSingles(context, args),
-            lists -> {
-                final List<NewsItem> combinedList = new ArrayList<>();
-                for (final Object list : lists) combinedList.addAll((List<NewsItem>)list);
+        if (NetworkUtils.isOnline(context)) {
+            return Flowable.create(emitter -> Single.zip(
+                this.createSingles(context, args),
+                lists -> {
+                    final List<NewsItem> combinedList = new ArrayList<>();
+                    for (final Object list : lists) combinedList.addAll((List<NewsItem>)list);
 
-                Collections.sort(combinedList);
+                    Collections.sort(combinedList);
 
-                return combinedList;
-            })
-            .map(items -> {
-                Collections.sort(items);
-                return items;
-            })
-            .flatMap(items -> {
-                if (this.isValid()) {
-                    return Single.create(e -> ItemManager.create(this.getRealm())
-                        .putItems(items)
-                        .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
-                        .subscribe(
-                            e::onSuccess,
-                            error -> {
-                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                            }));
-                } else {
-                    return Single.just(items);
-                }
-            })
-            .subscribe(
-                emitter::onNext,
-                error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                }
-            ), BackpressureStrategy.LATEST);
+                    return combinedList;
+                })
+                .map(items -> {
+                    Collections.sort(items);
+                    return items;
+                })
+                .flatMap(items -> {
+                    if (this.isValid()) {
+                        return Single.create(e -> ItemManager.create(this.getRealm())
+                            .putItems(items)
+                            .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
+                            .subscribe(
+                                e::onSuccess,
+                                error -> {
+                                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                }));
+                    } else {
+                        return Single.just(items);
+                    }
+                })
+                .subscribe(
+                    emitter::onNext,
+                    error -> {
+                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    }
+                ), BackpressureStrategy.LATEST);
+        }
+
+        return Flowable.just(Collections.emptyList());
     }
 
     private List<Single<List<NewsItem>>> createSingles(@NonNull final Context context, @Nullable final Bundle args) {

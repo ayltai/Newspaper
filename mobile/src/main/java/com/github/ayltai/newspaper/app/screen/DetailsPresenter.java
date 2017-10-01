@@ -19,6 +19,7 @@ import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.DataManager;
+import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -59,23 +60,25 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                 } else {
                     super.bindModel(model);
 
-                    this.manageDisposable(Single.<NewsItem>create(
-                        emitter -> {
-                            final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(model.getSource());
+                    if (NetworkUtils.isOnline(this.getView().getContext())) {
+                        this.manageDisposable(Single.<NewsItem>create(
+                            emitter -> {
+                                final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(model.getSource());
 
-                            if (client == null) {
-                                emitter.onError(new IllegalArgumentException("Unrecognized source " + model.getSource()));
-                            } else {
-                                client.updateItem((NewsItem)model).subscribe(emitter::onSuccess);
-                            }
-                        })
-                        .compose(RxUtils.applySingleBackgroundSchedulers())
-                        .flatMap(item -> DetailsPresenter.updateItem(this.getView().getContext(), item)).compose(RxUtils.applySingleBackgroundToMainSchedulers())
-                        .subscribe(
-                            items -> super.bindModel(items.get(0)),
-                            error -> {
-                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                            }));
+                                if (client == null) {
+                                    emitter.onError(new IllegalArgumentException("Unrecognized source " + model.getSource()));
+                                } else {
+                                    client.updateItem((NewsItem)model).subscribe(emitter::onSuccess);
+                                }
+                            })
+                            .compose(RxUtils.applySingleBackgroundSchedulers())
+                            .flatMap(item -> DetailsPresenter.updateItem(this.getView().getContext(), item)).compose(RxUtils.applySingleBackgroundToMainSchedulers())
+                            .subscribe(
+                                items -> super.bindModel(items.get(0)),
+                                error -> {
+                                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                }));
+                    }
                 }
             } else {
                 super.bindModel(model);
