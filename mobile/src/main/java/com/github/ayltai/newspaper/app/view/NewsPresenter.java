@@ -11,6 +11,8 @@ public abstract class NewsPresenter extends ObservablePresenter<NewsPresenter.Vi
 
         void refresh();
 
+        void clear();
+
         void search(@Nullable CharSequence newText);
     }
 }

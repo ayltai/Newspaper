@@ -101,6 +101,10 @@ public class PagerNewsView extends ObservableView implements PagerNewsPresenter.
     }
 
     @Override
+    public void clear() {
+    }
+
+    @Override
     public void filter() {
         final OptionsView view = new OptionsView(this.getContext(), UserConfig.getTheme(this.getContext()) == Constants.THEME_LIGHT ? R.style.AppDialogThemeLight : R.style.AppDialogThemeDark);
 

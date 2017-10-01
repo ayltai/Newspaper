@@ -12,6 +12,7 @@ import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.data.DataModule;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 
 import io.reactivex.Single;
@@ -73,7 +74,9 @@ public final class ItemManager extends DataManager {
     @NonNull
     public Single<List<NewsItem>> getHistoricalItems(@Nullable final CharSequence searchText, @Nullable final String[] sources, @Nullable final String[] categories) {
         return Single.create(emitter -> {
-            final RealmQuery<NewsItem> query = this.getRealm().where(NewsItem.class).greaterThan(NewsItem.FIELD_LAST_ACCESSED_DATE, 0);
+            final RealmQuery<NewsItem> query = this.getRealm()
+                .where(NewsItem.class)
+                .greaterThan(NewsItem.FIELD_LAST_ACCESSED_DATE, 0);
 
             if (!TextUtils.isEmpty(searchText)) query.beginGroup()
                 .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
@@ -96,7 +99,9 @@ public final class ItemManager extends DataManager {
     @NonNull
     public Single<List<NewsItem>> getBookmarkedItems(@Nullable final CharSequence searchText, @Nullable final String[] sources, @Nullable final String[] categories) {
         return Single.create(emitter -> {
-            final RealmQuery<NewsItem> query = this.getRealm().where(NewsItem.class).equalTo(NewsItem.FIELD_BOOKMARKED, true);
+            final RealmQuery<NewsItem> query = this.getRealm()
+                .where(NewsItem.class)
+                .equalTo(NewsItem.FIELD_BOOKMARKED, true);
 
             if (!TextUtils.isEmpty(searchText)) query.beginGroup()
                 .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
@@ -120,7 +125,8 @@ public final class ItemManager extends DataManager {
             final List<NewsItem> newItems = new ArrayList<>();
 
             for (final NewsItem newsItem : newsItems) {
-                final RealmResults<NewsItem> items = this.getRealm().where(NewsItem.class)
+                final RealmResults<NewsItem> items = this.getRealm()
+                    .where(NewsItem.class)
                     .equalTo(NewsItem.FIELD_LINK, newsItem.getLink())
                     .findAll();
 
@@ -151,6 +157,46 @@ public final class ItemManager extends DataManager {
             if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
 
             emitter.onSuccess(newItems);
+        });
+    }
+
+    @NonNull
+    public Single<Irrelevant> clearHistories() {
+        return Single.create(emitter -> {
+            if (!this.getRealm().isInTransaction()) this.getRealm().beginTransaction();
+
+            final RealmResults<NewsItem> items = this.getRealm()
+                .where(NewsItem.class)
+                .greaterThan(NewsItem.FIELD_LAST_ACCESSED_DATE, 0)
+                .findAll();
+
+            for (final NewsItem item : items) item.setLastAccessedDate(null);
+
+            this.getRealm().insertOrUpdate(items);
+
+            if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
+
+            emitter.onSuccess(Irrelevant.INSTANCE);
+        });
+    }
+
+    @NonNull
+    public Single<Irrelevant> clearBookmarks() {
+        return Single.create(emitter -> {
+            if (!this.getRealm().isInTransaction()) this.getRealm().beginTransaction();
+
+            final RealmResults<NewsItem> items = this.getRealm()
+                .where(NewsItem.class)
+                .equalTo(NewsItem.FIELD_BOOKMARKED, true)
+                .findAll();
+
+            for (final NewsItem item : items) item.setBookmarked(false);
+
+            this.getRealm().insertOrUpdate(items);
+
+            if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
+
+            emitter.onSuccess(Irrelevant.INSTANCE);
         });
     }
 }

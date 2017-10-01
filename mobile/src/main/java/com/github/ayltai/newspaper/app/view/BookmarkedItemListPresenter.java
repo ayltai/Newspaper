@@ -9,11 +9,13 @@ import com.github.ayltai.newspaper.app.data.ItemManager;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.config.UserConfig;
 import com.github.ayltai.newspaper.data.DataManager;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.Lists;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 public class BookmarkedItemListPresenter extends ItemListPresenter {
     public BookmarkedItemListPresenter(@NonNull final List<String> categories) {
@@ -31,5 +33,16 @@ public class BookmarkedItemListPresenter extends ItemListPresenter {
                 .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER)))
             .map(items -> Lists.transform(items, item -> (Item)item))
             .flattenAsFlowable(Collections::singletonList);
+    }
+
+    @NonNull
+    @Override
+    public Single<Irrelevant> clearAll() {
+        if (this.getView() == null) return Single.just(Irrelevant.INSTANCE);
+
+        return ItemManager.create(this.getView().getContext())
+            .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
+            .flatMap(manager -> manager.clearBookmarks()
+                .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER)));
     }
 }

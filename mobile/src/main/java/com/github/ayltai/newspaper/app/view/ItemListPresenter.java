@@ -12,10 +12,12 @@ import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.ItemListLoader;
 import com.github.ayltai.newspaper.app.data.model.Item;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.Lists;
 import com.github.ayltai.newspaper.view.ListPresenter;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.View> {
     public interface View extends ListPresenter.View<Item> {
@@ -58,5 +60,11 @@ public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.Vie
 
                 return featuredItems;
             });
+    }
+
+    @NonNull
+    @Override
+    public Single<Irrelevant> clearAll() {
+        return Single.just(Irrelevant.INSTANCE);
     }
 }

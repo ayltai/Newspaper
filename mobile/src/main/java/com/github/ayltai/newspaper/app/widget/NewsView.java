@@ -62,6 +62,11 @@ public abstract class NewsView extends ObservableView implements NewsPresenter.V
         this.listView.refresh();
     }
 
+    @Override
+    public void clear() {
+        this.listView.clear();
+    }
+
     private void init() {
         final ViewGroup view = (ViewGroup)LayoutInflater.from(this.getContext()).inflate(R.layout.view_news, this, true);
 

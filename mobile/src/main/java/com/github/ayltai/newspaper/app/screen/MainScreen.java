@@ -60,9 +60,10 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
 
     //region Subscriptions
 
-    private final FlowableProcessor<Irrelevant> upActions      = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> refreshActions = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> filterActions  = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> upActions       = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> refreshActions  = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> filterActions   = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> clearAllActions = PublishProcessor.create();
 
     //endregion
 
@@ -78,6 +79,7 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
     private FloatingActionButton upAction;
     private FloatingActionButton refreshAction;
     private FloatingActionButton filterAction;
+    private FloatingActionButton clearAllAction;
     private FloatingActionButton moreAction;
 
     //endregion
@@ -129,6 +131,12 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
         return this.filterActions;
     }
 
+    @NonNull
+    @Override
+    public Flowable<Irrelevant> clearAllActions() {
+        return this.clearAllActions;
+    }
+
     //endregion
 
     @SuppressWarnings("CyclomaticComplexity")
@@ -156,6 +164,7 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
             this.upAction.setVisibility(View.GONE);
             this.refreshAction.setVisibility(View.GONE);
             this.filterAction.setVisibility(View.GONE);
+            this.clearAllAction.setVisibility(View.GONE);
             this.moreAction.setVisibility(View.GONE);
 
             this.toolbar.getMenu().findItem(R.id.action_search).setVisible(false);
@@ -167,6 +176,7 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
             this.upAction.setVisibility(View.INVISIBLE);
             this.refreshAction.setVisibility(View.INVISIBLE);
             this.filterAction.setVisibility(tabId == R.id.action_news ? View.INVISIBLE : View.GONE);
+            this.clearAllAction.setVisibility(tabId == R.id.action_news ? View.GONE : View.INVISIBLE);
             this.moreAction.setVisibility(View.VISIBLE);
 
             if (this.isMoreActionsShown) this.hideMoreActions();
@@ -227,6 +237,12 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
             this.filterActions.onNext(Irrelevant.INSTANCE);
         }));
 
+        this.manageDisposable(RxView.clicks(this.clearAllAction).subscribe(irrelevant -> {
+            this.hideMoreActions();
+
+            this.clearAllActions.onNext(Irrelevant.INSTANCE);
+        }));
+
         super.onAttachedToWindow();
     }
 
@@ -257,14 +273,20 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
         if (this.newsView instanceof PagerNewsView) ((PagerNewsView)this.newsView).filter();
     }
 
+    @Override
+    public void clearAll() {
+        this.newsView.clear();
+    }
+
     private void init() {
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, true);
 
-        this.content       = view.findViewById(R.id.content);
-        this.upAction      = view.findViewById(R.id.action_up);
-        this.refreshAction = view.findViewById(R.id.action_refresh);
-        this.filterAction  = view.findViewById(R.id.action_filter);
-        this.moreAction    = view.findViewById(R.id.action_more);
+        this.content        = view.findViewById(R.id.content);
+        this.upAction       = view.findViewById(R.id.action_up);
+        this.refreshAction  = view.findViewById(R.id.action_refresh);
+        this.filterAction   = view.findViewById(R.id.action_filter);
+        this.clearAllAction = view.findViewById(R.id.action_clear_all);
+        this.moreAction     = view.findViewById(R.id.action_more);
 
         this.toolbar = view.findViewById(R.id.toolbar);
         this.toolbar.inflateMenu(R.menu.main);
@@ -285,10 +307,12 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
         this.upAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
         this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
         if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.filterAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+        if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
 
         this.upAction.setClickable(true);
         this.refreshAction.setClickable(true);
         if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.filterAction.setClickable(true);
+        if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setClickable(true);
     }
 
     private void hideMoreActions() {
@@ -299,16 +323,19 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
             this.upAction.setVisibility(View.INVISIBLE);
             this.refreshAction.setVisibility(View.INVISIBLE);
             this.filterAction.setVisibility(View.INVISIBLE);
+            this.clearAllAction.setVisibility(View.INVISIBLE);
         } else {
             this.moreAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.rotate_anti_clockwise, R.integer.fab_animation_duration));
             this.upAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
             this.refreshAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
             this.filterAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
+            this.clearAllAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
         }
 
         this.upAction.setClickable(false);
         this.refreshAction.setClickable(false);
         this.filterAction.setClickable(false);
+        this.clearAllAction.setClickable(false);
     }
 
     //endregion

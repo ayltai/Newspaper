@@ -36,6 +36,7 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     protected final FlowableProcessor<Integer>    bestVisibleItemPositionChanges = PublishProcessor.create();
     protected final FlowableProcessor<Irrelevant> pullToRefreshes                = PublishProcessor.create();
+    protected final FlowableProcessor<Irrelevant> clears                         = PublishProcessor.create();
     protected final FlowableProcessor<Irrelevant> infiniteLoads                  = PublishProcessor.create();
     protected final FlowableProcessor<Boolean>    attachments                    = PublishProcessor.create();
     protected final FlowableProcessor<Irrelevant> detachments                    = PublishProcessor.create();
@@ -141,6 +142,13 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
     }
 
     @Override
+    public void clearAll() {
+        this.adapter.clear();
+
+        this.clears.onNext(Irrelevant.INSTANCE);
+    }
+
+    @Override
     public void up() {
         this.recyclerView.smoothScrollToPosition(0);
     }
@@ -182,6 +190,12 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
     //endregion
 
     //region Events
+
+    @NonNull
+    @Override
+    public Flowable<Irrelevant> clears() {
+        return this.clears;
+    }
 
     @NonNull
     @Override
