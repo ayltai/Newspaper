@@ -73,7 +73,7 @@ references:
   decode_fabric_key: &decode_fabric_key
     run:
       name: Decode Fabric key
-      command: echo $FABRIC_KEY | base64 -di > mobile/fabric.properties
+      command: echo $FABRIC_KEY | base64 -di > mobile/fabric.properties && echo $FABRIC_KEY | base64 -di > wear/fabric.properties
 
 jobs:
 
@@ -163,7 +163,7 @@ jobs:
           command: mkdir firebase
       - run:
           name: Download instrumented test results from Firebase Test Lab
-          command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-3pnq30ktpy1hz-yk8yw2wf0s9f2 | tail -1`*" /root/workspace/firebase/
+          command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-3udbiqpdyp0d0-miwcp7d69v80m | tail -1`*" /root/workspace/firebase/
       - store_artifacts:
           path: firebase/
           destination: /firebase/

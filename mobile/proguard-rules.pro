@@ -18,10 +18,15 @@
 -dontwarn okio.**
 -dontwarn com.squareup.okhttp.**
 -dontwarn okhttp3.**
--dontwarn javax.annotation.**
 -dontwarn com.android.volley.toolbox.**
 -dontwarn com.facebook.infer.**
 
-## Firebase Realtime Database
--keepattributes Signature
--keepclasseswithmembers class com.github.ayltai.newspaper.data.model.** { *; }
+## Realm
+-dontwarn javax.**
+-dontwarn io.realm.**
+
+## Retrofit
+-dontwarn retrofit2.**
+
+## BottomBar
+-dontwarn com.roughike.bottombar.**

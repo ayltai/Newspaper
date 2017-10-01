@@ -3,9 +3,8 @@ package com.github.ayltai.newspaper.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.arch.core.util.Function;
 import android.support.annotation.NonNull;
-
-import com.squareup.haha.guava.base.Function;
 
 public final class Lists {
     private Lists() {

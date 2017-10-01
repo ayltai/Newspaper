@@ -8,5 +8,8 @@
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="3852232f6854cd891d91a69732ab35097b757d0e" />
     </application>
 </manifest>

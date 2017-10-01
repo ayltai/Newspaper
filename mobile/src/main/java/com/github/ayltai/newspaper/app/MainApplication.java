@@ -3,7 +3,6 @@ package com.github.ayltai.newspaper.app;
 import java.util.Collections;
 
 import android.os.StrictMode;
-import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
@@ -34,7 +33,7 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 
-public final class MainApplication extends MultiDexApplication {
+public final class MainApplication extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
