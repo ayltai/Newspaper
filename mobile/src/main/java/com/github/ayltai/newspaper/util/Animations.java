@@ -5,6 +5,7 @@ import java.util.Arrays;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.AnimRes;
 import android.support.annotation.IntegerRes;
@@ -20,7 +21,12 @@ public final class Animations {
     @NonNull
     public static Animation getAnimation(@NonNull final Context context, @AnimRes final int animationId, @IntegerRes final int durationId) {
         final Animation animation = AnimationUtils.loadAnimation(context, animationId);
-        animation.setDuration((int)(context.getResources().getInteger(durationId) * Settings.Global.getFloat(context.getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1f)));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            animation.setDuration((int)(context.getResources().getInteger(durationId) * Settings.Global.getFloat(context.getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1f)));
+        } else {
+            animation.setDuration(context.getResources().getInteger(durationId));
+        }
 
         return animation;
     }

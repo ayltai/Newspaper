@@ -56,8 +56,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space8"
-            android:src="?attr/ic_up_24dp"
             android:visibility="invisible"
+            app:srcCompat="?attr/ic_up_24dp"
             app:fabSize="mini"
             app:backgroundTint="?attr/windowBackground" />
         <android.support.design.widget.FloatingActionButton
@@ -65,8 +65,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space8"
-            android:src="?attr/ic_refresh_24dp"
             android:visibility="invisible"
+            app:srcCompat="?attr/ic_refresh_24dp"
             app:fabSize="mini"
             app:backgroundTint="?attr/windowBackground" />
         <android.support.design.widget.FloatingActionButton
@@ -74,8 +74,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space8"
-            android:src="?attr/ic_filter_24dp"
             android:visibility="invisible"
+            app:srcCompat="?attr/ic_filter_24dp"
             app:fabSize="mini"
             app:backgroundTint="?attr/windowBackground" />
         <android.support.design.widget.FloatingActionButton
@@ -83,8 +83,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space8"
-            android:src="?attr/ic_clear_all_24dp"
             android:visibility="invisible"
+            app:srcCompat="?attr/ic_clear_all_24dp"
             app:fabSize="mini"
             app:backgroundTint="?attr/windowBackground" />
         <android.support.design.widget.FloatingActionButton
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space16"
             android:layout_gravity="end|bottom"
-            android:src="@drawable/ic_open_white_24dp"
+            app:srcCompat="@drawable/ic_open_white_24dp"
             app:fabSize="normal" />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
