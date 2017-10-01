@@ -25,6 +25,9 @@ public final class Constants {
     public static final int ANIMATION_DURATION = 500;
     public static final int ANIMATION_OFFSET   = 100;
 
+    public static final int DURATION_SLOW_FRAME   = 16;
+    public static final int DURATION_FROZEN_FRAME = 700;
+
     public static final int VIEW_STYLE_COMPACT = 0;
     public static final int VIEW_STYLE_COZY    = 1;
     public static final int VIEW_STYLE_DEFAULT = VIEW_STYLE_COZY;

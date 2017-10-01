@@ -3,9 +3,15 @@ package com.github.ayltai.newspaper.app;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FrameMetricsAggregator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.MenuItem;
+
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.Trace;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
@@ -16,6 +22,7 @@ import com.github.ayltai.newspaper.data.DataModule;
 import com.github.ayltai.newspaper.media.FrescoImageLoader;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
+import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import io.reactivex.Single;
@@ -28,6 +35,13 @@ public final class MainActivity extends AppCompatActivity {
 
     private FlowController controller;
     private Realm          realm;
+
+    //region Performance monitoring
+
+    private Trace                  trace;
+    private FrameMetricsAggregator aggregator;
+
+    //endregion
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -43,6 +57,38 @@ public final class MainActivity extends AppCompatActivity {
             .subscribe(realm -> this.realm = realm);
 
         this.getLifecycle().addObserver(FrescoImageLoader.getInstance(this));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (TestUtils.isLoggable()) {
+            this.trace      = FirebasePerformance.getInstance().newTrace(this.getClass().getSimpleName());
+            this.aggregator = new FrameMetricsAggregator(FrameMetricsAggregator.TOTAL_DURATION);
+            this.aggregator.add(this);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (TestUtils.isLoggable()) {
+            try {
+                final SparseIntArray totalDurations = this.aggregator.getMetrics()[FrameMetricsAggregator.TOTAL_INDEX];
+
+                for (int i = 0; i < totalDurations.size(); i++) {
+                    this.trace.incrementCounter("frames");
+                    if (totalDurations.get(i) > Constants.DURATION_SLOW_FRAME) this.trace.incrementCounter("slow_frames");
+                    if (totalDurations.get(i) > Constants.DURATION_FROZEN_FRAME) this.trace.incrementCounter("frozen_frames");
+                }
+            } catch (final NullPointerException e) {
+                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+            }
+
+            this.trace.stop();
+        }
     }
 
     @Override
