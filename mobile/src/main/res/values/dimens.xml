@@ -24,6 +24,7 @@
     <dimen name="compact_card_elevation">2dp</dimen>
     <dimen name="featured_image_height">240dp</dimen>
     <dimen name="featured_title_height">96dp</dimen>
+    <dimen name="featured_extend_height">120dp</dimen>
     <dimen name="cozy_item_header_clipped_height">80dp</dimen>
     <dimen name="cozy_item_header_padded_height">108dp</dimen>
     <dimen name="cozy_item_header_height">72dp</dimen>

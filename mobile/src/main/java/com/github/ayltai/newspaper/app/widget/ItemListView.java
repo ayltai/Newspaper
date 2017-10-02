@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.TextView;
 
 import com.github.ayltai.newspaper.R;
@@ -21,6 +22,7 @@ import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.ayltai.newspaper.widget.ListView;
+import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView;
 
 import io.reactivex.disposables.Disposable;
 
@@ -103,6 +105,14 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
             final Disposable disposable = (Disposable)this.adapter;
             if (!disposable.isDisposed()) disposable.dispose();
         }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        final View view = this.findViewById(R.id.scrolling_background);
+        if (view != null) this.manageDisposable(RxRecyclerView.scrollEvents(this.recyclerView).subscribe(event -> view.setTranslationY(view.getTranslationY() - event.dy())));
     }
 
     private void init() {
