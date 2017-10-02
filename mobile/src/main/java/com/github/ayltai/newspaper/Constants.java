@@ -47,6 +47,7 @@ public final class Constants {
     }
 
     public static final boolean AUTO_PLAY_DEFAULT = false;
+    public static final boolean PANORAMA_DEFAULT  = false;
 
     private Constants() {
     }

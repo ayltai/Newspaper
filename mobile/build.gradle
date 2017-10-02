@@ -212,6 +212,7 @@ dependencies {
     compile 'com.fujiyuu75:sequent:0.2.1'
     compile 'hanks.xyz:smallbang-library:0.1.2'
     compile 'com.flaviofaria:kenburnsview:1.0.7'
+    compile 'com.gjiazhe:PanoramaImageView:1.0'
     compile 'io.github.inflationx:calligraphy3:3.0.0'
 
     // Code generation tools

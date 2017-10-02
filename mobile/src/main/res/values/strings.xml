@@ -44,6 +44,7 @@
     <string name="pref_cozy_layout">Cozy layout</string>
     <string name="pref_dark_theme">Dark theme</string>
     <string name="pref_auto_play">Play video news automatically</string>
+    <string name="pref_panorama">Panoramic images</string>
     <string name="pref_settings">Settings</string>
     <string name="pref_sources">Sources</string>
     <string name="pref_categories">Categories</string>
