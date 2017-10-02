@@ -24,9 +24,6 @@
     <color name="tabInactiveColorDark">#aab2bd</color>
     <color name="tabBarBackgroundColorLight">#fafafa</color>
     <color name="tabBarBackgroundColorDark">#1c282e</color>
-    <color name="textProtectionScrimTop">#00000000</color>
-    <color name="textProtectionScrimCenter">#44000000</color>
-    <color name="textProtectionScrimBottom">#99000000</color>
     <color name="placeholderTextColorLight">#aab2bd</color>
     <color name="placeholderTextColorDark">#656d78</color>
     <color name="emptyBackgroundTopLight">#cacaca</color>

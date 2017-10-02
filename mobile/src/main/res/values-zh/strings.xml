@@ -8,11 +8,9 @@
     <string name="view_via">查看…</string>
     <string name="share_to">分享給…</string>
     <string name="update_indicator">有新的新聞</string>
-    <string name="loading_indicator">下載中…</string>
 
     <!-- About -->
     <string name="about_visit">訪問網站</string>
-    <string name="about_contact">聯繫開發人員</string>
     <string name="about_rate">評價這個軟件</string>
     <string name="about_report">報告問題</string>
 
@@ -25,18 +23,11 @@
     <string name="time_ago_day">昨天</string>
     <string name="time_ago_days">%s天前</string>
 
-    <string name="title_bookmark">書籤</string>
-    <string name="go_back">上一個類別</string>
-    <string name="go_next">下一個類別</string>
-
     <!-- Actions -->
     <string name="action_search">搜尋</string>
-    <string name="action_filter">篩選</string>
-    <string name="action_settings">設置</string>
     <string name="action_bookmark">書籤</string>
     <string name="action_share">分享</string>
     <string name="action_about">關於</string>
-    <string name="action_refresh">更新</string>
     <string name="action_close">關閉</string>
     <string name="action_apply">立即套用</string>
     <string name="action_news">新聞</string>
@@ -52,20 +43,14 @@
     <!-- Preferences -->
     <string name="pref_cozy_layout">舒適設計</string>
     <string name="pref_dark_theme">深色主題</string>
-    <string name="pref_sources">報紙</string>
-    <string name="pref_categories">分類</string>
     <string name="pref_auto_play">自動播放視頻新聞</string>
     <string name="pref_settings">設置</string>
+    <string name="pref_sources">報紙</string>
+    <string name="pref_categories">分類</string>
 
-    <!-- Sources -->
-    <string name="source_apple_daily">蘋果日報</string>
-    <string name="source_oriental_daily">東方日報</string>
-    <string name="source_sing_tao_daily">星島日報</string>
-    <string name="source_hket">經濟日報</string>
-    <string name="source_sing_pao_daily">成報</string>
-    <string name="source_ming_pao">明報</string>
-    <string name="source_headline_daily">頭條日報</string>
-    <string name="source_sky_post">晴報</string>
-    <string name="source_hkej">信報</string>
-    <string name="source_rthk">香港電台</string>
+    <!-- Content descriptions -->
+    <string name="exo_play">Play</string>
+    <string name="exo_pause">Pause</string>
+    <string name="exo_fullscreen">Enter fullscreen</string>
+    <string name="exo_fullscreen_exit">Exit fullscreen</string>
 </resources>

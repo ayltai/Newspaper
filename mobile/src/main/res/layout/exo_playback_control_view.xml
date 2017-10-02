@@ -14,12 +14,14 @@
     android:visibility="invisible">
     <ImageButton
         android:id="@id/exo_play"
+        android:contentDescription="@string/exo_play"
         android:tint="?attr/indicatorColor"
         android:scaleType="center"
         app:srcCompat="@drawable/ic_play_arrow"
         style="@style/ExoPlayerControlButton" />
     <ImageButton
         android:id="@id/exo_pause"
+        android:contentDescription="@string/exo_pause"
         android:tint="?attr/indicatorColor"
         android:scaleType="center"
         app:srcCompat="@drawable/ic_pause"
@@ -37,12 +39,14 @@
         style="@style/ExoPlayerControlItem" />
     <ImageButton
         android:id="@+id/exo_fullscreen"
+        android:contentDescription="@string/exo_fullscreen"
         android:tint="?attr/indicatorColor"
         android:scaleType="center"
         app:srcCompat="@drawable/ic_fullscreen"
         style="@style/ExoPlayerControlButton" />
     <ImageButton
         android:id="@+id/exo_fullscreen_exit"
+        android:contentDescription="@string/exo_fullscreen_exit"
         android:tint="?attr/indicatorColor"
         android:scaleType="center"
         app:srcCompat="@drawable/ic_fullscreen_exit"

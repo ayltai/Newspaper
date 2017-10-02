@@ -44,11 +44,11 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
 
     //region Components
 
-    private View                thumbnailContainer;
-    private View                playAction;
-    private View                thumbnail;
+    private final View thumbnailContainer;
+    private final View playAction;
+    private final View thumbnail;
+
     private View                fullScreenAction;
-    private View                fullScreenExitAction;
     private SimpleExoPlayerView playerView;
     private SimpleExoPlayer     player;
 
@@ -95,11 +95,11 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
 
             this.playerView.setPlayer(this.player);
 
-            this.fullScreenAction     = this.playerView.findViewById(R.id.exo_fullscreen);
-            this.fullScreenExitAction = this.playerView.findViewById(R.id.exo_fullscreen_exit);
-
+            this.fullScreenAction = this.playerView.findViewById(R.id.exo_fullscreen);
             this.fullScreenAction.setVisibility(View.VISIBLE);
-            this.fullScreenExitAction.setVisibility(View.GONE);
+
+            final View fullScreenExitAction = this.playerView.findViewById(R.id.exo_fullscreen_exit);
+            fullScreenExitAction.setVisibility(View.GONE);
 
             this.player.prepare(new ExtractorMediaSource(Uri.parse(this.video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
 

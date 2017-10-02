@@ -30,9 +30,7 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
     protected Single<List<Boolean>> load() {
         if (this.getView() == null) return Single.just(Collections.emptyList());
 
-        return Single.create(emitter -> {
-            emitter.onSuccess(this.getSettings());
-        });
+        return Single.create(emitter -> emitter.onSuccess(this.getSettings()));
     }
 
     @Override
