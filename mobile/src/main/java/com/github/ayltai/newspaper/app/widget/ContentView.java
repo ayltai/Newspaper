@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Image;
+import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.piasy.biv.view.BigImageView;
 
 public final class ContentView extends ItemView {
@@ -72,6 +73,8 @@ public final class ContentView extends ItemView {
         if (images.isEmpty()) {
             this.image.setVisibility(View.GONE);
         } else {
+            ImageUtils.translateToFacesCenter(this.image);
+
             this.image.setVisibility(View.VISIBLE);
             this.image.showImage(Uri.parse(images.get(0).getUrl()));
         }
