@@ -64,7 +64,7 @@ public abstract class NewsView extends ObservableView implements NewsPresenter.V
 
     @Override
     public void clear() {
-        this.listView.clear();
+        this.listView.clearAll();
     }
 
     private void init() {
