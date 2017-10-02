@@ -5,6 +5,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Singleton;
+
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
@@ -41,7 +43,8 @@ import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 
-public class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObserver {
+@Singleton
+public final class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObserver {
     private static final Handler          HANDLER = new Handler(Looper.getMainLooper());
     private static final List<DataSource> SOURCES = new ArrayList<>();
 
