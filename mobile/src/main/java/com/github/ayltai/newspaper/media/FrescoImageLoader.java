@@ -11,6 +11,7 @@ import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,6 +30,7 @@ import com.facebook.cache.disk.FileCache;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
+import com.facebook.datasource.DataSources;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -37,11 +39,18 @@ import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.imagepipeline.image.CloseableBitmap;
+import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.util.Optional;
+import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
+
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 @Singleton
 public final class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObserver {
@@ -66,6 +75,41 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
 
     protected FrescoImageLoader(@NonNull final Context context) {
         this.context = context.getApplicationContext();
+    }
+
+    @SuppressWarnings("IllegalCatch")
+    @NonNull
+    public static Maybe<Bitmap> loadImage(@NonNull final String uri) {
+        return Single.<CloseableReference<CloseableImage>>create(
+            emitter -> {
+                final DataSource<CloseableReference<CloseableImage>> source = Fresco.getImagePipeline().fetchDecodedImage(ImageRequest.fromUri(uri), false);
+
+                try {
+                    emitter.onSuccess(DataSources.waitForFinalResult(source));
+                } catch (final Throwable error) {
+                    emitter.onError(error);
+                } finally {
+                    source.close();
+                }
+            })
+            .compose(RxUtils.applySingleBackgroundSchedulers())
+            .map(reference -> {
+                if (reference.isValid()) {
+                    final CloseableImage image = reference.get();
+
+                    // TODO: Checks image size to avoid out-of-memory error
+
+                    if (image instanceof CloseableBitmap) return Optional.of(((CloseableBitmap)image).getUnderlyingBitmap());
+                }
+
+                return Optional.<Bitmap>empty();
+            })
+            .compose(RxUtils.applySingleBackgroundSchedulers())
+            .flatMapMaybe(optional -> {
+                if (optional.isPresent()) return Maybe.just(optional.get());
+
+                return Maybe.empty();
+            });
     }
 
     @Override

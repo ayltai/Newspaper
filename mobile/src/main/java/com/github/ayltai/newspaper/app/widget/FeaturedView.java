@@ -3,7 +3,6 @@ package com.github.ayltai.newspaper.app.widget;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,23 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.facebook.common.references.CloseableReference;
-import com.facebook.datasource.DataSource;
-import com.facebook.datasource.DataSources;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.image.CloseableBitmap;
-import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Image;
+import com.github.ayltai.newspaper.media.FrescoImageLoader;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.util.Optional;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.jakewharton.rxbinding2.view.RxView;
-
-import io.reactivex.Single;
 
 public final class FeaturedView extends ItemView {
     public static final int VIEW_TYPE = R.id.view_type_featured;
@@ -71,38 +61,13 @@ public final class FeaturedView extends ItemView {
         } else {
             if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Featured image = " + images.get(0).getUrl());
 
-            final DataSource<CloseableReference<CloseableImage>> source = Fresco.getImagePipeline().fetchDecodedImage(ImageRequest.fromUri(images.get(0).getUrl()), false);
-
-            Single.<CloseableReference<CloseableImage>>create(
-                emitter -> {
-                    try {
-                        emitter.onSuccess(DataSources.waitForFinalResult(source));
-                    } catch (final Throwable error) {
-                        emitter.onError(error);
-                    } finally {
-                        source.close();
-                    }
-                })
-                .compose(RxUtils.applySingleBackgroundSchedulers())
-                .map(reference -> {
-                    if (reference.isValid()) {
-                        final CloseableImage image = reference.get();
-
-                        // TODO: Checks image size to avoid out-of-memory error
-
-                        if (image instanceof CloseableBitmap) return Optional.of(((CloseableBitmap)image).getUnderlyingBitmap());
-                    }
-
-                    return Optional.<Bitmap>empty();
-                })
-                .compose(RxUtils.applySingleBackgroundToMainSchedulers())
+            FrescoImageLoader.loadImage(images.get(0).getUrl())
+                .compose(RxUtils.applyMaybeBackgroundToMainSchedulers())
                 .subscribe(
                     bitmap -> {
-                        if (bitmap.isPresent()) {
-                            this.image.setImageBitmap(bitmap.get());
+                        this.image.setImageBitmap(bitmap);
 
-                            if (TestUtils.isRunningInstrumentedTest()) this.image.pause();
-                        }
+                        if (TestUtils.isRunningInstrumentedTest()) this.image.pause();
                     },
                     error -> {
                         if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);

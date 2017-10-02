@@ -24,6 +24,7 @@ public final class UserConfig {
     private static final String KEY_VIEW_STYLE = "viewStyle";
     private static final String KEY_THEME      = "theme";
     private static final String KEY_AUTO_PLAY  = "autoPlay";
+    private static final String KEY_PANORAMA   = "panorama";
 
     //endregion
 
@@ -88,5 +89,13 @@ public final class UserConfig {
 
     public static void setAutoPlayEnabled(@NonNull final Context context, final boolean enabled) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(UserConfig.KEY_AUTO_PLAY, enabled).apply();
+    }
+
+    public static boolean isPanoramaEnabled(@NonNull final Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(UserConfig.KEY_PANORAMA, Constants.PANORAMA_DEFAULT);
+    }
+
+    public static void setPanoramaEnabled(@NonNull final Context context, final boolean enabled) {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(UserConfig.KEY_PANORAMA, enabled).apply();
     }
 }
