@@ -47,10 +47,10 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     //region Components
 
-    protected SwipeRefreshLayout        swipeRefreshLayout;
-    protected SmartRecyclerView         recyclerView;
-    protected View                      loadingView;
-    protected View                      emptyView;
+    protected SwipeRefreshLayout swipeRefreshLayout;
+    protected SmartRecyclerView  recyclerView;
+    protected View               loadingView;
+    protected View               emptyView;
 
     //endregion
 
