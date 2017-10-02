@@ -10,11 +10,11 @@ An aggreated news app containing news from 10+ local news publishers in Hong Kon
 ## Features
 * Fast. Just fast.
 * Support video news
-* Read news from 10 news publishers
-* Bookmark any news
+* Auto face centering image cropping
+* Optional panoramic images
+* Read news from 10 local news publishers
+* Bookmarks and reading history
 * No ads. We hate ads as much as you do
-* Remember where you were reading
-* Exactly the features we need. No bloat
 
 ## Aggregated news publishers
 * [Apple Daily (蘋果日報)](http://hk.apple.nextmedia.com)
@@ -42,6 +42,7 @@ This app is made with the support of open source software:
 * [BigImageViewer](https://github.com/Piasy/BigImageViewer)
 * [RecyclerView Animators](https://github.com/wasabeef/recyclerview-animators)
 * [KenBurnsView](https://github.com/flavioarfaria/KenBurnsView)
+* [PanoramaImageView](https://github.com/gjiazhe/PanoramaImageView)
 * [SmallBang](https://github.com/hanks-zyh/SmallBang)
 * [OkHttp](https://github.com/square/okhttp)
 * [Retrolambda](https://github.com/orfjackal/retrolambda)
@@ -59,6 +60,7 @@ This app is made with the support of open source software:
 
 … and closed source software:
 
+* [Google Mobile Vision](https://developers.google.com/vision/face-detection-concepts)
 * [Firebase Crash Reporting](https://firebase.google.com/docs/crash)
 * [Fabric Crashlytics](https://fabric.io/kits/android/crashlytics)
 

@@ -33,15 +33,18 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
     private final class MainFilter extends Filter {
         @Nullable
         @Override
-        protected FilterResults performFiltering(@Nullable final CharSequence searchText) {
+        protected Filter.FilterResults performFiltering(@Nullable final CharSequence searchText) {
             PagerNewsAdapter.this.searchText = searchText;
 
             for (int i = 0; i < PagerNewsAdapter.this.getCount(); i++) {
                 final ListView listView = PagerNewsAdapter.this.getItem(i);
-                if (listView != null && listView.getAdapter() instanceof Filterable && ((Filterable)listView.getAdapter()).getFilter() instanceof ItemListAdapter.ItemListFilter) {
+
+                if (listView instanceof ItemListView && listView.getAdapter() instanceof Filterable && ((Filterable)listView.getAdapter()).getFilter() instanceof ItemListAdapter.ItemListFilter) {
+                    ((ItemListView)listView).setSearchText(searchText);
+
                     final ItemListAdapter.ItemListFilter filter = (ItemListAdapter.ItemListFilter)((Filterable)listView.getAdapter()).getFilter();
 
-                    filter.setCategories(new ArrayList<>(Category.fromDisplayName(UserConfig.getCategories(listView.getContext()).get(PagerNewsAdapter.this.position))));
+                    filter.setCategories(new ArrayList<>(Category.fromDisplayName(PagerNewsAdapter.this.categories.get(i))));
                     filter.setSources(UserConfig.getSources(listView.getContext()));
                     filter.setFeatured(true);
 
@@ -61,10 +64,13 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
                     final FilterResults                  results = (FilterResults)PagerNewsAdapter.this.filterResults.get(i);
                     final ItemListAdapter.ItemListFilter filter  = (ItemListAdapter.ItemListFilter)((Filterable)listView.getAdapter()).getFilter();
 
-                    filter.setCategories(new ArrayList<>(Category.fromDisplayName(UserConfig.getCategories(listView.getContext()).get(PagerNewsAdapter.this.position))));
-                    filter.setSources(UserConfig.getSources(listView.getContext()));
-                    filter.setFeatured(true);
                     filter.publishResults(searchText, results);
+
+                    if (listView.getAdapter().getItemCount() == 0) {
+                        listView.showEmptyView();
+                    } else {
+                        listView.hideEmptyView();
+                    }
                 }
             }
         }
@@ -147,7 +153,11 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
         this.views.put(position, new SoftReference<>(view));
         container.addView(view);
 
-        if (!TextUtils.isEmpty(this.searchText) && view.getAdapter() instanceof Filterable && ((Filterable)view.getAdapter()).getFilter() != null) ((Filterable)view.getAdapter()).getFilter().filter(this.searchText);
+        if (!TextUtils.isEmpty(this.searchText)) {
+            view.setCategories(categories);
+            view.setSources(UserConfig.getSources(container.getContext()));
+            view.setSearchText(this.searchText);
+        }
 
         return view;
     }

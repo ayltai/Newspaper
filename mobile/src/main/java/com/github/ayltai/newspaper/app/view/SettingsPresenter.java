@@ -22,6 +22,7 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
     private static final int INDEX_LAYOUT    = 0;
     private static final int INDEX_THEME     = 1;
     private static final int INDEX_AUTO_PLAY = 2;
+    private static final int INDEX_PANORAMA  = 3;
 
     //endregion
 
@@ -52,6 +53,10 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
                         UserConfig.setAutoPlayEnabled(view.getContext(), !this.getSettings().get(SettingsPresenter.INDEX_AUTO_PLAY));
                         break;
 
+                    case SettingsPresenter.INDEX_PANORAMA:
+                        UserConfig.setPanoramaEnabled(view.getContext(), !this.getSettings().get(SettingsPresenter.INDEX_PANORAMA));
+                        break;
+
                     default:
                         break;
                 }
@@ -69,6 +74,7 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
                         view.addOption(view.getContext().getText(R.string.pref_cozy_layout), settings.get(SettingsPresenter.INDEX_LAYOUT));
                         view.addOption(view.getContext().getText(R.string.pref_dark_theme), settings.get(SettingsPresenter.INDEX_THEME));
                         view.addOption(view.getContext().getText(R.string.pref_auto_play), settings.get(SettingsPresenter.INDEX_AUTO_PLAY));
+                        view.addOption(view.getContext().getText(R.string.pref_panorama), settings.get(SettingsPresenter.INDEX_PANORAMA));
                     },
                     error -> {
                         if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
@@ -86,6 +92,7 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
         settings.add(UserConfig.getViewStyle(this.getView().getContext()) == Constants.VIEW_STYLE_DEFAULT);
         settings.add(UserConfig.getTheme(this.getView().getContext()) != Constants.THEME_DEFAULT);
         settings.add(UserConfig.isAutoPlayEnabled(this.getView().getContext()));
+        settings.add(UserConfig.isPanoramaEnabled(this.getView().getContext()));
 
         return settings;
     }

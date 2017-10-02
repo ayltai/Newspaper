@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper.app;
 
+import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,10 +20,12 @@ import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.data.DataModule;
-import com.github.ayltai.newspaper.media.FrescoImageLoader;
+import com.github.ayltai.newspaper.media.DaggerImageComponent;
+import com.github.ayltai.newspaper.media.ImageModule;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.piasy.biv.loader.ImageLoader;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import io.reactivex.Single;
@@ -56,7 +59,12 @@ public final class MainActivity extends AppCompatActivity {
             .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
             .subscribe(realm -> this.realm = realm);
 
-        this.getLifecycle().addObserver(FrescoImageLoader.getInstance(this));
+        final ImageLoader imageLoader = DaggerImageComponent.builder()
+            .imageModule(new ImageModule(this))
+            .build()
+            .imageLoader();
+
+        if (imageLoader instanceof LifecycleObserver) this.getLifecycle().addObserver((LifecycleObserver)imageLoader);
     }
 
     @Override

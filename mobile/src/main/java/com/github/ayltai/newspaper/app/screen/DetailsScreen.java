@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,19 +34,24 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.widget.ItemView;
 import com.github.ayltai.newspaper.app.widget.VideoView;
+import com.github.ayltai.newspaper.media.FrescoImageLoader;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.ayltai.newspaper.view.ScreenPresenter;
 import com.github.piasy.biv.view.BigImageView;
+import com.gjiazhe.panoramaimageview.GyroscopeObserver;
+import com.gjiazhe.panoramaimageview.PanoramaImageView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
@@ -81,38 +87,41 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     //region Components
 
-    private final Toolbar          toolbar;
-    private final TextView         defaultToolbarTitle;
-    private final View             toolbarView;
-    private final BigImageView     toolbarImage;
-    private final TextView         toolbarTitle;
-    private final View             toolbarBackground;
-    private final ViewGroup        imageContainer;
-    private final ViewGroup        container;
-    private final SimpleDraweeView avatar;
-    private final TextView         source;
-    private final TextView         publishDate;
-    private final TextView         title;
-    private final TextView         description;
-    private final ImageView        bookmarkAction;
-    private final ImageView        shareAction;
-    private final ViewGroup        imagesContainer;
-    private final ViewGroup        videoContainer;
+    private final CollapsingToolbarLayout collapsingToolbarLayout;
+    private final Toolbar                 toolbar;
+    private final View                    toolbarView;
+    private final BigImageView            toolbarImage;
+    private final PanoramaImageView       panoramaImageView;
+    private final TextView                toolbarTitle;
+    private final View                    toolbarBackground;
+    private final ViewGroup               imageContainer;
+    private final ViewGroup               container;
+    private final SimpleDraweeView        avatar;
+    private final TextView                source;
+    private final TextView                publishDate;
+    private final TextView                title;
+    private final TextView                description;
+    private final ImageView               bookmarkAction;
+    private final ImageView               shareAction;
+    private final ViewGroup               imagesContainer;
+    private final ViewGroup               videoContainer;
 
     private VideoView videoView;
 
     //endregion
 
-    private SmallBang smallBang;
-    private boolean   hasAnimated;
+    private GyroscopeObserver gyroscopeObserver;
+    private SmallBang         smallBang;
+    private boolean           isPanoramaEnabled;
+    private boolean           hasAnimated;
 
     public DetailsScreen(@NonNull final Context context) {
         super(context);
 
         final View view = LayoutInflater.from(context).inflate(R.layout.screen_news_details, this, true);
 
+        this.collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbarLayout);
         this.toolbar                 = view.findViewById(R.id.toolbar);
-        this.defaultToolbarTitle     = view.findViewById(R.id.toolbar_title);
         this.imageContainer          = view.findViewById(R.id.image_container);
         this.container               = view.findViewById(R.id.container);
         this.avatar                  = view.findViewById(R.id.avatar);
@@ -125,10 +134,19 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.imagesContainer         = view.findViewById(R.id.images_container);
         this.videoContainer          = view.findViewById(R.id.video_container);
 
-        this.toolbarView       = LayoutInflater.from(this.getContext()).inflate(R.layout.widget_toolbar, this.imageContainer, false);
-        this.toolbarImage      = this.toolbarView.findViewById(R.id.image);
+        this.isPanoramaEnabled = UserConfig.isPanoramaEnabled(context);
+        this.toolbarView       = LayoutInflater.from(this.getContext()).inflate(this.isPanoramaEnabled ? R.layout.widget_toolbar_panorama : R.layout.widget_toolbar, this.imageContainer, false);
+        this.toolbarImage      = this.isPanoramaEnabled ? null : this.toolbarView.findViewById(R.id.image);
+        this.panoramaImageView = this.isPanoramaEnabled ? this.toolbarView.findViewById(R.id.image) : null;
         this.toolbarTitle      = this.toolbarView.findViewById(R.id.title);
         this.toolbarBackground = this.toolbarView.findViewById(R.id.title_background);
+
+        if (this.isPanoramaEnabled) {
+            this.gyroscopeObserver = new GyroscopeObserver();
+            this.panoramaImageView.setGyroscopeObserver(this.gyroscopeObserver);
+
+            if (TestUtils.isRunningInstrumentedTest()) this.panoramaImageView.setEnablePanoramaMode(false);
+        }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) ((CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout)).setExpandedTitleTextAppearance(R.style.TransparentText);
 
@@ -165,13 +183,13 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     @SuppressWarnings("deprecation")
     @Override
     public void setTitle(@Nullable final CharSequence title) {
+        this.collapsingToolbarLayout.setTitle(title);
+
         if (TextUtils.isEmpty(title)) {
             this.title.setVisibility(View.GONE);
-            this.defaultToolbarTitle.setText("");
         } else {
             this.title.setVisibility(View.VISIBLE);
             this.title.setText(Html.fromHtml(title.toString()));
-            this.defaultToolbarTitle.setText(Html.fromHtml(title.toString()));
         }
     }
 
@@ -223,12 +241,15 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.imagesContainer.removeAllViews();
 
         if (!images.isEmpty()) {
-            this.subscribeImage(this.toolbarImage, images.get(0));
+            if (this.isPanoramaEnabled) {
+                this.subscribeImage(this.panoramaImageView, images.get(0));
+            } else {
+                this.subscribeImage(this.toolbarImage, images.get(0));
+            }
 
             if (TextUtils.isEmpty(images.get(0).getDescription())) {
                 this.toolbarBackground.setVisibility(View.GONE);
             } else {
-                this.defaultToolbarTitle.setText("");
                 this.toolbarTitle.setText(Html.fromHtml(images.get(0).getDescription()));
                 this.toolbarBackground.setVisibility(View.VISIBLE);
             }
@@ -344,7 +365,12 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         this.hasAnimated = false;
 
-        this.toolbarImage.getSSIV().setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
+        if (this.isPanoramaEnabled) {
+            this.gyroscopeObserver.register(this.getContext());
+            this.panoramaImageView.setImageDrawable(null);
+        } else {
+            this.toolbarImage.getSSIV().setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
+        }
 
         this.manageDisposable(RxView.clicks(this.avatar).subscribe(irrelevant -> this.avatarClicks.onNext(Irrelevant.INSTANCE)));
         this.manageDisposable(RxView.clicks(this.source).subscribe(irrelevant -> this.sourceClicks.onNext(Irrelevant.INSTANCE)));
@@ -366,6 +392,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     protected void onDetachedFromWindow() {
         if (this.videoView != null) this.removeView(this.videoView);
 
+        if (this.isPanoramaEnabled) this.gyroscopeObserver.unregister();
+
         super.onDetachedFromWindow();
 
         this.smallBang = null;
@@ -380,6 +408,19 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         imageView.showImage(Uri.parse(image.getUrl()));
 
+        imageView.setOnClickListener(view -> this.imageClicks.onNext(image));
+        this.manageDisposable(RxView.clicks((View)imageView.getParent()).subscribe(irrelevant -> this.imageClicks.onNext(image)));
+    }
+
+    private void subscribeImage(@NonNull final PanoramaImageView imageView, @NonNull final Image image) {
+        FrescoImageLoader.loadImage(image.getUrl())
+            .compose(RxUtils.applyMaybeBackgroundToMainSchedulers())
+            .subscribe(
+                imageView::setImageBitmap,
+                error -> {
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                }
+            );
         imageView.setOnClickListener(view -> this.imageClicks.onNext(image));
         this.manageDisposable(RxView.clicks((View)imageView.getParent()).subscribe(irrelevant -> this.imageClicks.onNext(image)));
     }

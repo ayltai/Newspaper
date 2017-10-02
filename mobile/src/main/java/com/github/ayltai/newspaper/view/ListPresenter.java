@@ -32,6 +32,8 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
 
         void showEmptyView();
 
+        void hideEmptyView();
+
         void showLoadingView();
 
         void showEndOfList();

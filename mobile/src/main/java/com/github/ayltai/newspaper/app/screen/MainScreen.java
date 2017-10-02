@@ -211,7 +211,7 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
             this.searchView.setSearchableInfo(manager.getSearchableInfo(activity.getComponentName()));
         }
 
-        this.manageDisposable(RxSearchView.queryTextChanges(this.searchView).subscribe(newText -> {
+        this.manageDisposable(RxSearchView.queryTextChanges(this.searchView).skipInitialValue().subscribe(newText -> {
             if (this.newsView != null) this.newsView.search(newText);
         }));
 

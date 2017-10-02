@@ -1,5 +1,8 @@
 package com.github.ayltai.newspaper.app.widget;
 
+import java.util.List;
+import java.util.Set;
+
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.LifecycleOwner;
@@ -13,12 +16,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Item;
+import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.ayltai.newspaper.widget.ListView;
@@ -27,6 +33,14 @@ import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView;
 import io.reactivex.disposables.Disposable;
 
 public abstract class ItemListView extends ListView<Item> implements ItemListPresenter.View, Disposable, LifecycleObserver {
+    //region Supports initial searching
+
+    private List<String> categories;
+    private Set<String>  sources;
+    private CharSequence searchText;
+
+    //endregion
+
     //region Constructors
 
     public ItemListView(@NonNull final Context context) {
@@ -48,6 +62,22 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
     public ItemListView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.init();
+    }
+
+    //endregion
+
+    //region Search properties
+
+    public void setCategories(@NonNull final List<String> categories) {
+        this.categories = categories;
+    }
+
+    public void setSources(@NonNull final Set<String> sources) {
+        this.sources = sources;
+    }
+
+    public void setSearchText(final CharSequence searchText) {
+        this.searchText = searchText;
     }
 
     //endregion
@@ -86,6 +116,28 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
         return ListView.NO_INFINITE_LOADING;
     }
 
+    //region Methods
+
+    @Override
+    public void bind(@NonNull final List<Item> models) {
+        super.bind(models);
+
+        if (!TextUtils.isEmpty(this.searchText) && this.adapter instanceof Filterable) {
+            final ItemListAdapter.ItemListFilter filter = (ItemListAdapter.ItemListFilter)((Filterable)this.adapter).getFilter();
+
+            if (filter != null) {
+                filter.setCategories(this.categories);
+                filter.setSources(this.sources);
+                filter.setFeatured(true);
+
+                // FIXME: performFiltering() should be executed on a background thread, but Filter.FilterResults class is protected
+                filter.publishResults(this.searchText, filter.performFiltering(this.searchText));
+
+                if (this.adapter.getItemCount() == 0) this.showEmptyView();
+            }
+        }
+    }
+
     @Override
     public void scrollTo(final int scrollPosition) {
         if (scrollPosition > 0) this.recyclerView.scrollToPosition(scrollPosition);
@@ -106,6 +158,8 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
             if (!disposable.isDisposed()) disposable.dispose();
         }
     }
+
+    //endregion
 
     @Override
     protected void onAttachedToWindow() {

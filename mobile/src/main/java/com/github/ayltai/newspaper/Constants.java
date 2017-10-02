@@ -17,8 +17,10 @@ public final class Constants {
     public static final long CACHE_SIZE_MAX_SMALLER  = 8 * 1024 * 1024;
     public static final long CACHE_SIZE_MAX_SMALLEST = 4 * 1024 * 1024;
 
-    public static final int FEATURED_IMAGE_ROTATION = 8;
-    public static final int IMAGE_ZOOM_MAX          = 8;
+    public static final int   FEATURED_IMAGE_ROTATION  = 8;
+    public static final int   IMAGE_ZOOM_MAX           = 8;
+    public static final float FACE_DETECTION_RATIO_MIN = 0.05f;
+    public static final int   FACE_DETECTION_SIZE_MAX  = 262144;
 
     public static final double VIDEO_ASPECT_RATIO = 16.0 / 9.0;
 
@@ -45,6 +47,7 @@ public final class Constants {
     }
 
     public static final boolean AUTO_PLAY_DEFAULT = false;
+    public static final boolean PANORAMA_DEFAULT  = false;
 
     private Constants() {
     }
