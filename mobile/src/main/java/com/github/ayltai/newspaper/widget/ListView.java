@@ -172,6 +172,14 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
     }
 
     @Override
+    public void hideEmptyView() {
+        this.recyclerView.setVisibility(View.VISIBLE);
+
+        if (this.loadingView != null) this.loadingView.setVisibility(View.GONE);
+        if (this.emptyView != null) this.emptyView.setVisibility(View.GONE);
+    }
+
+    @Override
     public void showLoadingView() {
         this.recyclerView.setVisibility(View.GONE);
 
