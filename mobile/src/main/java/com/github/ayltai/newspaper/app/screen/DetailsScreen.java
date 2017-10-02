@@ -87,24 +87,24 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     //region Components
 
-    private final Toolbar           toolbar;
-    private final TextView          defaultToolbarTitle;
-    private final View              toolbarView;
-    private final BigImageView      toolbarImage;
-    private final PanoramaImageView panoramaImageView;
-    private final TextView          toolbarTitle;
-    private final View              toolbarBackground;
-    private final ViewGroup         imageContainer;
-    private final ViewGroup         container;
-    private final SimpleDraweeView  avatar;
-    private final TextView          source;
-    private final TextView          publishDate;
-    private final TextView          title;
-    private final TextView          description;
-    private final ImageView         bookmarkAction;
-    private final ImageView         shareAction;
-    private final ViewGroup         imagesContainer;
-    private final ViewGroup         videoContainer;
+    private final CollapsingToolbarLayout collapsingToolbarLayout;
+    private final Toolbar                 toolbar;
+    private final View                    toolbarView;
+    private final BigImageView            toolbarImage;
+    private final PanoramaImageView       panoramaImageView;
+    private final TextView                toolbarTitle;
+    private final View                    toolbarBackground;
+    private final ViewGroup               imageContainer;
+    private final ViewGroup               container;
+    private final SimpleDraweeView        avatar;
+    private final TextView                source;
+    private final TextView                publishDate;
+    private final TextView                title;
+    private final TextView                description;
+    private final ImageView               bookmarkAction;
+    private final ImageView               shareAction;
+    private final ViewGroup               imagesContainer;
+    private final ViewGroup               videoContainer;
 
     private VideoView videoView;
 
@@ -120,8 +120,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         final View view = LayoutInflater.from(context).inflate(R.layout.screen_news_details, this, true);
 
+        this.collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbarLayout);
         this.toolbar                 = view.findViewById(R.id.toolbar);
-        this.defaultToolbarTitle     = view.findViewById(R.id.toolbar_title);
         this.imageContainer          = view.findViewById(R.id.image_container);
         this.container               = view.findViewById(R.id.container);
         this.avatar                  = view.findViewById(R.id.avatar);
@@ -183,13 +183,13 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     @SuppressWarnings("deprecation")
     @Override
     public void setTitle(@Nullable final CharSequence title) {
+        this.collapsingToolbarLayout.setTitle(title);
+
         if (TextUtils.isEmpty(title)) {
             this.title.setVisibility(View.GONE);
-            this.defaultToolbarTitle.setText("");
         } else {
             this.title.setVisibility(View.VISIBLE);
             this.title.setText(Html.fromHtml(title.toString()));
-            this.defaultToolbarTitle.setText(Html.fromHtml(title.toString()));
         }
     }
 
@@ -250,7 +250,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             if (TextUtils.isEmpty(images.get(0).getDescription())) {
                 this.toolbarBackground.setVisibility(View.GONE);
             } else {
-                this.defaultToolbarTitle.setText("");
                 this.toolbarTitle.setText(Html.fromHtml(images.get(0).getDescription()));
                 this.toolbarBackground.setVisibility(View.VISIBLE);
             }
@@ -368,6 +367,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         if (this.isPanoramaEnabled) {
             this.gyroscopeObserver.register(this.getContext());
+            this.panoramaImageView.setImageDrawable(null);
         } else {
             this.toolbarImage.getSSIV().setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
         }
