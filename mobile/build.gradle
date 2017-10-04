@@ -108,8 +108,8 @@ configurations {
 ext {
     multidexVersion       = '1.0.2'
     supportLibraryVersion = '26.1.0'
-    architectureVersion   = '1.0.0-alpha9-1'
-    firebaseSdkVersion    = '11.4.0'
+    architectureVersion   = '1.0.0-beta1'
+    firebaseSdkVersion    = '11.4.2'
     daggerVersion         = '2.11'
     rxBindingVersion      = '2.0.0'
     okhttpVersion         = '3.9.0'
