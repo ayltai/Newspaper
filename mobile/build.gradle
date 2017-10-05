@@ -232,6 +232,9 @@ dependencies {
         transitive = true;
     }
 
+    // Flurry Analytics
+    compile 'com.flurry.android:analytics:7.2.3@aar'
+
     // Debugging
     debugCompile   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"

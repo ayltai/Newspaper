@@ -19,6 +19,7 @@ import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
+import com.flurry.android.FlurryAgent;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.debug.ThreadPolicyFactory;
@@ -47,13 +48,20 @@ public final class MainApplication extends BaseApplication {
             if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
         }
 
-        if (!TestUtils.isLoggable() && !TestUtils.isRunningTests()) Fabric.with(this,
-            new Answers(),
-            new Crashlytics.Builder()
-                .core(new CrashlyticsCore.Builder()
-                    .disabled(TestUtils.isLoggable())
-                    .build())
-                .build());
+        if (!TestUtils.isLoggable() && !TestUtils.isRunningTests()) {
+            Fabric.with(this,
+                new Answers(),
+                new Crashlytics.Builder()
+                    .core(new CrashlyticsCore.Builder()
+                        .disabled(TestUtils.isLoggable())
+                        .build())
+                    .build());
+
+            new FlurryAgent.Builder()
+                .withCaptureUncaughtExceptions(true)
+                .withLogEnabled(false)
+                .build(this, "YVP5NNQJ5CJBJQS84MBQ");
+        }
 
         //noinspection CheckStyle
         try {
