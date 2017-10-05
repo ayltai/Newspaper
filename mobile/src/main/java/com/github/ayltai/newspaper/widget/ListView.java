@@ -118,10 +118,8 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
         if (this.adapter.getItemCount() == 0 && models.isEmpty()) {
             this.showEmptyView();
         } else {
-            this.recyclerView.setVisibility(View.VISIBLE);
-
-            if (this.loadingView != null) this.loadingView.setVisibility(View.GONE);
-            if (this.emptyView != null) this.emptyView.setVisibility(View.GONE);
+            this.hideEmptyView();
+            this.hideLoadingView();
         }
 
         if (this.adapter.getItemCount() == 0) {
@@ -184,6 +182,14 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
         this.recyclerView.setVisibility(View.GONE);
 
         if (this.loadingView != null) this.loadingView.setVisibility(View.VISIBLE);
+        if (this.emptyView != null) this.emptyView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideLoadingView() {
+        this.recyclerView.setVisibility(View.VISIBLE);
+
+        if (this.loadingView != null) this.loadingView.setVisibility(View.GONE);
         if (this.emptyView != null) this.emptyView.setVisibility(View.GONE);
     }
 

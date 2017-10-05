@@ -36,6 +36,8 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
 
         void showLoadingView();
 
+        void hideLoadingView();
+
         void showEndOfList();
 
         @NonNull
