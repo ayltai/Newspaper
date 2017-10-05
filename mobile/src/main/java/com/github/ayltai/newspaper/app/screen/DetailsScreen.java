@@ -14,6 +14,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -88,6 +89,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     //region Components
 
+    private final AppBarLayout            appBarLayout;
     private final CollapsingToolbarLayout collapsingToolbarLayout;
     private final Toolbar                 toolbar;
     private final View                    toolbarView;
@@ -121,6 +123,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         final View view = LayoutInflater.from(context).inflate(R.layout.screen_news_details, this, true);
 
+        this.appBarLayout            = view.findViewById(R.id.appBarLayout);
         this.collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbarLayout);
         this.toolbar                 = view.findViewById(R.id.toolbar);
         this.imageContainer          = view.findViewById(R.id.image_container);
@@ -255,6 +258,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             } else {
                 this.subscribeImage(this.toolbarImage, images.get(0));
             }
+
+            this.appBarLayout.setExpanded(true, true);
 
             if (TextUtils.isEmpty(images.get(0).getDescription())) {
                 this.toolbarBackground.setVisibility(View.GONE);

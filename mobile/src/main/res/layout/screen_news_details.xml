@@ -96,6 +96,7 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
