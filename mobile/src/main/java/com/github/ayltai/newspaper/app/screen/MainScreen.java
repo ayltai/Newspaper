@@ -29,6 +29,9 @@ import android.view.animation.AnimationUtils;
 import com.google.auto.value.AutoValue;
 
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.analytics.AnalyticsModule;
+import com.github.ayltai.newspaper.analytics.ClickEvent;
+import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
 import com.github.ayltai.newspaper.app.view.AboutPresenter;
 import com.github.ayltai.newspaper.app.view.NewsPresenter;
 import com.github.ayltai.newspaper.app.widget.AboutView;
@@ -198,6 +201,13 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
         }
 
         if (this.content.getChildCount() > 1) this.content.removeViewAt(0);
+
+        DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("BottomBar-" + this.bottomBar.findPositionForTabWithId(tabId)));
     }
 
     //region Lifecycle
@@ -222,6 +232,13 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
                 this.hideMoreActions();
             } else {
                 this.showMoreActions();
+
+                DaggerAnalyticsComponent.builder()
+                    .analyticsModule(new AnalyticsModule(this.getContext()))
+                    .build()
+                    .eventLogger()
+                    .logEvent(new ClickEvent()
+                        .setElementName("FAB - More"));
             }
         }));
 
@@ -267,21 +284,49 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
     @Override
     public void up() {
         this.newsView.up();
+
+        DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("FAB - Up"));
     }
 
     @Override
     public void refresh() {
         this.newsView.refresh();
+
+        DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("FAB - Refresh"));
     }
 
     @Override
     public void filter() {
         if (this.newsView instanceof PagerNewsView) ((PagerNewsView)this.newsView).filter();
+
+        DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("FAB - Filter"));
     }
 
     @Override
     public void clearAll() {
         this.newsView.clear();
+
+        DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("FAB - Clear All"));
     }
 
     private void init() {

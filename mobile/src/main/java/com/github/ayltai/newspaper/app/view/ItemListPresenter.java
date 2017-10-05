@@ -8,6 +8,9 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
+import com.github.ayltai.newspaper.analytics.AnalyticsModule;
+import com.github.ayltai.newspaper.analytics.ClickEvent;
+import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.ItemListLoader;
@@ -29,6 +32,18 @@ public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.Vie
 
     public ItemListPresenter(@NonNull final List<String> categories) {
         this.categories = categories;
+    }
+
+    @Override
+    protected void onPullToRefresh() {
+        super.onPullToRefresh();
+
+        if (this.getView() != null) DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Pull-To-Refresh"));
     }
 
     @Override

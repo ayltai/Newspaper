@@ -5,9 +5,11 @@ import java.util.Collections;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.logging.FLog;
@@ -45,15 +47,18 @@ public final class MainApplication extends BaseApplication {
             if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
         }
 
-        if (!TestUtils.isLoggable() && !TestUtils.isRunningTests()) Fabric.with(this, new Crashlytics.Builder()
-            .core(new CrashlyticsCore.Builder()
-                .disabled(TestUtils.isLoggable())
-                .build())
-            .build());
+        if (!TestUtils.isLoggable() && !TestUtils.isRunningTests()) Fabric.with(this,
+            new Answers(),
+            new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder()
+                    .disabled(TestUtils.isLoggable())
+                    .build())
+                .build());
 
         //noinspection CheckStyle
         try {
             FirebaseCrash.setCrashCollectionEnabled(!TestUtils.isLoggable());
+            FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(!TestUtils.isLoggable());
         } catch (final RuntimeException e) {
             if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
         }

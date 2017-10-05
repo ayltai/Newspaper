@@ -11,12 +11,17 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.analytics.AnalyticsModule;
+import com.github.ayltai.newspaper.analytics.ClickEvent;
+import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
+import com.github.ayltai.newspaper.analytics.SearchEvent;
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.view.PagerNewsPresenter;
 import com.github.ayltai.newspaper.app.config.UserConfig;
@@ -78,6 +83,13 @@ public class PagerNewsView extends ObservableView implements PagerNewsPresenter.
                 this.adapter.setCurrentPosition(index);
 
                 this.pageSelections.onNext(index);
+
+                DaggerAnalyticsComponent.builder()
+                    .analyticsModule(new AnalyticsModule(this.getContext()))
+                    .build()
+                    .eventLogger()
+                    .logEvent(new ClickEvent()
+                        .setElementName("Page Selection"));
             }));
 
             this.pageSelections.onNext(0);
@@ -125,6 +137,16 @@ public class PagerNewsView extends ObservableView implements PagerNewsPresenter.
     @Override
     public void search(@Nullable final CharSequence newText) {
         if (this.adapter != null) this.adapter.getFilter().filter(newText);
+
+        if (!TextUtils.isEmpty(newText)) DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new SearchEvent()
+                .setQuery(newText.toString())
+                .setCategory(UserConfig.getCategories(this.getContext()).get(this.viewPager.getCurrentItem()))
+                .setScreenName(this.getClass().getSimpleName()));
+
     }
 
     private void init() {

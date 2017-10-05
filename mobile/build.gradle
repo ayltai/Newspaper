@@ -108,8 +108,8 @@ configurations {
 ext {
     multidexVersion       = '1.0.2'
     supportLibraryVersion = '26.1.0'
-    architectureVersion   = '1.0.0-alpha9-1'
-    firebaseSdkVersion    = '11.4.0'
+    architectureVersion   = '1.0.0-beta1'
+    firebaseSdkVersion    = '11.4.2'
     daggerVersion         = '2.11'
     rxBindingVersion      = '2.0.0'
     okhttpVersion         = '3.9.0'
@@ -222,10 +222,13 @@ dependencies {
     compile             'com.google.code.gson:gson:2.8.2'
 
     // Fabric
-    compile('io.fabric.sdk.android:fabric:1.3.17@aar') {
+    compile ('io.fabric.sdk.android:fabric:1.3.17@aar') {
         transitive = true;
     }
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    compile ('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
+    compile ('com.crashlytics.sdk.android:answers:1.3.13@aar') {
         transitive = true;
     }
 
