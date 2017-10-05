@@ -36,12 +36,12 @@
 -dontwarn com.flurry.**
 -keepattributes *Annotation*,EnclosingMethod,Signature
 -keepclasseswithmembers class * {
-   public (android.content.Context, android.util.AttributeSet, int);
+   public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 
  # Google Play Services library
 -keep class * extends java.util.ListResourceBundle {
-   protected Object[ ][ ] getContents();
+   protected Object[][] getContents();
 }
 
 -keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
