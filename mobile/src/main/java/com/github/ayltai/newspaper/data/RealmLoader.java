@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -55,7 +56,9 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
     @NonNull
     @Override
     protected Flowable<D> load(@NonNull final Context context, @Nullable final Bundle args) {
-        if (RealmLoader.isForceRefresh(args)) return this.loadFromRemoteSource(context, args);
+        final boolean isOnline = NetworkUtils.isOnline(context);
+
+        if (isOnline && RealmLoader.isForceRefresh(args)) return this.loadFromRemoteSource(context, args);
 
         if (this.isValid()) {
             return Flowable.create(emitter -> this.loadFromLocalSource(context, args)
@@ -64,7 +67,18 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
                     data -> {
                         if (data instanceof Collection && !((Collection)data).isEmpty()) emitter.onNext(data);
 
-                        this.loadFromRemoteSource(context, args).subscribe(emitter::onNext);
+                        if (isOnline) {
+                            this.loadFromRemoteSource(context, args)
+                                .subscribe(items -> {
+                                    if (items instanceof Collection && !((Collection)items).isEmpty()) {
+                                        emitter.onNext(items);
+                                    } else {
+                                        emitter.onNext(data);
+                                    }
+                                });
+                        } else {
+                            emitter.onNext(data);
+                        }
                     },
                     error -> {
                         if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
