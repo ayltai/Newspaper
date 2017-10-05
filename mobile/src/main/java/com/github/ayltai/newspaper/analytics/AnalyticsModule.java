@@ -30,10 +30,17 @@ public final class AnalyticsModule {
 
     @Singleton
     @Provides
+    FlurryEventLogger provideFlurryEventLogger() {
+        return new FlurryEventLogger();
+    }
+
+    @Singleton
+    @Provides
     public EventLogger provideEventLogger() {
         return new CompositeEventLogger.Builder()
             .add(this.provideFabricEventLogger())
             .add(this.provideFirebaseEventLogger())
+            .add(this.provideFlurryEventLogger())
             .build();
     }
 }
