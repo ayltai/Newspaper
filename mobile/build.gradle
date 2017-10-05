@@ -24,7 +24,7 @@ android {
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
         targetSdkVersion 26
         versionCode      18
-        versionName      '3.0.' + VERSION_REVISION + '-' + VERSION_HASH
+        versionName      '3.1.' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
