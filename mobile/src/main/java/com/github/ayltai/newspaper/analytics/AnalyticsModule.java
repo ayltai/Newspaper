@@ -9,7 +9,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class AnalyticsModule {
+public final class AnalyticsModule {
     private final Context context;
 
     public AnalyticsModule(@NonNull final Context context) {

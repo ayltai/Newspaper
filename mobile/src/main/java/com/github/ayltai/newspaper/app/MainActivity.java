@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper.app;
 
+import javax.inject.Inject;
+
 import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.os.Bundle;
@@ -20,6 +22,9 @@ import com.github.ayltai.newspaper.analytics.AnalyticsModule;
 import com.github.ayltai.newspaper.analytics.AppOpenEvent;
 import com.github.ayltai.newspaper.analytics.Attribute;
 import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
+import com.github.ayltai.newspaper.app.config.ConfigModule;
+import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
+import com.github.ayltai.newspaper.app.config.RemoteConfig;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
@@ -40,6 +45,9 @@ public final class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
+    @Inject RemoteConfig remoteConfig;
+    @Inject UserConfig   userConfig;
+
     private FlowController controller;
     private Realm          realm;
 
@@ -54,7 +62,12 @@ public final class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.setTheme(UserConfig.getTheme(this) == Constants.THEME_LIGHT ? R.style.AppTheme_Light : R.style.AppTheme_Dark);
+        DaggerConfigComponent.builder()
+            .configModule(new ConfigModule(this))
+            .build()
+            .inject(this);
+
+        this.setTheme(this.userConfig.getTheme() == Constants.THEME_LIGHT ? R.style.AppTheme_Light : R.style.AppTheme_Dark);
 
         Single.<Realm>create(emitter -> emitter.onSuccess(DaggerDataComponent.builder()
             .dataModule(new DataModule(this))
@@ -63,22 +76,17 @@ public final class MainActivity extends AppCompatActivity {
             .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
             .subscribe(realm -> this.realm = realm);
 
-        final ImageLoader imageLoader = DaggerImageComponent.builder()
-            .imageModule(new ImageModule(this))
-            .build()
-            .imageLoader();
-
-        if (imageLoader instanceof LifecycleObserver) this.getLifecycle().addObserver((LifecycleObserver)imageLoader);
+        this.initImageLoader();
 
         DaggerAnalyticsComponent.builder()
             .analyticsModule(new AnalyticsModule(this))
             .build()
             .eventLogger()
             .logEvent(new AppOpenEvent()
-                .addAttribute(new Attribute("Settings - Cozy Layout", String.valueOf(UserConfig.getViewStyle(this) == Constants.VIEW_STYLE_COZY)))
-                .addAttribute(new Attribute("Settings - Dark Theme", String.valueOf(UserConfig.getTheme(this) == Constants.THEME_DARK)))
-                .addAttribute(new Attribute("Settings - Auto Play", String.valueOf(UserConfig.isAutoPlayEnabled(this))))
-                .addAttribute(new Attribute("Settings - Panorama", String.valueOf(UserConfig.isPanoramaEnabled(this)))));
+                .addAttribute(new Attribute("Settings - Cozy Layout", String.valueOf(this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY)))
+                .addAttribute(new Attribute("Settings - Dark Theme", String.valueOf(this.userConfig.getTheme() == Constants.THEME_DARK)))
+                .addAttribute(new Attribute("Settings - Auto Play", String.valueOf(this.userConfig.isAutoPlayEnabled())))
+                .addAttribute(new Attribute("Settings - Panorama", String.valueOf(this.userConfig.isPanoramaEnabled()))));
     }
 
     @Override
@@ -155,5 +163,14 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (!this.controller.onBackPressed()) super.onBackPressed();
+    }
+
+    private void initImageLoader() {
+        final ImageLoader imageLoader = DaggerImageComponent.builder()
+            .imageModule(new ImageModule(this))
+            .build()
+            .imageLoader();
+
+        if (imageLoader instanceof LifecycleObserver) this.getLifecycle().addObserver((LifecycleObserver)imageLoader);
     }
 }

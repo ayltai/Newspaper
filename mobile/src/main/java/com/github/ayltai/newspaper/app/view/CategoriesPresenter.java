@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.github.ayltai.newspaper.app.config.ConfigModule;
+import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -25,8 +28,11 @@ public class CategoriesPresenter extends OptionsPresenter<String, OptionsPresent
     protected Single<List<String>> load() {
         if (this.getView() == null) return Single.just(Collections.emptyList());
 
+        final Activity activity = this.getView().getActivity();
+        if (activity == null) return Single.just(Collections.emptyList());
+
         return Single.create(emitter -> {
-            final List<String> categories   = new ArrayList<>(UserConfig.getDefaultCategories(this.getView().getContext()));
+            final List<String> categories   = new ArrayList<>(DaggerConfigComponent.builder().configModule(new ConfigModule(activity)).build().userConfig().getDefaultCategories());
             final List<String> displayNames = new ArrayList<>();
 
             for (final String category : categories) {
@@ -42,43 +48,50 @@ public class CategoriesPresenter extends OptionsPresenter<String, OptionsPresent
     public void onViewAttached(@NonNull final OptionsPresenter.View view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
-        this.manageDisposable(view.optionsChanges().subscribe(
-            index -> {
-                this.selectedCategories.set(index, !this.selectedCategories.get(index));
+        final Activity activity = view.getActivity();
 
-                final List<String> categories = new ArrayList<>();
+        if (activity != null) {
+            final UserConfig userConfig = DaggerConfigComponent.builder().configModule(new ConfigModule(activity)).build().userConfig();
 
-                for (int i = 0; i < this.categories.size(); i++) {
-                    if (this.selectedCategories.get(i)) categories.addAll(Category.fromDisplayName(this.categories.get(i)));
-                }
+            this.manageDisposable(view.optionsChanges().subscribe(
+                index -> {
+                    this.selectedCategories.set(index, !this.selectedCategories.get(index));
 
-                UserConfig.setCategories(view.getContext(), categories);
-            },
-            error -> {
-                if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
-            }
-        ));
+                    final List<String> categories = new ArrayList<>();
 
-        if (isFirstTimeAttachment) {
-            this.load()
-                .compose(RxUtils.applySingleBackgroundToMainSchedulers())
-                .subscribe(
-                    categories -> {
-                        this.categories = categories;
-                        this.selectedCategories.clear();
-
-                        final List<String> selectedCategories = UserConfig.getCategories(view.getContext());
-
-                        for (int i = 0; i < categories.size(); i++) {
-                            this.selectedCategories.add(selectedCategories.contains(categories.get(i)));
-
-                            view.addOption(categories.get(i), this.selectedCategories.get(i));
-                        }
-                    },
-                    error -> {
-                        if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                    for (int i = 0; i < this.categories.size(); i++) {
+                        if (this.selectedCategories.get(i))
+                            categories.addAll(Category.fromDisplayName(this.categories.get(i)));
                     }
-                );
+
+                    userConfig.setCategories(categories);
+                },
+                error -> {
+                    if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                }
+            ));
+
+            if (isFirstTimeAttachment) {
+                this.load()
+                    .compose(RxUtils.applySingleBackgroundToMainSchedulers())
+                    .subscribe(
+                        categories -> {
+                            this.categories = categories;
+                            this.selectedCategories.clear();
+
+                            final List<String> selectedCategories = userConfig.getCategories();
+
+                            for (int i = 0; i < categories.size(); i++) {
+                                this.selectedCategories.add(selectedCategories.contains(categories.get(i)));
+
+                                view.addOption(categories.get(i), this.selectedCategories.get(i));
+                            }
+                        },
+                        error -> {
+                            if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                        }
+                    );
+            }
         }
     }
 }

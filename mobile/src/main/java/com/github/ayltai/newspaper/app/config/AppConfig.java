@@ -24,36 +24,36 @@ public final class AppConfig {
 
     //endregion
 
-    private AppConfig() {
+    AppConfig() {
     }
 
-    public static boolean isVideoPlaying() {
+    public boolean isVideoPlaying() {
         return AppConfig.VIDEO_IS_PLAYING.get();
     }
 
-    public static void setVideoPlaying(final boolean isPlaying) {
+    public void setVideoPlaying(final boolean isPlaying) {
         VIDEO_IS_PLAYING.set(isPlaying);
 
         AppConfig.VIDEO_PLAYBACK_STATE_CHANGES.onNext(isPlaying);
     }
 
-    public static long getVideoSeekPosition() {
+    public long getVideoSeekPosition() {
         return AppConfig.VIDEO_SEEK_POSITION.get();
     }
 
-    public static void setVideoSeekPosition(final long seekPosition) {
+    public void setVideoSeekPosition(final long seekPosition) {
         VIDEO_SEEK_POSITION.set(seekPosition);
 
         AppConfig.VIDEO_SEEK_POSITION_CHANGES.onNext(seekPosition);
     }
 
     @NonNull
-    public static Flowable<Boolean> videoPlaybackStateChanges() {
+    public Flowable<Boolean> videoPlaybackStateChanges() {
         return AppConfig.VIDEO_PLAYBACK_STATE_CHANGES;
     }
 
     @NonNull
-    public static Flowable<Long> videoSeekPositionChanges() {
+    public Flowable<Long> videoSeekPositionChanges() {
         return AppConfig.VIDEO_SEEK_POSITION_CHANGES;
     }
 }

@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Singleton;
+
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -16,6 +18,7 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Sets;
 
+@Singleton
 public final class UserConfig {
     //region Constants
 
@@ -28,74 +31,79 @@ public final class UserConfig {
 
     //endregion
 
-    private UserConfig() {
+    private final Context      context;
+    private final RemoteConfig remoteConfig;
+
+    UserConfig(@NonNull final Context context, @NonNull final RemoteConfig remoteConfig) {
+        this.context      = context;
+        this.remoteConfig = remoteConfig;
     }
 
     @NonNull
-    public static Set<String> getSources(@NonNull final Context context) {
-        final Set<String> sources = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(UserConfig.KEY_SOURCES, null);
-        return sources == null || sources.isEmpty() ? UserConfig.getDefaultSources(context) : sources;
+    public Set<String> getSources() {
+        final Set<String> sources = PreferenceManager.getDefaultSharedPreferences(this.context).getStringSet(UserConfig.KEY_SOURCES, null);
+        return sources == null || sources.isEmpty() ? this.getDefaultSources() : sources;
     }
 
-    public static void setSources(@NonNull final Context context, @NonNull final Set<String> sources) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putStringSet(UserConfig.KEY_SOURCES, sources).apply();
-    }
-
-    @NonNull
-    public static Set<String> getDefaultSources(@NonNull final Context context) {
-        return Sets.from(context.getResources().getStringArray(R.array.sources));
+    public void setSources(@NonNull final Set<String> sources) {
+        PreferenceManager.getDefaultSharedPreferences(this.context).edit().putStringSet(UserConfig.KEY_SOURCES, sources).apply();
     }
 
     @NonNull
-    public static List<String> getCategories(@NonNull final Context context) {
-        final String json = PreferenceManager.getDefaultSharedPreferences(context).getString(UserConfig.KEY_CATEGORIES, null);
-        if (TextUtils.isEmpty(json)) return UserConfig.getDefaultCategories(context);
+    public Set<String> getDefaultSources() {
+        return Sets.from(this.context.getResources().getStringArray(R.array.sources));
+    }
+
+    @NonNull
+    public List<String> getCategories() {
+        final String json = PreferenceManager.getDefaultSharedPreferences(this.context).getString(UserConfig.KEY_CATEGORIES, null);
+        if (TextUtils.isEmpty(json)) return this.getDefaultCategories();
 
         return new Gson().fromJson(json, new TypeToken<List<String>>() {}.getType());
     }
 
-    public static void setCategories(@NonNull final Context context, @NonNull final List<String> categories) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(UserConfig.KEY_CATEGORIES, new Gson().toJson(categories)).apply();
+    public void setCategories(@NonNull final List<String> categories) {
+        PreferenceManager.getDefaultSharedPreferences(this.context).edit().putString(UserConfig.KEY_CATEGORIES, new Gson().toJson(categories)).apply();
     }
 
     @NonNull
-    public static List<String> getDefaultCategories(@NonNull final Context context) {
-        return Arrays.asList(context.getResources().getStringArray(R.array.categories));
+    public List<String> getDefaultCategories() {
+        return Arrays.asList(this.context.getResources().getStringArray(R.array.categories));
     }
 
     @SuppressWarnings("WrongConstant")
     @Constants.ViewStyle
-    public static int getViewStyle(@NonNull final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(UserConfig.KEY_VIEW_STYLE, Constants.VIEW_STYLE_DEFAULT);
+    public int getViewStyle() {
+        return PreferenceManager.getDefaultSharedPreferences(this.context).getInt(UserConfig.KEY_VIEW_STYLE, this.remoteConfig.getViewStyle());
     }
 
-    public static void setViewStyle(@NonNull final Context context, @Constants.ViewStyle final int viewStyle) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(UserConfig.KEY_VIEW_STYLE, viewStyle).apply();
+    public void setViewStyle(@Constants.ViewStyle final int viewStyle) {
+        PreferenceManager.getDefaultSharedPreferences(this.context).edit().putInt(UserConfig.KEY_VIEW_STYLE, viewStyle).apply();
     }
 
     @SuppressWarnings("WrongConstant")
     @Constants.Theme
-    public static int getTheme(@NonNull final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(UserConfig.KEY_THEME, Constants.THEME_DEFAULT);
+    public int getTheme() {
+        return PreferenceManager.getDefaultSharedPreferences(this.context).getInt(UserConfig.KEY_THEME, this.remoteConfig.getTheme());
     }
 
-    public static void setTheme(@NonNull final Context context, @Constants.Theme final int theme) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(UserConfig.KEY_THEME, theme).apply();
+    public void setTheme(@Constants.Theme final int theme) {
+        PreferenceManager.getDefaultSharedPreferences(this.context).edit().putInt(UserConfig.KEY_THEME, theme).apply();
     }
 
-    public static boolean isAutoPlayEnabled(@NonNull final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(UserConfig.KEY_AUTO_PLAY, Constants.AUTO_PLAY_DEFAULT);
+    public boolean isAutoPlayEnabled() {
+        return PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean(UserConfig.KEY_AUTO_PLAY, Constants.AUTO_PLAY_DEFAULT);
     }
 
-    public static void setAutoPlayEnabled(@NonNull final Context context, final boolean enabled) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(UserConfig.KEY_AUTO_PLAY, enabled).apply();
+    public void setAutoPlayEnabled(final boolean enabled) {
+        PreferenceManager.getDefaultSharedPreferences(this.context).edit().putBoolean(UserConfig.KEY_AUTO_PLAY, enabled).apply();
     }
 
-    public static boolean isPanoramaEnabled(@NonNull final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(UserConfig.KEY_PANORAMA, Constants.PANORAMA_DEFAULT);
+    public boolean isPanoramaEnabled() {
+        return PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean(UserConfig.KEY_PANORAMA, this.remoteConfig.isPanoramaEnabled());
     }
 
-    public static void setPanoramaEnabled(@NonNull final Context context, final boolean enabled) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(UserConfig.KEY_PANORAMA, enabled).apply();
+    public void setPanoramaEnabled(final boolean enabled) {
+        PreferenceManager.getDefaultSharedPreferences(this.context).edit().putBoolean(UserConfig.KEY_PANORAMA, enabled).apply();
     }
 }

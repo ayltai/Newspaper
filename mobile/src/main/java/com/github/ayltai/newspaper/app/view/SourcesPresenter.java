@@ -5,10 +5,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArraySet;
 import android.util.Log;
 
+import com.github.ayltai.newspaper.app.config.ConfigModule;
+import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -27,8 +30,11 @@ public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.
     protected Single<List<String>> load() {
         if (this.getView() == null) return Single.just(Collections.emptyList());
 
+        final Activity activity = this.getView().getActivity();
+        if (activity == null) return Single.just(Collections.emptyList());
+
         return Single.create(emitter -> {
-            final List<String> sources      = new ArrayList<>(UserConfig.getDefaultSources(this.getView().getContext()));
+            final List<String> sources      = new ArrayList<>(DaggerConfigComponent.builder().configModule(new ConfigModule(activity)).build().userConfig().getDefaultSources());
             final Set<String>  displayNames = new ArraySet<>();
 
             for (final String source : sources) displayNames.add(Source.toDisplayName(source));
@@ -41,6 +47,12 @@ public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.
     public void onViewAttached(@NonNull final OptionsPresenter.View view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
+        final Activity   activity   = view.getActivity();
+        final UserConfig userConfig = activity == null ? null : DaggerConfigComponent.builder()
+            .configModule(new ConfigModule(activity))
+            .build()
+            .userConfig();
+
         this.manageDisposable(view.optionsChanges().subscribe(
             index -> {
                 this.selectedSources.set(index, !this.selectedSources.get(index));
@@ -51,7 +63,7 @@ public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.
                     if (this.selectedSources.get(i)) sources.addAll(Source.fromDisplayName(this.sources.get(i)));
                 }
 
-                UserConfig.setSources(view.getContext(), sources);
+                if (userConfig != null) userConfig.setSources(sources);
             },
             error -> {
                 if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
@@ -66,7 +78,7 @@ public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.
                         this.sources = sources;
                         this.selectedSources.clear();
 
-                        final Set<String> selectedSources = UserConfig.getSources(view.getContext());
+                        final Set<String> selectedSources = userConfig == null ? Collections.emptySet() : userConfig.getSources();
 
                         for (int i = 0; i < sources.size(); i++) {
                             this.selectedSources.add(selectedSources.contains(sources.get(i)));

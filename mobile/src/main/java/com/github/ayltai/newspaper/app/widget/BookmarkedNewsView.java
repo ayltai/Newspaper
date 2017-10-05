@@ -1,5 +1,8 @@
 package com.github.ayltai.newspaper.app.widget;
 
+import java.util.Collections;
+
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
@@ -16,6 +19,8 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.AnalyticsModule;
 import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
 import com.github.ayltai.newspaper.analytics.SearchEvent;
+import com.github.ayltai.newspaper.app.config.ConfigModule;
+import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.view.BookmarkedItemListPresenter;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
@@ -46,9 +51,17 @@ public final class BookmarkedNewsView extends NewsView {
     @NonNull
     @Override
     public ItemListView createItemListView() {
-        final ItemListPresenter presenter = new BookmarkedItemListPresenter(UserConfig.getCategories(this.getContext()));
+        final Activity   activity   = this.getActivity();
+        final UserConfig userConfig = activity == null
+            ? null
+            : DaggerConfigComponent.builder()
+                .configModule(new ConfigModule(activity))
+                .build()
+                .userConfig();
 
-        final ItemListView view = UserConfig.getViewStyle(this.getContext()) == Constants.VIEW_STYLE_COZY
+        final ItemListPresenter presenter = new BookmarkedItemListPresenter(userConfig == null ? Collections.emptyList() : userConfig.getCategories());
+
+        final ItemListView view = userConfig == null || userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY
             ? new CozyItemListView(this.getContext()) {
                 @Override
                 protected int getLayoutId() {

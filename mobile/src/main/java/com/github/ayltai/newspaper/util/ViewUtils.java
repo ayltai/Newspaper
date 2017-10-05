@@ -20,7 +20,7 @@ public final class ViewUtils {
     }
 
     @Nullable
-    private static Activity getActivity(@NonNull final Context context) {
+    public static Activity getActivity(@NonNull final Context context) {
         if (context instanceof ContextWrapper) {
             if (context instanceof Activity) return (Activity)context;
 
