@@ -43,6 +43,7 @@ public final class OptionsAdapter extends PagerAdapter {
         return view == object;
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     @Override
     public int getCount() {
         return 3;

@@ -63,6 +63,7 @@ final class HketClient extends Client {
         super(client, apiService, source);
     }
 
+    @SuppressWarnings("CyclomaticComplexity")
     @WorkerThread
     @NonNull
     @Override
