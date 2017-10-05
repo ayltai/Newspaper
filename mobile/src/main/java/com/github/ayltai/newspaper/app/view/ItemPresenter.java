@@ -113,6 +113,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     }
 
     protected void onClick() {
+        this.initAppConfig();
+
         if (this.getView() != null) {
             final Item item = this.getModel();
 
@@ -219,14 +221,6 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     public void onViewAttached(@NonNull final V view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
-        if (isFirstTimeAttachment) {
-            final Activity activity = view.getActivity();
-            if (activity != null) this.appConfig = DaggerConfigComponent.builder()
-                .configModule(new ConfigModule(activity))
-                .build()
-                .appConfig();
-        }
-
         final Flowable<Irrelevant> clicks = view.clicks();
         if (clicks != null) this.manageDisposable(clicks.subscribe(irrelevant -> this.onClick()));
 
@@ -258,5 +252,15 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         if (videoClick != null) this.manageDisposable(videoClick.subscribe(irrelevant -> this.onVideoClick()));
 
         this.bindModel(this.getModel());
+    }
+
+    private void initAppConfig() {
+        if (this.appConfig == null) {
+            final Activity activity = this.getView() == null ? null : this.getView().getActivity();
+            if (activity != null) this.appConfig = DaggerConfigComponent.builder()
+                .configModule(new ConfigModule(activity))
+                .build()
+                .appConfig();
+        }
     }
 }
