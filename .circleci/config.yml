@@ -160,7 +160,12 @@ jobs:
           command: gcloud auth activate-service-account firebase-adminsdk-p9qvk@newspaper-84169.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
       - run:
           name: Run instrumented test on Firebase Test Lab
-          command: gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=Nexus5X,version=26,locale=en_US,orientation=portrait --timeout 10m
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=Nexus5X,version=26,locale=en_US,orientation=portrait --timeout 10m
+            else
+              gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=sailfish,version=26,locale=en_US,orientation=portrait --timeout 10m
+            fi
       - run:
           name: Create directory to store test results
           command: mkdir firebase
