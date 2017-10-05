@@ -9,6 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
+import com.github.ayltai.newspaper.analytics.AnalyticsModule;
+import com.github.ayltai.newspaper.analytics.ClickEvent;
+import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Item;
@@ -111,35 +114,98 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
             AppConfig.setVideoPlaying(false);
             AppConfig.setVideoSeekPosition(0);
 
+            if (item instanceof FeaturedItem) DaggerAnalyticsComponent.builder()
+                .analyticsModule(new AnalyticsModule(this.getView().getContext()))
+                .build()
+                .eventLogger()
+                .logEvent(new ClickEvent()
+                    .setElementName("Featured"));
+
             Flow.get(this.getView().getContext()).set(DetailsScreen.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem()));
         }
     }
 
+    @CallSuper
     protected void onAvatarClick() {
+        if (this.getView() != null) DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Avatar"));
     }
 
+    @CallSuper
     protected void onSourceClick() {
+        if (this.getView() != null) DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Source"));
     }
 
+    @CallSuper
     protected void onPublishDateClick() {
+        if (this.getView() != null) DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Publish Date"));
     }
 
+    @CallSuper
     protected void onTitleClick() {
+        if (this.getView() != null) DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Title"));
     }
 
+    @CallSuper
     protected void onDescriptionClick() {
+        if (this.getView() != null) DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Description"));
     }
 
     protected void onLinkClick() {
     }
 
+    @CallSuper
     protected void onBookmarkClick() {
+        if (this.getView() != null) DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Bookmark"));
     }
 
+    @CallSuper
     protected void onImageClick(@NonNull final Image image) {
+        if (this.getView() != null) DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Image"));
     }
 
+    @CallSuper
     protected void onVideoClick() {
+        if (this.getView() != null) DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
+            .build()
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Video"));
     }
 
     @SuppressWarnings("CyclomaticComplexity")

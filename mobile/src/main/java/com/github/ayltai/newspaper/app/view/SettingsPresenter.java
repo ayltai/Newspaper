@@ -9,6 +9,10 @@ import android.util.Log;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.analytics.AnalyticsModule;
+import com.github.ayltai.newspaper.analytics.ClickEvent;
+import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
+import com.github.ayltai.newspaper.analytics.EventLogger;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -35,26 +39,51 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
     }
 
     @Override
-    public void onViewAttached(@NonNull final View view, final boolean isFirstTimeAttachment) {
+    public void onViewAttached(@NonNull final OptionsPresenter.View view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
         this.manageDisposable(view.optionsChanges().subscribe(
             index -> {
+                final EventLogger eventLogger = DaggerAnalyticsComponent.builder()
+                    .analyticsModule(new AnalyticsModule(view.getContext()))
+                    .build()
+                    .eventLogger();
+
                 switch (index) {
                     case SettingsPresenter.INDEX_LAYOUT:
-                        UserConfig.setViewStyle(view.getContext(), this.getSettings().get(SettingsPresenter.INDEX_LAYOUT) ? Constants.VIEW_STYLE_COMPACT : Constants.VIEW_STYLE_COZY);
+                        final boolean isCozyLayout = this.getSettings().get(SettingsPresenter.INDEX_LAYOUT);
+
+                        UserConfig.setViewStyle(view.getContext(), isCozyLayout ? Constants.VIEW_STYLE_COMPACT : Constants.VIEW_STYLE_COZY);
+
+                        eventLogger.logEvent(new ClickEvent().setElementName("Settings - " + (isCozyLayout ? "Compact" : "Cozy") + " Layout"));
+
                         break;
 
                     case SettingsPresenter.INDEX_THEME:
-                        UserConfig.setTheme(view.getContext(), this.getSettings().get(SettingsPresenter.INDEX_THEME) ? Constants.THEME_LIGHT : Constants.THEME_DARK);
+                        final boolean isDarkTheme = this.getSettings().get(SettingsPresenter.INDEX_THEME);
+
+                        UserConfig.setTheme(view.getContext(), isDarkTheme ? Constants.THEME_LIGHT : Constants.THEME_DARK);
+
+                        eventLogger.logEvent(new ClickEvent().setElementName("Settings - " + (isDarkTheme ? "Light" : "Dark") + " Theme"));
+
                         break;
 
                     case SettingsPresenter.INDEX_AUTO_PLAY:
-                        UserConfig.setAutoPlayEnabled(view.getContext(), !this.getSettings().get(SettingsPresenter.INDEX_AUTO_PLAY));
+                        final boolean isAutoPlayEnabled = this.getSettings().get(SettingsPresenter.INDEX_AUTO_PLAY);
+
+                        UserConfig.setAutoPlayEnabled(view.getContext(), !isAutoPlayEnabled);
+
+                        eventLogger.logEvent(new ClickEvent().setElementName("Settings - " + (isAutoPlayEnabled ? "Auto Play Disabled" : "Auto Play Enabled")));
+
                         break;
 
                     case SettingsPresenter.INDEX_PANORAMA:
-                        UserConfig.setPanoramaEnabled(view.getContext(), !this.getSettings().get(SettingsPresenter.INDEX_PANORAMA));
+                        final boolean isPanoramaEnabled = this.getSettings().get(SettingsPresenter.INDEX_PANORAMA);
+
+                        UserConfig.setPanoramaEnabled(view.getContext(), !isPanoramaEnabled);
+
+                        eventLogger.logEvent(new ClickEvent().setElementName("Settings - " + (isPanoramaEnabled ? "Panorama Disabled" : "Panorama Enabled")));
+
                         break;
 
                     default:

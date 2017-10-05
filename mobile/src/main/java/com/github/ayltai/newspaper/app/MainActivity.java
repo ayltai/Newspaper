@@ -16,6 +16,10 @@ import com.google.firebase.perf.metrics.Trace;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.analytics.AnalyticsModule;
+import com.github.ayltai.newspaper.analytics.AppOpenEvent;
+import com.github.ayltai.newspaper.analytics.Attribute;
+import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
@@ -65,6 +69,16 @@ public final class MainActivity extends AppCompatActivity {
             .imageLoader();
 
         if (imageLoader instanceof LifecycleObserver) this.getLifecycle().addObserver((LifecycleObserver)imageLoader);
+
+        DaggerAnalyticsComponent.builder()
+            .analyticsModule(new AnalyticsModule(this))
+            .build()
+            .eventLogger()
+            .logEvent(new AppOpenEvent()
+                .addAttribute(new Attribute("Settings - Cozy Layout", String.valueOf(UserConfig.getViewStyle(this) == Constants.VIEW_STYLE_COZY)))
+                .addAttribute(new Attribute("Settings - Dark Theme", String.valueOf(UserConfig.getTheme(this) == Constants.THEME_DARK)))
+                .addAttribute(new Attribute("Settings - Auto Play", String.valueOf(UserConfig.isAutoPlayEnabled(this))))
+                .addAttribute(new Attribute("Settings - Panorama", String.valueOf(UserConfig.isPanoramaEnabled(this)))));
     }
 
     @Override

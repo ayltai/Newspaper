@@ -14,6 +14,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.ayltai.newspaper.analytics.AnalyticsModule;
+import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
+import com.github.ayltai.newspaper.analytics.ViewEvent;
+import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.screen.DetailsPresenter;
 import com.github.ayltai.newspaper.app.screen.DetailsScreen;
 import com.github.ayltai.newspaper.app.screen.MainPresenter;
@@ -59,6 +63,19 @@ final class FlowController {
             })
             .dispatcher(KeyDispatcher.configure(this.activity, (outgoingState, incomingState, direction, incomingContexts, callback) -> {
                 if (outgoingState != null) outgoingState.save(((ViewGroup)this.activity.findViewById(android.R.id.content)).getChildAt(0));
+
+                if (incomingState.getKey() instanceof DetailsScreen.Key) {
+                    final Item item = ((DetailsScreen.Key)incomingState.getKey()).getItem();
+
+                    DaggerAnalyticsComponent.builder()
+                        .analyticsModule(new AnalyticsModule(this.activity))
+                        .build()
+                        .eventLogger()
+                        .logEvent(new ViewEvent()
+                            .setScreenName(DetailsScreen.class.getSimpleName())
+                            .setSource(item.getSource())
+                            .setCategory(item.getCategory()));
+                }
 
                 Presenter      presenter = null;
                 Presenter.View view      = null;

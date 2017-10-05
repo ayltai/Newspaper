@@ -11,6 +11,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.util.Log;
 
+import com.github.ayltai.newspaper.analytics.AnalyticsModule;
+import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
+import com.github.ayltai.newspaper.analytics.ShareEvent;
 import com.github.ayltai.newspaper.app.data.ItemManager;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Item;
@@ -86,16 +89,23 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         }
     }
 
+    @CallSuper
     @Override
     protected void onAvatarClick() {
         // TODO
+
+        super.onAvatarClick();
     }
 
+    @CallSuper
     @Override
     protected void onSourceClick() {
         // TODO
+
+        super.onSourceClick();
     }
 
+    @CallSuper
     @Override
     protected void onBookmarkClick() {
         if (this.getView() != null && this.getModel() instanceof NewsItem) {
@@ -115,20 +125,38 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         }
 
         if (this.getView() != null) this.getView().setIsBookmarked(this.getModel().isBookmarked());
+
+        super.onBookmarkClick();
     }
 
     protected void onShareClick() {
-        if (this.getView() != null) this.getView().share(this.getModel().getLink());
+        if (this.getView() != null) {
+            DaggerAnalyticsComponent.builder()
+                .analyticsModule(new AnalyticsModule(this.getView().getContext()))
+                .build()
+                .eventLogger()
+                .logEvent(new ShareEvent()
+                    .setSource(this.getModel().getSource())
+                    .setCategory(this.getModel().getCategory()));
+
+            this.getView().share(this.getModel().getLink());
+        }
     }
 
+    @CallSuper
     @Override
     protected void onImageClick(@NonNull final Image image) {
         if (this.getView() != null) this.getView().showImage(image.getUrl());
+
+        super.onImageClick(image);
     }
 
+    @CallSuper
     @Override
     protected void onVideoClick() {
         // TODO
+
+        super.onVideoClick();
     }
 
     @CallSuper

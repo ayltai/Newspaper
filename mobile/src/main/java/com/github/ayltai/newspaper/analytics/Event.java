@@ -34,4 +34,10 @@ public class Event {
 
         return null;
     }
+
+    @NonNull
+    public Event addAttribute(@NonNull final Attribute attribute) {
+        this.attributes.add(attribute);
+        return this;
+    }
 }
