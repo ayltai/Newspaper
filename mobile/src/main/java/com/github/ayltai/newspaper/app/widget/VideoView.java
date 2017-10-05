@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper.app.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -26,6 +27,9 @@ import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.VideoActivity;
+import com.github.ayltai.newspaper.app.config.ConfigComponent;
+import com.github.ayltai.newspaper.app.config.ConfigModule;
+import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.view.VideoPresenter;
 import com.github.ayltai.newspaper.app.config.AppConfig;
@@ -54,10 +58,23 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
 
     //endregion
 
+    @Nullable private AppConfig  appConfig;
+    @Nullable private UserConfig userConfig;
+
     private Video video;
 
     public VideoView(@NonNull final Context context) {
         super(context);
+
+        final Activity activity = this.getActivity();
+        if (activity != null) {
+            final ConfigComponent component = DaggerConfigComponent.builder()
+                .configModule(new ConfigModule(activity))
+                .build();
+
+            this.appConfig  = component.appConfig();
+            this.userConfig = component.userConfig();
+        }
 
         this.thumbnailContainer = LayoutInflater.from(context).inflate(R.layout.widget_video_thumbnail, this, false);
         this.playAction         = this.thumbnailContainer.findViewById(R.id.play);
@@ -112,7 +129,7 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
             this.addView(this.playerView);
             this.bringChildToFront(this.thumbnailContainer);
 
-            if (UserConfig.isAutoPlayEnabled(this.getContext()) || AppConfig.isVideoPlaying()) this.startPlayer();
+            if (this.userConfig != null && this.userConfig.isAutoPlayEnabled() || this.appConfig != null && this.appConfig.isVideoPlaying()) this.startPlayer();
         }
     }
 
@@ -125,17 +142,19 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
             this.playerView.findViewById(R.id.exo_playback_control_view).setVisibility(View.VISIBLE);
             this.thumbnailContainer.setVisibility(View.GONE);
 
-            if (AppConfig.getVideoSeekPosition() > 0) this.player.seekTo(AppConfig.getVideoSeekPosition());
-            this.player.setPlayWhenReady(true);
+            if (this.appConfig != null) {
+                if (this.appConfig.getVideoSeekPosition() > 0) this.player.seekTo(this.appConfig.getVideoSeekPosition());
+                this.player.setPlayWhenReady(true);
 
-            this.manageDisposable(AppConfig.videoSeekPositionChanges().subscribe(seekPosition -> {
-                this.playerView.setVisibility(View.VISIBLE);
-                this.thumbnailContainer.setVisibility(View.GONE);
+                this.manageDisposable(this.appConfig.videoSeekPositionChanges().subscribe(seekPosition -> {
+                    this.playerView.setVisibility(View.VISIBLE);
+                    this.thumbnailContainer.setVisibility(View.GONE);
 
-                this.player.seekTo(seekPosition);
+                    this.player.seekTo(seekPosition);
 
-                if (AppConfig.isVideoPlaying()) this.player.setPlayWhenReady(true);
-            }));
+                    if (this.appConfig.isVideoPlaying()) this.player.setPlayWhenReady(true);
+                }));
+            }
         }
     }
 

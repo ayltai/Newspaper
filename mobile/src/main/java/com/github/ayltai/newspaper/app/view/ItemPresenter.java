@@ -3,6 +3,7 @@ package com.github.ayltai.newspaper.app.view;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Activity;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -12,6 +13,9 @@ import android.support.annotation.UiThread;
 import com.github.ayltai.newspaper.analytics.AnalyticsModule;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
+import com.github.ayltai.newspaper.app.config.AppConfig;
+import com.github.ayltai.newspaper.app.config.ConfigModule;
+import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Item;
@@ -20,7 +24,6 @@ import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.screen.DetailsScreen;
-import com.github.ayltai.newspaper.app.config.AppConfig;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.binding.Binder;
@@ -89,6 +92,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         Flowable<Irrelevant> videoClick();
     }
 
+    private AppConfig appConfig;
+
     @UiThread
     @Override
     public void bindModel(final Item model) {
@@ -111,8 +116,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         if (this.getView() != null) {
             final Item item = this.getModel();
 
-            AppConfig.setVideoPlaying(false);
-            AppConfig.setVideoSeekPosition(0);
+            this.appConfig.setVideoPlaying(false);
+            this.appConfig.setVideoSeekPosition(0);
 
             if (item instanceof FeaturedItem) DaggerAnalyticsComponent.builder()
                 .analyticsModule(new AnalyticsModule(this.getView().getContext()))
@@ -213,6 +218,14 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     @Override
     public void onViewAttached(@NonNull final V view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
+
+        if (isFirstTimeAttachment) {
+            final Activity activity = view.getActivity();
+            if (activity != null) this.appConfig = DaggerConfigComponent.builder()
+                .configModule(new ConfigModule(activity))
+                .build()
+                .appConfig();
+        }
 
         final Flowable<Irrelevant> clicks = view.clicks();
         if (clicks != null) this.manageDisposable(clicks.subscribe(irrelevant -> this.onClick()));

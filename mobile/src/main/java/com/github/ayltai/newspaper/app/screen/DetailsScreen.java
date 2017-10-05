@@ -34,7 +34,8 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.app.config.UserConfig;
+import com.github.ayltai.newspaper.app.config.ConfigModule;
+import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Video;
@@ -134,7 +135,15 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.imagesContainer         = view.findViewById(R.id.images_container);
         this.videoContainer          = view.findViewById(R.id.video_container);
 
-        this.isPanoramaEnabled = UserConfig.isPanoramaEnabled(context);
+        final Activity activity = this.getActivity();
+        this.isPanoramaEnabled = activity == null
+            ? Constants.PANORAMA_DEFAULT
+            : DaggerConfigComponent.builder()
+                .configModule(new ConfigModule(activity))
+                .build()
+                .userConfig()
+                .isPanoramaEnabled();
+
         this.toolbarView       = LayoutInflater.from(this.getContext()).inflate(this.isPanoramaEnabled ? R.layout.widget_toolbar_panorama : R.layout.widget_toolbar, this.imageContainer, false);
         this.toolbarImage      = this.isPanoramaEnabled ? null : this.toolbarView.findViewById(R.id.image);
         this.panoramaImageView = this.isPanoramaEnabled ? this.toolbarView.findViewById(R.id.image) : null;
