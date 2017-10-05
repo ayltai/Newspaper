@@ -119,6 +119,7 @@ ext {
     exoPlayerVersion      = 'r2.5.3'
     autoValueVersion      = '1.5'
     autoValueGsonVersion  = '0.5.0'
+    instabugVersion       = '4.3.0'
     leakCanaryVersion     = '1.5.4'
     robolectricVersion    = '3.4.2'
     powerMockVersion      = '1.7.3'
@@ -164,7 +165,7 @@ dependencies {
     compile "com.google.android.gms:play-services-analytics:$firebaseSdkVersion"
 
     // Reactive programming
-    compile 'io.reactivex.rxjava2:rxjava:2.1.4'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.5'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile "com.jakewharton.rxbinding2:rxbinding:$rxBindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxBindingVersion"
@@ -237,6 +238,10 @@ dependencies {
 
     // Flurry Analytics
     compile 'com.flurry.android:analytics:7.2.3@aar'
+
+    // Instabug
+    compile "com.instabug.library:instabug:$instabugVersion"
+    compile "com.instabug.library:instabug-with-okhttp-interceptor:$instabugVersion"
 
     // Debugging
     debugCompile   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"

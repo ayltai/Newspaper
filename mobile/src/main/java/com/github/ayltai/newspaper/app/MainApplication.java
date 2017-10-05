@@ -29,6 +29,8 @@ import com.github.ayltai.newspaper.media.ImageModule;
 import com.github.ayltai.newspaper.net.DaggerHttpComponent;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.BigImageViewer;
+import com.instabug.library.Instabug;
+import com.instabug.library.invocation.InstabugInvocationEvent;
 import com.squareup.leakcanary.LeakCanary;
 
 import io.fabric.sdk.android.Fabric;
@@ -70,6 +72,10 @@ public final class MainApplication extends BaseApplication {
         } catch (final RuntimeException e) {
             if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
         }
+
+        new Instabug.Builder(this, "1c5817a3503c2a8ece8624b8c0f5a052")
+            .setInvocationEvent(InstabugInvocationEvent.NONE)
+            .build();
 
         FLog.setMinimumLoggingLevel(TestUtils.isLoggable() ? FLog.INFO : FLog.ERROR);
 
