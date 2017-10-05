@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">Newspaper</string>
     <string name="app_version">Version %s</string>
-    <string name="error_no_connection">No internet connection</string>
     <string name="empty_bookmark_title">You don\'t have any favorite news yet</string>
     <string name="empty_bookmark_description">Tap on the bookmark icon to collect news here</string>
     <string name="view_via">View via…</string>
@@ -12,7 +11,7 @@
     <!-- About -->
     <string name="about_visit">Visit website</string>
     <string name="about_rate">Rate this app</string>
-    <string name="about_report">Report issue</string>
+    <string name="about_report">Contact us</string>
 
     <!-- Time namings -->
     <string name="time_ago_now">Just now</string>
@@ -87,4 +86,16 @@
     <string name="exo_pause">Pause</string>
     <string name="exo_fullscreen">Enter fullscreen</string>
     <string name="exo_fullscreen_exit">Exit fullscreen</string>
+
+    <!-- Instabug -->
+    <string name="instabug_report_header">What is it about?</string>
+    <string name="instabug_bug_report_header">Report a problem</string>
+    <string name="instabug_feedback_report_header">Tell us something</string>
+    <string name="instabug_report_bug">Report a problem</string>
+    <string name="instabug_report_feedback">Tell us something</string>
+    <string name="instabug_bug_report_hint">Steps to reproduce the problem</string>
+    <string name="instabug_feedback_report_hint">Your feedback is important to us</string>
+    <string name="instabug_email_hint">Your email</string>
+    <string name="instabug_screenshot">Attach a screenshot</string>
+    <string name="instabug_gallery">Attach an image from gallery</string>
 </resources>

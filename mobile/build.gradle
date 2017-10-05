@@ -119,7 +119,6 @@ ext {
     exoPlayerVersion      = 'r2.5.3'
     autoValueVersion      = '1.5'
     autoValueGsonVersion  = '0.5.0'
-    instabugVersion       = '4.3.0'
     leakCanaryVersion     = '1.5.4'
     robolectricVersion    = '3.4.2'
     powerMockVersion      = '1.7.3'
@@ -240,8 +239,7 @@ dependencies {
     compile 'com.flurry.android:analytics:7.2.3@aar'
 
     // Instabug
-    compile "com.instabug.library:instabug:$instabugVersion"
-    compile "com.instabug.library:instabug-with-okhttp-interceptor:$instabugVersion"
+    compile 'com.instabug.library:instabug:4.3.0'
 
     // Debugging
     debugCompile   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
