@@ -10,8 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.ArraySet;
 import android.util.Log;
 
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -34,7 +33,7 @@ public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.
         if (activity == null) return Single.just(Collections.emptyList());
 
         return Single.create(emitter -> {
-            final List<String> sources      = new ArrayList<>(DaggerConfigComponent.builder().configModule(new ConfigModule(activity)).build().userConfig().getDefaultSources());
+            final List<String> sources      = new ArrayList<>(ComponentFactory.getInstance().getConfigComponent(activity).userConfig().getDefaultSources());
             final Set<String>  displayNames = new ArraySet<>();
 
             for (final String source : sources) displayNames.add(Source.toDisplayName(source));
@@ -48,10 +47,11 @@ public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.
         super.onViewAttached(view, isFirstTimeAttachment);
 
         final Activity   activity   = view.getActivity();
-        final UserConfig userConfig = activity == null ? null : DaggerConfigComponent.builder()
-            .configModule(new ConfigModule(activity))
-            .build()
-            .userConfig();
+        final UserConfig userConfig = activity == null
+            ? null
+            : ComponentFactory.getInstance()
+                .getConfigComponent(activity)
+                .userConfig();
 
         this.manageDisposable(view.optionsChanges().subscribe(
             index -> {

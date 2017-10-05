@@ -8,11 +8,8 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
-import com.github.ayltai.newspaper.analytics.AnalyticsModule;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
-import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.data.ItemListLoader;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.data.model.Item;
@@ -39,9 +36,8 @@ public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.Vie
     protected void onPullToRefresh() {
         super.onPullToRefresh();
 
-        if (this.getView() != null) DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
-            .build()
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("Pull-To-Refresh"));
@@ -64,7 +60,7 @@ public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.Vie
 
         final ItemListLoader.Builder builder = new ItemListLoader.Builder((AppCompatActivity)activity).forceRefresh(this.forceRefresh);
         for (final String category : this.categories) builder.addCategory(category);
-        for (final String source : DaggerConfigComponent.builder().configModule(new ConfigModule(activity)).build().userConfig().getSources()) builder.addSource(source);
+        for (final String source : ComponentFactory.getInstance().getConfigComponent(activity).userConfig().getSources()) builder.addSource(source);
 
         return builder.build()
             .map(items -> Lists.transform(items, item -> (Item)item))

@@ -26,14 +26,13 @@ import com.google.android.exoplayer2.util.Util;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.VideoActivity;
+import com.github.ayltai.newspaper.app.config.AppConfig;
 import com.github.ayltai.newspaper.app.config.ConfigComponent;
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.view.VideoPresenter;
-import com.github.ayltai.newspaper.app.config.AppConfig;
-import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.util.DeviceUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
@@ -68,9 +67,7 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
 
         final Activity activity = this.getActivity();
         if (activity != null) {
-            final ConfigComponent component = DaggerConfigComponent.builder()
-                .configModule(new ConfigModule(activity))
-                .build();
+            final ConfigComponent component = ComponentFactory.getInstance().getConfigComponent(activity);
 
             this.appConfig  = component.appConfig();
             this.userConfig = component.userConfig();

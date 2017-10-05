@@ -29,9 +29,8 @@ import android.view.animation.AnimationUtils;
 import com.google.auto.value.AutoValue;
 
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.analytics.AnalyticsModule;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
-import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.view.AboutPresenter;
 import com.github.ayltai.newspaper.app.view.NewsPresenter;
 import com.github.ayltai.newspaper.app.widget.AboutView;
@@ -202,9 +201,8 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
 
         if (this.content.getChildCount() > 1) this.content.removeViewAt(0);
 
-        DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getContext()))
-            .build()
+        ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("BottomBar-" + this.bottomBar.findPositionForTabWithId(tabId)));
@@ -233,9 +231,8 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
             } else {
                 this.showMoreActions();
 
-                DaggerAnalyticsComponent.builder()
-                    .analyticsModule(new AnalyticsModule(this.getContext()))
-                    .build()
+                ComponentFactory.getInstance()
+                    .getAnalyticsComponent(this.getContext())
                     .eventLogger()
                     .logEvent(new ClickEvent()
                         .setElementName("FAB - More"));
@@ -285,9 +282,8 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
     public void up() {
         this.newsView.up();
 
-        DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getContext()))
-            .build()
+        ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("FAB - Up"));
@@ -297,9 +293,8 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
     public void refresh() {
         this.newsView.refresh();
 
-        DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getContext()))
-            .build()
+        ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("FAB - Refresh"));
@@ -309,9 +304,8 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
     public void filter() {
         if (this.newsView instanceof PagerNewsView) ((PagerNewsView)this.newsView).filter();
 
-        DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getContext()))
-            .build()
+        ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("FAB - Filter"));
@@ -321,9 +315,8 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
     public void clearAll() {
         this.newsView.clear();
 
-        DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getContext()))
-            .build()
+        ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("FAB - Clear All"));

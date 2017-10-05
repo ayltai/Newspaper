@@ -22,12 +22,11 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.github.ayltai.newspaper.Constants;
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
-import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.ayltai.newspaper.widget.ListView;
@@ -97,9 +96,8 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
         final Activity activity = ViewUtils.getActivity(context);
         this.userConfig = activity == null
             ? null
-            : DaggerConfigComponent.builder()
-                .configModule(new ConfigModule(activity))
-                .build()
+            : ComponentFactory.getInstance()
+                .getConfigComponent(activity)
                 .userConfig();
 
         final List<String> categories = this.userConfig == null ? Collections.emptyList() : this.userConfig.getCategories();

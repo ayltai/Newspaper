@@ -5,9 +5,8 @@ import android.support.annotation.NonNull;
 
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.analytics.AnalyticsModule;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
-import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.ObservablePresenter;
 import com.github.ayltai.newspaper.view.Presenter;
@@ -48,18 +47,16 @@ public class AboutPresenter extends ObservablePresenter<AboutPresenter.View> {
         this.manageDisposable(view.visitActions().subscribe(irrelevant -> {
             view.visit("https://github.com/ayltai/Newspaper");
 
-            DaggerAnalyticsComponent.builder()
-                .analyticsModule(new AnalyticsModule(view.getContext()))
-                .build()
+            ComponentFactory.getInstance()
+                .getAnalyticsComponent(view.getContext())
                 .eventLogger()
                 .logEvent(new ClickEvent()
                     .setElementName("About - Visit"));
         }));
 
         this.manageDisposable(view.rateActions().subscribe(irrelevant -> {
-            DaggerAnalyticsComponent.builder()
-                .analyticsModule(new AnalyticsModule(view.getContext()))
-                .build()
+            ComponentFactory.getInstance()
+                .getAnalyticsComponent(view.getContext())
                 .eventLogger()
                 .logEvent(new ClickEvent()
                     .setElementName("About - Rate"));
@@ -68,9 +65,8 @@ public class AboutPresenter extends ObservablePresenter<AboutPresenter.View> {
         }));
 
         this.manageDisposable(view.reportActions().subscribe(irrelevant -> {
-            DaggerAnalyticsComponent.builder()
-                .analyticsModule(new AnalyticsModule(view.getContext()))
-                .build()
+            ComponentFactory.getInstance()
+                .getAnalyticsComponent(view.getContext())
                 .eventLogger()
                 .logEvent(new ClickEvent()
                     .setElementName("About - Report"));

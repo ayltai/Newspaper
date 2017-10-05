@@ -10,12 +10,9 @@ import android.util.Log;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.analytics.AnalyticsModule;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
-import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
 import com.github.ayltai.newspaper.analytics.EventLogger;
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -41,7 +38,9 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
         final Activity activity = this.getView().getActivity();
         if (activity == null) return Single.just(Collections.emptyList());
 
-        return Single.create(emitter -> emitter.onSuccess(this.getSettings(DaggerConfigComponent.builder().configModule(new ConfigModule(activity)).build().userConfig())));
+        return Single.create(emitter -> emitter.onSuccess(this.getSettings(ComponentFactory.getInstance()
+            .getConfigComponent(activity)
+            .userConfig())));
     }
 
     @Override
@@ -50,17 +49,15 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
 
         this.manageDisposable(view.optionsChanges().subscribe(
             index -> {
-                final EventLogger eventLogger = DaggerAnalyticsComponent.builder()
-                    .analyticsModule(new AnalyticsModule(view.getContext()))
-                    .build()
+                final EventLogger eventLogger = ComponentFactory.getInstance()
+                    .getAnalyticsComponent(view.getContext())
                     .eventLogger();
 
                 final Activity activity = view.getActivity();
 
                 if (activity != null) {
-                    final UserConfig userConfig = DaggerConfigComponent.builder()
-                        .configModule(new ConfigModule(activity))
-                        .build()
+                    final UserConfig userConfig = ComponentFactory.getInstance()
+                        .getConfigComponent(activity)
                         .userConfig();
 
                     final List<Boolean> settings = this.getSettings(userConfig);

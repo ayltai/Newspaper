@@ -10,12 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
-import com.github.ayltai.newspaper.analytics.AnalyticsModule;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
-import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.AppConfig;
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Item;
@@ -121,9 +118,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
             this.appConfig.setVideoPlaying(false);
             this.appConfig.setVideoSeekPosition(0);
 
-            if (item instanceof FeaturedItem) DaggerAnalyticsComponent.builder()
-                .analyticsModule(new AnalyticsModule(this.getView().getContext()))
-                .build()
+            if (item instanceof FeaturedItem) ComponentFactory.getInstance()
+                .getAnalyticsComponent(this.getView().getContext())
                 .eventLogger()
                 .logEvent(new ClickEvent()
                     .setElementName("Featured"));
@@ -134,9 +130,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
 
     @CallSuper
     protected void onAvatarClick() {
-        if (this.getView() != null) DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
-            .build()
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("Avatar"));
@@ -144,9 +139,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
 
     @CallSuper
     protected void onSourceClick() {
-        if (this.getView() != null) DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
-            .build()
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("Source"));
@@ -154,9 +148,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
 
     @CallSuper
     protected void onPublishDateClick() {
-        if (this.getView() != null) DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
-            .build()
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("Publish Date"));
@@ -164,9 +157,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
 
     @CallSuper
     protected void onTitleClick() {
-        if (this.getView() != null) DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
-            .build()
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("Title"));
@@ -174,9 +166,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
 
     @CallSuper
     protected void onDescriptionClick() {
-        if (this.getView() != null) DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
-            .build()
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("Description"));
@@ -187,9 +178,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
 
     @CallSuper
     protected void onBookmarkClick() {
-        if (this.getView() != null) DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
-            .build()
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("Bookmark"));
@@ -197,9 +187,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
 
     @CallSuper
     protected void onImageClick(@NonNull final Image image) {
-        if (this.getView() != null) DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
-            .build()
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("Image"));
@@ -207,9 +196,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
 
     @CallSuper
     protected void onVideoClick() {
-        if (this.getView() != null) DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getView().getContext()))
-            .build()
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
                 .setElementName("Video"));
@@ -257,9 +245,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     private void initAppConfig() {
         if (this.appConfig == null) {
             final Activity activity = this.getView() == null ? null : this.getView().getActivity();
-            if (activity != null) this.appConfig = DaggerConfigComponent.builder()
-                .configModule(new ConfigModule(activity))
-                .build()
+            if (activity != null) this.appConfig = ComponentFactory.getInstance()
+                .getConfigComponent(activity)
                 .appConfig();
         }
     }

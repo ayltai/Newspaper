@@ -35,8 +35,7 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Video;
@@ -141,9 +140,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         final Activity activity = this.getActivity();
         this.isPanoramaEnabled = activity == null
             ? Constants.PANORAMA_DEFAULT
-            : DaggerConfigComponent.builder()
-                .configModule(new ConfigModule(activity))
-                .build()
+            : ComponentFactory.getInstance()
+                .getConfigComponent(activity)
                 .userConfig()
                 .isPanoramaEnabled();
 

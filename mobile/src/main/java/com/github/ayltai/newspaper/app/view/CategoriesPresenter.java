@@ -8,8 +8,7 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -32,7 +31,7 @@ public class CategoriesPresenter extends OptionsPresenter<String, OptionsPresent
         if (activity == null) return Single.just(Collections.emptyList());
 
         return Single.create(emitter -> {
-            final List<String> categories   = new ArrayList<>(DaggerConfigComponent.builder().configModule(new ConfigModule(activity)).build().userConfig().getDefaultCategories());
+            final List<String> categories   = new ArrayList<>(ComponentFactory.getInstance().getConfigComponent(activity).userConfig().getDefaultCategories());
             final List<String> displayNames = new ArrayList<>();
 
             for (final String category : categories) {
@@ -51,7 +50,9 @@ public class CategoriesPresenter extends OptionsPresenter<String, OptionsPresent
         final Activity activity = view.getActivity();
 
         if (activity != null) {
-            final UserConfig userConfig = DaggerConfigComponent.builder().configModule(new ConfigModule(activity)).build().userConfig();
+            final UserConfig userConfig = ComponentFactory.getInstance()
+                .getConfigComponent(activity)
+                .userConfig();
 
             this.manageDisposable(view.optionsChanges().subscribe(
                 index -> {

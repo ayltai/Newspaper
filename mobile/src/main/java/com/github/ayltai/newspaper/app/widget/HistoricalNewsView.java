@@ -16,11 +16,8 @@ import android.widget.Filterable;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.analytics.AnalyticsModule;
-import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
 import com.github.ayltai.newspaper.analytics.SearchEvent;
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.view.HistoricalItemListPresenter;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
@@ -54,10 +51,9 @@ public final class HistoricalNewsView extends NewsView {
         final Activity   activity   = this.getActivity();
         final UserConfig userConfig = activity == null
             ? null
-            : DaggerConfigComponent.builder()
-            .configModule(new ConfigModule(activity))
-            .build()
-            .userConfig();
+            : ComponentFactory.getInstance()
+                .getConfigComponent(activity)
+                .userConfig();
 
         final ItemListPresenter presenter = new HistoricalItemListPresenter(userConfig == null ? Collections.emptyList() : userConfig.getCategories());
 
@@ -118,9 +114,8 @@ public final class HistoricalNewsView extends NewsView {
             if (filter != null) filter.filter(newText);
         }
 
-        if (!TextUtils.isEmpty(newText)) DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getContext()))
-            .build()
+        if (!TextUtils.isEmpty(newText)) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getContext())
             .eventLogger()
             .logEvent(new SearchEvent()
                 .setQuery(newText.toString())

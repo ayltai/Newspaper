@@ -14,8 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.ayltai.newspaper.analytics.AnalyticsModule;
-import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
 import com.github.ayltai.newspaper.analytics.ViewEvent;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.screen.DetailsPresenter;
@@ -67,9 +65,8 @@ final class FlowController {
                 if (incomingState.getKey() instanceof DetailsScreen.Key) {
                     final Item item = ((DetailsScreen.Key)incomingState.getKey()).getItem();
 
-                    DaggerAnalyticsComponent.builder()
-                        .analyticsModule(new AnalyticsModule(this.activity))
-                        .build()
+                    ComponentFactory.getInstance()
+                        .getAnalyticsComponent(this.activity)
                         .eventLogger()
                         .logEvent(new ViewEvent()
                             .setScreenName(DetailsScreen.class.getSimpleName())

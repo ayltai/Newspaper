@@ -6,8 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.data.ItemManager;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.data.DataManager;
@@ -35,9 +34,8 @@ public class HistoricalItemListPresenter extends ItemListPresenter {
         return ItemManager.create(this.getView().getContext())
             .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
             .flatMap(
-                manager -> manager.getHistoricalItems(DaggerConfigComponent.builder()
-                    .configModule(new ConfigModule(activity))
-                    .build()
+                manager -> manager.getHistoricalItems(ComponentFactory.getInstance()
+                    .getConfigComponent(activity)
                     .userConfig()
                     .getSources()
                     .toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))

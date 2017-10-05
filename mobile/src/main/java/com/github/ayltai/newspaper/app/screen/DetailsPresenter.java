@@ -11,9 +11,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.util.Log;
 
-import com.github.ayltai.newspaper.analytics.AnalyticsModule;
-import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
 import com.github.ayltai.newspaper.analytics.ShareEvent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.data.ItemManager;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Item;
@@ -131,9 +130,8 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
 
     protected void onShareClick() {
         if (this.getView() != null) {
-            DaggerAnalyticsComponent.builder()
-                .analyticsModule(new AnalyticsModule(this.getView().getContext()))
-                .build()
+            ComponentFactory.getInstance()
+                .getAnalyticsComponent(this.getView().getContext())
                 .eventLogger()
                 .logEvent(new ShareEvent()
                     .setSource(this.getModel().getSource())

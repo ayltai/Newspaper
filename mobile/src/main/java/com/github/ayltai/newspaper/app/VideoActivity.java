@@ -29,8 +29,6 @@ import com.google.android.exoplayer2.util.Util;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.config.AppConfig;
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.jakewharton.rxbinding2.view.RxView;
 
@@ -117,9 +115,8 @@ public final class VideoActivity extends AppCompatActivity {
 
         this.videoPlayer.setPlayWhenReady(false);
 
-        final AppConfig appConfig = DaggerConfigComponent.builder()
-            .configModule(new ConfigModule(this))
-            .build()
+        final AppConfig appConfig = ComponentFactory.getInstance()
+            .getConfigComponent(this)
             .appConfig();
 
         appConfig.setVideoPlaying(isPlaying);

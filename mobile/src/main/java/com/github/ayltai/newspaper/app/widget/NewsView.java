@@ -14,10 +14,9 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
-import com.github.ayltai.newspaper.app.view.NewsPresenter;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.UserConfig;
+import com.github.ayltai.newspaper.app.view.NewsPresenter;
 import com.github.ayltai.newspaper.widget.ObservableView;
 
 public abstract class NewsView extends ObservableView implements NewsPresenter.View {
@@ -80,9 +79,8 @@ public abstract class NewsView extends ObservableView implements NewsPresenter.V
         final Activity activity = this.getActivity();
 
         if (activity != null) {
-            final UserConfig userConfig = DaggerConfigComponent.builder()
-                .configModule(new ConfigModule(activity))
-                .build()
+            final UserConfig userConfig = ComponentFactory.getInstance()
+                .getConfigComponent(activity)
                 .userConfig();
 
             this.categories = userConfig.getCategories();

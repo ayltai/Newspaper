@@ -18,23 +18,17 @@ import com.google.firebase.perf.metrics.Trace;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.analytics.AnalyticsModule;
 import com.github.ayltai.newspaper.analytics.AppOpenEvent;
 import com.github.ayltai.newspaper.analytics.Attribute;
-import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
 import com.github.ayltai.newspaper.app.config.RemoteConfig;
 import com.github.ayltai.newspaper.app.config.UserConfig;
-import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
-import com.github.ayltai.newspaper.data.DataModule;
-import com.github.ayltai.newspaper.media.DaggerImageComponent;
-import com.github.ayltai.newspaper.media.ImageModule;
+import com.github.ayltai.newspaper.media.FaceCenterFinder;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.loader.ImageLoader;
+import com.instabug.library.InstabugTrackingDelegate;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import io.reactivex.Single;
@@ -45,8 +39,12 @@ public final class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
+    //region Configurations
+
     @Inject RemoteConfig remoteConfig;
     @Inject UserConfig   userConfig;
+
+    //endregion
 
     private FlowController controller;
     private Realm          realm;
@@ -60,27 +58,26 @@ public final class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
+        ComponentFactory.init();
+
         super.onCreate(savedInstanceState);
 
-        DaggerConfigComponent.builder()
-            .configModule(new ConfigModule(this))
-            .build()
+        ComponentFactory.getInstance()
+            .getConfigComponent(this)
             .inject(this);
 
         this.setTheme(this.userConfig.getTheme() == Constants.THEME_LIGHT ? R.style.AppTheme_Light : R.style.AppTheme_Dark);
 
-        Single.<Realm>create(emitter -> emitter.onSuccess(DaggerDataComponent.builder()
-            .dataModule(new DataModule(this))
-            .build()
+        Single.<Realm>create(emitter -> emitter.onSuccess(ComponentFactory.getInstance()
+            .getDataComponent(this)
             .realm()))
             .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
             .subscribe(realm -> this.realm = realm);
 
-        this.initImageLoader();
+        this.initImageModule();
 
-        DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this))
-            .build()
+        ComponentFactory.getInstance()
+            .getAnalyticsComponent(this)
             .eventLogger()
             .logEvent(new AppOpenEvent()
                 .addAttribute(new Attribute("Settings - Cozy Layout", String.valueOf(this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY)))
@@ -129,17 +126,17 @@ public final class MainActivity extends AppCompatActivity {
         this.controller = null;
 
         if (this.isFinishing()) {
-            if (this.realm != null) {
-                Single.<Irrelevant>create(
-                    emitter -> {
-                        this.realm.close();
+            if (this.realm != null) Single.<Irrelevant>create(
+                emitter -> {
+                    this.realm.close();
 
-                        emitter.onSuccess(Irrelevant.INSTANCE);
-                    })
-                    .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
-                    .subscribe();
-            }
+                    emitter.onSuccess(Irrelevant.INSTANCE);
+                })
+                .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
+                .subscribe();
         }
+
+        this.disposeImageModule();
     }
 
     @Override
@@ -165,12 +162,20 @@ public final class MainActivity extends AppCompatActivity {
         if (!this.controller.onBackPressed()) super.onBackPressed();
     }
 
-    private void initImageLoader() {
-        final ImageLoader imageLoader = DaggerImageComponent.builder()
-            .imageModule(new ImageModule(this))
-            .build()
-            .imageLoader();
 
+    private void initImageModule() {
+        final ImageLoader imageLoader = ComponentFactory.getInstance().getImageComponent(this).imageLoader();
         if (imageLoader instanceof LifecycleObserver) this.getLifecycle().addObserver((LifecycleObserver)imageLoader);
+
+        final FaceCenterFinder faceCenterFinder = ComponentFactory.getInstance().getImageComponent(this).faceCenterFinder();
+        this.getLifecycle().addObserver(faceCenterFinder);
+    }
+
+    private void disposeImageModule() {
+        final ImageLoader imageLoader = ComponentFactory.getInstance().getImageComponent(this).imageLoader();
+        if (imageLoader instanceof LifecycleObserver) this.getLifecycle().removeObserver((LifecycleObserver)imageLoader);
+
+        final FaceCenterFinder faceCenterFinder = ComponentFactory.getInstance().getImageComponent(this).faceCenterFinder();
+        this.getLifecycle().removeObserver(faceCenterFinder);
     }
 }

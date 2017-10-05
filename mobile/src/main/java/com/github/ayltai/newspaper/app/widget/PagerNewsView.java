@@ -20,15 +20,12 @@ import android.view.View;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.analytics.AnalyticsModule;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
-import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
 import com.github.ayltai.newspaper.analytics.SearchEvent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.MainActivity;
-import com.github.ayltai.newspaper.app.config.ConfigModule;
-import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
-import com.github.ayltai.newspaper.app.view.PagerNewsPresenter;
 import com.github.ayltai.newspaper.app.config.UserConfig;
+import com.github.ayltai.newspaper.app.view.PagerNewsPresenter;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.github.ayltai.newspaper.widget.ObservableView;
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
@@ -89,9 +86,8 @@ public class PagerNewsView extends ObservableView implements PagerNewsPresenter.
 
                 this.pageSelections.onNext(index);
 
-                DaggerAnalyticsComponent.builder()
-                    .analyticsModule(new AnalyticsModule(this.getContext()))
-                    .build()
+                ComponentFactory.getInstance()
+                    .getAnalyticsComponent(this.getContext())
                     .eventLogger()
                     .logEvent(new ClickEvent()
                         .setElementName("Page Selection"));
@@ -143,9 +139,8 @@ public class PagerNewsView extends ObservableView implements PagerNewsPresenter.
     public void search(@Nullable final CharSequence newText) {
         if (this.adapter != null) this.adapter.getFilter().filter(newText);
 
-        if (!TextUtils.isEmpty(newText)) DaggerAnalyticsComponent.builder()
-            .analyticsModule(new AnalyticsModule(this.getContext()))
-            .build()
+        if (!TextUtils.isEmpty(newText)) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getContext())
             .eventLogger()
             .logEvent(new SearchEvent()
                 .setQuery(newText.toString())
@@ -156,9 +151,8 @@ public class PagerNewsView extends ObservableView implements PagerNewsPresenter.
 
     private void init() {
         final Activity activity = this.getActivity();
-        if (activity != null) this.userConfig = DaggerConfigComponent.builder()
-            .configModule(new ConfigModule(activity))
-            .build()
+        if (activity != null) this.userConfig = ComponentFactory.getInstance()
+            .getConfigComponent(activity)
             .userConfig();
 
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_news_pager, this, true);
