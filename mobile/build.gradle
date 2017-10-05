@@ -66,11 +66,13 @@ android {
             // For Android Studio 3
             //includeAndroidResources = true
             returnDefaultValues     = true
-        }
 
-        unitTests.all {
-            jacoco {
-                includeNoLocationClasses true
+            all {
+                jvmArgs '-noverify'
+
+                jacoco {
+                    includeNoLocationClasses true
+                }
             }
         }
     }
