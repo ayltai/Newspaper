@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper.analytics;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Singleton;
@@ -9,7 +10,7 @@ import android.support.annotation.NonNull;
 @Singleton
 final class CompositeEventLogger extends EventLogger {
     static final class Builder {
-        private List<EventLogger> eventLoggers;
+        private List<EventLogger> eventLoggers = new ArrayList<>();
 
         @NonNull
         public CompositeEventLogger.Builder add(@NonNull final EventLogger eventLogger) {
