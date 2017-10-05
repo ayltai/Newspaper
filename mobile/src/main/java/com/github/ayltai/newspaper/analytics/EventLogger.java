@@ -6,7 +6,7 @@ import com.github.ayltai.newspaper.util.TestUtils;
 
 public abstract class EventLogger {
     public <T extends Event> void logEvent(@NonNull final T event) {
-        if (!TestUtils.isLoggable()) {
+        if (!TestUtils.isLoggable() && !TestUtils.isRunningTests()) {
             if (event instanceof ClickEvent) {
                 this.logEvent((ClickEvent)event);
             } else if (event instanceof CountEvent) {
