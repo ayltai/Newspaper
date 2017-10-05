@@ -17,7 +17,7 @@ public final class DataModule {
     private final Context context;
 
     public DataModule(@NonNull final Context context) {
-        this.context = context;
+        this.context = context.getApplicationContext();
     }
 
     @NonNull

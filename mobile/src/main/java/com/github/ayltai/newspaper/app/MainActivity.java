@@ -64,6 +64,7 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         ComponentFactory.init();
+        this.getLifecycle().addObserver(ComponentFactory.getInstance());
 
         super.onCreate(savedInstanceState);
 
@@ -144,6 +145,8 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         this.disposeImageModule();
+
+        this.getLifecycle().removeObserver(ComponentFactory.getInstance());
     }
 
     @Override
