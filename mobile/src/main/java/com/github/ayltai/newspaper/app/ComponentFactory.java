@@ -1,7 +1,9 @@
 package com.github.ayltai.newspaper.app;
 
 import android.app.Activity;
+import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -42,6 +44,7 @@ public final class ComponentFactory implements Disposable, LifecycleObserver {
         return false;
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     @Override
     public void dispose() {
         this.configComponent    = null;
