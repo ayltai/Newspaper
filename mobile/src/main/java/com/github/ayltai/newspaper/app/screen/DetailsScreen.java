@@ -14,6 +14,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -34,7 +35,7 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.app.config.UserConfig;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Video;
@@ -87,6 +88,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     //region Components
 
+    private final AppBarLayout            appBarLayout;
     private final CollapsingToolbarLayout collapsingToolbarLayout;
     private final Toolbar                 toolbar;
     private final View                    toolbarView;
@@ -120,6 +122,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         final View view = LayoutInflater.from(context).inflate(R.layout.screen_news_details, this, true);
 
+        this.appBarLayout            = view.findViewById(R.id.appBarLayout);
         this.collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbarLayout);
         this.toolbar                 = view.findViewById(R.id.toolbar);
         this.imageContainer          = view.findViewById(R.id.image_container);
@@ -134,7 +137,14 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.imagesContainer         = view.findViewById(R.id.images_container);
         this.videoContainer          = view.findViewById(R.id.video_container);
 
-        this.isPanoramaEnabled = UserConfig.isPanoramaEnabled(context);
+        final Activity activity = this.getActivity();
+        this.isPanoramaEnabled = activity == null
+            ? Constants.PANORAMA_DEFAULT
+            : ComponentFactory.getInstance()
+                .getConfigComponent(activity)
+                .userConfig()
+                .isPanoramaEnabled();
+
         this.toolbarView       = LayoutInflater.from(this.getContext()).inflate(this.isPanoramaEnabled ? R.layout.widget_toolbar_panorama : R.layout.widget_toolbar, this.imageContainer, false);
         this.toolbarImage      = this.isPanoramaEnabled ? null : this.toolbarView.findViewById(R.id.image);
         this.panoramaImageView = this.isPanoramaEnabled ? this.toolbarView.findViewById(R.id.image) : null;
@@ -246,6 +256,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             } else {
                 this.subscribeImage(this.toolbarImage, images.get(0));
             }
+
+            this.appBarLayout.setExpanded(true, true);
 
             if (TextUtils.isEmpty(images.get(0).getDescription())) {
                 this.toolbarBackground.setVisibility(View.GONE);

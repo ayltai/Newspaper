@@ -36,6 +36,8 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
 
         void showLoadingView();
 
+        void hideLoadingView();
+
         void showEndOfList();
 
         @NonNull
@@ -58,6 +60,9 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
 
     @NonNull
     public abstract Single<Irrelevant> clearAll();
+
+    protected void onPullToRefresh() {
+    }
 
     protected void resetState() {
         this.scrollPosition = 0;
@@ -129,6 +134,7 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
             irrelevant -> {
                 if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Pull-to-refresh");
 
+                this.onPullToRefresh();
                 this.resetState();
 
                 final AtomicBoolean hasCleared = new AtomicBoolean(false);

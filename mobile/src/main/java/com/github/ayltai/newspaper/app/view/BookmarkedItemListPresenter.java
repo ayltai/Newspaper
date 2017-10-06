@@ -3,11 +3,12 @@ package com.github.ayltai.newspaper.app.view;
 import java.util.Collections;
 import java.util.List;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.data.ItemManager;
 import com.github.ayltai.newspaper.app.data.model.Item;
-import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.Lists;
@@ -27,9 +28,17 @@ public class BookmarkedItemListPresenter extends ItemListPresenter {
     public Flowable<List<Item>> load() {
         if (this.getView() == null) return Flowable.just(Collections.emptyList());
 
+        final Activity activity = this.getView().getActivity();
+        if (activity == null) return Flowable.just(Collections.emptyList());
+
         return ItemManager.create(this.getView().getContext())
             .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
-            .flatMap(manager -> manager.getBookmarkedItems(UserConfig.getSources(this.getView().getContext()).toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
+            .flatMap(
+                manager -> manager.getBookmarkedItems(ComponentFactory.getInstance()
+                    .getConfigComponent(activity)
+                    .userConfig()
+                    .getSources()
+                    .toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
                 .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER)))
             .map(items -> Lists.transform(items, item -> (Item)item))
             .flattenAsFlowable(Collections::singletonList);

@@ -2,8 +2,10 @@ package com.github.ayltai.newspaper.app.widget;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
@@ -20,11 +22,13 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.github.ayltai.newspaper.Constants;
+import com.github.ayltai.newspaper.app.ComponentFactory;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
-import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.ayltai.newspaper.widget.ListView;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -45,7 +49,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
                     final ItemListAdapter.ItemListFilter filter = (ItemListAdapter.ItemListFilter)((Filterable)listView.getAdapter()).getFilter();
 
                     filter.setCategories(new ArrayList<>(Category.fromDisplayName(PagerNewsAdapter.this.categories.get(i))));
-                    filter.setSources(UserConfig.getSources(listView.getContext()));
+                    filter.setSources(PagerNewsAdapter.this.userConfig == null ? Collections.emptySet() : PagerNewsAdapter.this.userConfig.getSources());
                     filter.setFeatured(true);
 
                     PagerNewsAdapter.this.filterResults.put(i, filter.performFiltering(searchText));
@@ -80,13 +84,23 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
     private final SparseArrayCompat<SoftReference<View>> views         = new SparseArrayCompat<>();
     private final SparseArrayCompat<Object>              filterResults = new SparseArrayCompat<>();
 
+    @Nullable
+    private final UserConfig userConfig;
+
     private CompositeDisposable disposables;
     private Filter              filter;
     private int                 position;
     private CharSequence        searchText;
 
     PagerNewsAdapter(@NonNull final Context context) {
-        final List<String> categories = UserConfig.getCategories(context);
+        final Activity activity = ViewUtils.getActivity(context);
+        this.userConfig = activity == null
+            ? null
+            : ComponentFactory.getInstance()
+                .getConfigComponent(activity)
+                .userConfig();
+
+        final List<String> categories = this.userConfig == null ? Collections.emptyList() : this.userConfig.getCategories();
         for (final String category : categories) {
             final String name = Category.toDisplayName(category);
             if (!this.categories.contains(name)) this.categories.add(name);
@@ -132,7 +146,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
     public Object instantiateItem(final ViewGroup container, final int position) {
         final List<String>      categories = new ArrayList<>(Category.fromDisplayName(this.categories.get(position)));
         final ItemListPresenter presenter  = new ItemListPresenter(categories);
-        final ItemListView      view       = UserConfig.getViewStyle(container.getContext()) == Constants.VIEW_STYLE_COZY ? new CozyItemListView(container.getContext()) : new CompactItemListView(container.getContext());
+        final ItemListView      view       = this.userConfig == null || this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY ? new CozyItemListView(container.getContext()) : new CompactItemListView(container.getContext());
 
         if (this.disposables == null) this.disposables = new CompositeDisposable();
 
@@ -155,7 +169,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
 
         if (!TextUtils.isEmpty(this.searchText)) {
             view.setCategories(categories);
-            view.setSources(UserConfig.getSources(container.getContext()));
+            view.setSources(this.userConfig == null ? Collections.emptySet() : this.userConfig.getSources());
             view.setSearchText(this.searchText);
         }
 

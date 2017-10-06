@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
     <entry>
-        <key>default_list_view_type</key>
-        <value>2</value>
+        <key>view_style</key>
+        <value>1</value>
     </entry>
     <entry>
-        <key>update_interval</key>
-        <value>180</value>
+        <key>theme</key>
+        <value>0</value>
+    </entry>
+    <entry>
+        <key>panorama</key>
+        <value>false</value>
     </entry>
 </defaultsMap>

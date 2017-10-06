@@ -147,7 +147,19 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
     public void showLoadingView() {
         super.showLoadingView();
 
-        if (this.loadingView != null) ViewUtils.startShimmerAnimation(this.loadingView);
+        if (this.loadingView != null) {
+            this.findViewById(R.id.scrolling_background).setVisibility(View.GONE);
+
+            ViewUtils.startShimmerAnimation(this.loadingView);
+        }
+    }
+
+    @Override
+    public void hideLoadingView() {
+        super.hideLoadingView();
+
+        final View view = this.findViewById(R.id.scrolling_background);
+        if (view != null) view.setVisibility(View.VISIBLE);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)

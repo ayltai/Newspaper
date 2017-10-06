@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper.app.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -7,6 +8,7 @@ import android.net.Uri;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +27,13 @@ import com.google.android.exoplayer2.util.Util;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.VideoActivity;
+import com.github.ayltai.newspaper.app.config.AppConfig;
+import com.github.ayltai.newspaper.app.config.ConfigComponent;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.view.VideoPresenter;
-import com.github.ayltai.newspaper.app.config.AppConfig;
-import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.util.DeviceUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
@@ -44,13 +48,20 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
 
     //region Components
 
-    private final View thumbnailContainer;
-    private final View playAction;
-    private final View thumbnail;
+    private final View         thumbnailContainer;
+    private final View         playAction;
+    private final BigImageView thumbnail;
 
     private View                fullScreenAction;
     private SimpleExoPlayerView playerView;
     private SimpleExoPlayer     player;
+
+    //endregion
+
+    //region Configurations
+
+    @Nullable private AppConfig  appConfig;
+    @Nullable private UserConfig userConfig;
 
     //endregion
 
@@ -59,15 +70,21 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
     public VideoView(@NonNull final Context context) {
         super(context);
 
+        final Activity activity = this.getActivity();
+        if (activity != null) {
+            final ConfigComponent component = ComponentFactory.getInstance().getConfigComponent(activity);
+
+            this.appConfig  = component.appConfig();
+            this.userConfig = component.userConfig();
+        }
+
         this.thumbnailContainer = LayoutInflater.from(context).inflate(R.layout.widget_video_thumbnail, this, false);
         this.playAction         = this.thumbnailContainer.findViewById(R.id.play);
 
-        final BigImageView imageView = this.thumbnailContainer.findViewById(R.id.image);
-        imageView.getSSIV().setMaxScale(Constants.IMAGE_ZOOM_MAX);
-        imageView.getSSIV().setPanEnabled(false);
-        imageView.getSSIV().setZoomEnabled(false);
-
-        this.thumbnail = imageView;
+        this.thumbnail = this.thumbnailContainer.findViewById(R.id.image);
+        this.thumbnail.getSSIV().setMaxScale(Constants.IMAGE_ZOOM_MAX);
+        this.thumbnail.getSSIV().setPanEnabled(false);
+        this.thumbnail.getSSIV().setZoomEnabled(false);
 
         this.addView(this.thumbnailContainer);
     }
@@ -76,7 +93,10 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
     public void setVideo(@Nullable final Video video) {
         this.video = video;
 
-        if (video != null) this.setUpPlayer();
+        if (video != null) {
+            this.setUpThumbnail();
+            this.setUpPlayer();
+        }
     }
 
     @Nullable
@@ -86,6 +106,11 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
     }
 
     //region Methods
+
+    @Override
+    public void setUpThumbnail() {
+        if (!TextUtils.isEmpty(this.video.getThumbnailUrl())) this.thumbnail.showImage(Uri.parse(this.video.getThumbnailUrl()));
+    }
 
     @Override
     public void setUpPlayer() {
@@ -112,7 +137,7 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
             this.addView(this.playerView);
             this.bringChildToFront(this.thumbnailContainer);
 
-            if (UserConfig.isAutoPlayEnabled(this.getContext()) || AppConfig.isVideoPlaying()) this.startPlayer();
+            if (this.userConfig != null && this.userConfig.isAutoPlayEnabled() || this.appConfig != null && this.appConfig.isVideoPlaying()) this.startPlayer();
         }
     }
 
@@ -125,17 +150,19 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
             this.playerView.findViewById(R.id.exo_playback_control_view).setVisibility(View.VISIBLE);
             this.thumbnailContainer.setVisibility(View.GONE);
 
-            if (AppConfig.getVideoSeekPosition() > 0) this.player.seekTo(AppConfig.getVideoSeekPosition());
-            this.player.setPlayWhenReady(true);
+            if (this.appConfig != null) {
+                if (this.appConfig.getVideoSeekPosition() > 0) this.player.seekTo(this.appConfig.getVideoSeekPosition());
+                this.player.setPlayWhenReady(true);
 
-            this.manageDisposable(AppConfig.videoSeekPositionChanges().subscribe(seekPosition -> {
-                this.playerView.setVisibility(View.VISIBLE);
-                this.thumbnailContainer.setVisibility(View.GONE);
+                this.manageDisposable(this.appConfig.videoSeekPositionChanges().subscribe(seekPosition -> {
+                    this.playerView.setVisibility(View.VISIBLE);
+                    this.thumbnailContainer.setVisibility(View.GONE);
 
-                this.player.seekTo(seekPosition);
+                    this.player.seekTo(seekPosition);
 
-                if (AppConfig.isVideoPlaying()) this.player.setPlayWhenReady(true);
-            }));
+                    if (this.appConfig.isVideoPlaying()) this.player.setPlayWhenReady(true);
+                }));
+            }
         }
     }
 

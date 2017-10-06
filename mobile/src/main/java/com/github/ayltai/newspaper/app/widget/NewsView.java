@@ -3,6 +3,7 @@ package com.github.ayltai.newspaper.app.widget;
 import java.util.List;
 import java.util.Set;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
@@ -13,8 +14,9 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.app.view.NewsPresenter;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.UserConfig;
+import com.github.ayltai.newspaper.app.view.NewsPresenter;
 import com.github.ayltai.newspaper.widget.ObservableView;
 
 public abstract class NewsView extends ObservableView implements NewsPresenter.View {
@@ -74,8 +76,16 @@ public abstract class NewsView extends ObservableView implements NewsPresenter.V
 
         view.addView(this.listView);
 
-        this.categories = UserConfig.getCategories(this.getContext());
-        this.sources    = UserConfig.getSources(this.getContext());
+        final Activity activity = this.getActivity();
+
+        if (activity != null) {
+            final UserConfig userConfig = ComponentFactory.getInstance()
+                .getConfigComponent(activity)
+                .userConfig();
+
+            this.categories = userConfig.getCategories();
+            this.sources    = userConfig.getSources();
+        }
     }
 
     //endregion

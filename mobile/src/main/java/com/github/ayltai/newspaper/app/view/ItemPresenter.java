@@ -3,12 +3,16 @@ package com.github.ayltai.newspaper.app.view;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Activity;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
+import com.github.ayltai.newspaper.analytics.ClickEvent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
+import com.github.ayltai.newspaper.app.config.AppConfig;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Item;
@@ -17,7 +21,6 @@ import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.screen.DetailsScreen;
-import com.github.ayltai.newspaper.app.config.AppConfig;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.binding.Binder;
@@ -86,6 +89,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         Flowable<Irrelevant> videoClick();
     }
 
+    private AppConfig appConfig;
+
     @UiThread
     @Override
     public void bindModel(final Item model) {
@@ -105,41 +110,97 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     }
 
     protected void onClick() {
+        this.initAppConfig();
+
         if (this.getView() != null) {
             final Item item = this.getModel();
 
-            AppConfig.setVideoPlaying(false);
-            AppConfig.setVideoSeekPosition(0);
+            this.appConfig.setVideoPlaying(false);
+            this.appConfig.setVideoSeekPosition(0);
+
+            if (item instanceof FeaturedItem) ComponentFactory.getInstance()
+                .getAnalyticsComponent(this.getView().getContext())
+                .eventLogger()
+                .logEvent(new ClickEvent()
+                    .setElementName("Featured"));
 
             Flow.get(this.getView().getContext()).set(DetailsScreen.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem()));
         }
     }
 
+    @CallSuper
     protected void onAvatarClick() {
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Avatar"));
     }
 
+    @CallSuper
     protected void onSourceClick() {
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Source"));
     }
 
+    @CallSuper
     protected void onPublishDateClick() {
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Publish Date"));
     }
 
+    @CallSuper
     protected void onTitleClick() {
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Title"));
     }
 
+    @CallSuper
     protected void onDescriptionClick() {
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Description"));
     }
 
     protected void onLinkClick() {
     }
 
+    @CallSuper
     protected void onBookmarkClick() {
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Bookmark"));
     }
 
+    @CallSuper
     protected void onImageClick(@NonNull final Image image) {
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Image"));
     }
 
+    @CallSuper
     protected void onVideoClick() {
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Video"));
     }
 
     @SuppressWarnings("CyclomaticComplexity")
@@ -179,5 +240,14 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         if (videoClick != null) this.manageDisposable(videoClick.subscribe(irrelevant -> this.onVideoClick()));
 
         this.bindModel(this.getModel());
+    }
+
+    private void initAppConfig() {
+        if (this.appConfig == null) {
+            final Activity activity = this.getView() == null ? null : this.getView().getActivity();
+            if (activity != null) this.appConfig = ComponentFactory.getInstance()
+                .getConfigComponent(activity)
+                .appConfig();
+        }
     }
 }

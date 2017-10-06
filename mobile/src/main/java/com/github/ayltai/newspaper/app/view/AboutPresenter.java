@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.analytics.ClickEvent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.ObservablePresenter;
 import com.github.ayltai.newspaper.view.Presenter;
@@ -33,7 +35,7 @@ public class AboutPresenter extends ObservablePresenter<AboutPresenter.View> {
     }
 
     @Override
-    public void onViewAttached(@NonNull final View view, final boolean isFirstTimeAttachment) {
+    public void onViewAttached(@NonNull final AboutPresenter.View view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
         if (isFirstTimeAttachment) {
@@ -42,8 +44,34 @@ public class AboutPresenter extends ObservablePresenter<AboutPresenter.View> {
             view.setAppVersion(BuildConfig.VERSION_NAME);
         }
 
-        this.manageDisposable(view.visitActions().subscribe(irrelevant -> view.visit("https://github.com/ayltai/Newspaper")));
-        this.manageDisposable(view.rateActions().subscribe(irrelevant -> view.rate()));
-        this.manageDisposable(view.reportActions().subscribe(irrelevant -> view.report("https://github.com/ayltai/Newspaper/issues")));
+        this.manageDisposable(view.visitActions().subscribe(irrelevant -> {
+            view.visit("https://github.com/ayltai/Newspaper");
+
+            ComponentFactory.getInstance()
+                .getAnalyticsComponent(view.getContext())
+                .eventLogger()
+                .logEvent(new ClickEvent()
+                    .setElementName("About - Visit"));
+        }));
+
+        this.manageDisposable(view.rateActions().subscribe(irrelevant -> {
+            ComponentFactory.getInstance()
+                .getAnalyticsComponent(view.getContext())
+                .eventLogger()
+                .logEvent(new ClickEvent()
+                    .setElementName("About - Rate"));
+
+            view.rate();
+        }));
+
+        this.manageDisposable(view.reportActions().subscribe(irrelevant -> {
+            ComponentFactory.getInstance()
+                .getAnalyticsComponent(view.getContext())
+                .eventLogger()
+                .logEvent(new ClickEvent()
+                    .setElementName("About - Report"));
+
+            view.report("https://github.com/ayltai/Newspaper/issues");
+        }));
     }
 }

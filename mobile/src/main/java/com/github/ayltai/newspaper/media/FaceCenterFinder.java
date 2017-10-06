@@ -7,6 +7,9 @@ import java.util.Collections;
 
 import javax.inject.Singleton;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
@@ -19,12 +22,25 @@ import com.google.android.gms.vision.face.FaceDetector;
 
 import com.github.ayltai.newspaper.Constants;
 
+import io.reactivex.disposables.Disposable;
+
 @Singleton
-public final class FaceCenterFinder {
+public final class FaceCenterFinder implements Disposable, LifecycleObserver {
     private final FaceDetector detector;
 
     FaceCenterFinder(@NonNull final FaceDetector detector) {
         this.detector = detector;
+    }
+
+    @Override
+    public boolean isDisposed() {
+        return !this.detector.isOperational();
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    @Override
+    public void dispose() {
+        this.detector.release();
     }
 
     @NonNull

@@ -32,7 +32,7 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.RealmObject;
 
-public class ItemListLoader extends RealmLoader<List<NewsItem>> {
+public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
     //region Constants
 
     public static final int ID = ItemListLoader.class.hashCode();

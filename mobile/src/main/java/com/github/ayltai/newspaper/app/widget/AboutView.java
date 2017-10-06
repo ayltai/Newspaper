@@ -26,6 +26,7 @@ import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.widget.ObservableView;
+import com.instabug.library.Instabug;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Flowable;
@@ -124,7 +125,13 @@ public final class AboutView extends ObservableView implements AboutPresenter.Vi
 
     @Override
     public void report(@NonNull final String url) {
-        this.openUrl(url);
+        try {
+            Instabug.invoke();
+        } catch (final IllegalStateException e) {
+            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+
+            this.openUrl(url);
+        }
     }
 
     //endregion

@@ -1,10 +1,14 @@
 package com.github.ayltai.newspaper.app.widget;
 
+import java.util.Collections;
+
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.Filter;
@@ -12,10 +16,12 @@ import android.widget.Filterable;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.analytics.SearchEvent;
+import com.github.ayltai.newspaper.app.ComponentFactory;
+import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.view.BookmarkedItemListPresenter;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
-import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.util.TestUtils;
 
 public final class BookmarkedNewsView extends NewsView {
@@ -42,9 +48,16 @@ public final class BookmarkedNewsView extends NewsView {
     @NonNull
     @Override
     public ItemListView createItemListView() {
-        final ItemListPresenter presenter = new BookmarkedItemListPresenter(UserConfig.getCategories(this.getContext()));
+        final Activity   activity   = this.getActivity();
+        final UserConfig userConfig = activity == null
+            ? null
+            : ComponentFactory.getInstance()
+                .getConfigComponent(activity)
+                .userConfig();
 
-        final ItemListView view = UserConfig.getViewStyle(this.getContext()) == Constants.VIEW_STYLE_COZY
+        final ItemListPresenter presenter = new BookmarkedItemListPresenter(userConfig == null ? Collections.emptyList() : userConfig.getCategories());
+
+        final ItemListView view = userConfig == null || userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY
             ? new CozyItemListView(this.getContext()) {
                 @Override
                 protected int getLayoutId() {
@@ -100,5 +113,12 @@ public final class BookmarkedNewsView extends NewsView {
 
             if (filter != null) filter.filter(newText);
         }
+
+        if (!TextUtils.isEmpty(newText)) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getContext())
+            .eventLogger()
+            .logEvent(new SearchEvent()
+                .setQuery(newText.toString())
+                .setScreenName(this.getClass().getSimpleName()));
     }
 }

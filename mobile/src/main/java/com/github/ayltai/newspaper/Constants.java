@@ -5,11 +5,12 @@ import android.support.annotation.IntDef;
 public final class Constants {
     public static final String ENCODING_UTF8 = "UTF-8";
 
-    public static final int INITIAL_RETRY_DELAY = 2;
-    public static final int MAX_RETRIES         = 5;
-    public static final int CONNECTION_TIMEOUT  = 5;
-    public static final int REFRESH_TIMEOUT     = 10;
-    public static final int HOUSEKEEP_TIME      = 72 * 60 * 60 * 1000;
+    public static final int INITIAL_RETRY_DELAY            = 2;
+    public static final int MAX_RETRIES                    = 5;
+    public static final int CONNECTION_TIMEOUT             = 5;
+    public static final int REFRESH_TIMEOUT                = 10;
+    public static final int HOUSEKEEP_TIME                 = 72 * 60 * 60 * 1000;
+    public static final int REMOTE_CONFIG_CACHE_EXPIRATION = 30 * 60 * 1000;
 
     public static final int  FILE_BUFFER_SIZE        = 4 * 1024;
     public static final long CACHE_SIZE_MAX          = 32 * 1024 * 1024;
@@ -17,7 +18,7 @@ public final class Constants {
     public static final long CACHE_SIZE_MAX_SMALLER  = 8 * 1024 * 1024;
     public static final long CACHE_SIZE_MAX_SMALLEST = 4 * 1024 * 1024;
 
-    public static final int   FEATURED_IMAGE_ROTATION  = 8;
+    public static final int   FEATURED_IMAGE_ROTATION  = 10;
     public static final int   IMAGE_ZOOM_MAX           = 8;
     public static final float FACE_DETECTION_RATIO_MIN = 0.05f;
     public static final int   FACE_DETECTION_SIZE_MAX  = 262144;

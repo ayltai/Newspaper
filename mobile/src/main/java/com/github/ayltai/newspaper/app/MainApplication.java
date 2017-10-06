@@ -5,9 +5,11 @@ import java.util.Collections;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.logging.FLog;
@@ -17,6 +19,7 @@ import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
+import com.flurry.android.FlurryAgent;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.debug.ThreadPolicyFactory;
@@ -26,6 +29,8 @@ import com.github.ayltai.newspaper.media.ImageModule;
 import com.github.ayltai.newspaper.net.DaggerHttpComponent;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.BigImageViewer;
+import com.instabug.library.Instabug;
+import com.instabug.library.invocation.InstabugInvocationEvent;
 import com.squareup.leakcanary.LeakCanary;
 
 import io.fabric.sdk.android.Fabric;
@@ -45,18 +50,32 @@ public final class MainApplication extends BaseApplication {
             if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
         }
 
-        if (!TestUtils.isLoggable() && !TestUtils.isRunningTests()) Fabric.with(this, new Crashlytics.Builder()
-            .core(new CrashlyticsCore.Builder()
-                .disabled(TestUtils.isLoggable())
-                .build())
-            .build());
+        if (!TestUtils.isLoggable() && !TestUtils.isRunningTests()) {
+            Fabric.with(this,
+                new Answers(),
+                new Crashlytics.Builder()
+                    .core(new CrashlyticsCore.Builder()
+                        .disabled(TestUtils.isLoggable())
+                        .build())
+                    .build());
+
+            new FlurryAgent.Builder()
+                .withCaptureUncaughtExceptions(true)
+                .withLogEnabled(false)
+                .build(this, "YVP5NNQJ5CJBJQS84MBQ");
+        }
 
         //noinspection CheckStyle
         try {
             FirebaseCrash.setCrashCollectionEnabled(!TestUtils.isLoggable());
+            FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(!TestUtils.isLoggable());
         } catch (final RuntimeException e) {
             if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
         }
+
+        new Instabug.Builder(this, "1c5817a3503c2a8ece8624b8c0f5a052")
+            .setInvocationEvent(InstabugInvocationEvent.NONE)
+            .build();
 
         FLog.setMinimumLoggingLevel(TestUtils.isLoggable() ? FLog.INFO : FLog.ERROR);
 
