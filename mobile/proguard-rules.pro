@@ -60,3 +60,10 @@
 ## SearchView
 -keep class android.support.v7.widget.SearchView { *; }
 
+## SimpleXML
+-dontwarn org.simpleframework.xml.stream.**
+-keep class org.simpleframework.xml.** { *; }
+-keepclassmembers,allowobfuscation class * {
+    @org.simpleframework.xml.* <fields>;
+    @org.simpleframework.xml.* <init>(...);
+}
