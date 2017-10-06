@@ -81,20 +81,21 @@ public class PagerNewsView extends ObservableView implements PagerNewsPresenter.
             if (lifecycleOwner != null) lifecycleOwner.getLifecycle().addObserver(this.adapter);
 
             this.viewPager.setAdapter(this.adapter);
-            this.manageDisposable(RxViewPager.pageSelections(this.viewPager).subscribe(index -> {
-                this.adapter.setCurrentPosition(index);
-
-                this.pageSelections.onNext(index);
-
-                ComponentFactory.getInstance()
-                    .getAnalyticsComponent(this.getContext())
-                    .eventLogger()
-                    .logEvent(new ClickEvent()
-                        .setElementName("Page Selection"));
-            }));
-
-            this.pageSelections.onNext(0);
         }
+
+        this.manageDisposable(RxViewPager.pageSelections(this.viewPager).subscribe(index -> {
+            this.adapter.setCurrentPosition(index);
+
+            this.pageSelections.onNext(index);
+
+            ComponentFactory.getInstance()
+                .getAnalyticsComponent(this.getContext())
+                .eventLogger()
+                .logEvent(new ClickEvent()
+                    .setElementName("Page Selection"));
+        }));
+
+        if (this.isFirstTimeAttachment) this.pageSelections.onNext(0);
 
         super.onAttachedToWindow();
     }
