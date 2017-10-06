@@ -65,5 +65,5 @@
 -keep class org.simpleframework.xml.** { *; }
 -keepclassmembers,allowobfuscation class * {
     @org.simpleframework.xml.* <fields>;
-    @org.simpleframework.xml.* <init>(...);
+    public <init>(...);
 }
