@@ -15,34 +15,38 @@ import com.github.ayltai.newspaper.util.TestUtils;
 
 @Singleton
 public final class RemoteConfig {
-    private FirebaseRemoteConfig remoteConfig;
+    private final FirebaseRemoteConfig remoteConfig;
 
     RemoteConfig(@NonNull final Activity activity) {
-        this.remoteConfig = FirebaseRemoteConfig.getInstance();
-        this.remoteConfig.setConfigSettings(new FirebaseRemoteConfigSettings.Builder()
-            .setDeveloperModeEnabled(TestUtils.isLoggable() && !TestUtils.isRunningTests())
-            .build());
+        if (TestUtils.isRunningUnitTest()) {
+            this.remoteConfig = null;
+        } else {
+            this.remoteConfig = FirebaseRemoteConfig.getInstance();
+            this.remoteConfig.setConfigSettings(new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(TestUtils.isLoggable() && !TestUtils.isRunningTests())
+                .build());
 
-        this.remoteConfig.setDefaults(R.xml.config);
+            this.remoteConfig.setDefaults(R.xml.config);
 
-        this.remoteConfig.fetch(this.remoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled() ? 0 : Constants.REMOTE_CONFIG_CACHE_EXPIRATION)
-            .addOnSuccessListener(activity, irrelevant -> remoteConfig.activateFetched())
-            .addOnFailureListener(activity, error -> {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-            });
+            this.remoteConfig.fetch(this.remoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled() ? 0 : Constants.REMOTE_CONFIG_CACHE_EXPIRATION)
+                .addOnSuccessListener(activity, irrelevant -> remoteConfig.activateFetched())
+                .addOnFailureListener(activity, error -> {
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                });
+        }
     }
 
     @Constants.ViewStyle
     public int getViewStyle() {
-        return this.remoteConfig.getLong("view_style") == Constants.VIEW_STYLE_COZY ? Constants.VIEW_STYLE_COZY : Constants.VIEW_STYLE_COMPACT;
+        return this.remoteConfig == null ? Constants.VIEW_STYLE_DEFAULT : this.remoteConfig.getLong("view_style") == Constants.VIEW_STYLE_COZY ? Constants.VIEW_STYLE_COZY : Constants.VIEW_STYLE_COMPACT;
     }
 
     @Constants.Theme
     public int getTheme() {
-        return this.remoteConfig.getLong("theme") == Constants.THEME_DARK ? Constants.THEME_DARK : Constants.THEME_LIGHT;
+        return this.remoteConfig == null ? Constants.THEME_DEFAULT : this.remoteConfig.getLong("theme") == Constants.THEME_DARK ? Constants.THEME_DARK : Constants.THEME_LIGHT;
     }
 
     public boolean isPanoramaEnabled() {
-        return this.remoteConfig.getBoolean("panorama");
+        return this.remoteConfig == null ? Constants.PANORAMA_DEFAULT : this.remoteConfig.getBoolean("panorama");
     }
 }
