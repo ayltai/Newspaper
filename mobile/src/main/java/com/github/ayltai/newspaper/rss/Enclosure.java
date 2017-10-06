@@ -8,7 +8,7 @@ import org.simpleframework.xml.Root;
 
 @Root(name = "enclosure", strict = false)
 public final class Enclosure {
-    @Attribute(name = "url", required = true)
+    @Attribute(name = "url")
     private String url;
 
     @Attribute(name = "length", required = false)

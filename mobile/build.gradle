@@ -89,7 +89,7 @@ android {
 
     dexOptions {
         preDexLibraries !project.hasProperty('ciBuild')
-        javaMaxHeapSize '1024m'
+        javaMaxHeapSize '1280m'
     }
 
     compileOptions {
@@ -172,10 +172,6 @@ dependencies {
     compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxBindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxBindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxBindingVersion"
-
-    // Dagger 2
-    compile             "com.google.dagger:dagger:${daggerVersion}"
-    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
 
     // Dependency injection
     compile             "com.google.dagger:dagger:$daggerVersion"
@@ -272,10 +268,6 @@ dependencies {
     androidTestCompile ("com.android.support.test.espresso:espresso-intents:$espressoVersion") {
         exclude group : 'com.android.support'
     }
-
-    // Android Wear
-    wearApp project(':wear')
-    compile "com.google.android.gms:play-services-wearable:$firebaseSdkVersion"
 
     // Code coverage by Codacy
     codacy 'com.github.codacy:codacy-coverage-reporter:1.0.13'
