@@ -56,18 +56,40 @@ public final class ItemListPresenterTest extends PresenterTest<MainActivity, Ite
 
     @Test
     public void Given_model_When_onViewAttached_Then_modelIsBound() {
+        // Given
         final List<Item> models = this.getModels();
-
         this.getPresenter().bindModel(models);
 
+        // When
         this.attachments.onNext(true);
 
+        // Then
         Mockito.verify(this.getView(), Mockito.times(1)).showLoadingView();
 
         this.load.onNext(models);
 
         Mockito.verify(this.getView(), Mockito.times(1)).clear();
         Mockito.verify(this.getView(), Mockito.times(1)).bind(models);
+    }
+
+    @Test
+    public void Given_model_When_pullToRefresh_Then_viewIsRefreshed() {
+        // Given
+        final List<Item> models = this.getModels();
+        this.getPresenter().bindModel(models);
+
+        // When
+        this.attachments.onNext(true);
+        this.pullToRefreshes.onNext(Irrelevant.INSTANCE);
+
+        // Then
+        Mockito.verify(this.getPresenter(), Mockito.times(1)).onPullToRefresh();
+        Mockito.verify(this.getPresenter(), Mockito.times(1)).resetState();
+
+        this.load.onNext(models);
+
+        Mockito.verify(this.getView(), Mockito.times(3)).clear();
+        Mockito.verify(this.getView(), Mockito.times(2)).bind(models);
     }
 
     @NonNull

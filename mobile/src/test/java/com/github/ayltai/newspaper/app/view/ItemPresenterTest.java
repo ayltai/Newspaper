@@ -64,8 +64,10 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
 
     @Test
     public void Given_model_When_onViewAttached_Then_modelIsBound() {
+        // Given
         this.getPresenter().bindModel(this.getModel());
 
+        // When
         this.attachments.onNext(true);
 
         Mockito.verify(this.getView(), Mockito.times(1)).setAvatar(Mockito.anyInt());
@@ -81,91 +83,121 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
 
     @Test
     public void Given_onViewAttached_When_clicks_Then_onClickIsCalled() {
+        // Given
         this.attachments.onNext(true);
 
+        // When
         this.clicks.onNext(Irrelevant.INSTANCE);
 
+        // Then
         Mockito.verify(this.getView(), Mockito.times(1)).clicks();
     }
 
     @Test
     public void Given_onViewAttached_When_avatarClicks_Then_onAvatarClickIsCalled() {
+        // Given
         this.attachments.onNext(true);
 
+        // When
         this.avatarClicks.onNext(Irrelevant.INSTANCE);
 
+        // Then
         Mockito.verify(this.getView(), Mockito.times(1)).avatarClicks();
     }
 
     @Test
     public void Given_onViewAttached_When_sourceClicks_Then_onSourceClickIsCalled() {
+        // Given
         this.attachments.onNext(true);
 
+        // When
         this.sourceClicks.onNext(Irrelevant.INSTANCE);
 
+        // Then
         Mockito.verify(this.getView(), Mockito.times(1)).sourceClicks();
     }
 
     @Test
     public void Given_onViewAttached_When_publishDateClicks_Then_onPublishDateClickIsCalled() {
+        // Given
         this.attachments.onNext(true);
 
+        // When
         this.publishDateClicks.onNext(Irrelevant.INSTANCE);
 
+        // Then
         Mockito.verify(this.getView(), Mockito.times(1)).publishDateClicks();
     }
 
     @Test
     public void Given_onViewAttached_When_titleClicks_Then_onTitleClickIsCalled() {
+        // Given
         this.attachments.onNext(true);
 
+        // When
         this.titleClicks.onNext(Irrelevant.INSTANCE);
 
+        // Then
         Mockito.verify(this.getView(), Mockito.times(1)).titleClicks();
     }
 
     @Test
     public void Given_onViewAttached_When_descriptionClicks_Then_onDescriptionClickIsCalled() {
+        // Given
         this.attachments.onNext(true);
 
+        // When
         this.descriptionClicks.onNext(Irrelevant.INSTANCE);
 
+        // Then
         Mockito.verify(this.getView(), Mockito.times(1)).descriptionClicks();
     }
 
     @Test
     public void Given_onViewAttached_When_linkClicks_Then_onLinkClickIsCalled() {
+        // Given
         this.attachments.onNext(true);
 
+        // When
         this.linkClicks.onNext(Irrelevant.INSTANCE);
 
+        // Then
         Mockito.verify(this.getView(), Mockito.times(1)).linkClicks();
     }
 
     @Test
     public void Given_onViewAttached_When_bookmarkClicks_Then_onBookmarkClickIsCalled() {
+        // Given
         this.attachments.onNext(true);
 
+        // When
         this.bookmarkClicks.onNext(Irrelevant.INSTANCE);
 
+        // Then
         Mockito.verify(this.getView(), Mockito.times(1)).bookmarkClicks();
     }
 
     @Test
     public void Given_onViewAttached_When_imageClicks_Then_onImageClickIsCalled() {
+        // Given
         this.attachments.onNext(true);
 
+        // When
         this.imageClicks.onNext(new Image());
 
+        // Then
         Mockito.verify(this.getView(), Mockito.times(1)).imageClicks();
     }
 
     @Test
     public void Given_onViewAttached_When_videoClicks_Then_onVideoClickIsCalled() {
+        // Given
         this.attachments.onNext(true);
 
+        // When
         this.videoClicks.onNext(Irrelevant.INSTANCE);
 
+        // Then
         Mockito.verify(this.getView(), Mockito.times(1)).videoClicks();
     }
 
