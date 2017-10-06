@@ -86,7 +86,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         Flowable<Image> imageClicks();
 
         @Nullable
-        Flowable<Irrelevant> videoClick();
+        Flowable<Irrelevant> videoClicks();
     }
 
     private AppConfig appConfig;
@@ -236,7 +236,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         final Flowable<Image> imageClicks = view.imageClicks();
         if (imageClicks != null) this.manageDisposable(imageClicks.subscribe(this::onImageClick));
 
-        final Flowable<Irrelevant> videoClick = view.videoClick();
+        final Flowable<Irrelevant> videoClick = view.videoClicks();
         if (videoClick != null) this.manageDisposable(videoClick.subscribe(irrelevant -> this.onVideoClick()));
 
         this.bindModel(this.getModel());

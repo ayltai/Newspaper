@@ -128,7 +128,7 @@ public class ItemView extends ObservableView implements ItemPresenter.View {
 
     @Nullable
     @Override
-    public Flowable<Irrelevant> videoClick() {
+    public Flowable<Irrelevant> videoClicks() {
         return null;
     }
 

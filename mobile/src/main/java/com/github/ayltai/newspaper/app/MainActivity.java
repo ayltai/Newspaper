@@ -74,7 +74,7 @@ public final class MainActivity extends AppCompatActivity {
 
         this.setTheme(this.userConfig.getTheme() == Constants.THEME_LIGHT ? R.style.AppTheme_Light : R.style.AppTheme_Dark);
 
-        this.initInstabug();
+        if (!TestUtils.isRunningUnitTest()) this.initInstabug();
 
         Single.<Realm>create(emitter -> emitter.onSuccess(ComponentFactory.getInstance()
             .getDataComponent(this)

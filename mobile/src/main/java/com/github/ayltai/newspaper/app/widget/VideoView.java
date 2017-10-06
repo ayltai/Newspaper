@@ -101,7 +101,7 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
 
     @Nullable
     @Override
-    public Flowable<Irrelevant> videoClick() {
+    public Flowable<Irrelevant> videoClicks() {
         return this.videoClicks;
     }
 
