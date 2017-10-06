@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,9 +48,9 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
 
     //region Components
 
-    private final View thumbnailContainer;
-    private final View playAction;
-    private final View thumbnail;
+    private final View         thumbnailContainer;
+    private final View         playAction;
+    private final BigImageView thumbnail;
 
     private View                fullScreenAction;
     private SimpleExoPlayerView playerView;
@@ -57,8 +58,12 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
 
     //endregion
 
+    //region Configurations
+
     @Nullable private AppConfig  appConfig;
     @Nullable private UserConfig userConfig;
+
+    //endregion
 
     private Video video;
 
@@ -76,12 +81,10 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
         this.thumbnailContainer = LayoutInflater.from(context).inflate(R.layout.widget_video_thumbnail, this, false);
         this.playAction         = this.thumbnailContainer.findViewById(R.id.play);
 
-        final BigImageView imageView = this.thumbnailContainer.findViewById(R.id.image);
-        imageView.getSSIV().setMaxScale(Constants.IMAGE_ZOOM_MAX);
-        imageView.getSSIV().setPanEnabled(false);
-        imageView.getSSIV().setZoomEnabled(false);
-
-        this.thumbnail = imageView;
+        this.thumbnail = this.thumbnailContainer.findViewById(R.id.image);
+        this.thumbnail.getSSIV().setMaxScale(Constants.IMAGE_ZOOM_MAX);
+        this.thumbnail.getSSIV().setPanEnabled(false);
+        this.thumbnail.getSSIV().setZoomEnabled(false);
 
         this.addView(this.thumbnailContainer);
     }
@@ -90,7 +93,10 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
     public void setVideo(@Nullable final Video video) {
         this.video = video;
 
-        if (video != null) this.setUpPlayer();
+        if (video != null) {
+            this.setUpThumbnail();
+            this.setUpPlayer();
+        }
     }
 
     @Nullable
@@ -100,6 +106,11 @@ public final class VideoView extends ItemView implements VideoPresenter.View {
     }
 
     //region Methods
+
+    @Override
+    public void setUpThumbnail() {
+        if (!TextUtils.isEmpty(this.video.getThumbnailUrl())) this.thumbnail.showImage(Uri.parse(this.video.getThumbnailUrl()));
+    }
 
     @Override
     public void setUpPlayer() {
