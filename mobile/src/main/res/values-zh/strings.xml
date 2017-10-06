@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">報紙</string>
     <string name="app_version">版本 %s</string>
-    <string name="error_no_connection">沒有網絡連接</string>
     <string name="empty_bookmark_title">你還沒有任何喜歡的新聞</string>
     <string name="empty_bookmark_description">點擊書籤圖標可收集新聞到此處</string>
     <string name="view_via">查看…</string>
@@ -12,7 +11,7 @@
     <!-- About -->
     <string name="about_visit">訪問網站</string>
     <string name="about_rate">評價這個軟件</string>
-    <string name="about_report">報告問題</string>
+    <string name="about_report">聯絡我們</string>
 
     <!-- Time nameings -->
     <string name="time_ago_now">現在</string>
@@ -50,8 +49,20 @@
     <string name="pref_categories">分類</string>
 
     <!-- Content descriptions -->
-    <string name="exo_play">Play</string>
-    <string name="exo_pause">Pause</string>
-    <string name="exo_fullscreen">Enter fullscreen</string>
-    <string name="exo_fullscreen_exit">Exit fullscreen</string>
+    <string name="exo_play">播放</string>
+    <string name="exo_pause">暫停</string>
+    <string name="exo_fullscreen">進入全屏模式</string>
+    <string name="exo_fullscreen_exit">退出全屏模式</string>
+
+    <!-- Instabug -->
+    <string name="instabug_report_header">這是關於什麼的？</string>
+    <string name="instabug_bug_report_header">報告問題</string>
+    <string name="instabug_feedback_report_header">告訴我們一些東西</string>
+    <string name="instabug_report_bug">報告問題</string>
+    <string name="instabug_report_feedback">告訴我們一些東西</string>
+    <string name="instabug_bug_report_hint">重現錯誤的步驟</string>
+    <string name="instabug_feedback_report_hint">你的意見對我們很重要</string>
+    <string name="instabug_email_hint">你的電子郵件</string>
+    <string name="instabug_screenshot">附上屏幕截圖</string>
+    <string name="instabug_gallery">附上圖庫圖像</string>
 </resources>

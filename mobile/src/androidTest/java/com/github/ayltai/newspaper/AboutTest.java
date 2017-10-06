@@ -57,23 +57,4 @@ public final class AboutTest extends BaseTest {
         Intents.intended(intent);
         Intents.release();
     }
-
-    @Test
-    public void reportIssue() {
-        Espresso.onView(ViewMatchers.withText("About"))
-            .perform(ViewActions.click());
-
-        ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".reportIssue", this.testRule.getActivity());
-
-        final Matcher<Intent> intent = Matchers.allOf(IntentMatchers.hasAction(Intent.ACTION_VIEW), IntentMatchers.hasData("https://github.com/ayltai/Newspaper/issues"));
-
-        Intents.init();
-        Intents.intending(intent).respondWith(new Instrumentation.ActivityResult(0, null));
-
-        Espresso.onView(ViewMatchers.withId(R.id.report_container))
-            .perform(ViewActions.click());
-
-        Intents.intended(intent);
-        Intents.release();
-    }
 }

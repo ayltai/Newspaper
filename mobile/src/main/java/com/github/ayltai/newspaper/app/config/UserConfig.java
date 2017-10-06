@@ -35,7 +35,7 @@ public final class UserConfig {
     private final RemoteConfig remoteConfig;
 
     UserConfig(@NonNull final Context context, @NonNull final RemoteConfig remoteConfig) {
-        this.context      = context;
+        this.context      = context.getApplicationContext();
         this.remoteConfig = remoteConfig;
     }
 
