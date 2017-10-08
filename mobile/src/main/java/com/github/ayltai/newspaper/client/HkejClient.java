@@ -64,7 +64,7 @@ final class HkejClient extends RssClient {
                 error -> {
                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
-                    emitter.onError(error);
+                    emitter.onSuccess(item);
                 }
             ));
     }
