@@ -317,7 +317,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     }
 
     classDirectories = fileTree(
-        dir: 'build/intermediates/classes/test/debug',
+        dir: 'build/intermediates/classes/debug',
         excludes: [
             '**/R.class',
             '**/R$*.class',
@@ -326,7 +326,11 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
             '**/BuildConfig.*',
             '**/Manifest*.*',
             '**/*$Lambda$*.*',
-            '**/*$RealmProxy.*'
+            '**/*RealmProxy.*',
+            '**/*ColumnInfo.*',
+            '**/*RealmModule*.*',
+            '**/AutoValue_*.*',
+            '**/Dagger*.*'
         ]
     )
 
@@ -334,7 +338,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     executionData     = files('build/jacoco/testDebugUnitTest.exec')
 
     doFirst {
-        files('build/intermediates/classes/test/debug').getFiles().each { file ->
+        files('build/intermediates/classes/debug').getFiles().each { file ->
             if (file.name.contains('$$')) {
                 file.renameTo(file.path.replace('$$', '$'))
             }
