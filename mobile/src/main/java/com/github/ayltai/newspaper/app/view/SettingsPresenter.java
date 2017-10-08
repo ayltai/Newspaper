@@ -6,6 +6,8 @@ import java.util.List;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.github.ayltai.newspaper.Constants;
@@ -48,42 +50,44 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
         super.onViewAttached(view, isFirstTimeAttachment);
 
         this.manageDisposable(view.optionsChanges().subscribe(
-            index -> {
-                final EventLogger eventLogger = ComponentFactory.getInstance()
-                    .getAnalyticsComponent(view.getContext())
-                    .eventLogger();
+            index -> this.load()
+                .compose(RxUtils.applySingleBackgroundToMainSchedulers())
+                .subscribe(
+                    settings -> {
+                        final Activity activity = view.getActivity();
 
-                final Activity activity = view.getActivity();
+                        if (activity != null) {
+                            final UserConfig userConfig = ComponentFactory.getInstance()
+                                .getConfigComponent(activity)
+                                .userConfig();
 
-                if (activity != null) {
-                    final UserConfig userConfig = ComponentFactory.getInstance()
-                        .getConfigComponent(activity)
-                        .userConfig();
+                            final EventLogger eventLogger = ComponentFactory.getInstance()
+                                .getAnalyticsComponent(view.getContext())
+                                .eventLogger();
 
-                    final List<Boolean> settings = this.getSettings(userConfig);
+                            switch (index) {
+                                case SettingsPresenter.INDEX_LAYOUT:
+                                    this.updateViewStyle(settings, userConfig, eventLogger);
+                                    break;
 
-                    switch (index) {
-                        case SettingsPresenter.INDEX_LAYOUT:
-                            this.updateViewStyle(settings, userConfig, eventLogger);
-                            break;
+                                case SettingsPresenter.INDEX_THEME:
+                                    this.updateTheme(settings, userConfig, eventLogger);
+                                    break;
 
-                        case SettingsPresenter.INDEX_THEME:
-                            this.updateTheme(settings, userConfig, eventLogger);
-                            break;
+                                case SettingsPresenter.INDEX_AUTO_PLAY:
+                                    this.updateAutoPlay(settings, userConfig, eventLogger);
+                                    break;
 
-                        case SettingsPresenter.INDEX_AUTO_PLAY:
-                            this.updateAutoPlay(settings, userConfig, eventLogger);
-                            break;
+                                case SettingsPresenter.INDEX_PANORAMA:
+                                    this.updatePanorama(settings, userConfig, eventLogger);
+                                    break;
 
-                        case SettingsPresenter.INDEX_PANORAMA:
-                            this.updatePanorama(settings, userConfig, eventLogger);
-                            break;
-
-                        default:
-                            break;
+                                default:
+                                    break;
+                            }
+                        }
                     }
-                }
-            },
+                ),
             error -> {
                 if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
             }
@@ -107,44 +111,46 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
     }
 
     @NonNull
-    private List<Boolean> getSettings(@NonNull final UserConfig userConfig) {
-        if (this.getView() == null) return Collections.emptyList();
-
+    private List<Boolean> getSettings(@Nullable final UserConfig userConfig) {
         final List<Boolean> settings = new ArrayList<>();
 
-        settings.add(userConfig.getViewStyle() == Constants.VIEW_STYLE_DEFAULT);
-        settings.add(userConfig.getTheme() != Constants.THEME_DEFAULT);
-        settings.add(userConfig.isAutoPlayEnabled());
-        settings.add(userConfig.isPanoramaEnabled());
+        settings.add(userConfig == null || userConfig.getViewStyle() == Constants.VIEW_STYLE_DEFAULT);
+        settings.add(userConfig != null && userConfig.getTheme() != Constants.THEME_DEFAULT);
+        settings.add(userConfig != null && userConfig.isAutoPlayEnabled());
+        settings.add(userConfig != null && userConfig.isPanoramaEnabled());
 
         return settings;
     }
 
-    private void updateViewStyle(@NonNull final List<Boolean> settings, @NonNull final UserConfig userConfig, @NonNull final EventLogger eventLogger) {
-        final boolean isCozyLayout = settings.get(SettingsPresenter.INDEX_LAYOUT);
-        userConfig.setViewStyle(isCozyLayout ? Constants.VIEW_STYLE_COMPACT : Constants.VIEW_STYLE_COZY);
+    @VisibleForTesting
+    protected void updateViewStyle(@Nullable final List<Boolean> settings, @Nullable final UserConfig userConfig, @Nullable final EventLogger eventLogger) {
+        final boolean isCozyLayout = settings == null || settings.isEmpty() ? true : settings.get(SettingsPresenter.INDEX_LAYOUT);
+        if (userConfig != null) userConfig.setViewStyle(isCozyLayout ? Constants.VIEW_STYLE_COMPACT : Constants.VIEW_STYLE_COZY);
 
-        eventLogger.logEvent(new ClickEvent().setElementName("Settings - " + (isCozyLayout ? "Compact" : "Cozy") + " Layout"));
+        if (eventLogger != null) eventLogger.logEvent(new ClickEvent().setElementName("Settings - " + (isCozyLayout ? "Compact" : "Cozy") + " Layout"));
     }
 
-    private void updateTheme(@NonNull final List<Boolean> settings, @NonNull final UserConfig userConfig, @NonNull final EventLogger eventLogger) {
-        final boolean isDarkTheme = settings.get(SettingsPresenter.INDEX_THEME);
-        userConfig.setTheme(isDarkTheme ? Constants.THEME_LIGHT : Constants.THEME_DARK);
+    @VisibleForTesting
+    protected void updateTheme(@Nullable final List<Boolean> settings, @Nullable final UserConfig userConfig, @Nullable final EventLogger eventLogger) {
+        final boolean isDarkTheme = settings == null || settings.isEmpty() ? false : settings.get(SettingsPresenter.INDEX_THEME);
+        if (userConfig != null) userConfig.setTheme(isDarkTheme ? Constants.THEME_LIGHT : Constants.THEME_DARK);
 
-        eventLogger.logEvent(new ClickEvent().setElementName("Settings - " + (isDarkTheme ? "Light" : "Dark") + " Theme"));
+        if (eventLogger != null) eventLogger.logEvent(new ClickEvent().setElementName("Settings - " + (isDarkTheme ? "Light" : "Dark") + " Theme"));
     }
 
-    private void updateAutoPlay(@NonNull final List<Boolean> settings, @NonNull final UserConfig userConfig, @NonNull final EventLogger eventLogger) {
-        final boolean isAutoPlayEnabled = settings.get(SettingsPresenter.INDEX_AUTO_PLAY);
-        userConfig.setAutoPlayEnabled(!isAutoPlayEnabled);
+    @VisibleForTesting
+    protected void updateAutoPlay(@Nullable final List<Boolean> settings, @Nullable final UserConfig userConfig, @Nullable final EventLogger eventLogger) {
+        final boolean isAutoPlayEnabled = settings == null || settings.isEmpty() ? false : settings.get(SettingsPresenter.INDEX_AUTO_PLAY);
+        if (userConfig != null) userConfig.setAutoPlayEnabled(!isAutoPlayEnabled);
 
-        eventLogger.logEvent(new ClickEvent().setElementName("Settings - " + (isAutoPlayEnabled ? "Auto Play Disabled" : "Auto Play Enabled")));
+        if (eventLogger != null) eventLogger.logEvent(new ClickEvent().setElementName("Settings - " + (isAutoPlayEnabled ? "Auto Play Disabled" : "Auto Play Enabled")));
     }
 
-    private void updatePanorama(@NonNull final List<Boolean> settings, @NonNull final UserConfig userConfig, @NonNull final EventLogger eventLogger) {
-        final boolean isPanoramaEnabled = settings.get(SettingsPresenter.INDEX_PANORAMA);
-        userConfig.setPanoramaEnabled(!isPanoramaEnabled);
+    @VisibleForTesting
+    protected void updatePanorama(@Nullable final List<Boolean> settings, @Nullable final UserConfig userConfig, @Nullable final EventLogger eventLogger) {
+        final boolean isPanoramaEnabled = settings == null || settings.isEmpty() ? false : settings.get(SettingsPresenter.INDEX_PANORAMA);
+        if (userConfig != null) userConfig.setPanoramaEnabled(!isPanoramaEnabled);
 
-        eventLogger.logEvent(new ClickEvent().setElementName("Settings - " + (isPanoramaEnabled ? "Panorama Disabled" : "Panorama Enabled")));
+        if (eventLogger != null) eventLogger.logEvent(new ClickEvent().setElementName("Settings - " + (isPanoramaEnabled ? "Panorama Disabled" : "Panorama Enabled")));
     }
 }
