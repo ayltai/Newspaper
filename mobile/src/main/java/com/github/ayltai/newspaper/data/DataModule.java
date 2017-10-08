@@ -31,7 +31,11 @@ public final class DataModule {
     Realm provideRealm() {
         if (!DataModule.isInitialized) {
             Realm.init(this.context);
-            Realm.setDefaultConfiguration(new RealmConfiguration.Builder().schemaVersion(DataModule.SCHEMA_VERSION).build());
+            Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
+                .schemaVersion(DataModule.SCHEMA_VERSION)
+                .deleteRealmIfMigrationNeeded()
+                .compactOnLaunch()
+                .build());
 
             DataModule.isInitialized = true;
         }
