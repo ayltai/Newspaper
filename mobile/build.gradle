@@ -330,7 +330,11 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
             '**/*ColumnInfo.*',
             '**/*RealmModule*.*',
             '**/AutoValue_*.*',
-            '**/Dagger*.*'
+            '**/Dagger*.*',
+            '**/*Module_Provide*Factory.*',
+            '**/*_Factory.*',
+            '**/*_MembersInjector.*',
+            '**/*_LifecycleAdapter.*'
         ]
     )
 
