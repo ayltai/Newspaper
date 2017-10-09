@@ -64,7 +64,6 @@ public abstract class DataTest extends UnitTest {
         final RealmResults<NewsItem> results = PowerMockito.mock(RealmResults.class);
         PowerMockito.when(query.findAll()).thenReturn(results);
         PowerMockito.when(query.findAllSorted(Mockito.anyString(), Mockito.any(Sort.class))).thenReturn(results);
-        PowerMockito.when(results.isEmpty()).thenReturn(true);
         PowerMockito.when(results.iterator()).thenReturn(Collections.emptyList().iterator());
 
         final NewsItem item = new NewsItem();

@@ -83,6 +83,8 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
         public Flowable<List<NewsItem>> build() {
             final ArrayList<String> categories = this.args.getStringArrayList(ItemListLoader.KEY_CATEGORIES);
 
+            if (TestUtils.isRunningUnitTest()) return Flowable.just(Collections.emptyList());
+
             return Flowable.create(emitter -> this.activity
                 .getSupportLoaderManager()
                 .restartLoader(ItemListLoader.ID + (categories == null ? 0 : categories.toString().hashCode()), this.args, new LoaderManager.LoaderCallbacks<List<NewsItem>>() {
