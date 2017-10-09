@@ -1,11 +1,11 @@
-package com.github.ayltai.newspaper;
+package com.github.ayltai.newspaper.net;
 
 import android.support.annotation.CallSuper;
 
 import org.junit.Before;
 import org.mockito.Mockito;
 
-import com.github.ayltai.newspaper.net.ApiService;
+import com.github.ayltai.newspaper.UnitTest;
 
 import okhttp3.OkHttpClient;
 

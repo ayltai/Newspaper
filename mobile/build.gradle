@@ -89,7 +89,7 @@ android {
 
     dexOptions {
         preDexLibraries !project.hasProperty('ciBuild')
-        javaMaxHeapSize '1280m'
+        javaMaxHeapSize '1024m'
     }
 
     compileOptions {
@@ -123,7 +123,7 @@ ext {
     autoValueGsonVersion  = '0.5.0'
     leakCanaryVersion     = '1.5.4'
     robolectricVersion    = '3.4.2'
-    powerMockVersion      = '1.7.3'
+    powerMockVersion      = '2.0.0-beta.5'
     espressoVersion       = '3.0.1'
 }
 
@@ -237,7 +237,7 @@ dependencies {
     compile 'com.flurry.android:analytics:7.2.3@aar'
 
     // Instabug
-    compile 'com.instabug.library:instabug:4.3.0'
+    compile 'com.instabug.library:instabug:4.3.1'
 
     // Debugging
     debugCompile   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"

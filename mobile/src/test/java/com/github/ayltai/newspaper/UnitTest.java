@@ -27,6 +27,7 @@ import io.reactivex.schedulers.Schedulers;
     }
 )
 @PowerMockIgnore({
+    "javax.net.ssl.*",
     "org.mockito.*",
     "org.robolectric.*",
     "android.*"
