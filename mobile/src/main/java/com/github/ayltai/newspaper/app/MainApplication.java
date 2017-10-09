@@ -77,6 +77,8 @@ public final class MainApplication extends BaseApplication {
             .setInvocationEvent(InstabugInvocationEvent.NONE)
             .build();
 
+        if (TestUtils.isRunningUnitTest()) Instabug.disable();
+
         FLog.setMinimumLoggingLevel(TestUtils.isLoggable() ? FLog.INFO : FLog.ERROR);
 
         ImagePipelineConfig.getDefaultImageRequestConfig()

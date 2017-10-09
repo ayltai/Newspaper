@@ -32,8 +32,7 @@ public abstract class RssClient extends Client {
     public final Single<List<NewsItem>> getItems(@NonNull final String url) {
         final String category = this.getCategoryName(url);
 
-        return Single.create(emitter -> this.apiService
-            .getFeed(url)
+        return Single.create(emitter -> this.apiService.getFeed(url)
             .compose(RxUtils.applyObservableBackgroundSchedulers())
             .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
             .map(feed -> this.filter(url, feed))
@@ -51,7 +50,7 @@ public abstract class RssClient extends Client {
                 error -> {
                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
 
-                    emitter.onError(error);
+                    emitter.onSuccess(Collections.emptyList());
                 }
             ));
     }

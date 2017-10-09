@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.client;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -97,7 +98,7 @@ final class AppleDailyClient extends Client {
                 error -> {
                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
 
-                    emitter.onError(error);
+                    emitter.onSuccess(Collections.emptyList());
                 }
             ));
     }

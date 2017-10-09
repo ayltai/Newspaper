@@ -3,6 +3,8 @@ package com.github.ayltai.newspaper.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.github.ayltai.newspaper.util.TestUtils;
+
 import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
@@ -30,8 +32,15 @@ public final class DataModule {
     @Provides
     Realm provideRealm() {
         if (!DataModule.isInitialized) {
-            Realm.init(this.context);
-            Realm.setDefaultConfiguration(new RealmConfiguration.Builder().schemaVersion(DataModule.SCHEMA_VERSION).build());
+            if (!TestUtils.isRunningUnitTest()) {
+                Realm.init(this.context);
+
+                Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
+                    .schemaVersion(DataModule.SCHEMA_VERSION)
+                    .deleteRealmIfMigrationNeeded()
+                    .compactOnLaunch()
+                    .build());
+            }
 
             DataModule.isInitialized = true;
         }

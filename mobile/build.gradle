@@ -23,7 +23,7 @@ android {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
         targetSdkVersion 26
-        versionCode      18
+        versionCode      19
         versionName      '3.1.' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
@@ -123,7 +123,7 @@ ext {
     autoValueGsonVersion  = '0.5.0'
     leakCanaryVersion     = '1.5.4'
     robolectricVersion    = '3.4.2'
-    powerMockVersion      = '1.7.3'
+    powerMockVersion      = '2.0.0-beta.5'
     espressoVersion       = '3.0.1'
 }
 
@@ -172,10 +172,6 @@ dependencies {
     compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxBindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxBindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxBindingVersion"
-
-    // Dagger 2
-    compile             "com.google.dagger:dagger:${daggerVersion}"
-    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
 
     // Dependency injection
     compile             "com.google.dagger:dagger:$daggerVersion"
@@ -241,7 +237,7 @@ dependencies {
     compile 'com.flurry.android:analytics:7.2.3@aar'
 
     // Instabug
-    compile 'com.instabug.library:instabug:4.3.0'
+    compile 'com.instabug.library:instabug:4.3.1'
 
     // Debugging
     debugCompile   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
@@ -272,10 +268,6 @@ dependencies {
     androidTestCompile ("com.android.support.test.espresso:espresso-intents:$espressoVersion") {
         exclude group : 'com.android.support'
     }
-
-    // Android Wear
-    wearApp project(':wear')
-    compile "com.google.android.gms:play-services-wearable:$firebaseSdkVersion"
 
     // Code coverage by Codacy
     codacy 'com.github.codacy:codacy-coverage-reporter:1.0.13'
@@ -325,7 +317,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     }
 
     classDirectories = fileTree(
-        dir: 'build/intermediates/classes/test/debug',
+        dir: 'build/intermediates/classes/debug',
         excludes: [
             '**/R.class',
             '**/R$*.class',
@@ -334,7 +326,15 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
             '**/BuildConfig.*',
             '**/Manifest*.*',
             '**/*$Lambda$*.*',
-            '**/*$RealmProxy.*'
+            '**/*RealmProxy.*',
+            '**/*ColumnInfo.*',
+            '**/*RealmModule*.*',
+            '**/AutoValue_*.*',
+            '**/Dagger*.*',
+            '**/*Module_Provide*Factory.*',
+            '**/*_Factory.*',
+            '**/*_MembersInjector.*',
+            '**/*_LifecycleAdapter.*'
         ]
     )
 
@@ -342,7 +342,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     executionData     = files('build/jacoco/testDebugUnitTest.exec')
 
     doFirst {
-        files('build/intermediates/classes/test/debug').getFiles().each { file ->
+        files('build/intermediates/classes/debug').getFiles().each { file ->
             if (file.name.contains('$$')) {
                 file.renameTo(file.path.replace('$$', '$'))
             }

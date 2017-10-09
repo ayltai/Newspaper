@@ -3,7 +3,7 @@ version: 2
 references:
 
   cache_key: &cache_key
-    key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum  "mobile/build.gradle" }}-{{ checksum "wear/build.gradle" }}
+    key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum "mobile/build.gradle" }}
   restore_cache: &restore_cache
     restore_cache:
       <<: *cache_key
@@ -73,7 +73,7 @@ references:
   decode_fabric_key: &decode_fabric_key
     run:
       name: Decode Fabric key
-      command: echo $FABRIC_KEY | base64 -di > mobile/fabric.properties && echo $FABRIC_KEY | base64 -di > wear/fabric.properties
+      command: echo $FABRIC_KEY | base64 -di > mobile/fabric.properties
 
 jobs:
 
