@@ -18,6 +18,7 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
 public abstract class RealmLoader<D> extends RxLoader<D> {
@@ -35,7 +36,7 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
 
     @NonNull
     protected Scheduler getScheduler() {
-        return DataManager.SCHEDULER;
+        return TestUtils.isRunningUnitTest() ? Schedulers.trampoline() : DataManager.SCHEDULER;
     }
 
     @Nullable

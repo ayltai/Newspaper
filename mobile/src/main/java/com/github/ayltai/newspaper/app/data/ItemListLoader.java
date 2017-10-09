@@ -15,11 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.github.ayltai.newspaper.Constants;
-import com.github.ayltai.newspaper.client.Client;
-import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
+import com.github.ayltai.newspaper.client.Client;
+import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.RealmLoader;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -82,6 +82,8 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
         @NonNull
         public Flowable<List<NewsItem>> build() {
             final ArrayList<String> categories = this.args.getStringArrayList(ItemListLoader.KEY_CATEGORIES);
+
+            if (TestUtils.isRunningUnitTest()) return Flowable.just(Collections.emptyList());
 
             return Flowable.create(emitter -> this.activity
                 .getSupportLoaderManager()

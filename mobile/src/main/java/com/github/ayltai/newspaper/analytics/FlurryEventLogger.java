@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 import android.support.annotation.NonNull;
 
 import com.flurry.android.FlurryAgent;
+import com.github.ayltai.newspaper.util.TestUtils;
 
 @Singleton
 final class FlurryEventLogger extends EventLogger {
@@ -40,7 +41,7 @@ final class FlurryEventLogger extends EventLogger {
     protected void logEvent(@NonNull final ViewEvent event) {
         this.logCustomEvent(event);
 
-        FlurryAgent.onPageView();
+        if (!TestUtils.isRunningTests()) FlurryAgent.onPageView();
     }
 
     @Override
@@ -48,6 +49,6 @@ final class FlurryEventLogger extends EventLogger {
         final Map<String, String> parameters = new HashMap<>(event.getAttributes().size());
         for (final Attribute attribute : event.getAttributes()) parameters.put(attribute.getName(), attribute.getValue());
 
-        FlurryAgent.logEvent(event.getName(), parameters);
+        if (!TestUtils.isRunningTests()) FlurryAgent.logEvent(event.getName(), parameters);
     }
 }

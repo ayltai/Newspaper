@@ -361,8 +361,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     @Nullable
     @Override
-    public Flowable<Irrelevant> videoClick() {
-        return this.videoView == null ? null : this.videoView.videoClick();
+    public Flowable<Irrelevant> videoClicks() {
+        return this.videoView == null ? null : this.videoView.videoClicks();
     }
 
     //endregion

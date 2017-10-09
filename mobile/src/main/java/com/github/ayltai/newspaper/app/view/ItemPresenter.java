@@ -22,6 +22,7 @@ import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.screen.DetailsScreen;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.binding.Binder;
 import com.github.ayltai.newspaper.view.binding.PresentationBinder;
@@ -86,7 +87,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         Flowable<Image> imageClicks();
 
         @Nullable
-        Flowable<Irrelevant> videoClick();
+        Flowable<Irrelevant> videoClicks();
     }
 
     private AppConfig appConfig;
@@ -124,7 +125,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
                 .logEvent(new ClickEvent()
                     .setElementName("Featured"));
 
-            Flow.get(this.getView().getContext()).set(DetailsScreen.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem()));
+            if (!TestUtils.isRunningUnitTest()) Flow.get(this.getView().getContext()).set(DetailsScreen.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem()));
         }
     }
 
@@ -236,7 +237,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         final Flowable<Image> imageClicks = view.imageClicks();
         if (imageClicks != null) this.manageDisposable(imageClicks.subscribe(this::onImageClick));
 
-        final Flowable<Irrelevant> videoClick = view.videoClick();
+        final Flowable<Irrelevant> videoClick = view.videoClicks();
         if (videoClick != null) this.manageDisposable(videoClick.subscribe(irrelevant -> this.onVideoClick()));
 
         this.bindModel(this.getModel());

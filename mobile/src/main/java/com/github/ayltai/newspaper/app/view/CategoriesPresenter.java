@@ -61,8 +61,7 @@ public class CategoriesPresenter extends OptionsPresenter<String, OptionsPresent
                     final List<String> categories = new ArrayList<>();
 
                     for (int i = 0; i < this.categories.size(); i++) {
-                        if (this.selectedCategories.get(i))
-                            categories.addAll(Category.fromDisplayName(this.categories.get(i)));
+                        if (this.selectedCategories.get(i)) categories.addAll(Category.fromDisplayName(this.categories.get(i)));
                     }
 
                     userConfig.setCategories(categories);

@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import org.robolectric.RuntimeEnvironment;
 import org.simpleframework.xml.core.Persister;
 
-import com.github.ayltai.newspaper.NetworkTest;
+import com.github.ayltai.newspaper.net.NetworkTest;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;

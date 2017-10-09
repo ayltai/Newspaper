@@ -110,15 +110,11 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
                 final List<NewsItem> items = ItemManager.create(ItemListAdapter.this.context)
                     .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
                     .flatMap(manager -> {
-                        if (this.isHistorical) {
-                            return manager.getHistoricalItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
+                        if (this.isHistorical) return manager.getHistoricalItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
                                 .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
-                        }
 
-                        if (this.isBookmarked) {
-                            return manager.getBookmarkedItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
+                        if (this.isBookmarked) return manager.getBookmarkedItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
                                 .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
-                        }
 
                         return manager.getItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
                             .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));

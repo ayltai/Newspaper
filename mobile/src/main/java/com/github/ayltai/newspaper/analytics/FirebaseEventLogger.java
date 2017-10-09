@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import com.github.ayltai.newspaper.util.TestUtils;
+
 @Singleton
 final class FirebaseEventLogger extends EventLogger {
     private final Context context;
@@ -18,7 +20,7 @@ final class FirebaseEventLogger extends EventLogger {
 
     @Override
     protected void logEvent(@NonNull final AppOpenEvent event) {
-        FirebaseAnalytics.getInstance(this.context).logEvent(FirebaseAnalytics.Event.APP_OPEN, new Bundle());
+        if (!TestUtils.isRunningTests()) FirebaseAnalytics.getInstance(this.context).logEvent(FirebaseAnalytics.Event.APP_OPEN, new Bundle());
     }
 
     @Override
@@ -36,7 +38,7 @@ final class FirebaseEventLogger extends EventLogger {
         final Attribute query      = event.getAttribute(SearchEvent.ATTRIBUTE_QUERY);
         final Attribute screenName = event.getAttribute(SearchEvent.ATTRIBUTE_SCREEN_NAME);
 
-        if (query != null && screenName != null) {
+        if (query != null && screenName != null && !TestUtils.isRunningTests()) {
             final Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, query.getValue());
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, screenName.getValue());
@@ -50,7 +52,7 @@ final class FirebaseEventLogger extends EventLogger {
         final Attribute source   = event.getAttribute(ShareEvent.ATTRIBUTE_SOURCE);
         final Attribute category = event.getAttribute(ShareEvent.ATTRIBUTE_CATEGORY);
 
-        if (source != null && category != null) {
+        if (source != null && category != null && !TestUtils.isRunningTests()) {
             final Bundle bundle = new Bundle();
             bundle.putString(source.getName(), source.getValue());
             bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, category.getValue());
@@ -65,7 +67,7 @@ final class FirebaseEventLogger extends EventLogger {
         final Attribute source     = event.getAttribute(ViewEvent.ATTRIBUTE_SOURCE);
         final Attribute category   = event.getAttribute(ViewEvent.ATTRIBUTE_CATEGORY);
 
-        if (screenName != null && source != null && category != null) {
+        if (screenName != null && source != null && category != null && !TestUtils.isRunningTests()) {
             final Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, screenName.getValue());
             bundle.putString(source.getName(), source.getValue());
@@ -80,6 +82,6 @@ final class FirebaseEventLogger extends EventLogger {
         final Bundle bundle = new Bundle();
         for (final Attribute attribute : event.getAttributes()) bundle.putString(attribute.getName(), attribute.getValue());
 
-        FirebaseAnalytics.getInstance(this.context).logEvent(event.getName(), bundle);
+        if (!TestUtils.isRunningTests()) FirebaseAnalytics.getInstance(this.context).logEvent(event.getName(), bundle);
     }
 }
