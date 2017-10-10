@@ -23,7 +23,8 @@ references:
     persist_to_workspace:
       root: *workspace
       paths:
-        - mobile/build
+        - mobile/build/outputs
+        - mobile/build/test-results
 
   android_config: &android_config
     working_directory: *workspace
