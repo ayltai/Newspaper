@@ -13,7 +13,7 @@ public class MainPresenter extends ScreenPresenter<MainPresenter.View> {
 
         void refresh();
 
-        void filter();
+        void settings();
 
         void clearAll();
 
@@ -24,7 +24,7 @@ public class MainPresenter extends ScreenPresenter<MainPresenter.View> {
         Flowable<Irrelevant> refreshActions();
 
         @NonNull
-        Flowable<Irrelevant> filterActions();
+        Flowable<Irrelevant> settingsActions();
 
         @NonNull
         Flowable<Irrelevant> clearAllActions();
@@ -36,7 +36,7 @@ public class MainPresenter extends ScreenPresenter<MainPresenter.View> {
 
         this.manageDisposable(view.upActions().subscribe(irrelevant -> view.up()));
         this.manageDisposable(view.refreshActions().subscribe(irrelevant -> view.refresh()));
-        this.manageDisposable(view.filterActions().subscribe(irrelevant -> view.filter()));
+        this.manageDisposable(view.settingsActions().subscribe(irrelevant -> view.settings()));
         this.manageDisposable(view.clearAllActions().subscribe(irrelevant -> view.clearAll()));
     }
 }

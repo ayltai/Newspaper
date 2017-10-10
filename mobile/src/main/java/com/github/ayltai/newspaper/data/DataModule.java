@@ -38,6 +38,7 @@ public final class DataModule {
                 Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
                     .schemaVersion(DataModule.SCHEMA_VERSION)
                     .deleteRealmIfMigrationNeeded()
+                    .compactOnLaunch()
                     .build());
             }
 

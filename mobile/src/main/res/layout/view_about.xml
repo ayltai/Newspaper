@@ -70,7 +70,7 @@
             android:id="@+id/report_container"
             style="@style/AboutContainer">
             <ImageView
-                app:srcCompat="@drawable/ic_bug_report_black_24dp"
+                app:srcCompat="@drawable/ic_feedback_black_24dp"
                 android:contentDescription="@string/about_report"
                 style="@style/AboutIcon" />
             <TextView

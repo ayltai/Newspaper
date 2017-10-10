@@ -50,7 +50,7 @@ public abstract class RssClient extends Client {
                 error -> {
                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
 
-                    emitter.onError(error);
+                    emitter.onSuccess(Collections.emptyList());
                 }
             ));
     }

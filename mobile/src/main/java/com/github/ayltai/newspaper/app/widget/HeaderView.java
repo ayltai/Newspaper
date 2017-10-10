@@ -60,7 +60,7 @@ public final class HeaderView extends ItemView {
             this.publishDate.setVisibility(View.GONE);
         } else {
             this.publishDate.setVisibility(View.VISIBLE);
-            this.publishDate.setText(DateUtils.getTimeAgo(this.getContext(), date.getTime()));
+            this.publishDate.setText(DateUtils.toApproximateTime(this.getContext(), date.getTime()));
         }
     }
 

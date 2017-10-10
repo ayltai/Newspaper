@@ -70,12 +70,12 @@
             app:fabSize="mini"
             app:backgroundTint="?attr/windowBackground" />
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/action_filter"
+            android:id="@+id/action_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fabMargin"
             android:visibility="invisible"
-            app:srcCompat="?attr/ic_filter_24dp"
+            app:srcCompat="?attr/ic_settings_24dp"
             app:fabSize="mini"
             app:backgroundTint="?attr/windowBackground" />
         <android.support.design.widget.FloatingActionButton
