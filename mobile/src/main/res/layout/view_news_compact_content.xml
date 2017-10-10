@@ -33,7 +33,6 @@
             <TextView
                 android:id="@+id/title"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/space16"
                 android:layout_marginStart="@dimen/space16"
                 android:layout_marginRight="@dimen/space16"
@@ -45,15 +44,11 @@
                 android:layout_toLeftOf="@+id/image"
                 android:layout_toStartOf="@+id/image"
                 android:layout_alignWithParentIfMissing="true"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textColor="?attr/textColor"
-                android:textSize="@dimen/textHeading3"
-                tools:text="Proin rutrum ipsum" />
+                tools:text="Proin rutrum ipsum"
+                style="@style/Title.Compact" />
             <TextView
                 android:id="@+id/description"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/space16"
                 android:layout_marginStart="@dimen/space16"
                 android:layout_marginRight="@dimen/space16"
@@ -65,11 +60,8 @@
                 android:layout_toStartOf="@+id/image"
                 android:layout_below="@+id/title"
                 android:layout_alignWithParentIfMissing="true"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:textColor="?attr/textColorHint"
-                android:textSize="@dimen/textNormal"
-                tools:text="Phasellus at aliquam dolor\nProin rutrum ipsum" />
+                tools:text="Phasellus at aliquam dolor\nProin rutrum ipsum"
+                style="@style/Description.Compact" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </FrameLayout>

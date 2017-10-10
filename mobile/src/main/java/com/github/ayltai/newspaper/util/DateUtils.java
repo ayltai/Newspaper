@@ -24,7 +24,7 @@ public final class DateUtils {
     @SuppressFBWarnings("ICAST_INT_CAST_TO_FLOAT_PASSED_TO_ROUND")
     @SuppressWarnings("checkstyle:magicnumber")
     @Nullable
-    public static String getTimeAgo(@NonNull final Context context, final long time) {
+    public static String toApproximateTime(@NonNull final Context context, final long time) {
         final long now = System.currentTimeMillis();
 
         if (time > now || time <= 0) return null;
