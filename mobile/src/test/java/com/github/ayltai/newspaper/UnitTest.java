@@ -27,7 +27,11 @@ import io.reactivex.schedulers.Schedulers;
     }
 )
 @PowerMockIgnore({
-    "javax.net.ssl.*",
+    "javax.*",
+    "com.davemorrissey.*",
+    "com.github.piasy.*",
+    "com.facebook.*",
+    "com.sun.*",
     "org.mockito.*",
     "org.robolectric.*",
     "android.*"

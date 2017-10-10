@@ -10,6 +10,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
+import android.support.annotation.VisibleForTesting;
 import android.support.customtabs.CustomTabsIntent;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -87,6 +88,11 @@ public final class AboutView extends ObservableView implements AboutPresenter.Vi
         this.appName.setText(appName);
     }
 
+    @VisibleForTesting
+    protected CharSequence getAppName() {
+        return this.appName.getText();
+    }
+
     @Override
     public void setAppIcon(@DrawableRes final int appIcon) {
         this.appIcon.setImageResource(appIcon);
@@ -101,6 +107,11 @@ public final class AboutView extends ObservableView implements AboutPresenter.Vi
 
             Animations.animateViewGroup(this.container);
         }
+    }
+
+    @VisibleForTesting
+    protected CharSequence getAppVersion() {
+        return this.appVersion.getText();
     }
 
     //endregion
