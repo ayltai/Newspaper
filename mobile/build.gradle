@@ -134,7 +134,7 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir : 'libs', include : [ '*.jar' ])
 
     // Multi-dex support
     debugCompile       "com.android.support:multidex:$multidexVersion"
@@ -255,7 +255,7 @@ dependencies {
     testCompile 'org.json:json:20170516'
 
     // Instrumented testing
-    androidTestCompile (name :'cloudtestingscreenshotter_lib', ext :'aar')
+    androidTestCompile (name : 'cloudtestingscreenshotter_lib', ext : 'aar')
     androidTestCompile ('com.android.support.test:runner:1.0.1') {
         exclude group : 'com.android.support'
     }
@@ -279,7 +279,7 @@ configurations.all {
     }
 }
 
-task customFindBugs(type: FindBugs) {
+task customFindBugs(type : FindBugs) {
     ignoreFailures = false
     effort         = "max"
     reportLevel    = "medium"
@@ -307,7 +307,7 @@ def coverageSourceDirs = [
     'src/debug/java'
 ]
 
-task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+task jacocoTestReport(type : JacocoReport, dependsOn : [ 'testDebugUnitTest', 'createDebugCoverageReport' ]) {
     group       = 'Reporting'
     description = 'Generate Jacoco coverage reports'
 
@@ -317,8 +317,8 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     }
 
     classDirectories = fileTree(
-        dir: 'build/intermediates/classes/debug',
-        excludes: [
+        dir      : 'build/intermediates/classes/debug',
+        excludes : [
             '**/R.class',
             '**/R$*.class',
             '**/*$ViewInjector*.*',
@@ -339,7 +339,10 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     )
 
     sourceDirectories = files(coverageSourceDirs)
-    executionData     = files('build/jacoco/testDebugUnitTest.exec')
+    executionData     = fileTree(
+        dir     : "$buildDir",
+        include : [ 'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec' ]
+    )
 
     doFirst {
         files('build/intermediates/classes/debug').getFiles().each { file ->
@@ -350,7 +353,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     }
 }
 
-task uploadCoverageToCodacy(type: JavaExec, dependsOn : jacocoTestReport) {
+task uploadCoverageToCodacy(type : JavaExec, dependsOn : jacocoTestReport) {
     main      = "com.codacy.CodacyCoverageReporter"
     classpath = configurations.codacy
 

@@ -135,10 +135,8 @@ jobs:
       - *decode_gservices_key
       - run:
           name: Run unit tests
-          command: ./gradlew -PciBuild=true :mobile:testDebugUnitTest :mobile:jacocoTestReport
-      - run:
-          name: Upload unit tests results to CodeCov
-          command: bash <(curl -s https://codecov.io/bash)
+          command: ./gradlew -PciBuild=true :mobile:testDebugUnitTest
+      - *persist_to_workspace
       - store_artifacts:
           path: mobile/build/reports/
           destination: /reports/
@@ -176,6 +174,22 @@ jobs:
           path: firebase/
           destination: /firebase/
 
+  report_coverage:
+    <<: *android_config
+    steps:
+      - checkout
+      - *restore_cache
+      - *attach_workspace
+      - run:
+          name: Generate JaCoCo report
+          command: ./gradlew -PciBuild=true :mobile:jacocoTestReport
+      - run:
+          name: Upload unit tests results to CodeCov
+          command: bash <(curl -s https://codecov.io/bash)
+      - store_artifacts:
+          path: mobile/build/reports/
+          destination: /reports/
+
   deploy:
     <<: *android_config
     steps:
@@ -198,6 +212,10 @@ workflows:
       - test_instrumented:
           requires:
             - build_debug
+      - report_coverage
+          requires:
+            - test_unit
+            - test_instrumented
       - deploy:
           filters:
             branches:
