@@ -6,7 +6,7 @@ import io.reactivex.Flowable;
 
 public class PagerNewsPresenter extends NewsPresenter {
     public interface View extends NewsPresenter.View {
-        void filter();
+        void settings();
 
         @NonNull
         Flowable<Integer> pageSelections();

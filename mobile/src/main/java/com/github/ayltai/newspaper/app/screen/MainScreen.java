@@ -302,7 +302,7 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
 
     @Override
     public void settings() {
-        if (this.newsView instanceof PagerNewsView) ((PagerNewsView)this.newsView).filter();
+        if (this.newsView instanceof PagerNewsView) ((PagerNewsView)this.newsView).settings();
 
         ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getContext())
