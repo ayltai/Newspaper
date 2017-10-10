@@ -34,7 +34,7 @@ references:
     persist_to_workspace:
       root: *workspace
       paths:
-        - firebase/artifacts
+        - firebase
 
   android_config: &android_config
     working_directory: *workspace
