@@ -27,6 +27,14 @@ references:
         - mobile/build/outputs/apk
         - mobile/build/outputs/code-coverage
         - mobile/build/test-results
+  attach_firebase: &attach_firebase
+    attach_workspace:
+      at: *workspace
+  persist_firebase: &persist_firebase
+    persist_to_workspace:
+      root: *workspace
+      paths:
+        - firebase
 
   android_config: &android_config
     working_directory: *workspace
@@ -163,9 +171,9 @@ jobs:
           name: Run instrumented test on Firebase Test Lab
           command: |
             if [ "${CIRCLE_BRANCH}" = "master" ]; then
-              gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=sailfish,version=26,locale=en_US,orientation=portrait,environment-variables=coverage=true,coverageFile=/sdcard/coverage.ec,directories-to-pull=/sdcard --timeout 10m
+              gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=sailfish,version=26,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 10m
             else
-              gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=Nexus5X,version=26,locale=en_US,orientation=portrait,environment-variables=coverage=true,coverageFile=/sdcard/coverage.ec,directories-to-pull=/sdcard --timeout 10m
+              gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=Nexus5X,version=26,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 10m
             fi
       - run:
           name: Create directory to store test results
@@ -173,6 +181,7 @@ jobs:
       - run:
           name: Download instrumented test results from Firebase Test Lab
           command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-3udbiqpdyp0d0-miwcp7d69v80m | tail -1`*" /root/workspace/firebase/
+      - *persist_firebase
       - store_artifacts:
           path: firebase/
           destination: /firebase/
@@ -183,6 +192,10 @@ jobs:
       - checkout
       - *restore_cache
       - *attach_workspace
+      - *attach_firebase
+      - run:
+          name: Move Firebase coverage report
+          command: cp /root/workspace/firebase/* /root/workspace/mobile/build/outputs
       - run:
           name: Generate JaCoCo report
           command: ./gradlew -PciBuild=true :mobile:jacocoTestReport

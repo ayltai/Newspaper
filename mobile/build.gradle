@@ -307,9 +307,9 @@ def coverageSourceDirs = [
     'src/debug/java'
 ]
 
-task jacocoTestReport(type : JacocoReport, dependsOn : [ 'testDebugUnitTest', 'createDebugCoverageReport' ]) {
+task jacocoTestReport(type : JacocoReport, dependsOn : 'testDebugUnitTest') {
     group       = 'Reporting'
-    description = 'Generate Jacoco coverage reports'
+    description = 'Generate JaCoCo coverage reports'
 
     reports {
         xml.enabled  = true
