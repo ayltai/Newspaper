@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper;
 
+import java.io.File;
+
 import android.support.annotation.CallSuper;
 import android.support.test.rule.ActivityTestRule;
 
@@ -20,6 +22,9 @@ public class BaseTest {
     @CallSuper
     @Before
     public void setUp() {
+        final File file = new File("/sdcard/tmp/code-coverage/connected");
+        if (!file.exists()) file.mkdirs();
+
         BaseTest.sleep(BaseTest.DURATION_SHORT);
     }
 
