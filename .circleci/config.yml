@@ -186,11 +186,16 @@ jobs:
     steps:
       - checkout
       - *restore_cache
+      - run:
+          name: Download dependencies
+          command: ./gradlew androidDependencies
       - *attach_workspace
       - *attach_firebase
       - run:
           name: Move Firebase coverage report
           command: mkdir -p mobile/build/outputs/code-coverage/connected && cp firebase/Nexus5X-26-en_US-portrait/artifacts/coverage.ec mobile/build/outputs/code-coverage/connected/coverage.ec
+      - *export_gservices_key
+      - *decode_gservices_key
       - run:
           name: Generate JaCoCo report
           command: ./gradlew -PciBuild=true :mobile:jacocoTestReport
