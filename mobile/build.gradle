@@ -89,7 +89,7 @@ android {
 
     dexOptions {
         preDexLibraries !project.hasProperty('ciBuild')
-        javaMaxHeapSize '1536m'
+        javaMaxHeapSize '1024m'
     }
 
     compileOptions {
