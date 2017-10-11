@@ -3,8 +3,15 @@ package com.github.ayltai.newspaper;
 import java.io.File;
 
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.support.test.rule.ActivityTestRule;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -39,5 +46,21 @@ public class BaseTest {
         } catch (final InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @NonNull
+    protected static Matcher<View> childAtPosition(@NonNull final Matcher<View> parentMatcher, final int position) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(@NonNull final Description description) {
+                parentMatcher.describeTo(description.appendText("Child at position " + position + " in parent "));
+            }
+
+            @Override
+            public boolean matchesSafely(@NonNull final View view) {
+                final ViewParent parent = view.getParent();
+                return parent instanceof ViewGroup && parentMatcher.matches(parent) && view.equals(((ViewGroup)parent).getChildAt(position));
+            }
+        };
     }
 }

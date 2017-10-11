@@ -40,6 +40,7 @@ import com.github.ayltai.newspaper.app.widget.PagerNewsView;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.widget.Screen;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -181,13 +182,13 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
                 }
             }
 
+            if (this.isMoreActionsShown) this.hideMoreActions();
+
             this.upAction.setVisibility(View.INVISIBLE);
             this.refreshAction.setVisibility(View.INVISIBLE);
             this.settingsAction.setVisibility(tabId == R.id.action_news ? View.INVISIBLE : View.GONE);
             this.clearAllAction.setVisibility(tabId == R.id.action_news ? View.GONE : View.INVISIBLE);
             this.moreAction.setVisibility(View.VISIBLE);
-
-            if (this.isMoreActionsShown) this.hideMoreActions();
 
             this.toolbar.getMenu().findItem(R.id.action_search).setVisible(true);
 
@@ -344,14 +345,23 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
         this.bottomBar.selectTabAtPosition(0);
     }
 
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private void showMoreActions() {
         this.isMoreActionsShown = true;
 
         this.moreAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_clockwise));
-        this.upAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
-        this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
-        if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
-        if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+
+        if (TestUtils.isRunningInstrumentedTest() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled()) {
+            this.upAction.setVisibility(View.VISIBLE);
+            this.refreshAction.setVisibility(View.VISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setVisibility(View.VISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setVisibility(View.VISIBLE);
+        } else {
+            this.upAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+            this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+        }
 
         this.upAction.setClickable(true);
         this.refreshAction.setClickable(true);
@@ -359,27 +369,28 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
         if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setClickable(true);
     }
 
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private void hideMoreActions() {
         this.isMoreActionsShown = false;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled()) {
-            this.moreAction.setVisibility(View.INVISIBLE);
+        this.moreAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.rotate_anti_clockwise, R.integer.fab_animation_duration));
+
+        if (TestUtils.isRunningInstrumentedTest() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled()) {
             this.upAction.setVisibility(View.INVISIBLE);
             this.refreshAction.setVisibility(View.INVISIBLE);
-            this.settingsAction.setVisibility(View.INVISIBLE);
-            this.clearAllAction.setVisibility(View.INVISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setVisibility(View.INVISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setVisibility(View.INVISIBLE);
         } else {
-            this.moreAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.rotate_anti_clockwise, R.integer.fab_animation_duration));
             this.upAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
             this.refreshAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
-            this.settingsAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
-            this.clearAllAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
         }
 
         this.upAction.setClickable(false);
         this.refreshAction.setClickable(false);
-        this.settingsAction.setClickable(false);
-        this.clearAllAction.setClickable(false);
+        if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setClickable(false);
+        if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setClickable(false);
     }
 
     //endregion
