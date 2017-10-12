@@ -43,5 +43,57 @@ public final class SettingsDialogTest extends BaseTest {
             ViewMatchers.withId(R.id.action_ok),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withText("Categories"),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
+
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+
+        ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".settingsDialog.category.selected", this.testRule.getActivity());
+
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withText("兩岸"),
+            ViewMatchers.withParent(ViewMatchers.withId(R.id.flowLayout)),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
+
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_ok),
+            ViewMatchers.withText("Apply changes"),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
+
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_MEDIUM);
+
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_more),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
+
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_settings),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
+
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withText("Categories"),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
+
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+
+        ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".settingsDialog.notSelected", this.testRule.getActivity());
+
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withText("兩岸"),
+            ViewMatchers.withParent(ViewMatchers.withId(R.id.flowLayout)),
+            ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.matches(MoreTestUtils.isNotSelected()));
     }
 }

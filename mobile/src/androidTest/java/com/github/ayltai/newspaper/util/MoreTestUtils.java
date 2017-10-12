@@ -24,17 +24,47 @@ public final class MoreTestUtils {
     }
 
     @NonNull
+    public static Matcher<View> isSelected() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(@NonNull final Description description) {
+                description.appendText("matching the selected element");
+            }
+
+            @Override
+            public boolean matchesSafely(@NonNull final View item) {
+                return item.isSelected();
+            }
+        };
+    }
+
+    @NonNull
+    public static Matcher<View> isNotSelected() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(@NonNull final Description description) {
+                description.appendText("matching the non-selected element");
+            }
+
+            @Override
+            public boolean matchesSafely(@NonNull final View item) {
+                return !item.isSelected();
+            }
+        };
+    }
+
+    @NonNull
     public static <T> Matcher<T> first(@NonNull final Matcher<T> matcher) {
         return new BaseMatcher<T>() {
             private boolean isFirst = true;
 
             @Override
-            public void describeTo(final Description description) {
+            public void describeTo(@NonNull final Description description) {
                 description.appendText("matching the first element");
             }
 
             @Override
-            public boolean matches(final Object element) {
+            public boolean matches(@NonNull final Object element) {
                 if (isFirst && matcher.matches(element)) {
                     isFirst = false;
 
