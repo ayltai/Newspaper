@@ -155,7 +155,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             this.gyroscopeObserver = new GyroscopeObserver();
             this.panoramaImageView.setGyroscopeObserver(this.gyroscopeObserver);
 
-            if (TestUtils.isRunningInstrumentedTest()) this.panoramaImageView.setEnablePanoramaMode(false);
+            if (!Animations.isEnabled()) this.panoramaImageView.setEnablePanoramaMode(false);
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) ((CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout)).setExpandedTitleTextAppearance(R.style.TransparentText);
@@ -227,7 +227,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             this.bookmarkAction.setImageDrawable(drawable);
             this.bookmarkAction.setClickable(false);
 
-            this.smallBang.bang(this.bookmarkAction, new SmallBangListener() {
+            if (Animations.isEnabled()) this.smallBang.bang(this.bookmarkAction, new SmallBangListener() {
                 @Override
                 public void onAnimationStart() {
                 }
@@ -295,7 +295,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             this.videoContainer.addView(this.videoView);
         }
 
-        if (!TestUtils.isRunningInstrumentedTest() && !this.hasAnimated) {
+        if (Animations.isEnabled() && !this.hasAnimated) {
             this.hasAnimated = true;
 
             Animations.animateViewGroup(this.container);

@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -166,7 +164,7 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
     @NonNull
     @Override
     protected Iterable<Animator> getItemAnimators(@NonNull final View view) {
-        return TestUtils.isRunningInstrumentedTest() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled() ? super.getItemAnimators(view) : Animations.createDefaultAnimators(view);
+        return Animations.isEnabled() ? Animations.createDefaultAnimators(view) : super.getItemAnimators(view);
     }
 
     @Override

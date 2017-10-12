@@ -3,7 +3,6 @@ package com.github.ayltai.newspaper.app.screen;
 import java.lang.ref.SoftReference;
 import java.util.Map;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -40,7 +39,6 @@ import com.github.ayltai.newspaper.app.widget.PagerNewsView;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.widget.Screen;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -351,16 +349,16 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
 
         this.moreAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_clockwise));
 
-        if (TestUtils.isRunningInstrumentedTest() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled()) {
-            this.upAction.setVisibility(View.VISIBLE);
-            this.refreshAction.setVisibility(View.VISIBLE);
-            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setVisibility(View.VISIBLE);
-            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setVisibility(View.VISIBLE);
-        } else {
+        if (Animations.isEnabled()) {
             this.upAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
             this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
             if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
             if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+        } else {
+            this.upAction.setVisibility(View.VISIBLE);
+            this.refreshAction.setVisibility(View.VISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setVisibility(View.VISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setVisibility(View.VISIBLE);
         }
 
         this.upAction.setClickable(true);
@@ -375,16 +373,16 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
 
         this.moreAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.rotate_anti_clockwise, R.integer.fab_animation_duration));
 
-        if (TestUtils.isRunningInstrumentedTest() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled()) {
-            this.upAction.setVisibility(View.INVISIBLE);
-            this.refreshAction.setVisibility(View.INVISIBLE);
-            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setVisibility(View.INVISIBLE);
-            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setVisibility(View.INVISIBLE);
-        } else {
+        if (Animations.isEnabled()) {
             this.upAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
             this.refreshAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
             if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
             if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
+        } else {
+            this.upAction.setVisibility(View.INVISIBLE);
+            this.refreshAction.setVisibility(View.INVISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setVisibility(View.INVISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setVisibility(View.INVISIBLE);
         }
 
         this.upAction.setClickable(false);

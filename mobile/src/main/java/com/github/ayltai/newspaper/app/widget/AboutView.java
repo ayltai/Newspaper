@@ -102,7 +102,7 @@ public final class AboutView extends ObservableView implements AboutPresenter.Vi
     public void setAppVersion(@NonNull final CharSequence appVersion) {
         this.appVersion.setText(String.format(this.getContext().getString(R.string.app_version), appVersion));
 
-        if (!TestUtils.isRunningInstrumentedTest() && !this.isAnimated) {
+        if (Animations.isEnabled() && !this.isAnimated) {
             this.isAnimated = true;
 
             Animations.animateViewGroup(this.container);
