@@ -13,6 +13,8 @@ import org.junit.runner.RunWith;
 
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
+import com.github.ayltai.newspaper.util.MoreTestUtils;
+
 @MediumTest
 @RunWith(AndroidJUnit4.class)
 public final class FeaturedItemTest extends BaseTest {
@@ -20,27 +22,30 @@ public final class FeaturedItemTest extends BaseTest {
     public void featuredItemTest() {
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".featuredItem", this.testRule.getActivity());
 
+        // Checks that Featured News is displayed
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.featured_image),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
+        // Clicks Featured News
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.featured_image),
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
-        BaseTest.sleep(BaseTest.DURATION_SHORT);
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".featuredItem.details", this.testRule.getActivity());
 
+        // Checks that the news image is displayed within the toolbar
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            BaseTest.childAtPosition(Matchers.allOf(
+            MoreTestUtils.childAtPosition(Matchers.allOf(
                 ViewMatchers.withId(R.id.image),
-                BaseTest.childAtPosition(BaseTest.childAtPosition(Matchers.allOf(
+                MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(Matchers.allOf(
                     ViewMatchers.withId(R.id.image_container),
-                    BaseTest.childAtPosition(ViewMatchers.withId(R.id.collapsingToolbarLayout), 0)), 0), 0)), 0),
+                    MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.collapsingToolbarLayout), 0)), 0), 0)), 0),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
     }

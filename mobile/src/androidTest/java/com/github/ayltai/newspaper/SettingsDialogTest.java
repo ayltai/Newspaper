@@ -13,27 +13,32 @@ import org.junit.runner.RunWith;
 
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
+import com.github.ayltai.newspaper.util.MoreTestUtils;
+
 @MediumTest
 @RunWith(AndroidJUnit4.class)
 public final class SettingsDialogTest extends BaseTest {
     @Test
     public void settingsDialogTest() {
+        // Clicks More button
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_more),
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
-        BaseTest.sleep(BaseTest.DURATION_SHORT);
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".moreAction", this.testRule.getActivity());
 
+        // Clicks Settings tab
         Espresso.onView(ViewMatchers.withId(R.id.action_settings))
             .perform(ViewActions.click());
 
-        BaseTest.sleep(BaseTest.DURATION_SHORT);
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".settingsDialog", this.testRule.getActivity());
 
+        // Checks that Apply button is displayed
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_ok),
             ViewMatchers.isDisplayed()))

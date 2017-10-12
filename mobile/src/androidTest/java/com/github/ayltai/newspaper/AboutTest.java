@@ -22,6 +22,7 @@ import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 public final class AboutTest extends BaseTest {
     @Test
     public void visitWebsite() {
+        // Clicks About bottom tab
         Espresso.onView(ViewMatchers.withText("About"))
             .perform(ViewActions.click());
 
@@ -32,15 +33,18 @@ public final class AboutTest extends BaseTest {
         Intents.init();
         Intents.intending(intent).respondWith(new Instrumentation.ActivityResult(0, null));
 
+        // Clicks Visit button
         Espresso.onView(ViewMatchers.withId(R.id.visit_container))
             .perform(ViewActions.click());
 
+        // Checks that the fired Intent is correct
         Intents.intended(intent);
         Intents.release();
     }
 
     @Test
     public void rateApp() {
+        // Clicks About bottom tab
         Espresso.onView(ViewMatchers.withText("About"))
             .perform(ViewActions.click());
 
@@ -51,9 +55,11 @@ public final class AboutTest extends BaseTest {
         Intents.init();
         Intents.intending(intent).respondWith(new Instrumentation.ActivityResult(0, null));
 
+        // Clicks Rate button
         Espresso.onView(ViewMatchers.withId(R.id.rate_container))
             .perform(ViewActions.click());
 
+        // Checks that the fired Intent is correct
         Intents.intended(intent);
         Intents.release();
     }
