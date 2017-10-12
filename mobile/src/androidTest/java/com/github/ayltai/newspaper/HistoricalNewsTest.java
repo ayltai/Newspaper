@@ -108,5 +108,71 @@ public final class HistoricalNewsTest extends BaseTest {
                     MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0), 0)), 0)), 0),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        // Clicks Search button
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_search),
+            ViewMatchers.withContentDescription("Search"),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
+
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+
+        ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".search", this.testRule.getActivity());
+
+        // Types a query into the search text box
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.search_src_text),
+            ViewMatchers.isDisplayed()))
+            .perform(
+                ViewActions.replaceText("asdfqwerzxcv"),
+                ViewActions.closeSoftKeyboard());
+
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+
+        ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".search.textBox.filled", this.testRule.getActivity());
+
+        // Checks that no search results returned
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.image),
+            MoreTestUtils.childAtPosition(Matchers.allOf(
+                ViewMatchers.withId(R.id.image),
+                MoreTestUtils.childAtPosition(Matchers.allOf(
+                    ViewMatchers.withId(R.id.container),
+                    MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0), 0)), 0)), 0),
+            ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.doesNotExist());
+
+        // Clears the search query
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.search_close_btn),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
+
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+
+        ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".search.textBox.cleared", this.testRule.getActivity());
+
+        // Collapses the search text box
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withContentDescription("Collapse"),
+            ViewMatchers.withParent(ViewMatchers.withId(R.id.toolbar)),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
+
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+
+        ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".search.collapsed", this.testRule.getActivity());
+
+        // Checks that there is a bookmarked news item
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.image),
+            MoreTestUtils.childAtPosition(Matchers.allOf(
+                ViewMatchers.withId(R.id.image),
+                MoreTestUtils.childAtPosition(Matchers.allOf(
+                    ViewMatchers.withId(R.id.container),
+                    MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0), 0)), 0)), 0),
+            ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
     }
 }

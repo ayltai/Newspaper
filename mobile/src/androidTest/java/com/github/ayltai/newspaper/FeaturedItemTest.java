@@ -4,7 +4,7 @@ import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.filters.MediumTest;
+import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.hamcrest.Matchers;
@@ -15,7 +15,7 @@ import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
 import com.github.ayltai.newspaper.util.MoreTestUtils;
 
-@MediumTest
+@SmallTest
 @RunWith(AndroidJUnit4.class)
 public final class FeaturedItemTest extends BaseTest {
     @Test
