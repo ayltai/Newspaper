@@ -90,11 +90,11 @@ public final class HistoricalNewsTest extends BaseTest {
 
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            childAtPosition(Matchers.allOf(
+            BaseTest.childAtPosition(Matchers.allOf(
                 ViewMatchers.withId(R.id.image),
-                childAtPosition(Matchers.allOf(
+                BaseTest.childAtPosition(Matchers.allOf(
                     ViewMatchers.withId(R.id.container),
-                    childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0), 0)), 0)), 0),
+                    BaseTest.childAtPosition(BaseTest.childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0), 0)), 0)), 0),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
     }
