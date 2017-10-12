@@ -18,7 +18,7 @@ import org.junit.Rule;
 
 import com.github.ayltai.newspaper.app.MainActivity;
 
-public class BaseTest {
+public abstract class BaseTest {
     public static final int DURATION_SHORT  = 3;
     public static final int DURATION_MEDIUM = 6;
     public static final int DURATION_LONG   = 12;

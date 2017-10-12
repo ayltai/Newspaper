@@ -110,7 +110,6 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         if (this.getView() != null && this.getModel() instanceof NewsItem) {
             final NewsItem item = (NewsItem)this.getModel();
             item.setBookmarked(!this.getModel().isBookmarked());
-            item.setLastAccessedDate(new Date());
 
             this.manageDisposable(DetailsPresenter.updateItem(this.getView().getContext(), item)
                 .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
