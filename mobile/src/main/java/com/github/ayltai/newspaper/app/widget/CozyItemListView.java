@@ -9,14 +9,15 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.binding.FeaturedBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.FooterBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.HeaderBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.ImageBinderFactory;
-import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
 public class CozyItemListView extends ItemListView {
@@ -50,11 +51,15 @@ public class CozyItemListView extends ItemListView {
     @NonNull
     @Override
     protected UniversalAdapter<Item, ?, ?> createAdapter() {
-        return new ItemListAdapter.Builder(this.getContext())
+        final ItemListAdapter adapter = new ItemListAdapter.Builder(this.getContext())
             .addBinderFactory(new FeaturedBinderFactory())
             .addBinderFactory(new HeaderBinderFactory())
             .addBinderFactory(new ImageBinderFactory())
             .addBinderFactory(new FooterBinderFactory())
             .build();
+
+        adapter.setAnimationInterpolator(new AccelerateDecelerateInterpolator());
+
+        return adapter;
     }
 }
