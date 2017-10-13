@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.CompoundButton;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -49,6 +50,36 @@ public final class MoreTestUtils {
             @Override
             public boolean matchesSafely(@NonNull final View item) {
                 return !item.isSelected();
+            }
+        };
+    }
+
+    @NonNull
+    public static Matcher<View> isChecked() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(@NonNull final Description description) {
+                description.appendText("matching the selected element");
+            }
+
+            @Override
+            public boolean matchesSafely(@NonNull final View item) {
+                return item instanceof CompoundButton && ((CompoundButton)item).isChecked();
+            }
+        };
+    }
+
+    @NonNull
+    public static Matcher<View> isNotChecked() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(@NonNull final Description description) {
+                description.appendText("matching the non-selected element");
+            }
+
+            @Override
+            public boolean matchesSafely(@NonNull final View item) {
+                return item instanceof CompoundButton && !((CompoundButton)item).isChecked();
             }
         };
     }
