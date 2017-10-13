@@ -49,7 +49,6 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.util.ViewUtils;
-import com.github.ayltai.newspaper.view.ScreenPresenter;
 import com.github.piasy.biv.view.BigImageView;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
 import com.gjiazhe.panoramaimageview.PanoramaImageView;
@@ -63,7 +62,7 @@ import io.reactivex.processors.PublishProcessor;
 import xyz.hanks.library.SmallBang;
 import xyz.hanks.library.SmallBangListener;
 
-public final class DetailsScreen extends ItemView implements DetailsPresenter.View, ScreenPresenter.View {
+public final class DetailsScreen extends ItemView implements DetailsPresenter.View {
     @AutoValue
     public abstract static class Key extends ClassKey implements Parcelable {
         @NonNull
@@ -77,12 +76,11 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     //region Subscriptions
 
-    private final FlowableProcessor<Irrelevant> avatarClicks    = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> sourceClicks    = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> bookmarkClicks  = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> shareClicks     = PublishProcessor.create();
-    private final FlowableProcessor<Image>      imageClicks     = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> backNavigations = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> avatarClicks   = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> sourceClicks   = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> bookmarkClicks = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> shareClicks    = PublishProcessor.create();
+    private final FlowableProcessor<Image>      imageClicks    = PublishProcessor.create();
 
     //endregion
 
@@ -316,13 +314,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         new ImageViewer.Builder<>(this.getContext(), new String[] { url })
             .allowSwipeToDismiss(false)
             .show();
-    }
-
-    @Override
-    public boolean goBack() {
-        this.backNavigations.onNext(Irrelevant.INSTANCE);
-
-        return false;
     }
 
     //endregion

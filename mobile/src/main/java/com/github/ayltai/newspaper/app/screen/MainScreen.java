@@ -6,20 +6,14 @@ import java.util.Map;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
-import android.os.Build;
 import android.os.Parcelable;
-import android.support.annotation.AttrRes;
 import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.StyleRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +33,7 @@ import com.github.ayltai.newspaper.app.widget.PagerNewsView;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.widget.Screen;
+import com.github.ayltai.newspaper.widget.ObservableView;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.roughike.bottombar.BottomBar;
@@ -50,7 +44,7 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public final class MainScreen extends Screen implements MainPresenter.View, OnTabSelectListener {
+public final class MainScreen extends ObservableView implements MainPresenter.View, OnTabSelectListener {
     @AutoValue
     public abstract static class Key extends ClassKey implements Parcelable {
         @NonNull
@@ -89,30 +83,10 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
 
     private boolean isMoreActionsShown;
 
-    //region Constructors
-
     public MainScreen(@NonNull final Context context) {
         super(context);
         this.init();
     }
-
-    public MainScreen(@NonNull final Context context, @Nullable final AttributeSet attrs) {
-        super(context, attrs);
-        this.init();
-    }
-
-    public MainScreen(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.init();
-    }
-
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    public MainScreen(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        this.init();
-    }
-
-    //endregion
 
     //region Events
 

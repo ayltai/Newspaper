@@ -111,11 +111,6 @@ public abstract class ItemListView extends ListView<Item> implements ItemListPre
         return android.R.id.empty;
     }
 
-    @Override
-    protected int getInfiniteLoadingThreshold() {
-        return ListView.NO_INFINITE_LOADING;
-    }
-
     //region Methods
 
     @Override
