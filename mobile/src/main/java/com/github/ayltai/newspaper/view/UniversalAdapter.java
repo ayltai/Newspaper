@@ -92,8 +92,8 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
 
         if (adapterPosition > this.lastItemPosition) {
             for (final Animator animator : this.getItemAnimators(holder.itemView)) {
-                animator.setDuration(this.animationDuration).start();
                 animator.setInterpolator(this.animationInterpolator);
+                animator.setDuration(this.animationDuration).start();
             }
 
             this.lastItemPosition = adapterPosition;

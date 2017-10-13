@@ -90,22 +90,6 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
 
     @CallSuper
     @Override
-    protected void onAvatarClick() {
-        // TODO
-
-        super.onAvatarClick();
-    }
-
-    @CallSuper
-    @Override
-    protected void onSourceClick() {
-        // TODO
-
-        super.onSourceClick();
-    }
-
-    @CallSuper
-    @Override
     protected void onBookmarkClick() {
         if (this.getView() != null && this.getModel() instanceof NewsItem) {
             final NewsItem item = (NewsItem)this.getModel();
@@ -146,14 +130,6 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         if (this.getView() != null) this.getView().showImage(image.getUrl());
 
         super.onImageClick(image);
-    }
-
-    @CallSuper
-    @Override
-    protected void onVideoClick() {
-        // TODO
-
-        super.onVideoClick();
     }
 
     @CallSuper
