@@ -26,10 +26,6 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
 
     private Realm realm;
 
-    protected RealmLoader(@NonNull final Context context) {
-        super(context);
-    }
-
     protected RealmLoader(@NonNull final Context context, @Nullable final Bundle args) {
         super(context, args);
     }

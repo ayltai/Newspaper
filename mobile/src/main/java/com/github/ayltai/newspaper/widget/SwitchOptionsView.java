@@ -42,9 +42,6 @@ public final class SwitchOptionsView extends ObservableView implements OptionsPr
         return this.optionChanges;
     }
 
-    protected void onSelect(@NonNull final SwitchCompat view) {
-    }
-
     @Override
     protected void onAttachedToWindow() {
         for (int i = 0; i < this.container.getChildCount(); i++) this.subscribeToView((SwitchCompat)this.container.getChildAt(i));
@@ -58,10 +55,6 @@ public final class SwitchOptionsView extends ObservableView implements OptionsPr
     }
 
     private void subscribeToView(@NonNull final SwitchCompat view) {
-        this.manageDisposable(RxCompoundButton.checkedChanges(view).subscribe(selected -> {
-            this.onSelect(view);
-
-            this.optionChanges.onNext(this.container.indexOfChild(view));
-        }));
+        this.manageDisposable(RxCompoundButton.checkedChanges(view).subscribe(selected -> this.optionChanges.onNext(this.container.indexOfChild(view))));
     }
 }

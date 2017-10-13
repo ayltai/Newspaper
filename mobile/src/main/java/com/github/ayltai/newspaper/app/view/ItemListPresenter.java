@@ -20,10 +20,7 @@ import com.github.ayltai.newspaper.view.ListPresenter;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
-public class ItemListPresenter extends ListPresenter<Item, ItemListPresenter.View> {
-    public interface View extends ListPresenter.View<Item> {
-    }
-
+public class ItemListPresenter extends ListPresenter<Item, ListPresenter.View<Item>> {
     protected final List<String> categories;
 
     private boolean forceRefresh = false;

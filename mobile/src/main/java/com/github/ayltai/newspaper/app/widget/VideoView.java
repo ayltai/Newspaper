@@ -33,7 +33,7 @@ import com.github.ayltai.newspaper.app.config.AppConfig;
 import com.github.ayltai.newspaper.app.config.ConfigComponent;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Video;
-import com.github.ayltai.newspaper.app.view.VideoPresenter;
+import com.github.ayltai.newspaper.app.view.VideoPresenterView;
 import com.github.ayltai.newspaper.util.DeviceUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
@@ -43,7 +43,7 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public final class VideoView extends ItemView implements VideoPresenter.View {
+public final class VideoView extends ItemView implements VideoPresenterView {
     private final FlowableProcessor<Irrelevant> videoClicks = PublishProcessor.create();
 
     //region Components

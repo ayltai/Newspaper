@@ -27,13 +27,7 @@ import com.github.ayltai.newspaper.widget.ListView;
 import com.github.ayltai.newspaper.widget.ObservableView;
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
 
-import io.reactivex.Flowable;
-import io.reactivex.processors.FlowableProcessor;
-import io.reactivex.processors.PublishProcessor;
-
 public class PagerNewsView extends ObservableView implements PagerNewsPresenter.View {
-    private final FlowableProcessor<Integer> pageSelections = PublishProcessor.create();
-
     private UserConfig       userConfig;
     private ViewPager        viewPager;
     private PagerNewsAdapter adapter;
@@ -41,12 +35,6 @@ public class PagerNewsView extends ObservableView implements PagerNewsPresenter.
     public PagerNewsView(@NonNull final Context context) {
         super(context);
         this.init();
-    }
-
-    @NonNull
-    @Override
-    public Flowable<Integer> pageSelections() {
-        return this.pageSelections;
     }
 
     @CallSuper
@@ -64,16 +52,12 @@ public class PagerNewsView extends ObservableView implements PagerNewsPresenter.
         this.manageDisposable(RxViewPager.pageSelections(this.viewPager).subscribe(index -> {
             this.adapter.setCurrentPosition(index);
 
-            this.pageSelections.onNext(index);
-
             ComponentFactory.getInstance()
                 .getAnalyticsComponent(this.getContext())
                 .eventLogger()
                 .logEvent(new ClickEvent()
                     .setElementName("Page Selection"));
         }));
-
-        if (this.isFirstTimeAttachment) this.pageSelections.onNext(0);
 
         super.onAttachedToWindow();
     }

@@ -1,14 +1,9 @@
 package com.github.ayltai.newspaper.app.view;
 
-import android.support.annotation.NonNull;
+import com.github.ayltai.newspaper.view.ObservablePresenter;
 
-import io.reactivex.Flowable;
-
-public class PagerNewsPresenter extends NewsPresenter {
-    public interface View extends NewsPresenter.View {
+public class PagerNewsPresenter extends ObservablePresenter<NewsPresenterView> {
+    public interface View extends NewsPresenterView {
         void settings();
-
-        @NonNull
-        Flowable<Integer> pageSelections();
     }
 }

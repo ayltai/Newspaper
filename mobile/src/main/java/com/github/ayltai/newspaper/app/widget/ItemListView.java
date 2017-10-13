@@ -19,14 +19,14 @@ import android.widget.TextView;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
-import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.util.ViewUtils;
+import com.github.ayltai.newspaper.view.ListPresenter;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView;
 
 import io.reactivex.disposables.Disposable;
 
-public abstract class ItemListView extends ListView<Item> implements ItemListPresenter.View, Disposable, LifecycleObserver {
+public abstract class ItemListView extends ListView<Item> implements ListPresenter.View<Item>, Disposable, LifecycleObserver {
     //region Supports initial searching
 
     private List<String> categories;

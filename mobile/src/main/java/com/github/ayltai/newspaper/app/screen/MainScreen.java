@@ -25,7 +25,7 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.view.AboutPresenter;
-import com.github.ayltai.newspaper.app.view.NewsPresenter;
+import com.github.ayltai.newspaper.app.view.NewsPresenterView;
 import com.github.ayltai.newspaper.app.widget.AboutView;
 import com.github.ayltai.newspaper.app.widget.BookmarkedNewsView;
 import com.github.ayltai.newspaper.app.widget.HistoricalNewsView;
@@ -71,7 +71,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
     private Toolbar              toolbar;
     private SearchView           searchView;
     private ViewGroup            content;
-    private NewsPresenter.View   newsView;
+    private NewsPresenterView    newsView;
     private BottomBar            bottomBar;
     private FloatingActionButton upAction;
     private FloatingActionButton refreshAction;
@@ -141,7 +141,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
             boolean isCached = false;
 
             if (this.cachedViews.containsKey(tabId)) {
-                this.newsView = (NewsPresenter.View)this.cachedViews.get(tabId).get();
+                this.newsView = (NewsPresenterView)this.cachedViews.get(tabId).get();
 
                 if (this.newsView != null) {
                     if (this.content.indexOfChild((View)this.newsView) < 0) {
