@@ -37,11 +37,6 @@ public final class DetailsTest extends BaseTest {
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.publish_date),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
-
-        Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_bookmark),
             ViewMatchers.withContentDescription("Bookmark"),
             ViewMatchers.isDisplayed()))
