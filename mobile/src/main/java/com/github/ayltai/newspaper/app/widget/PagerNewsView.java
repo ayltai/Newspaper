@@ -6,15 +6,12 @@ import android.app.Activity;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.AttrRes;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -41,29 +38,10 @@ public class PagerNewsView extends ObservableView implements PagerNewsPresenter.
     private ViewPager        viewPager;
     private PagerNewsAdapter adapter;
 
-    //region Constructors
-
     public PagerNewsView(@NonNull final Context context) {
         super(context);
         this.init();
     }
-
-    public PagerNewsView(@NonNull final Context context, @Nullable final AttributeSet attrs) {
-        super(context, attrs);
-        this.init();
-    }
-
-    public PagerNewsView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.init();
-    }
-
-    public PagerNewsView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        this.init();
-    }
-
-    //endregion
 
     @NonNull
     @Override

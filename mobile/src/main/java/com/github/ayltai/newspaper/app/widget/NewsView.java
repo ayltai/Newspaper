@@ -5,11 +5,7 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -25,29 +21,10 @@ public abstract class NewsView extends ObservableView implements NewsPresenter.V
     protected List<String> categories;
     protected Set<String>  sources;
 
-    //region Constructors
-
     public NewsView(@NonNull final Context context) {
         super(context);
         this.init();
     }
-
-    public NewsView(@NonNull final Context context, @Nullable final AttributeSet attrs) {
-        super(context, attrs);
-        this.init();
-    }
-
-    public NewsView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.init();
-    }
-
-    public NewsView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        this.init();
-    }
-
-    //endregion
 
     //region Methods
 

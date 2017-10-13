@@ -5,17 +5,12 @@ import java.util.Collection;
 import java.util.List;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.annotation.AttrRes;
 import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.StyleRes;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,30 +48,10 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     private boolean isFirstAttachment = true;
 
-    //region Constructors
-
     protected ListView(@NonNull final Context context) {
         super(context);
         this.init();
     }
-
-    protected ListView(@NonNull final Context context, @Nullable final AttributeSet attrs) {
-        super(context, attrs);
-        this.init();
-    }
-
-    protected ListView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.init();
-    }
-
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    protected ListView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        this.init();
-    }
-
-    //endregion
 
     //region Properties
 

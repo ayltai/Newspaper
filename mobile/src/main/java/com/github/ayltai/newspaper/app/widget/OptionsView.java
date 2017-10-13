@@ -42,24 +42,10 @@ public final class OptionsView extends BottomSheetDialog {
 
     //endregion
 
-    //region Constructors
-
-    public OptionsView(@NonNull final Context context) {
-        super(context);
-        this.init();
-    }
-
     public OptionsView(@NonNull final Context context, @StyleRes final int theme) {
         super(context, theme);
         this.init();
     }
-
-    public OptionsView(@NonNull final Context context, final boolean cancelable, final OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
-        this.init();
-    }
-
-    //endregion
 
     //region Events
 

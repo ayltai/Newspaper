@@ -1,14 +1,8 @@
 package com.github.ayltai.newspaper.app.widget;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.annotation.AttrRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.StyleRes;
-import android.util.AttributeSet;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.github.ayltai.newspaper.R;
@@ -21,26 +15,9 @@ import com.github.ayltai.newspaper.app.view.binding.ImageBinderFactory;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
 public class CozyItemListView extends ItemListView {
-    //region Constructors
-
     public CozyItemListView(@NonNull final Context context) {
         super(context);
     }
-
-    public CozyItemListView(@NonNull final Context context, @Nullable final AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public CozyItemListView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    public CozyItemListView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    //endregion
 
     @LayoutRes
     @Override
