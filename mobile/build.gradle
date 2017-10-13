@@ -222,13 +222,13 @@ dependencies {
     compile             'com.google.code.gson:gson:2.8.2'
 
     // Fabric
-    compile ('io.fabric.sdk.android:fabric:1.3.17@aar') {
+    compile ('io.fabric.sdk.android:fabric:1.4.0@aar') {
         transitive = true;
     }
-    compile ('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    compile ('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
         transitive = true;
     }
-    compile ('com.crashlytics.sdk.android:answers:1.3.13@aar') {
+    compile ('com.crashlytics.sdk.android:answers:1.4.0@aar') {
         transitive = true;
     }
 
