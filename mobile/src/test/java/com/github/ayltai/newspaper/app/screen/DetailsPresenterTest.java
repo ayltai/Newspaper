@@ -65,6 +65,20 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
     }
 
     @Test
+    public void Given_modelIsFullDescription_When_modelIsBound_Then_bindModelIsCalled() {
+        final Item model = this.getModel();
+        Mockito.doReturn(true).when(model).isFullDescription();
+
+        // Given
+        this.getPresenter().bindModel(model);
+
+        // When
+        this.attachments.onNext(true);
+
+        Mockito.verify(this.getView(), Mockito.times(1)).setDescription(Mockito.anyString());
+    }
+
+    @Test
     public void Given_onViewAttached_When_imageClicks_Then_showImage() {
         // Given
         this.getPresenter().bindModel(this.getModel());
