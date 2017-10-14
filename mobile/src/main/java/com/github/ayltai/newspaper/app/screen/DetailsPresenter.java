@@ -62,6 +62,15 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                 } else {
                     super.bindModel(model);
 
+                    this.manageDisposable(DetailsPresenter.updateItem(this.getView().getContext(), newsItem)
+                        .compose(RxUtils.applySingleBackgroundToMainSchedulers())
+                        .subscribe(
+                            items -> {
+                            },
+                            error -> {
+                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            }));
+
                     if (NetworkUtils.isOnline(this.getView().getContext())) {
                         this.manageDisposable(Single.<NewsItem>create(
                             emitter -> {
