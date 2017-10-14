@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
@@ -51,5 +52,9 @@ public final class Animations {
             .duration(Constants.ANIMATION_DURATION)
             .anim(container.getContext(), R.anim.fade_in_up)
             .start();
+    }
+
+    public static boolean isEnabled() {
+        return !TestUtils.isRunningInstrumentedTest() && (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || ValueAnimator.areAnimatorsEnabled());
     }
 }

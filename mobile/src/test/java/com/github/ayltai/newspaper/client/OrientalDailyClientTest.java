@@ -24,6 +24,8 @@ import io.reactivex.Observable;
 public final class OrientalDailyClientTest extends NetworkTest {
     private static final String ORIENTAL_DAILY_URL         = "http://orientaldaily.on.cc/rss/news.xml";
     private static final String ORIENTAL_DAILY_DETAILS_URL = "http://orientaldaily.on.cc/cnt/news/20170909/00174_001.html?pubdate=20170909";
+    private static final String ERROR_URL                  = "error 1";
+    private static final String ERROR_DETAILS_URL          = "error 2";
 
     private OrientalDailyClient client;
 
@@ -34,12 +36,14 @@ public final class OrientalDailyClientTest extends NetworkTest {
         Mockito.doReturn(Observable.just(createFeed())).when(this.apiService).getFeed(OrientalDailyClientTest.ORIENTAL_DAILY_URL);
         Mockito.doReturn(Observable.just(createHtml())).when(this.apiService).getHtml(OrientalDailyClientTest.ORIENTAL_DAILY_DETAILS_URL);
         Mockito.doReturn(Observable.just(createVideoHtml())).when(this.apiService).getHtml("http://orientaldaily.on.cc/cnt/keyinfo/20170909/videolist.xml");
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 1"))).when(this.apiService).getFeed(OrientalDailyClientTest.ERROR_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 2"))).when(this.apiService).getHtml(OrientalDailyClientTest.ERROR_DETAILS_URL);
 
         this.client = new OrientalDailyClient(this.httpClient, this.apiService, SourceFactory.getInstance(RuntimeEnvironment.application).getSource("東方日報"));
     }
 
     @Test
-    public void Given_OrientalDailyUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
+    public void Given_orientalDailyUrl_When_getItemsIsCalled_Then_itemsAreReturned() {
         final List<NewsItem> items = this.client.getItems(OrientalDailyClientTest.ORIENTAL_DAILY_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 20, items.size());
@@ -54,7 +58,14 @@ public final class OrientalDailyClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_Item_When_updateItemIsCalled_Then_ItemIsUpdated() {
+    public void Given_errorUrl_When_getItemsIsCalled_Then_noItemsAreReturned() {
+        final List<NewsItem> items = this.client.getItems(OrientalDailyClientTest.ERROR_URL).blockingGet();
+
+        Assert.assertEquals("Incorrect items.size()", 0, items.size());
+    }
+
+    @Test
+    public void Given_item_When_updateItemIsCalled_Then_itemIsUpdated() {
         final Item item = this.client.updateItem(this.client.getItems(OrientalDailyClientTest.ORIENTAL_DAILY_URL).blockingGet().get(0)).blockingGet();
 
         Assert.assertEquals("Incorrect item.getImages().size()", 4, item.getImages().size());
@@ -63,6 +74,14 @@ public final class OrientalDailyClientTest extends NetworkTest {
         Assert.assertNotNull("item.getVideo() is null", item.getVideo());
         Assert.assertEquals("Incorrect video URL", "http://video.cdn.on.cc/Video/201709/ONS170908-14006-77-M_ipad.mp4", item.getVideo().getVideoUrl());
         Assert.assertEquals("Incorrect item full description", "繼青年新政游蕙禎和梁頌恆宣誓引發辱華風波後，昨日再爆出中文大學學生辱華事件。中大日前出現「香港獨立」橫額及海報後，惹來反對港獨團體前日到中大文化廣場示威，並與支持港獨的學生爆發衝突。其後網上流傳數段影", item.getDescription().substring(0, 100));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void Given_orientalDailyDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
+        final NewsItem newsItem = new NewsItem();
+        newsItem.setLink(OrientalDailyClientTest.ERROR_DETAILS_URL);
+
+        this.client.updateItem(newsItem).blockingGet();
     }
 
     @NonNull

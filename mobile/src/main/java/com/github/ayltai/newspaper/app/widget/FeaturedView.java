@@ -16,6 +16,7 @@ import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.media.FrescoImageLoader;
+import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -67,7 +68,7 @@ public final class FeaturedView extends ItemView {
                     bitmap -> {
                         this.image.setImageBitmap(bitmap);
 
-                        if (TestUtils.isRunningInstrumentedTest()) this.image.pause();
+                        if (!Animations.isEnabled()) this.image.pause();
                     },
                     error -> {
                         if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);

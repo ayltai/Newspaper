@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +55,11 @@ public final class MetaView extends ItemView {
         }
     }
 
+    @VisibleForTesting
+    protected CharSequence getSource() {
+        return this.source.getText();
+    }
+
     @Override
     public void setPublishDate(@Nullable final Date date) {
         if (date == null) {
@@ -62,6 +68,11 @@ public final class MetaView extends ItemView {
             this.publishDate.setVisibility(View.VISIBLE);
             this.publishDate.setText(DateUtils.toApproximateTime(this.getContext(), date.getTime()));
         }
+    }
+
+    @VisibleForTesting
+    protected String getPublishDate() {
+        return this.publishDate.getText().toString();
     }
 
     //endregion

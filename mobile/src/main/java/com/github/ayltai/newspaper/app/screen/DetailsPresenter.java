@@ -62,6 +62,15 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                 } else {
                     super.bindModel(model);
 
+                    this.manageDisposable(DetailsPresenter.updateItem(this.getView().getContext(), newsItem)
+                        .compose(RxUtils.applySingleBackgroundToMainSchedulers())
+                        .subscribe(
+                            items -> {
+                            },
+                            error -> {
+                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            }));
+
                     if (NetworkUtils.isOnline(this.getView().getContext())) {
                         this.manageDisposable(Single.<NewsItem>create(
                             emitter -> {
@@ -90,27 +99,10 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
 
     @CallSuper
     @Override
-    protected void onAvatarClick() {
-        // TODO
-
-        super.onAvatarClick();
-    }
-
-    @CallSuper
-    @Override
-    protected void onSourceClick() {
-        // TODO
-
-        super.onSourceClick();
-    }
-
-    @CallSuper
-    @Override
     protected void onBookmarkClick() {
         if (this.getView() != null && this.getModel() instanceof NewsItem) {
             final NewsItem item = (NewsItem)this.getModel();
             item.setBookmarked(!this.getModel().isBookmarked());
-            item.setLastAccessedDate(new Date());
 
             this.manageDisposable(DetailsPresenter.updateItem(this.getView().getContext(), item)
                 .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
@@ -147,14 +139,6 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         if (this.getView() != null) this.getView().showImage(image.getUrl());
 
         super.onImageClick(image);
-    }
-
-    @CallSuper
-    @Override
-    protected void onVideoClick() {
-        // TODO
-
-        super.onVideoClick();
     }
 
     @CallSuper

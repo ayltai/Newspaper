@@ -22,6 +22,8 @@ import io.reactivex.Observable;
 public final class AppleDailyClientTest extends NetworkTest {
     private static final String APPLE_DAILY_URL         = "http://hk.apple.nextmedia.com/video/videolist/20170909/local/home/0";
     private static final String APPLE_DAILY_DETAILS_URL = "http://hk.apple.nextmedia.com/news/art/20170909/20147535";
+    private static final String ERROR_URL               = "error 1";
+    private static final String ERROR_DETAILS_URL       = "error 2";
 
     private AppleDailyClient client;
 
@@ -34,6 +36,8 @@ public final class AppleDailyClientTest extends NetworkTest {
 
             if (AppleDailyClientTest.APPLE_DAILY_URL.equals(url)) return Observable.just(AppleDailyClientTest.createHtml());
             if (AppleDailyClientTest.APPLE_DAILY_DETAILS_URL.equals(url)) return Observable.just(AppleDailyClientTest.createDetailsHtml());
+            if (AppleDailyClientTest.ERROR_URL.equals(url)) return Observable.error(new RuntimeException("Fake error 1"));
+            if (AppleDailyClientTest.ERROR_DETAILS_URL.equals(url)) return Observable.error(new RuntimeException("Fake error 2"));
 
             return Observable.just(AppleDailyClientTest.createVideoHtml());
         }).when(this.apiService).getHtml(Mockito.anyString());
@@ -42,7 +46,7 @@ public final class AppleDailyClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_AppleDailyUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
+    public void Given_appleDailyUrl_When_getItemsIsCalled_Then_itemsAreReturned() {
         final List<NewsItem> items = this.client.getItems(AppleDailyClientTest.APPLE_DAILY_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 28, items.size());
@@ -52,7 +56,14 @@ public final class AppleDailyClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_Item_When_updateItemIsCalled_Then_ItemIsUpdated() {
+    public void Given_errorUrl_When_getItemsIsCalled_Then_noItemsAreReturned() {
+        final List<NewsItem> items = this.client.getItems(AppleDailyClientTest.ERROR_URL).blockingGet();
+
+        Assert.assertEquals("Incorrect items.size()", 0, items.size());
+    }
+
+    @Test
+    public void Given_item_When_updateItemIsCalled_Then_itemIsUpdated() {
         final Item item = this.client.updateItem(this.client.getItems(AppleDailyClientTest.APPLE_DAILY_URL).blockingGet().get(0)).blockingGet();
 
         Assert.assertEquals("Incorrect item.getImages().size()", 6, item.getImages().size());
@@ -62,6 +73,14 @@ public final class AppleDailyClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect video URL", "http://video.appledaily.com.hk/mcp/encode/2017/09/09/3437461/20170908_news_53_newADAD_w.mp4", item.getVideo().getVideoUrl());
         Assert.assertEquals("Incorrect video thumbnail URL", "http://static.apple.nextmedia.com/images/apple-photos/video/20170909/org/1504900568_d1c2.jpg", item.getVideo().getThumbnailUrl());
         Assert.assertEquals("Incorrect item full description", "<p class=\"ArticleIntro\">\n                                \t【本報訊】教育局副局長蔡若蓮長子周四跳樓身亡，教育大學學生會民主牆出現冒犯性標語，行", item.getDescription().substring(0, 100));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void Given_applieDailyDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
+        final NewsItem newsItem = new NewsItem();
+        newsItem.setLink(AppleDailyClientTest.ERROR_DETAILS_URL);
+
+        this.client.updateItem(newsItem).blockingGet();
     }
 
     @NonNull

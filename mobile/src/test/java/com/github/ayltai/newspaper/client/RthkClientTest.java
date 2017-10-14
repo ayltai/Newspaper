@@ -22,8 +22,10 @@ import com.github.ayltai.newspaper.util.IOUtils;
 import io.reactivex.Observable;
 
 public final class RthkClientTest extends NetworkTest {
-    private static final String RTHK_URL         = "http://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml";
-    private static final String RTHK_DETAILS_URL = "http://news.rthk.hk/rthk/ch/component/k2/1353287-20170910.htm";
+    private static final String RTHK_URL          = "http://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml";
+    private static final String RTHK_DETAILS_URL  = "http://news.rthk.hk/rthk/ch/component/k2/1353287-20170910.htm";
+    private static final String ERROR_URL         = "error 1";
+    private static final String ERROR_DETAILS_URL = "error 2";
 
     private RthkClient client;
 
@@ -33,12 +35,14 @@ public final class RthkClientTest extends NetworkTest {
 
         Mockito.doReturn(Observable.just(RthkClientTest.createFeed())).when(this.apiService).getFeed(RthkClientTest.RTHK_URL);
         Mockito.doReturn(Observable.just(RthkClientTest.createDetailsHtml())).when(this.apiService).getHtml(RthkClientTest.RTHK_DETAILS_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 1"))).when(this.apiService).getFeed(RthkClientTest.ERROR_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 2"))).when(this.apiService).getHtml(RthkClientTest.ERROR_DETAILS_URL);
 
         this.client = new RthkClient(this.httpClient, this.apiService, SourceFactory.getInstance(RuntimeEnvironment.application).getSource("香港電台"));
     }
 
     @Test
-    public void Given_RthkUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
+    public void Given_rthkUrl_When_getItemsIsCalled_Then_itemsAreReturned() {
         final List<NewsItem> items = this.client.getItems(RthkClientTest.RTHK_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 20, items.size());
@@ -52,7 +56,14 @@ public final class RthkClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_Item_When_updateItemIsCalled_Then_ItemIsUpdated() {
+    public void Given_errorUrl_When_getItemsIsCalled_Then_noItemsAreReturned() {
+        final List<NewsItem> items = this.client.getItems(RthkClientTest.ERROR_URL).blockingGet();
+
+        Assert.assertEquals("Incorrect items.size()", 0, items.size());
+    }
+
+    @Test
+    public void Given_item_When_updateItemIsCalled_Then_itemIsUpdated() {
         final Item item = this.client.updateItem(this.client.getItems(RthkClientTest.RTHK_URL).blockingGet().get(2)).blockingGet();
 
         Assert.assertEquals("Incorrect item.getImages().size()", 1, item.getImages().size());
@@ -63,6 +74,14 @@ public final class RthkClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect item full description", "本台節目《城市論壇》暑假暫停後，今日復播。早前被傳或會出任食物及衞生局局長政治助理的主持蘇敬恆，今日繼續主持節目。<br />\r\n" +
             "<br />\r\n" +
             "被問到會否出任政治助理一職，蘇敬恆說，現時未有最新消息", item.getDescription().substring(0, 100));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void Given_rthkDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
+        final NewsItem newsItem = new NewsItem();
+        newsItem.setLink(RthkClientTest.ERROR_DETAILS_URL);
+
+        this.client.updateItem(newsItem).blockingGet();
     }
 
     @NonNull

@@ -22,6 +22,8 @@ import io.reactivex.Observable;
 public final class HeadlineRealtimeClientTest extends NetworkTest {
     private static final String HEADLINE_REALTIME_URL         = "http://hd.stheadline.com/news/realtime/hk/";
     private static final String HEADLINE_REALTIME_DETAILS_URL = "http://hd.stheadline.com/news/realtime/hk/1008479/";
+    private static final String ERROR_URL                     = "error 1";
+    private static final String ERROR_DETAILS_URL             = "error 2";
 
     private HeadlineRealtimeClient client;
 
@@ -31,12 +33,14 @@ public final class HeadlineRealtimeClientTest extends NetworkTest {
 
         Mockito.doReturn(Observable.just(HeadlineRealtimeClientTest.createHtml())).when(this.apiService).getHtml(HeadlineRealtimeClientTest.HEADLINE_REALTIME_URL);
         Mockito.doReturn(Observable.just(HeadlineRealtimeClientTest.createDetailsHtml())).when(this.apiService).getHtml(HeadlineRealtimeClientTest.HEADLINE_REALTIME_DETAILS_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 1"))).when(this.apiService).getHtml(HeadlineRealtimeClientTest.ERROR_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 2"))).when(this.apiService).getHtml(HeadlineRealtimeClientTest.ERROR_DETAILS_URL);
 
         this.client = new HeadlineRealtimeClient(this.httpClient, this.apiService, SourceFactory.getInstance(RuntimeEnvironment.application).getSource("頭條即時"));
     }
 
     @Test
-    public void Given_HeadlineRealtimeUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
+    public void Given_headlineRealtimeUrl_When_getItemsIsCalled_Then_itemsAreReturned() {
         final List<NewsItem> items = this.client.getItems(HeadlineRealtimeClientTest.HEADLINE_REALTIME_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 10, items.size());
@@ -46,13 +50,28 @@ public final class HeadlineRealtimeClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_Item_When_updateItemIsCalled_Then_ItemIsUpdated() {
+    public void Given_errorUrl_When_getItemsIsCalled_Then_noItemsAreReturned() {
+        final List<NewsItem> items = this.client.getItems(HeadlineRealtimeClientTest.ERROR_URL).blockingGet();
+
+        Assert.assertEquals("Incorrect items.size()", 0, items.size());
+    }
+
+    @Test
+    public void Given_item_When_updateItemIsCalled_Then_itemIsUpdated() {
         final Item item = this.client.updateItem(this.client.getItems(HeadlineRealtimeClientTest.HEADLINE_REALTIME_URL).blockingGet().get(0)).blockingGet();
 
         Assert.assertEquals("Incorrect item.getImages().size()", 3, item.getImages().size());
         Assert.assertEquals("Incorrect image URL", "http://static.stheadline.com/stheadline/inewsmedia/20170909/_2017090915215953935.jpg", item.getImages().get(0).getUrl());
         Assert.assertEquals("Incorrect image description", "警方在場調查。林思明攝", item.getImages().get(0).getDescription());
         Assert.assertEquals("Incorrect item full description", "<p>將軍澳新都城第一期停車場冷氣機房發生爆炸，2名男工人受", item.getDescription().substring(0, 30));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void Given_headlineRealtimeDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
+        final NewsItem newsItem = new NewsItem();
+        newsItem.setLink(HeadlineRealtimeClientTest.ERROR_DETAILS_URL);
+
+        this.client.updateItem(newsItem).blockingGet();
     }
 
     @NonNull

@@ -22,8 +22,10 @@ import com.github.ayltai.newspaper.util.IOUtils;
 import io.reactivex.Observable;
 
 public final class HkejClientTest extends NetworkTest {
-    private static final String HKEJ_URL         = "http://www.hkej.com/rss/onlinenews.xml";
-    private static final String HKEJ_DETAILS_URL = "http://www2.hkej.com/instantnews/china/article/1653531";
+    private static final String HKEJ_URL          = "http://www.hkej.com/rss/onlinenews.xml";
+    private static final String HKEJ_DETAILS_URL  = "http://www2.hkej.com/instantnews/china/article/1653531";
+    private static final String ERROR_URL         = "error 1";
+    private static final String ERROR_DETAILS_URL = "error 2";
 
     private HkejClient client;
 
@@ -33,12 +35,14 @@ public final class HkejClientTest extends NetworkTest {
 
         Mockito.doReturn(Observable.just(HkejClientTest.createFeed())).when(this.apiService).getFeed(HkejClientTest.HKEJ_URL);
         Mockito.doReturn(Observable.just(HkejClientTest.createHtml())).when(this.apiService).getHtml(HkejClientTest.HKEJ_DETAILS_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 1"))).when(this.apiService).getFeed(HkejClientTest.ERROR_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 2"))).when(this.apiService).getHtml(HkejClientTest.ERROR_DETAILS_URL);
 
         this.client = new HkejClient(this.httpClient, this.apiService, SourceFactory.getInstance(RuntimeEnvironment.application).getSource("信報"));
     }
 
     @Test
-    public void Given_HkejUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
+    public void Given_hkejUrl_When_getItemsIsCalled_Then_itemsAreReturned() {
         final List<NewsItem> items = this.client.getItems(HkejClientTest.HKEJ_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 31, items.size());
@@ -48,7 +52,14 @@ public final class HkejClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_Item_When_updateItemIsCalled_Then_ItemIsUpdated() {
+    public void Given_errorUrl_When_getItemsIsCalled_Then_noItemsAreReturned() {
+        final List<NewsItem> items = this.client.getItems(HkejClientTest.ERROR_URL).blockingGet();
+
+        Assert.assertEquals("Incorrect items.size()", 0, items.size());
+    }
+
+    @Test
+    public void Given_item_When_updateItemIsCalled_Then_itemIsUpdated() {
         final Item item = this.client.updateItem(this.client.getItems(HkejClientTest.HKEJ_URL).blockingGet().get(0)).blockingGet();
 
         Assert.assertEquals("Incorrect item.getImages().size()", 1, item.getImages().size());
@@ -58,6 +69,14 @@ public final class HkejClientTest extends NetworkTest {
             "<br>文章指出，從央企效益提升的原因來看，一方面今年以來經濟的持續向好發展，為央企效益提升創造了良好環境；另一方面央企重組以後，效率的提升功不可沒，特別是在重組之後，央企核心競爭力的提升、資產負債率的下降，對央企利潤的增長提供了重要支撐。<br>\n" +
             "<br>下一步，國資委將繼續堅持以新發展理念為引領，以推進供給側結構性改革為主線，以提高質量效益和核心競爭力為中心，努力做好中央企業重組各項工作，推動國有資本布局優化和結構調整實現突破、取得成效。<br>\n" +
             "<br>總體來看，未來央企重組的大方向、路線圖都是明確的，且煤電行業、重型製造裝備行業、鋼鐵行業等依舊會是推進重組的重點領域。不過，具體什麼時間會進行重組、某一時期會重組多少家，這還需根據央企的具體發展情況、外在客觀條件等因素來定，「成熟一戶、推進一戶」依舊會是未來央企重組堅持的原則，所謂的央企重組時間表是沒有且沒有必要的。<br>", item.getDescription());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void Given_hkejDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
+        final NewsItem newsItem = new NewsItem();
+        newsItem.setLink(HkejClientTest.ERROR_DETAILS_URL);
+
+        this.client.updateItem(newsItem).blockingGet();
     }
 
     @NonNull

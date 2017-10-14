@@ -36,19 +36,6 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
         this.factories = factories;
     }
 
-    public int getAnimationDuration() {
-        return this.animationDuration;
-    }
-
-    public void setAnimationDuration(final int animationDuration) {
-        this.animationDuration = animationDuration;
-    }
-
-    @Nullable
-    public Interpolator getAnimationInterpolator() {
-        return this.animationInterpolator;
-    }
-
     public void setAnimationInterpolator(@Nullable final Interpolator animationInterpolator) {
         this.animationInterpolator = animationInterpolator;
     }
@@ -92,8 +79,8 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
 
         if (adapterPosition > this.lastItemPosition) {
             for (final Animator animator : this.getItemAnimators(holder.itemView)) {
-                animator.setDuration(this.animationDuration).start();
                 animator.setInterpolator(this.animationInterpolator);
+                animator.setDuration(this.animationDuration).start();
             }
 
             this.lastItemPosition = adapterPosition;
@@ -123,70 +110,6 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
     }
 
     /**
-     * Calls this method instead of calling {@link #notifyItemChanged(int)} to update its associated {@link Binder}s.
-     * @param item The item changed.
-     * @param position Position of the item that has changed.
-     */
-    public void onItemChanged(@Nullable final M item, final int position) {
-        final Pair<PartBinderFactory<M, V>, Binder<V>> binder = this.binders.get(position);
-        if (binder.second instanceof Disposable) {
-            final Disposable disposable = (Disposable)binder.second;
-            if (!disposable.isDisposed()) disposable.dispose();
-        }
-
-        this.binders.set(position, ViewBinderUtils.<M, V>createViewBinders(Collections.singletonList(item), this.factories).iterator().next());
-
-        this.notifyItemChanged(position);
-    }
-
-    /**
-     * Calls this method instead of calling {@link #notifyItemRangeChanged(int, int)} to update its associated {@link Binder}s.
-     * @param items The items changed.
-     * @param positionStart Position of the first item that has changed.
-     */
-    public void onItemRangeChanged(@NonNull final Collection<M> items, final int positionStart) {
-        int i = 0;
-
-        for (final Pair<PartBinderFactory<M, V>, Binder<V>> binder : ViewBinderUtils.<M, V>createViewBinders(items, this.factories)) {
-            final int position = positionStart + i;
-
-            final Pair<PartBinderFactory<M, V>, Binder<V>> b = this.binders.get(position);
-            if (b.second instanceof Disposable) {
-                final Disposable disposable = (Disposable)b.second;
-                if (!disposable.isDisposed()) disposable.dispose();
-            }
-
-            this.binders.set(position, binder);
-
-            i++;
-        }
-
-        this.notifyItemRangeChanged(positionStart, items.size());
-    }
-
-    /**
-     * Calls this method instead of calling {@link #notifyItemInserted(int)} to update its associated {@link Binder}s.
-     * @param item The item inserted.
-     * @param position Position of the newly inserted item in the data set.
-     */
-    public void onItemInserted(@Nullable final M item, final int position) {
-        this.binders.add(position, ViewBinderUtils.<M, V>createViewBinders(Collections.singletonList(item), this.factories).iterator().next());
-
-        this.notifyItemInserted(position);
-    }
-
-    /**
-     * Calls this method instead of calling {@link #notifyItemMoved(int, int)} to update its associated {@link Binder}s.
-     * @param fromPosition Previous position of the item.
-     * @param toPosition New position of the item.
-     */
-    public void onItemMoved(final int fromPosition, final int toPosition) {
-        Collections.swap(this.binders, fromPosition, toPosition);
-
-        this.notifyItemMoved(fromPosition, toPosition);
-    }
-
-    /**
      * Calls this method instead of calling {@link #notifyItemRangeInserted(int, int)} to update its associated {@link Binder}s.
      * @param items The items inserted.
      * @param positionStart Position of the first item that was inserted.
@@ -195,40 +118,5 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
         this.binders.addAll(positionStart, ViewBinderUtils.createViewBinders(items, this.factories));
 
         this.notifyItemRangeInserted(positionStart, items.size());
-    }
-
-    /**
-     * Calls this method instead of calling {@link #notifyItemRemoved(int)} to update its associated {@link Binder}s.
-     * @param position Position of the item that has now been removed.
-     */
-    public void onItemRemoved(final int position) {
-        final Pair<PartBinderFactory<M, V>, Binder<V>> binder = this.binders.get(position);
-        if (binder.second instanceof Disposable) {
-            final Disposable disposable = (Disposable)binder.second;
-            if (!disposable.isDisposed()) disposable.dispose();
-        }
-
-        this.binders.remove(position);
-
-        this.notifyItemRemoved(position);
-    }
-
-    /**
-     * Calls this method instead of calling {@link #notifyItemRangeRemoved(int, int)} to update its associated {@link Binder}s.
-     * @param positionStart Previous position of the first item that was removed.
-     * @param itemCount Number of items removed from the data set.
-     */
-    public void onItemRangeRemoved(final int positionStart, final int itemCount) {
-        final List<Pair<PartBinderFactory<M, V>, Binder<V>>> subList = this.binders.subList(positionStart, positionStart + itemCount);
-        for (final Pair<PartBinderFactory<M, V>, Binder<V>> binder : subList) {
-            if (binder.second instanceof Disposable) {
-                final Disposable disposable = (Disposable)binder.second;
-                if (!disposable.isDisposed()) disposable.dispose();
-            }
-        }
-
-        subList.clear();
-
-        this.notifyItemRangeRemoved(positionStart, itemCount);
     }
 }

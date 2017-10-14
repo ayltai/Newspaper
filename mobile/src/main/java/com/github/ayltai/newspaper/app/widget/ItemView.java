@@ -21,7 +21,7 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public class ItemView extends ObservableView implements ItemPresenter.View {
+public abstract class ItemView extends ObservableView implements ItemPresenter.View {
     protected final FlowableProcessor<Irrelevant> clicks = PublishProcessor.create();
 
     protected View container;

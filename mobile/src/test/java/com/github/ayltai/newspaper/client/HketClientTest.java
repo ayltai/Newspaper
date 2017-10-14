@@ -20,8 +20,10 @@ import com.github.ayltai.newspaper.util.IOUtils;
 import io.reactivex.Observable;
 
 public final class HketClientTest extends NetworkTest {
-    private static final String HKET_URL         = "https://topick.hket.com/srat006/%E6%96%B0%E8%81%9E";
-    private static final String HKET_DETAILS_URL = "https://topick.hket.com/article/1899848/全球獨有1.6億元的陀飛輪　手工鑲嵌260卡寶石?mtc=10012";
+    private static final String HKET_URL          = "https://topick.hket.com/srat006/%E6%96%B0%E8%81%9E";
+    private static final String HKET_DETAILS_URL  = "https://topick.hket.com/article/1899848/全球獨有1.6億元的陀飛輪　手工鑲嵌260卡寶石?mtc=10012";
+    private static final String ERROR_URL         = "error 1";
+    private static final String ERROR_DETAILS_URL = "error 2";
 
     private HketClient client;
 
@@ -31,12 +33,14 @@ public final class HketClientTest extends NetworkTest {
 
         Mockito.doReturn(Observable.just(HketClientTest.createHtml())).when(this.apiService).getHtml(HketClientTest.HKET_URL);
         Mockito.doReturn(Observable.just(HketClientTest.createDetailsHtml())).when(this.apiService).getHtml(HketClientTest.HKET_DETAILS_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 1"))).when(this.apiService).getHtml(HketClientTest.ERROR_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 2"))).when(this.apiService).getHtml(HketClientTest.ERROR_DETAILS_URL);
 
         this.client = new HketClient(this.httpClient, this.apiService, SourceFactory.getInstance(RuntimeEnvironment.application).getSource("經濟日報"));
     }
 
     @Test
-    public void Given_HketUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
+    public void Given_hketUrl_When_getItemsIsCalled_Then_itemsAreReturned() {
         final List<NewsItem> items = this.client.getItems(HketClientTest.HKET_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 30, items.size());
@@ -46,7 +50,14 @@ public final class HketClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_Item_When_updateItemIsCalled_Then_ItemIsUpdated() {
+    public void Given_errorUrl_When_getItemsIsCalled_Then_noItemsAreReturned() {
+        final List<NewsItem> items = this.client.getItems(HketClientTest.ERROR_URL).blockingGet();
+
+        Assert.assertEquals("Incorrect items.size()", 0, items.size());
+    }
+
+    @Test
+    public void Given_item_When_updateItemIsCalled_Then_itemIsUpdated() {
         final Item item = this.client.updateItem(this.client.getItems(HketClientTest.HKET_URL).blockingGet().get(18)).blockingGet();
 
         Assert.assertEquals("Incorrect item.getImages().size()", 3, item.getImages().size());
@@ -55,6 +66,14 @@ public final class HketClientTest extends NetworkTest {
         Assert.assertNotNull("item.getVideo() is null", item.getVideo());
         Assert.assertEquals("Incorrect video URL", "https://www.youtube.com/watch?v=UCcCvub76WA", item.getVideo().getVideoUrl());
         Assert.assertEquals("Incorrect item full description", "手錶向來是個人身份象徵。但一隻高達1.6億元的陀飛輪腕錶，到底有幾珍貴？<br>這隻名為Billionaire陀飛輪腕錶，是由美國品牌傑克寶Jacob &amp; Co.所製造，售價為1.6億元，全球", item.getDescription().substring(0, 100));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void Given_hketDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
+        final NewsItem newsItem = new NewsItem();
+        newsItem.setLink(HketClientTest.ERROR_DETAILS_URL);
+
+        this.client.updateItem(newsItem).blockingGet();
     }
 
     @NonNull

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -58,6 +59,11 @@ public final class ContentView extends ItemView {
         }
     }
 
+    @VisibleForTesting
+    protected CharSequence getTitle() {
+        return this.title.getText();
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public void setDescription(@Nullable final CharSequence description) {
@@ -71,6 +77,11 @@ public final class ContentView extends ItemView {
         }
     }
 
+    @VisibleForTesting
+    protected CharSequence getDescription() {
+        return this.description.getText();
+    }
+
     @Override
     public void setImages(@NonNull final List<Image> images) {
         if (images.isEmpty()) {
@@ -81,6 +92,11 @@ public final class ContentView extends ItemView {
             this.image.setVisibility(View.VISIBLE);
             this.image.showImage(Uri.parse(images.get(0).getUrl()));
         }
+    }
+
+    @VisibleForTesting
+    protected int getImageVisibility() {
+        return this.image.getVisibility();
     }
 
     @CallSuper

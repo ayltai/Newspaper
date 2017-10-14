@@ -14,13 +14,14 @@ import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.view.ListPresenter;
 import com.github.ayltai.newspaper.view.PresenterTest;
 
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 import io.realm.RealmList;
 
-public final class ItemListPresenterTest extends PresenterTest<MainActivity, ItemListPresenter, ItemListPresenter.View> {
+public final class ItemListPresenterTest extends PresenterTest<MainActivity, ItemListPresenter, ListPresenter.View<Item>> {
     private final FlowableProcessor<List<Item>> load                           = PublishProcessor.create();
     private final FlowableProcessor<Irrelevant> clears                         = PublishProcessor.create();
     private final FlowableProcessor<Irrelevant> pullToRefreshes                = PublishProcessor.create();
@@ -38,8 +39,8 @@ public final class ItemListPresenterTest extends PresenterTest<MainActivity, Ite
 
     @NonNull
     @Override
-    protected ItemListPresenter.View createView() {
-        final ItemListPresenter.View view = Mockito.mock(ItemListPresenter.View.class);
+    protected ListPresenter.View<Item> createView() {
+        final ListPresenter.View<Item> view = Mockito.mock(ListPresenter.View.class);
 
         Mockito.doReturn(this.clears).when(view).clears();
         Mockito.doReturn(this.pullToRefreshes).when(view).pullToRefreshes();

@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper;
 
+import java.io.File;
+
 import android.support.annotation.CallSuper;
 import android.support.test.rule.ActivityTestRule;
 
@@ -8,31 +10,23 @@ import org.junit.Before;
 import org.junit.Rule;
 
 import com.github.ayltai.newspaper.app.MainActivity;
+import com.github.ayltai.newspaper.util.MoreTestUtils;
 
-public class BaseTest {
-    public static final int DURATION_SHORT  = 6;
-    public static final int DURATION_MEDIUM = 12;
-    public static final int DURATION_LONG   = 18;
-
+public abstract class BaseTest {
     @Rule
     public ActivityTestRule<MainActivity> testRule = new ActivityTestRule<>(MainActivity.class);
 
     @CallSuper
     @Before
     public void setUp() {
-        BaseTest.sleep(BaseTest.DURATION_SHORT);
+        final File file = new File("/sdcard/tmp/code-coverage/connected");
+        if (!file.exists()) file.mkdirs();
+
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_MEDIUM);
     }
 
     @CallSuper
     @After
     public void tearDown() {
-    }
-
-    protected static void sleep(final int seconds) {
-        try {
-            Thread.sleep(seconds * 1000);
-        } catch (final InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }

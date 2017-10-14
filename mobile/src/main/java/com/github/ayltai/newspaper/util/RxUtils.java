@@ -21,11 +21,6 @@ public final class RxUtils {
     private RxUtils() {
     }
 
-    public static <T> ObservableTransformer<T, T> applyObservableSchedulers(@NonNull final Scheduler scheduler) {
-        return observable -> observable.observeOn(scheduler)
-            .subscribeOn(scheduler);
-    }
-
     public static <T> FlowableTransformer<T, T> applyFlowableSchedulers(@NonNull final Scheduler scheduler) {
         return flowable -> flowable.observeOn(scheduler)
             .subscribeOn(scheduler);
@@ -43,24 +38,10 @@ public final class RxUtils {
             .subscribeOn(Schedulers.io());
     }
 
-    public static <T> FlowableTransformer<T, T> applyFlowableBackgroundSchedulers() {
-        if (TestUtils.isRunningUnitTest()) return RxUtils.applyFlowableTrampolineSchedulers();
-
-        return flowable -> flowable.observeOn(Schedulers.io())
-            .subscribeOn(Schedulers.io());
-    }
-
     public static <T> SingleTransformer<T, T> applySingleBackgroundSchedulers() {
         if (TestUtils.isRunningUnitTest()) return RxUtils.applySingleTrampolineSchedulers();
 
         return single -> single.observeOn(Schedulers.io())
-            .subscribeOn(Schedulers.io());
-    }
-
-    public static <T> MaybeTransformer<T, T> applyMaybeBackgroundSchedulers() {
-        if (TestUtils.isRunningUnitTest()) return RxUtils.applyMaybeTrampolineSchedulers();
-
-        return maybe -> maybe.observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io());
     }
 

@@ -5,17 +5,12 @@ import java.util.Collection;
 import java.util.List;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.annotation.AttrRes;
 import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.StyleRes;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,14 +25,11 @@ import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
 public abstract class ListView<M> extends ObservableView implements ListPresenter.View<M> {
-    public static final int NO_INFINITE_LOADING = 0;
-
     //region Subscriptions
 
     protected final FlowableProcessor<Integer>    bestVisibleItemPositionChanges = PublishProcessor.create();
     protected final FlowableProcessor<Irrelevant> pullToRefreshes                = PublishProcessor.create();
     protected final FlowableProcessor<Irrelevant> clears                         = PublishProcessor.create();
-    protected final FlowableProcessor<Irrelevant> infiniteLoads                  = PublishProcessor.create();
     protected final FlowableProcessor<Boolean>    attachments                    = PublishProcessor.create();
     protected final FlowableProcessor<Irrelevant> detachments                    = PublishProcessor.create();
 
@@ -56,30 +48,10 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     private boolean isFirstAttachment = true;
 
-    //region Constructors
-
     protected ListView(@NonNull final Context context) {
         super(context);
         this.init();
     }
-
-    protected ListView(@NonNull final Context context, @Nullable final AttributeSet attrs) {
-        super(context, attrs);
-        this.init();
-    }
-
-    protected ListView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.init();
-    }
-
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    protected ListView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        this.init();
-    }
-
-    //endregion
 
     //region Properties
 
@@ -102,8 +74,6 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     @IdRes
     protected abstract int getEmptyViewId();
-
-    protected abstract int getInfiniteLoadingThreshold();
 
     //endregion
 
@@ -193,11 +163,6 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
         if (this.emptyView != null) this.emptyView.setVisibility(View.GONE);
     }
 
-    @Override
-    public void showEndOfList() {
-        this.adapter.onItemRemoved(this.adapter.getItemCount() - 1);
-    }
-
     @NonNull
     protected abstract UniversalAdapter<M, ?, ?> createAdapter();
 
@@ -215,12 +180,6 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
     @Override
     public Flowable<Irrelevant> pullToRefreshes() {
         return this.pullToRefreshes;
-    }
-
-    @NonNull
-    @Override
-    public Flowable<Irrelevant> infiniteLoads() {
-        return this.infiniteLoads;
     }
 
     @NonNull
@@ -250,11 +209,7 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        this.manageDisposable(this.recyclerView.bestVisibleItemPositionChanges().subscribe(index -> {
-            this.bestVisibleItemPositionChanges.onNext(index);
-
-            if (this.adapter.getItemCount() - index - 1 <= this.getInfiniteLoadingThreshold()) this.infiniteLoads.onNext(Irrelevant.INSTANCE);
-        }));
+        this.manageDisposable(this.recyclerView.bestVisibleItemPositionChanges().subscribe(this.bestVisibleItemPositionChanges::onNext));
 
         this.attachments.onNext(isFirstAttachment);
 
