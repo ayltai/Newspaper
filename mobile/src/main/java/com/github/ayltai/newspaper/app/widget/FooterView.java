@@ -3,6 +3,7 @@ package com.github.ayltai.newspaper.app.widget;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -44,6 +45,11 @@ public final class FooterView extends ItemView {
         }
     }
 
+    @VisibleForTesting
+    protected CharSequence getTitle() {
+        return this.title.getText();
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public void setDescription(@Nullable final CharSequence description) {
@@ -53,6 +59,11 @@ public final class FooterView extends ItemView {
             this.description.setVisibility(View.VISIBLE);
             this.description.setText(Html.fromHtml(description.toString()));
         }
+    }
+
+    @VisibleForTesting
+    protected CharSequence getDescription() {
+        return this.description.getText();
     }
 
     //endregion

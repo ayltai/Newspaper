@@ -38,16 +38,11 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
 
         void hideLoadingView();
 
-        void showEndOfList();
-
         @NonNull
         Flowable<Irrelevant> clears();
 
         @NonNull
         Flowable<Irrelevant> pullToRefreshes();
-
-        @NonNull
-        Flowable<Irrelevant> infiniteLoads();
 
         @NonNull
         Flowable<Integer> bestVisibleItemPositionChanges();

@@ -208,26 +208,6 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
         return false;
     }
 
-    @SuppressWarnings("CloneDoesntCallSuperClone")
-    @Override
-    public Item clone() {
-        final NewsItem item = new NewsItem();
-
-        item.setTitle(this.title);
-        item.setDescription(this.description);
-        item.setIsFullDescription(this.isFullDescription);
-        item.setLink(this.link);
-        item.setPublishDate(this.publishDate == 0 ? null : new Date(this.publishDate));
-        item.getImages().addAll(this.images);
-        item.setVideo(this.video);
-        item.setBookmarked(this.bookmarked);
-        item.setLastAccessedDate(this.lastAccessedDate == 0 ? null : new Date(this.lastAccessedDate));
-        item.setSource(this.source);
-        item.setCategory(this.category);
-
-        return item;
-    }
-
     @Override
     public final int hashCode() {
         return this.link.hashCode();

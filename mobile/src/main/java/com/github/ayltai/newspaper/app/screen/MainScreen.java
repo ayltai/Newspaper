@@ -3,24 +3,17 @@ package com.github.ayltai.newspaper.app.screen;
 import java.lang.ref.SoftReference;
 import java.util.Map;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
-import android.os.Build;
 import android.os.Parcelable;
-import android.support.annotation.AttrRes;
 import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.StyleRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +25,7 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.view.AboutPresenter;
-import com.github.ayltai.newspaper.app.view.NewsPresenter;
+import com.github.ayltai.newspaper.app.view.NewsPresenterView;
 import com.github.ayltai.newspaper.app.widget.AboutView;
 import com.github.ayltai.newspaper.app.widget.BookmarkedNewsView;
 import com.github.ayltai.newspaper.app.widget.HistoricalNewsView;
@@ -40,7 +33,7 @@ import com.github.ayltai.newspaper.app.widget.PagerNewsView;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.widget.Screen;
+import com.github.ayltai.newspaper.widget.ObservableView;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.roughike.bottombar.BottomBar;
@@ -51,7 +44,7 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public final class MainScreen extends Screen implements MainPresenter.View, OnTabSelectListener {
+public final class MainScreen extends ObservableView implements MainPresenter.View, OnTabSelectListener {
     @AutoValue
     public abstract static class Key extends ClassKey implements Parcelable {
         @NonNull
@@ -78,7 +71,7 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
     private Toolbar              toolbar;
     private SearchView           searchView;
     private ViewGroup            content;
-    private NewsPresenter.View   newsView;
+    private NewsPresenterView    newsView;
     private BottomBar            bottomBar;
     private FloatingActionButton upAction;
     private FloatingActionButton refreshAction;
@@ -90,30 +83,10 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
 
     private boolean isMoreActionsShown;
 
-    //region Constructors
-
     public MainScreen(@NonNull final Context context) {
         super(context);
         this.init();
     }
-
-    public MainScreen(@NonNull final Context context, @Nullable final AttributeSet attrs) {
-        super(context, attrs);
-        this.init();
-    }
-
-    public MainScreen(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.init();
-    }
-
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    public MainScreen(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        this.init();
-    }
-
-    //endregion
 
     //region Events
 
@@ -168,7 +141,7 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
             boolean isCached = false;
 
             if (this.cachedViews.containsKey(tabId)) {
-                this.newsView = (NewsPresenter.View)this.cachedViews.get(tabId).get();
+                this.newsView = (NewsPresenterView)this.cachedViews.get(tabId).get();
 
                 if (this.newsView != null) {
                     if (this.content.indexOfChild((View)this.newsView) < 0) {
@@ -181,13 +154,13 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
                 }
             }
 
+            if (this.isMoreActionsShown) this.hideMoreActions();
+
             this.upAction.setVisibility(View.INVISIBLE);
             this.refreshAction.setVisibility(View.INVISIBLE);
             this.settingsAction.setVisibility(tabId == R.id.action_news ? View.INVISIBLE : View.GONE);
             this.clearAllAction.setVisibility(tabId == R.id.action_news ? View.GONE : View.INVISIBLE);
             this.moreAction.setVisibility(View.VISIBLE);
-
-            if (this.isMoreActionsShown) this.hideMoreActions();
 
             this.toolbar.getMenu().findItem(R.id.action_search).setVisible(true);
 
@@ -344,14 +317,23 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
         this.bottomBar.selectTabAtPosition(0);
     }
 
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private void showMoreActions() {
         this.isMoreActionsShown = true;
 
         this.moreAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.rotate_clockwise));
-        this.upAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
-        this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
-        if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
-        if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+
+        if (Animations.isEnabled()) {
+            this.upAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+            this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+        } else {
+            this.upAction.setVisibility(View.VISIBLE);
+            this.refreshAction.setVisibility(View.VISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setVisibility(View.VISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setVisibility(View.VISIBLE);
+        }
 
         this.upAction.setClickable(true);
         this.refreshAction.setClickable(true);
@@ -359,27 +341,28 @@ public final class MainScreen extends Screen implements MainPresenter.View, OnTa
         if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setClickable(true);
     }
 
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private void hideMoreActions() {
         this.isMoreActionsShown = false;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled()) {
-            this.moreAction.setVisibility(View.INVISIBLE);
-            this.upAction.setVisibility(View.INVISIBLE);
-            this.refreshAction.setVisibility(View.INVISIBLE);
-            this.settingsAction.setVisibility(View.INVISIBLE);
-            this.clearAllAction.setVisibility(View.INVISIBLE);
-        } else {
-            this.moreAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.rotate_anti_clockwise, R.integer.fab_animation_duration));
+        this.moreAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.rotate_anti_clockwise, R.integer.fab_animation_duration));
+
+        if (Animations.isEnabled()) {
             this.upAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
             this.refreshAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
-            this.settingsAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
-            this.clearAllAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
+        } else {
+            this.upAction.setVisibility(View.INVISIBLE);
+            this.refreshAction.setVisibility(View.INVISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setVisibility(View.INVISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setVisibility(View.INVISIBLE);
         }
 
         this.upAction.setClickable(false);
         this.refreshAction.setClickable(false);
-        this.settingsAction.setClickable(false);
-        this.clearAllAction.setClickable(false);
+        if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setClickable(false);
+        if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setClickable(false);
     }
 
     //endregion

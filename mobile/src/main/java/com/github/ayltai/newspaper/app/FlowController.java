@@ -23,7 +23,6 @@ import com.github.ayltai.newspaper.app.screen.MainScreen;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.view.BindingPresenter;
 import com.github.ayltai.newspaper.view.Presenter;
-import com.github.ayltai.newspaper.view.ScreenPresenter;
 
 import flow.Flow;
 import flow.KeyDispatcher;
@@ -114,10 +113,7 @@ final class FlowController {
      * @return {@code true} if back button pressed event is handled; otherwise, {@code false}.
      */
     boolean onBackPressed() {
-        if (Flow.get(this.activity).goBack()) return true;
-
-        final View view = ((ViewGroup)this.activity.findViewById(android.R.id.content)).getChildAt(0);
-        return view instanceof ScreenPresenter.View && ((ScreenPresenter.View)view).goBack();
+        return Flow.get(this.activity).goBack();
     }
 
     void onDestroy() {

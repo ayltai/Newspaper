@@ -30,11 +30,6 @@ public final class ViewUtils {
         return null;
     }
 
-    @Nullable
-    public static View getRootView(@NonNull final Activity activity) {
-        return activity.findViewById(android.R.id.content);
-    }
-
     public static ViewGroup.LayoutParams createWrapContentLayoutParams() {
         return new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }

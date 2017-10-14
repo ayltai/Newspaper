@@ -4,12 +4,9 @@ import java.util.Collections;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -25,25 +22,9 @@ import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.util.TestUtils;
 
 public final class BookmarkedNewsView extends NewsView {
-    //region Constructors
-
     public BookmarkedNewsView(@NonNull final Context context) {
         super(context);
     }
-
-    public BookmarkedNewsView(@NonNull final Context context, @Nullable final AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public BookmarkedNewsView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    public BookmarkedNewsView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    //endregion
 
     @NonNull
     @Override

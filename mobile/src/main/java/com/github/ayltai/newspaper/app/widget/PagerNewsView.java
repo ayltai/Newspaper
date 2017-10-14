@@ -6,15 +6,12 @@ import android.app.Activity;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.AttrRes;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -25,50 +22,19 @@ import com.github.ayltai.newspaper.analytics.SearchEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.config.UserConfig;
-import com.github.ayltai.newspaper.app.view.PagerNewsPresenter;
+import com.github.ayltai.newspaper.app.view.PagerNewsPresenterView;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.github.ayltai.newspaper.widget.ObservableView;
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
 
-import io.reactivex.Flowable;
-import io.reactivex.processors.FlowableProcessor;
-import io.reactivex.processors.PublishProcessor;
-
-public class PagerNewsView extends ObservableView implements PagerNewsPresenter.View {
-    private final FlowableProcessor<Integer> pageSelections = PublishProcessor.create();
-
+public class PagerNewsView extends ObservableView implements PagerNewsPresenterView {
     private UserConfig       userConfig;
     private ViewPager        viewPager;
     private PagerNewsAdapter adapter;
 
-    //region Constructors
-
     public PagerNewsView(@NonNull final Context context) {
         super(context);
         this.init();
-    }
-
-    public PagerNewsView(@NonNull final Context context, @Nullable final AttributeSet attrs) {
-        super(context, attrs);
-        this.init();
-    }
-
-    public PagerNewsView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.init();
-    }
-
-    public PagerNewsView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        this.init();
-    }
-
-    //endregion
-
-    @NonNull
-    @Override
-    public Flowable<Integer> pageSelections() {
-        return this.pageSelections;
     }
 
     @CallSuper
@@ -86,16 +52,12 @@ public class PagerNewsView extends ObservableView implements PagerNewsPresenter.
         this.manageDisposable(RxViewPager.pageSelections(this.viewPager).subscribe(index -> {
             this.adapter.setCurrentPosition(index);
 
-            this.pageSelections.onNext(index);
-
             ComponentFactory.getInstance()
                 .getAnalyticsComponent(this.getContext())
                 .eventLogger()
                 .logEvent(new ClickEvent()
                     .setElementName("Page Selection"));
         }));
-
-        if (this.isFirstTimeAttachment) this.pageSelections.onNext(0);
 
         super.onAttachedToWindow();
     }

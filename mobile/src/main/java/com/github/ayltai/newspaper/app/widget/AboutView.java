@@ -4,14 +4,11 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.AttrRes;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
+import android.support.annotation.VisibleForTesting;
 import android.support.customtabs.CustomTabsIntent;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,35 +53,21 @@ public final class AboutView extends ObservableView implements AboutPresenter.Vi
 
     private boolean isAnimated;
 
-    //region Constructors
-
     public AboutView(@NonNull final Context context) {
         super(context);
         this.init();
     }
-
-    public AboutView(@NonNull final Context context, @Nullable final AttributeSet attrs) {
-        super(context, attrs);
-        this.init();
-    }
-
-    public AboutView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.init();
-    }
-
-    public AboutView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        this.init();
-    }
-
-    //endregion
 
     //region Properties
 
     @Override
     public void setAppName(@NonNull final CharSequence appName) {
         this.appName.setText(appName);
+    }
+
+    @VisibleForTesting
+    protected CharSequence getAppName() {
+        return this.appName.getText();
     }
 
     @Override
@@ -96,11 +79,16 @@ public final class AboutView extends ObservableView implements AboutPresenter.Vi
     public void setAppVersion(@NonNull final CharSequence appVersion) {
         this.appVersion.setText(String.format(this.getContext().getString(R.string.app_version), appVersion));
 
-        if (!TestUtils.isRunningInstrumentedTest() && !this.isAnimated) {
+        if (Animations.isEnabled() && !this.isAnimated) {
             this.isAnimated = true;
 
             Animations.animateViewGroup(this.container);
         }
+    }
+
+    @VisibleForTesting
+    protected CharSequence getAppVersion() {
+        return this.appVersion.getText();
     }
 
     //endregion

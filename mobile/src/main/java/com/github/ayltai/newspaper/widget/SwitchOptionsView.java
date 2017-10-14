@@ -1,12 +1,8 @@
 package com.github.ayltai.newspaper.widget;
 
 import android.content.Context;
-import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.support.v7.widget.SwitchCompat;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,29 +20,10 @@ public final class SwitchOptionsView extends ObservableView implements OptionsPr
 
     private ViewGroup container;
 
-    //region Constructors
-
     public SwitchOptionsView(@NonNull final Context context) {
         super(context);
         this.init();
     }
-
-    public SwitchOptionsView(@NonNull final Context context, @Nullable final AttributeSet attrs) {
-        super(context, attrs);
-        this.init();
-    }
-
-    public SwitchOptionsView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.init();
-    }
-
-    public SwitchOptionsView(@NonNull final Context context, @Nullable final AttributeSet attrs, @AttrRes final int defStyleAttr, @StyleRes final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        this.init();
-    }
-
-    //endregion
 
     @Override
     public void addOption(@NonNull final CharSequence text, final boolean selected) {
@@ -65,9 +42,6 @@ public final class SwitchOptionsView extends ObservableView implements OptionsPr
         return this.optionChanges;
     }
 
-    protected void onSelect(@NonNull final SwitchCompat view) {
-    }
-
     @Override
     protected void onAttachedToWindow() {
         for (int i = 0; i < this.container.getChildCount(); i++) this.subscribeToView((SwitchCompat)this.container.getChildAt(i));
@@ -81,10 +55,6 @@ public final class SwitchOptionsView extends ObservableView implements OptionsPr
     }
 
     private void subscribeToView(@NonNull final SwitchCompat view) {
-        this.manageDisposable(RxCompoundButton.checkedChanges(view).subscribe(selected -> {
-            this.onSelect(view);
-
-            this.optionChanges.onNext(this.container.indexOfChild(view));
-        }));
+        this.manageDisposable(RxCompoundButton.checkedChanges(view).subscribe(selected -> this.optionChanges.onNext(this.container.indexOfChild(view))));
     }
 }

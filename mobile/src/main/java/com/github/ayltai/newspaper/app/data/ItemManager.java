@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.app.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -137,7 +138,10 @@ public final class ItemManager extends DataManager {
 
                     if (item.isFullDescription()) {
                         if (newsItem.isFullDescription()) {
-                            if (newsItem.getLastAccessedDate().getTime() > item.getLastAccessedDate().getTime()) item.setLastAccessedDate(newsItem.getLastAccessedDate());
+                            final Date newsItemLastAccessedDate = newsItem.getLastAccessedDate();
+                            final Date itemLastAccessedDate     = item.getLastAccessedDate();
+
+                            if (newsItemLastAccessedDate != null && itemLastAccessedDate != null && newsItemLastAccessedDate.getTime() > itemLastAccessedDate.getTime()) item.setLastAccessedDate(newsItem.getLastAccessedDate());
                             item.setBookmarked(newsItem.isBookmarked());
 
                             this.getRealm().insertOrUpdate(item);

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -45,6 +46,11 @@ public final class ImageView extends ItemView {
             this.image.setVisibility(View.VISIBLE);
             this.image.showImage(Uri.parse(images.get(0).getUrl()));
         }
+    }
+
+    @VisibleForTesting
+    protected int getImageVisibility() {
+        return this.image.getVisibility();
     }
 
     @CallSuper

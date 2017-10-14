@@ -2,6 +2,8 @@ version: 2
 
 references:
 
+  ## Cache
+
   cache_key: &cache_key
     key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum "mobile/build.gradle" }}
   restore_cache: &restore_cache
@@ -14,6 +16,8 @@ references:
         - ~/.gradle
         - ~/.m2
 
+  ## Workspace
+
   workspace: &workspace
     ~/workspace
   attach_workspace: &attach_workspace
@@ -23,7 +27,20 @@ references:
     persist_to_workspace:
       root: *workspace
       paths:
-        - mobile/build
+        - mobile/build/outputs/androidTest-results
+        - mobile/build/outputs/apk
+        - mobile/build/outputs/code-coverage
+        - mobile/build/test-results
+  attach_firebase: &attach_firebase
+    attach_workspace:
+      at: *workspace
+  persist_firebase: &persist_firebase
+    persist_to_workspace:
+      root: *workspace
+      paths:
+        - firebase
+
+  ## Docker image configurations
 
   android_config: &android_config
     working_directory: *workspace
@@ -31,13 +48,18 @@ references:
       - image: circleci/android:api-26-alpha
     environment:
       TERM: dumb
-      _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+      _JAVA_OPTIONS: "-Xmx1536m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1536m"'
   gcloud_config: &gcloud_config
     working_directory: *workspace
     docker:
       - image: google/cloud-sdk:latest
     environment:
       TERM: dumb
+
+  ## Keys
+
+  # Android Key Store
 
   export_android_key: &export_android_key
     run:
@@ -48,6 +70,8 @@ references:
       name: Decode Android key store
       command: echo $ANDROID_KEY_STORE | base64 -di > key-store.jks
 
+  # Google Services
+
   export_gservices_key: &export_gservices_key
     run:
       name: Export Google Services key environment variable
@@ -57,6 +81,8 @@ references:
       name: Decode Google Services key
       command: echo $GOOGLE_SERVICES_KEY | base64 -di > mobile/google-services.json
 
+  # Google Cloud Service
+
   export_gcloud_key: &export_gcloud_key
     run:
       name: Export Google Cloud Service key environment variable
@@ -65,6 +91,8 @@ references:
     run:
       name: Decode Google Cloud credentials
       command: echo $GCLOUD_SERVICE_KEY | base64 -di > ${HOME}/client-secret.json
+
+  # Fabric
 
   export_fabric_key: &export_fabric_key
     run:
@@ -76,6 +104,8 @@ references:
       command: echo $FABRIC_KEY | base64 -di > mobile/fabric.properties
 
 jobs:
+
+  ## Build debug APK and instrumented test APK
 
   build_debug:
     <<: *android_config
@@ -95,6 +125,8 @@ jobs:
       - store_artifacts:
           path: mobile/build/outputs/apk/
           destination: /apk/
+
+  ## Build release APK
 
   build_release:
     <<: *android_config
@@ -122,6 +154,8 @@ jobs:
           path: mobile/build/outputs/mapping/
           destination: /mapping/
 
+  ## Run unit tests
+
   test_unit:
     <<: *android_config
     steps:
@@ -135,16 +169,16 @@ jobs:
       - *decode_gservices_key
       - run:
           name: Run unit tests
-          command: ./gradlew -PciBuild=true :mobile:testDebugUnitTest :mobile:jacocoTestReport
-      - run:
-          name: Upload unit tests results to CodeCov
-          command: bash <(curl -s https://codecov.io/bash)
+          command: ./gradlew -PciBuild=true :mobile:testDebugUnitTest
+      - *persist_to_workspace
       - store_artifacts:
           path: mobile/build/reports/
           destination: /reports/
       - store_test_results:
           path: mobile/build/test-results/
           destination: /test-results/
+
+  ## Run instrumented tests
 
   test_instrumented:
     <<: *gcloud_config
@@ -160,21 +194,46 @@ jobs:
           command: gcloud auth activate-service-account firebase-adminsdk-p9qvk@newspaper-84169.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
       - run:
           name: Run instrumented test on Firebase Test Lab
-          command: |
-            if [ "${CIRCLE_BRANCH}" = "master" ]; then
-              gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=sailfish,version=26,locale=en_US,orientation=portrait --timeout 10m
-            else
-              gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=Nexus5X,version=26,locale=en_US,orientation=portrait --timeout 10m
-            fi
+          command: gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=Nexus5X,version=26,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 10m
       - run:
           name: Create directory to store test results
           command: mkdir firebase
       - run:
           name: Download instrumented test results from Firebase Test Lab
           command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-3udbiqpdyp0d0-miwcp7d69v80m | tail -1`*" /root/workspace/firebase/
+      - *persist_firebase
       - store_artifacts:
           path: firebase/
           destination: /firebase/
+
+  ## Submit JaCoCo coverage report
+
+  report_coverage:
+    <<: *android_config
+    steps:
+      - checkout
+      - *restore_cache
+      - run:
+          name: Download dependencies
+          command: ./gradlew androidDependencies
+      - *attach_workspace
+      - *attach_firebase
+      - run:
+          name: Move Firebase coverage report
+          command: mkdir -p mobile/build/outputs/code-coverage/connected && cp firebase/Nexus5X-26-en_US-portrait/artifacts/coverage.ec mobile/build/outputs/code-coverage/connected/coverage.ec
+      - *export_gservices_key
+      - *decode_gservices_key
+      - run:
+          name: Generate JaCoCo report
+          command: ./gradlew -PciBuild=true :mobile:jacocoTestReport
+      - run:
+          name: Upload unit tests results to CodeCov
+          command: bash <(curl -s https://codecov.io/bash)
+      - store_artifacts:
+          path: mobile/build/reports/
+          destination: /reports/
+
+  ## Deploy release APK to Fabric Beta
 
   deploy:
     <<: *android_config
@@ -198,6 +257,10 @@ workflows:
       - test_instrumented:
           requires:
             - build_debug
+      - report_coverage:
+          requires:
+            - test_unit
+            - test_instrumented
       - deploy:
           filters:
             branches:

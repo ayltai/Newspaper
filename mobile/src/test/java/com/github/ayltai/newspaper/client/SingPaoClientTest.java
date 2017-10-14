@@ -22,6 +22,8 @@ import io.reactivex.Observable;
 public final class SingPaoClientTest extends NetworkTest {
     private static final String SING_PAO_URL         = "https://www.singpao.com.hk/index.php?fi=news1";
     private static final String SING_PAO_DETAILS_URL = "https://www.singpao.com.hk/index.php?fi=news1&id=45330";
+    private static final String ERROR_URL            = "error 1";
+    private static final String ERROR_DETAILS_URL    = "error 2";
 
     private SingPaoClient client;
 
@@ -31,12 +33,14 @@ public final class SingPaoClientTest extends NetworkTest {
 
         Mockito.doReturn(Observable.just(SingPaoClientTest.createHtml())).when(this.apiService).getHtml(SingPaoClientTest.SING_PAO_URL);
         Mockito.doReturn(Observable.just(SingPaoClientTest.createDetailsHtml())).when(this.apiService).getHtml(SingPaoClientTest.SING_PAO_DETAILS_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 1"))).when(this.apiService).getHtml(SingPaoClientTest.ERROR_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 2"))).when(this.apiService).getHtml(SingPaoClientTest.ERROR_DETAILS_URL);
 
         this.client = new SingPaoClient(this.httpClient, this.apiService, SourceFactory.getInstance(RuntimeEnvironment.application).getSource("成報"));
     }
 
     @Test
-    public void Given_SingPaoUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
+    public void Given_singPaoUrl_When_getItemsIsCalled_Then_itemsAreReturned() {
         final List<NewsItem> items = this.client.getItems(SingPaoClientTest.SING_PAO_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 20, items.size());
@@ -49,7 +53,14 @@ public final class SingPaoClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_Item_When_updateItemIsCalled_Then_ItemIsUpdated() {
+    public void Given_errorUrl_When_getItemsIsCalled_Then_noItemsAreReturned() {
+        final List<NewsItem> items = this.client.getItems(SingPaoClientTest.ERROR_URL).blockingGet();
+
+        Assert.assertEquals("Incorrect items.size()", 0, items.size());
+    }
+
+    @Test
+    public void Given_item_When_updateItemIsCalled_Then_itemIsUpdated() {
         final Item item = this.client.updateItem(this.client.getItems(SingPaoClientTest.SING_PAO_URL).blockingGet().get(0)).blockingGet();
 
         Assert.assertEquals("Incorrect item.getImages().size()", 5, item.getImages().size());
@@ -57,6 +68,14 @@ public final class SingPaoClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect image description", "實寄信封存世至今只剩15枚，價值連城。", item.getImages().get(0).getDescription());
         Assert.assertNull("item.getVideo() is not null", item.getVideo());
         Assert.assertEquals("Incorrect item full description", "【我城‧我故事】<br><br>紙上不只是談兵，還可以細看香港歷史的變遷。吳貴龍上世紀80年代修讀印刷，之後順理成章到印刷廠工作，自此與紙品結下不解緣。不過，令人意想不到的是，他也慢慢喜愛上收藏紙品，", item.getDescription().substring(0, 100));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void Given_singPaoDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
+        final NewsItem newsItem = new NewsItem();
+        newsItem.setLink(SingPaoClientTest.ERROR_DETAILS_URL);
+
+        this.client.updateItem(newsItem).blockingGet();
     }
 
     @NonNull

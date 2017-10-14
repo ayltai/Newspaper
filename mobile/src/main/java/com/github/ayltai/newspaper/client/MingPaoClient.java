@@ -92,7 +92,7 @@ final class MingPaoClient extends RssClient {
                 error -> {
                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
-                    emitter.onSuccess(item);
+                    emitter.onError(error);
                 }
             ));
     }

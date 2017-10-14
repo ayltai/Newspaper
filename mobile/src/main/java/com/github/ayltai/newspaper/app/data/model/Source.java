@@ -73,7 +73,7 @@ public class Source extends RealmObject implements Parcelable {
 
     @NonNull
     public RealmList<Category> getCategories() {
-        return this.categories;
+        return this.categories == null ? new RealmList<>() : this.categories;
     }
 
     @DrawableRes
@@ -86,7 +86,7 @@ public class Source extends RealmObject implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return "Source { name = '" + name + "', categories = " + categories + " }";
+        return "Source { name = '" + this.name + "', categories = " + this.getCategories() + " }";
     }
 
     //region Parcelable
@@ -99,7 +99,7 @@ public class Source extends RealmObject implements Parcelable {
     @Override
     public void writeToParcel(@NonNull final Parcel dest, final int flags) {
         dest.writeString(this.name);
-        dest.writeTypedList(this.categories);
+        dest.writeTypedList(this.categories == null ? new RealmList<>() : this.categories);
         dest.writeInt(this.avatar);
     }
 

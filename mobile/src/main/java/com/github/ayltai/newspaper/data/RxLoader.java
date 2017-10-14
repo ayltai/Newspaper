@@ -21,10 +21,6 @@ public abstract class RxLoader<D> extends Loader<D> {
 
     //region Constructors
 
-    protected RxLoader(@NonNull final Context context) {
-        this(context, null);
-    }
-
     protected RxLoader(@NonNull final Context context, @Nullable final Bundle args) {
         super(context);
 

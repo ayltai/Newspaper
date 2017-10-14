@@ -24,6 +24,8 @@ import io.reactivex.Observable;
 public final class SkyPostClientTest extends NetworkTest {
     private static final String SKY_POST_URL         = "http://skypost.ulifestyle.com.hk/rss/sras001";
     private static final String SKY_POST_DETAILS_URL = "http://skypost.ulifestyle.com.hk/article/1899134/港人首置上車盤 或市價一半";
+    private static final String ERROR_URL            = "error 1";
+    private static final String ERROR_DETAILS_URL    = "error 2";
 
     private SkyPostClient client;
 
@@ -33,12 +35,14 @@ public final class SkyPostClientTest extends NetworkTest {
 
         Mockito.doReturn(Observable.just(SkyPostClientTest.createFeed())).when(this.apiService).getFeed(SkyPostClientTest.SKY_POST_URL);
         Mockito.doReturn(Observable.just(SkyPostClientTest.createDetailsHtml())).when(this.apiService).getHtml(SkyPostClientTest.SKY_POST_DETAILS_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 1"))).when(this.apiService).getFeed(SkyPostClientTest.ERROR_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 2"))).when(this.apiService).getHtml(SkyPostClientTest.ERROR_DETAILS_URL);
 
         this.client = new SkyPostClient(this.httpClient, this.apiService, SourceFactory.getInstance(RuntimeEnvironment.application).getSource("晴報"));
     }
 
     @Test
-    public void Given_SkyPostUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
+    public void Given_skyPostUrl_When_getItemsIsCalled_Then_itemsAreReturned() {
         final List<NewsItem> items = this.client.getItems(SkyPostClientTest.SKY_POST_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 49, items.size());
@@ -48,7 +52,14 @@ public final class SkyPostClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_Item_When_updateItemIsCalled_Then_ItemIsUpdated() {
+    public void Given_errorUrl_When_getItemsIsCalled_Then_noItemsAreReturned() {
+        final List<NewsItem> items = this.client.getItems(SkyPostClientTest.ERROR_URL).blockingGet();
+
+        Assert.assertEquals("Incorrect items.size()", 0, items.size());
+    }
+
+    @Test
+    public void Given_item_When_updateItemIsCalled_Then_itemIsUpdated() {
         final Item item = this.client.updateItem(this.client.getItems(SkyPostClientTest.SKY_POST_URL).blockingGet().get(0)).blockingGet();
 
         Assert.assertEquals("Incorrect item.getImages().size()", 2, item.getImages().size());
@@ -56,6 +67,14 @@ public final class SkyPostClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect image description", "林鄭月娥曾在競選政綱指，港人首置上車盤是「居屋之上，私樓之下。」（iStock）", item.getImages().get(0).getDescription());
         Assert.assertNull("item.getVideo() is not null", item.getVideo());
         Assert.assertEquals("Incorrect item full description", "<h3>港人首置上車盤 或市價一半</h3><br><h4>轉售擬設限 只可賣予政府</h4><br>特首林鄭月娥下月發表的施政報告，將公布港人首置上車盤計劃，土地供應專責小組主席黃遠輝透露，定價會按", item.getDescription().substring(0, 100));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void Given_skyPostDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
+        final NewsItem newsItem = new NewsItem();
+        newsItem.setLink(SkyPostClientTest.ERROR_DETAILS_URL);
+
+        this.client.updateItem(newsItem).blockingGet();
     }
 
     @NonNull
