@@ -28,6 +28,8 @@ public final class MingPaoClientTest extends NetworkTest {
     private static final String MING_PAO_DETAILS_URL         = "https://news.mingpao.com/dat/pns/pns_web_tc/article1/20170909_9a6f9b7d2a/todaycontent_1504893031511.js";
     private static final String MING_PAO_INSTANT_URL         = "https://news.mingpao.com/rss/ins/s00001.xml";
     private static final String MING_PAO_INSTANT_DETAILS_URL = "https://news.mingpao.com/dat/ins/ins_web_tc/article1/20170910/content_1504952009224.js";
+    private static final String ERROR_URL                    = "error 1";
+    private static final String ERROR_DETAILS_URL            = "error 2";
 
     private MingPaoClient client;
 
@@ -41,12 +43,14 @@ public final class MingPaoClientTest extends NetworkTest {
         Mockito.doReturn(Observable.just(MingPaoClientTest.createJson())).when(this.apiService).getHtml(MingPaoClientTest.MING_PAO_DETAILS_URL);
         Mockito.doReturn(Observable.just(MingPaoClientTest.createJs())).when(this.apiService).getHtml(MingPaoClientTest.MING_PAO_ISSUE_LIST_URL);
         Mockito.doReturn(Observable.just(MingPaoClientTest.createInstantJs())).when(this.apiService).getHtml(MingPaoClientTest.MING_PAO_INSTANT_DETAILS_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 1"))).when(this.apiService).getFeed(MingPaoClientTest.ERROR_URL);
+        Mockito.doReturn(Observable.error(new RuntimeException("Fake error 2"))).when(this.apiService).getHtml(MingPaoClientTest.ERROR_DETAILS_URL);
 
         this.client = new MingPaoClient(this.httpClient, this.apiService, SourceFactory.getInstance(RuntimeEnvironment.application).getSource("明報"));
     }
 
     @Test
-    public void Given_MingPaoUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
+    public void Given_mingPaoUrl_When_getItemsIsCalled_Then_itemsAreReturned() {
         final List<NewsItem> items = this.client.getItems(MingPaoClientTest.MING_PAO_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 7, items.size());
@@ -56,7 +60,14 @@ public final class MingPaoClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_Item_When_updateItemIsCalled_Then_ItemIsUpdated() {
+    public void Given_errorUrl_When_getItemsIsCalled_Then_noItemsAreReturned() {
+        final List<NewsItem> items = this.client.getItems(MingPaoClientTest.ERROR_URL).blockingGet();
+
+        Assert.assertEquals("Incorrect items.size()", 0, items.size());
+    }
+
+    @Test
+    public void Given_item_When_updateItemIsCalled_Then_itemIsUpdated() {
         final Item item = this.client.updateItem(this.client.getItems(MingPaoClientTest.MING_PAO_URL).blockingGet().get(0)).blockingGet();
 
         Assert.assertEquals("Incorrect item.getImages().size()", 3, item.getImages().size());
@@ -66,7 +77,7 @@ public final class MingPaoClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_MingPaoInstantUrl_When_getItemsIsCalled_Then_ItemsAreReturned() {
+    public void Given_mingPaoInstantUrl_When_getItemsIsCalled_Then_itemsAreReturned() {
         final List<NewsItem> items = this.client.getItems(MingPaoClientTest.MING_PAO_INSTANT_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 12, items.size());
@@ -76,7 +87,7 @@ public final class MingPaoClientTest extends NetworkTest {
     }
 
     @Test
-    public void Given_InstantItem_When_updateItemIsCalled_Then_ItemIsUpdated() {
+    public void Given_instantItem_When_updateItemIsCalled_Then_itemIsUpdated() {
         final Item item = this.client.updateItem(this.client.getItems(MingPaoClientTest.MING_PAO_INSTANT_URL).blockingGet().get(10)).blockingGet();
 
         Assert.assertEquals("Incorrect item.getImages().size()", 1, item.getImages().size());
@@ -85,6 +96,14 @@ public final class MingPaoClientTest extends NetworkTest {
         Assert.assertNotNull("item.getVideo() is null", item.getVideo());
         Assert.assertEquals("Incorrect video URL", "http://video3.mingpao.com/inews/201709/newspaper20170909dog.mp4", item.getVideo().getVideoUrl());
         Assert.assertEquals("Incorrect item full description", "<p>從前，梁小偉（Gary）的生活只能靠白手杖，左右掃動，但無論多麼小心亦難保「碰壁」。今年4月Gary 放下手杖，執起導盲鞍，迎接導盲犬Gaga，Gary的生命從此不一樣。人犬相處短短5個月，從不", item.getDescription().substring(0, 100));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void Given_mingPaoDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
+        final NewsItem newsItem = new NewsItem();
+        newsItem.setLink(MingPaoClientTest.ERROR_DETAILS_URL);
+
+        this.client.updateItem(newsItem).blockingGet();
     }
 
     @NonNull
