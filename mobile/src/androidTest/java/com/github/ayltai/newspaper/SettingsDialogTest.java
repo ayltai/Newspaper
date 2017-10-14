@@ -44,6 +44,7 @@ public final class SettingsDialogTest extends BaseTest {
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
+        // Clicks Categories tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withText("Categories"),
             ViewMatchers.isDisplayed()))
@@ -53,12 +54,14 @@ public final class SettingsDialogTest extends BaseTest {
 
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".settingsDialog.category.selected", this.testRule.getActivity());
 
+        // De-selects a category
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withText("兩岸"),
             ViewMatchers.withParent(ViewMatchers.withId(R.id.flowLayout)),
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
+        // Clicks Apply Changes
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_ok),
             ViewMatchers.withText("Apply changes"),
@@ -67,6 +70,7 @@ public final class SettingsDialogTest extends BaseTest {
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_MEDIUM);
 
+        // Clicks More button
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_more),
             ViewMatchers.isDisplayed()))
@@ -74,6 +78,7 @@ public final class SettingsDialogTest extends BaseTest {
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
+        // Clicks Settings button
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_settings),
             ViewMatchers.isDisplayed()))
@@ -81,6 +86,7 @@ public final class SettingsDialogTest extends BaseTest {
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
+        // Clicks Categories tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withText("Categories"),
             ViewMatchers.isDisplayed()))
@@ -90,6 +96,7 @@ public final class SettingsDialogTest extends BaseTest {
 
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".settingsDialog.notSelected", this.testRule.getActivity());
 
+        // Checks if the specific category is de-selected
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withText("兩岸"),
             ViewMatchers.withParent(ViewMatchers.withId(R.id.flowLayout)),

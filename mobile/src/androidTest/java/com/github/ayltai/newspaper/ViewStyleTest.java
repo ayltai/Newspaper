@@ -20,6 +20,7 @@ import com.github.ayltai.newspaper.util.MoreTestUtils;
 public final class ViewStyleTest extends BaseTest {
     @Test
     public void viewStyleTest() {
+        // Clicks More button
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_more),
             ViewMatchers.isDisplayed()))
@@ -27,6 +28,7 @@ public final class ViewStyleTest extends BaseTest {
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
+        // Clicks Settings button
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_settings),
             ViewMatchers.isDisplayed()))
@@ -34,6 +36,7 @@ public final class ViewStyleTest extends BaseTest {
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
+        // Clicks Settings tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withText("Settings"),
             ViewMatchers.isDisplayed()))
@@ -43,6 +46,7 @@ public final class ViewStyleTest extends BaseTest {
 
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".settings.cozy", this.testRule.getActivity());
 
+        // Checks that Cozy view style is checked
         Espresso.onView(Matchers.allOf(
             MoreTestUtils.childAtPosition(Matchers.allOf(
                 ViewMatchers.withId(R.id.linearLayout),
@@ -54,12 +58,14 @@ public final class ViewStyleTest extends BaseTest {
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(MoreTestUtils.isChecked()));
 
+        // De-selects Cozy view style
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withText("Cozy layout"),
             ViewMatchers.withParent(ViewMatchers.withId(R.id.linearLayout)),
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
+        // Clicks Apply Changes
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_ok),
             ViewMatchers.withText("Apply changes"),
@@ -68,6 +74,7 @@ public final class ViewStyleTest extends BaseTest {
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_MEDIUM);
 
+        // Clicks More button
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_more),
             ViewMatchers.isDisplayed()))
@@ -75,6 +82,7 @@ public final class ViewStyleTest extends BaseTest {
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
+        // Clicks Settings button
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_settings),
             ViewMatchers.isDisplayed()))
@@ -82,6 +90,7 @@ public final class ViewStyleTest extends BaseTest {
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
+        // Clicks Settings tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withText("Settings"),
             ViewMatchers.isDisplayed()))
@@ -91,6 +100,7 @@ public final class ViewStyleTest extends BaseTest {
 
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".settings.compact", this.testRule.getActivity());
 
+        // Checks that Cozy view style is unchecked
         Espresso.onView(Matchers.allOf(
             MoreTestUtils.childAtPosition(Matchers.allOf(
                 ViewMatchers.withId(R.id.linearLayout),

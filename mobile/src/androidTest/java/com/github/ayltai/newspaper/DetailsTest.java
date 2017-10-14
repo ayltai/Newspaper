@@ -1,13 +1,18 @@
 package com.github.ayltai.newspaper;
 
+import android.app.Instrumentation;
+import android.content.Intent;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.intent.matcher.IntentMatchers;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,5 +66,21 @@ public final class DetailsTest extends BaseTest {
             ViewMatchers.withId(R.id.description),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        final Matcher<Intent> intent = Matchers.allOf(IntentMatchers.hasAction(Intent.ACTION_VIEW), IntentMatchers.hasExtraWithKey(Intent.EXTRA_TEXT), IntentMatchers.hasType("text/plain"));
+
+        Intents.init();
+        Intents.intending(intent).respondWith(new Instrumentation.ActivityResult(0, null));
+
+        // Clicks Share button
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_share),
+            ViewMatchers.withContentDescription("Share"),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
+
+        // Checks that the fired Intent is correct
+        Intents.intended(intent);
+        Intents.release();
     }
 }
