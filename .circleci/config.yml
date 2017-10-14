@@ -275,5 +275,3 @@ workflows:
                 - master
           requires:
             - build_release
-            - test_unit
-            - test_instrumented
