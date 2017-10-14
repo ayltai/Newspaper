@@ -22,12 +22,12 @@ import com.github.ayltai.newspaper.analytics.SearchEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.config.UserConfig;
-import com.github.ayltai.newspaper.app.view.PagerNewsPresenter;
+import com.github.ayltai.newspaper.app.view.PagerNewsPresenterView;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.github.ayltai.newspaper.widget.ObservableView;
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
 
-public class PagerNewsView extends ObservableView implements PagerNewsPresenter.View {
+public class PagerNewsView extends ObservableView implements PagerNewsPresenterView {
     private UserConfig       userConfig;
     private ViewPager        viewPager;
     private PagerNewsAdapter adapter;

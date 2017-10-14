@@ -9,7 +9,7 @@ public abstract class PresentationBinderFactory<M, V extends Presenter.View, P e
     @NonNull
     protected abstract P createPresenter();
 
-    @Nullable
+    @NonNull
     @Override
     public Binder<V> create(@Nullable final M model) {
         if (this.isNeeded(model)) {
