@@ -2,6 +2,8 @@ version: 2
 
 references:
 
+  ## Cache
+
   cache_key: &cache_key
     key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum "mobile/build.gradle" }}
   restore_cache: &restore_cache
@@ -13,6 +15,8 @@ references:
       paths:
         - ~/.gradle
         - ~/.m2
+
+  ## Workspace
 
   workspace: &workspace
     ~/workspace
@@ -36,6 +40,8 @@ references:
       paths:
         - firebase
 
+  ## Docker image configurations
+
   android_config: &android_config
     working_directory: *workspace
     docker:
@@ -51,6 +57,10 @@ references:
     environment:
       TERM: dumb
 
+  ## Keys
+
+  # Android Key Store
+
   export_android_key: &export_android_key
     run:
       name: Export Android key store environment variable
@@ -59,6 +69,8 @@ references:
     run:
       name: Decode Android key store
       command: echo $ANDROID_KEY_STORE | base64 -di > key-store.jks
+
+  # Google Services
 
   export_gservices_key: &export_gservices_key
     run:
@@ -69,6 +81,8 @@ references:
       name: Decode Google Services key
       command: echo $GOOGLE_SERVICES_KEY | base64 -di > mobile/google-services.json
 
+  # Google Cloud Service
+
   export_gcloud_key: &export_gcloud_key
     run:
       name: Export Google Cloud Service key environment variable
@@ -77,6 +91,8 @@ references:
     run:
       name: Decode Google Cloud credentials
       command: echo $GCLOUD_SERVICE_KEY | base64 -di > ${HOME}/client-secret.json
+
+  # Fabric
 
   export_fabric_key: &export_fabric_key
     run:
@@ -88,6 +104,8 @@ references:
       command: echo $FABRIC_KEY | base64 -di > mobile/fabric.properties
 
 jobs:
+
+  ## Build debug APK and instrumented test APK
 
   build_debug:
     <<: *android_config
@@ -107,6 +125,8 @@ jobs:
       - store_artifacts:
           path: mobile/build/outputs/apk/
           destination: /apk/
+
+  ## Build release APK
 
   build_release:
     <<: *android_config
@@ -134,6 +154,8 @@ jobs:
           path: mobile/build/outputs/mapping/
           destination: /mapping/
 
+  ## Run unit tests
+
   test_unit:
     <<: *android_config
     steps:
@@ -155,6 +177,8 @@ jobs:
       - store_test_results:
           path: mobile/build/test-results/
           destination: /test-results/
+
+  ## Run instrumented tests
 
   test_instrumented:
     <<: *gcloud_config
@@ -182,6 +206,8 @@ jobs:
           path: firebase/
           destination: /firebase/
 
+  ## Submit JaCoCo coverage report
+
   report_coverage:
     <<: *android_config
     steps:
@@ -206,6 +232,8 @@ jobs:
       - store_artifacts:
           path: mobile/build/reports/
           destination: /reports/
+
+  ## Deploy release APK to Fabric Beta
 
   deploy:
     <<: *android_config

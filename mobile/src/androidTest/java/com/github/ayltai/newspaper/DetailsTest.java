@@ -67,7 +67,9 @@ public final class DetailsTest extends BaseTest {
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
-        final Matcher<Intent> intent = Matchers.allOf(IntentMatchers.hasAction(Intent.ACTION_VIEW), IntentMatchers.hasExtraWithKey(Intent.EXTRA_TEXT), IntentMatchers.hasType("text/plain"));
+        final Matcher<Intent> intent = Matchers.allOf(
+            IntentMatchers.hasAction(Intent.ACTION_CHOOSER),
+            IntentMatchers.hasExtra(Matchers.is(Intent.EXTRA_INTENT), Matchers.allOf(IntentMatchers.hasAction(Intent.ACTION_SEND), IntentMatchers.hasExtraWithKey(Intent.EXTRA_TEXT), IntentMatchers.hasType("text/plain"))));
 
         Intents.init();
         Intents.intending(intent).respondWith(new Instrumentation.ActivityResult(0, null));
