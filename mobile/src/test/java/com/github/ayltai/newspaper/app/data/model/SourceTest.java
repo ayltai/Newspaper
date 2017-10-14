@@ -1,6 +1,6 @@
 package com.github.ayltai.newspaper.app.data.model;
 
-import android.os.Bundle;
+import android.os.Parcel;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,18 +12,24 @@ import io.realm.RealmList;
 public final class SourceTest extends UnitTest {
     @Test
     public void testParcelable() {
-        final Bundle bundle1 = new Bundle();
+        final Parcel parcel1 = Parcel.obtain();
         final Source source1 = new Source();
 
-        bundle1.putParcelable("key", source1);
+        source1.writeToParcel(parcel1, 0);
+        parcel1.setDataPosition(0);
 
-        Assert.assertEquals(source1, bundle1.getParcelable("key"));
+        Assert.assertEquals(source1.toString(), Source.CREATOR.createFromParcel(parcel1).toString());
 
-        final Bundle bundle2 = new Bundle();
+        parcel1.recycle();
+
+        final Parcel parcel2 = Parcel.obtain();
         final Source source2 = new Source("name", new RealmList<>(), 0);
 
-        bundle2.putParcelable("key", source2);
+        source2.writeToParcel(parcel2, 0);
+        parcel2.setDataPosition(0);
 
-        Assert.assertEquals(source2, bundle2.getParcelable("key"));
+        Assert.assertEquals(source2.toString(), Source.CREATOR.createFromParcel(parcel2).toString());
+
+        parcel2.recycle();
     }
 }

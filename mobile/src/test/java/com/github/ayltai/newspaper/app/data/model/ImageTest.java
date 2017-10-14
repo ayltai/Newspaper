@@ -1,6 +1,6 @@
 package com.github.ayltai.newspaper.app.data.model;
 
-import android.os.Bundle;
+import android.os.Parcel;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,18 +10,24 @@ import com.github.ayltai.newspaper.UnitTest;
 public final class ImageTest extends UnitTest {
     @Test
     public void testParcelable() {
-        final Bundle bundle1 = new Bundle();
+        final Parcel parcel1 = Parcel.obtain();
         final Image  image1  = new Image();
 
-        bundle1.putParcelable("key", image1);
+        image1.writeToParcel(parcel1, 0);
+        parcel1.setDataPosition(0);
 
-        Assert.assertEquals(image1, bundle1.getParcelable("key"));
+        Assert.assertEquals(image1.toString(), Image.CREATOR.createFromParcel(parcel1).toString());
 
-        final Bundle bundle2 = new Bundle();
-        final Image  image2  = new Image("url", "description");
+        parcel1.recycle();
 
-        bundle2.putParcelable("key", image2);
+        final Parcel parcel2 = Parcel.obtain();
+        final Image  image2  = new Image("url", "name");
 
-        Assert.assertEquals(image2, bundle2.getParcelable("key"));
+        image2.writeToParcel(parcel2, 0);
+        parcel2.setDataPosition(0);
+
+        Assert.assertEquals(image2.toString(), Image.CREATOR.createFromParcel(parcel2).toString());
+
+        parcel2.recycle();
     }
 }

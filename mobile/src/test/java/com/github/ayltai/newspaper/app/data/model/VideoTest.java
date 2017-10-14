@@ -1,6 +1,6 @@
 package com.github.ayltai.newspaper.app.data.model;
 
-import android.os.Bundle;
+import android.os.Parcel;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,18 +10,24 @@ import com.github.ayltai.newspaper.UnitTest;
 public final class VideoTest extends UnitTest {
     @Test
     public void testParcelable() {
-        final Bundle bundle1 = new Bundle();
+        final Parcel parcel1 = Parcel.obtain();
         final Video  video1  = new Video();
 
-        bundle1.putParcelable("key", video1);
+        video1.writeToParcel(parcel1, 0);
+        parcel1.setDataPosition(0);
 
-        Assert.assertEquals(video1, bundle1.getParcelable("key"));
+        Assert.assertEquals(video1.toString(), Video.CREATOR.createFromParcel(parcel1).toString());
 
-        final Bundle bundle2 = new Bundle();
+        parcel1.recycle();
+
+        final Parcel parcel2 = Parcel.obtain();
         final Video  video2  = new Video("url", "thumbnail");
 
-        bundle2.putParcelable("key", video2);
+        video2.writeToParcel(parcel2, 0);
+        parcel2.setDataPosition(0);
 
-        Assert.assertEquals(video2, bundle2.getParcelable("key"));
+        Assert.assertEquals(video2.toString(), Video.CREATOR.createFromParcel(parcel2).toString());
+
+        parcel2.recycle();
     }
 }
