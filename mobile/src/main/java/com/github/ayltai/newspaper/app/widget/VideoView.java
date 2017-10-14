@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,14 +44,17 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public final class VideoView extends ItemView implements VideoPresenterView {
+public class VideoView extends ItemView implements VideoPresenterView {
     private final FlowableProcessor<Irrelevant> videoClicks = PublishProcessor.create();
 
     //region Components
 
+    @VisibleForTesting
+    protected final View         playAction;
+    @VisibleForTesting
+    protected final BigImageView thumbnail;
+
     private final View         thumbnailContainer;
-    private final View         playAction;
-    private final BigImageView thumbnail;
 
     private View                fullScreenAction;
     private SimpleExoPlayerView playerView;
@@ -146,11 +150,14 @@ public final class VideoView extends ItemView implements VideoPresenterView {
         if (VideoView.isYouTubeUrl(this.video.getVideoUrl())) {
             this.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(this.video.getVideoUrl())), this.getContext().getText(R.string.view_via)));
         } else {
-            this.playerView.setVisibility(View.VISIBLE);
-            this.playerView.findViewById(R.id.exo_playback_control_view).setVisibility(View.VISIBLE);
+            if (this.playerView != null) {
+                this.playerView.setVisibility(View.VISIBLE);
+                this.playerView.findViewById(R.id.exo_playback_control_view).setVisibility(View.VISIBLE);
+            }
+
             this.thumbnailContainer.setVisibility(View.GONE);
 
-            if (this.appConfig != null) {
+            if (this.appConfig != null && this.player != null) {
                 if (this.appConfig.getVideoSeekPosition() > 0) this.player.seekTo(this.appConfig.getVideoSeekPosition());
                 this.player.setPlayWhenReady(true);
 
