@@ -39,14 +39,17 @@ public final class ImageUtils {
 
             @Override
             public void onPreviewLoadError(final Exception e) {
+                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
 
             @Override
             public void onImageLoadError(final Exception e) {
+                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
 
             @Override
             public void onTileLoadError(final Exception e) {
+                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
 
             @Override
