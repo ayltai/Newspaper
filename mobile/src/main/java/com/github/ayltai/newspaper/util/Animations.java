@@ -40,7 +40,7 @@ public final class Animations {
     public static Iterable<Animator> createDefaultAnimators(@NonNull final View view) {
         return Arrays.asList(
             ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
-            ObjectAnimator.ofFloat(view, "translationY", view.getMeasuredHeight(), 0f)
+            ObjectAnimator.ofFloat(view, "translationX", -view.getMeasuredWidth(), 0f)
         );
     }
 

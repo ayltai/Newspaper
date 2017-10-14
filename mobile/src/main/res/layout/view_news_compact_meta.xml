@@ -48,7 +48,7 @@
                 android:id="@+id/publish_date"
                 android:layout_marginRight="@dimen/space16"
                 android:layout_marginEnd="@dimen/space16"
-                android:layout_marginBottom="@dimen/space24"
+                android:layout_marginBottom="@dimen/space16"
                 android:layout_toRightOf="@+id/avatar"
                 android:layout_toEndOf="@+id/avatar"
                 android:layout_below="@+id/source"

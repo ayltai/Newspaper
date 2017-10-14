@@ -9,13 +9,14 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.binding.ContentBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.FeaturedBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.MetaBinderFactory;
-import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
 public class CompactItemListView extends ItemListView {
@@ -49,10 +50,14 @@ public class CompactItemListView extends ItemListView {
     @NonNull
     @Override
     protected UniversalAdapter<Item, ?, ?> createAdapter() {
-        return new ItemListAdapter.Builder(this.getContext())
+        final ItemListAdapter adapter = new ItemListAdapter.Builder(this.getContext())
             .addBinderFactory(new FeaturedBinderFactory())
             .addBinderFactory(new ContentBinderFactory())
             .addBinderFactory(new MetaBinderFactory())
             .build();
+
+        adapter.setAnimationInterpolator(new AccelerateDecelerateInterpolator());
+
+        return adapter;
     }
 }

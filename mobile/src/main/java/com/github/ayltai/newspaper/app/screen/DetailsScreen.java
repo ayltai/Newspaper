@@ -186,7 +186,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             this.publishDate.setVisibility(View.GONE);
         } else {
             this.publishDate.setVisibility(View.VISIBLE);
-            this.publishDate.setText(DateUtils.getTimeAgo(this.getContext(), date.getTime()));
+            this.publishDate.setText(DateUtils.toApproximateTime(this.getContext(), date.getTime()));
         }
     }
 

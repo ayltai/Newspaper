@@ -32,7 +32,7 @@ public final class MainPresenterTest extends PresenterTest<MainActivity, MainPre
 
         Mockito.doReturn(this.upActions).when(view).upActions();
         Mockito.doReturn(this.refreshActions).when(view).refreshActions();
-        Mockito.doReturn(this.filterActions).when(view).filterActions();
+        Mockito.doReturn(this.filterActions).when(view).settingsActions();
         Mockito.doReturn(this.clearAllActions).when(view).clearAllActions();
 
         return view;
@@ -69,7 +69,7 @@ public final class MainPresenterTest extends PresenterTest<MainActivity, MainPre
     }
 
     @Test
-    public void Give_onViewAttached_When_filterActions_Then_filterIsCalled() {
+    public void Give_onViewAttached_When_filterActions_Then_settingsIsCalled() {
         // Given
         this.attachments.onNext(true);
 
@@ -77,7 +77,7 @@ public final class MainPresenterTest extends PresenterTest<MainActivity, MainPre
         this.filterActions.onNext(Irrelevant.INSTANCE);
 
         // Then
-        Mockito.verify(this.getView(), Mockito.times(1)).filter();
+        Mockito.verify(this.getView(), Mockito.times(1)).settings();
     }
 
     @Test

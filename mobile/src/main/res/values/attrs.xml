@@ -70,7 +70,7 @@
         name="ic_refresh_24dp"
         format="reference" />
     <attr
-        name="ic_filter_24dp"
+        name="ic_settings_24dp"
         format="reference" />
     <attr
         name="ic_clear_all_24dp"

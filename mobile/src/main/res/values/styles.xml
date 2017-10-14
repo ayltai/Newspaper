@@ -45,13 +45,13 @@
         parent="TextAppearance.AppCompat.Title">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textColor">?attr/textColor</item>
     </style>
     <style name="Title.Featured">
         <item name="android:padding">@dimen/space16</item>
         <item name="android:layout_gravity">bottom</item>
+        <item name="android:maxLines">2</item>
         <item name="android:textSize">@dimen/textHeading3</item>
         <item name="android:textColor">@color/textColorInverseLight</item>
         <item name="android:shadowDx">1.5</item>
@@ -60,7 +60,13 @@
         <item name="android:shadowColor">@color/shadowEnd</item>
     </style>
     <style name="Title.Cozy">
+        <item name="android:maxLines">2</item>
         <item name="android:textSize">@dimen/textHeading3</item>
+    </style>
+    <style name="Title.Compact">
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/textNormal</item>
+        <item name="fontPath">fonts/Lato-Bold.ttf</item>
     </style>
     <style name="Title.Full">
         <item name="android:layout_marginLeft">@dimen/space16</item>
@@ -82,6 +88,10 @@
     </style>
     <style name="Description.Cozy">
         <item name="android:maxLines">5</item>
+        <item name="android:textSize">@dimen/textNormal</item>
+    </style>
+    <style name="Description.Compact">
+        <item name="android:maxLines">2</item>
         <item name="android:textSize">@dimen/textNormal</item>
     </style>
     <style name="Description.Full">
