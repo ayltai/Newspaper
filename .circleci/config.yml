@@ -227,7 +227,10 @@ jobs:
           name: Generate JaCoCo report
           command: ./gradlew -PciBuild=true :mobile:jacocoTestReport
       - run:
-          name: Upload unit tests results to CodeCov
+          name: Upload coverage report to Codacy
+          command: ./gradlew -PciBuild=true uploadCoverageToCodacy
+      - run:
+          name: Upload coverage report to CodeCov
           command: bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: mobile/build/reports/
@@ -252,13 +255,17 @@ workflows:
   workflow:
     jobs:
       - build_debug
-      - build_release
       - test_unit
       - test_instrumented:
           requires:
             - build_debug
       - report_coverage:
           requires:
+            - test_unit
+            - test_instrumented
+      - build_release:
+          requires:
+            - build_debug
             - test_unit
             - test_instrumented
       - deploy:
