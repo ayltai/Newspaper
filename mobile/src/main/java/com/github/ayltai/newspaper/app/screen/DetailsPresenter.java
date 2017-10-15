@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.util.Log;
 
+import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.analytics.ShareEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.data.ItemManager;
@@ -32,7 +33,12 @@ import io.reactivex.Single;
 public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     public interface View extends ItemPresenter.View {
         @Nullable
+        Flowable<Irrelevant> textToSpeechClicks();
+
+        @Nullable
         Flowable<Irrelevant> shareClicks();
+
+        void textToSpeech();
 
         void share(@NonNull String url);
 
@@ -97,6 +103,18 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         }
     }
 
+    protected void onTextToSpeechClick() {
+        if (this.getView() != null) {
+            this.getView().textToSpeech();
+
+            ComponentFactory.getInstance()
+                .getAnalyticsComponent(this.getView().getContext())
+                .eventLogger()
+                .logEvent(new ClickEvent()
+                    .setElementName("TTS"));
+        }
+    }
+
     @CallSuper
     @Override
     protected void onBookmarkClick() {
@@ -144,6 +162,9 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     @CallSuper
     @Override
     public void onViewAttached(@NonNull final DetailsPresenter.View view, final boolean isFirstTimeAttachment) {
+        final Flowable<Irrelevant> textToSpeechClicks = view.textToSpeechClicks();
+        if (textToSpeechClicks != null) this.manageDisposable(textToSpeechClicks.subscribe(irrelevant -> this.onTextToSpeechClick()));
+
         final Flowable<Irrelevant> shareClicks = view.shareClicks();
         if (shareClicks != null) this.manageDisposable(shareClicks.subscribe(irrelevant -> this.onShareClick()));
 

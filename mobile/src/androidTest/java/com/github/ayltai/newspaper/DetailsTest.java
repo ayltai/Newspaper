@@ -84,5 +84,12 @@ public final class DetailsTest extends BaseTest {
         // Checks that the fired Intent is correct
         Intents.intended(intent);
         Intents.release();
+
+        // Clicks Text-to-Speech button
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_text_to_speech),
+            ViewMatchers.withContentDescription("Text to speech"),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
     }
 }

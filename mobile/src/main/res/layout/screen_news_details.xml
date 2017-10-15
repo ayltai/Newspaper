@@ -45,8 +45,21 @@
                     tools:text="Phasellus at aliquam dolor"
                     style="@style/Subhead.Full" />
                 <ImageView
-                    android:id="@+id/action_bookmark"
+                    android:id="@+id/action_text_to_speech"
                     android:layout_margin="@dimen/space16"
+                    android:layout_toLeftOf="@+id/action_bookmark"
+                    android:layout_toStartOf="@+id/action_bookmark"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/action_text_to_speech"
+                    android:tint="?attr/textColorHint"
+                    app:srcCompat="@drawable/ic_volume_off_black_24dp"
+                    style="@style/Icon.Small" />
+                <ImageView
+                    android:id="@+id/action_bookmark"
+                    android:layout_marginRight="@dimen/space16"
+                    android:layout_marginEnd="@dimen/space16"
+                    android:layout_marginTop="@dimen/space16"
+                    android:layout_marginBottom="@dimen/space16"
                     android:layout_toLeftOf="@+id/action_share"
                     android:layout_toStartOf="@+id/action_share"
                     android:layout_alignParentTop="true"
