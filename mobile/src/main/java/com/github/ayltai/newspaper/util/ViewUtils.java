@@ -8,8 +8,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import io.supercharge.shimmerlayout.ShimmerLayout;
-
 public final class ViewUtils {
     private ViewUtils() {
     }
@@ -36,15 +34,5 @@ public final class ViewUtils {
 
     public static ViewGroup.LayoutParams createMatchParentLayoutParams() {
         return new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    }
-
-    public static void startShimmerAnimation(@NonNull final View view) {
-        if (view instanceof ViewGroup) {
-            final ViewGroup parent = (ViewGroup)view;
-
-            for (int i = 0; i < parent.getChildCount(); i++) ViewUtils.startShimmerAnimation(parent.getChildAt(i));
-
-            if (view instanceof ShimmerLayout) ((ShimmerLayout)view).startShimmerAnimation();
-        }
     }
 }

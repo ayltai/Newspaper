@@ -20,6 +20,8 @@ import com.fujiyuu75.sequent.Sequent;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 
+import io.supercharge.shimmerlayout.ShimmerLayout;
+
 public final class Animations {
     private Animations() {
     }
@@ -52,6 +54,16 @@ public final class Animations {
             .duration(Constants.ANIMATION_DURATION)
             .anim(container.getContext(), R.anim.fade_in_up)
             .start();
+    }
+
+    public static void startShimmerAnimation(@NonNull final View view) {
+        if (view instanceof ViewGroup) {
+            final ViewGroup parent = (ViewGroup)view;
+
+            for (int i = 0; i < parent.getChildCount(); i++) Animations.startShimmerAnimation(parent.getChildAt(i));
+
+            if (view instanceof ShimmerLayout) ((ShimmerLayout)view).startShimmerAnimation();
+        }
     }
 
     public static boolean isEnabled() {
