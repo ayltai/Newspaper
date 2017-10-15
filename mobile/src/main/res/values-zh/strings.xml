@@ -24,6 +24,7 @@
 
     <!-- Actions -->
     <string name="action_search">搜尋</string>
+    <string name="action_text_to_speech">文字轉語音</string>
     <string name="action_bookmark">書籤</string>
     <string name="action_share">分享</string>
     <string name="action_about">關於</string>
@@ -35,6 +36,10 @@
     <!-- Empty states -->
     <string name="empty_news_title">這裡什麼都沒有</string>
     <string name="empty_news_description">您可以在其他類別中閱讀更多新聞，也可以刷新再次嘗試。</string>
+
+    <!-- Errors -->
+    <string name="error_tts_not_supported">此設備不支持語音引擎</string>
+    <string name="error_tts_not_initialized">無法初始化語音引擎</string>
 
     <!-- Search -->
     <string name="search_hint">搜尋新聞</string>

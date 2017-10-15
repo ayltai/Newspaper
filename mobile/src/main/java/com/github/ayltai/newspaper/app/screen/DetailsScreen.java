@@ -2,6 +2,7 @@ package com.github.ayltai.newspaper.app.screen;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +44,7 @@ import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.widget.ItemView;
 import com.github.ayltai.newspaper.app.widget.VideoView;
 import com.github.ayltai.newspaper.media.FrescoImageLoader;
+import com.github.ayltai.newspaper.speech.SimpleTextToSpeech;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
@@ -76,11 +79,12 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     //region Subscriptions
 
-    private final FlowableProcessor<Irrelevant> avatarClicks   = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> sourceClicks   = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> bookmarkClicks = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> shareClicks    = PublishProcessor.create();
-    private final FlowableProcessor<Image>      imageClicks    = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> avatarClicks       = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> sourceClicks       = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> textToSpeechClicks = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> bookmarkClicks     = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> shareClicks        = PublishProcessor.create();
+    private final FlowableProcessor<Image>      imageClicks        = PublishProcessor.create();
 
     //endregion
 
@@ -101,6 +105,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     private final TextView                publishDate;
     private final TextView                title;
     private final TextView                description;
+    private final ImageView               textToSpeechAction;
     private final ImageView               bookmarkAction;
     private final ImageView               shareAction;
     private final ViewGroup               imagesContainer;
@@ -110,10 +115,12 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     //endregion
 
-    private GyroscopeObserver gyroscopeObserver;
-    private SmallBang         smallBang;
-    private boolean           isPanoramaEnabled;
-    private boolean           hasAnimated;
+    private GyroscopeObserver  gyroscopeObserver;
+    private SmallBang          smallBang;
+    private boolean            isPanoramaEnabled;
+    private boolean            hasAnimated;
+    private boolean            isTtsActive;
+    private SimpleTextToSpeech tts;
 
     public DetailsScreen(@NonNull final Context context) {
         super(context);
@@ -130,6 +137,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.publishDate             = view.findViewById(R.id.publish_date);
         this.title                   = view.findViewById(R.id.title);
         this.description             = view.findViewById(R.id.description);
+        this.textToSpeechAction      = view.findViewById(R.id.action_text_to_speech);
         this.bookmarkAction          = view.findViewById(R.id.action_bookmark);
         this.shareAction             = view.findViewById(R.id.action_share);
         this.imagesContainer         = view.findViewById(R.id.images_container);
@@ -210,11 +218,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             this.description.setVisibility(View.VISIBLE);
             this.description.setText(Html.fromHtml(description.toString()));
         }
-    }
-
-    @Override
-    public void setLink(@Nullable final CharSequence link) {
-        // TODO
     }
 
     @Override
@@ -305,6 +308,56 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     //region Methods
 
     @Override
+    public void textToSpeech() {
+        this.updateTextToSpeechUi(!this.isTtsActive);
+
+        if (this.isTtsActive) {
+            final Activity activity = this.getActivity();
+
+            if (activity == null) {
+                this.updateTextToSpeechUi(false);
+            } else {
+                SimpleTextToSpeech.builder()
+                    .addLocale(new Locale("yue", "HK"))
+                    .addLocale(new Locale("zh", "HK"))
+                    .setOnNotSupported(irrelevant -> {
+                        this.updateTextToSpeechUi(false);
+
+                        Snackbar.make(this, R.string.error_tts_not_supported, Snackbar.LENGTH_LONG).show();
+                    })
+                    .setOnInitError(error -> {
+                        this.updateTextToSpeechUi(false);
+
+                        Snackbar.make(this, R.string.error_tts_not_initialized, Snackbar.LENGTH_LONG).show();
+                    })
+                    .setOnUtteranceCompleted(irrelevant -> {
+                        if (this.isTtsActive) this.textToSpeech();
+                    })
+                    .build(activity)
+                    .compose(RxUtils.applySingleBackgroundToMainSchedulers())
+                    .subscribe(tts -> {
+                        if (this.isTtsActive) {
+                            this.tts = tts;
+
+                            this.tts.setText(this.title.getText());
+                            this.tts.addText(this.description.getText());
+                        } else {
+                            this.updateTextToSpeechUi(false);
+                            this.tts.shutdown();
+                        }
+                    });
+            }
+        } else {
+            if (this.tts != null) this.tts.shutdown();
+        }
+    }
+
+    private void updateTextToSpeechUi(final boolean active) {
+        this.isTtsActive = active;
+        this.textToSpeechAction.setImageResource(this.isTtsActive ? R.drawable.ic_volume_up_black_24dp : R.drawable.ic_volume_off_black_24dp);
+    }
+
+    @Override
     public void share(@NonNull final String url) {
         this.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT, url).setType("text/plain"), this.getContext().getText(R.string.share_to)));
     }
@@ -330,6 +383,12 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     @Override
     public Flowable<Irrelevant> sourceClicks() {
         return this.sourceClicks;
+    }
+
+    @Nullable
+    @Override
+    public Flowable<Irrelevant> textToSpeechClicks() {
+        return this.textToSpeechClicks;
     }
 
     @NonNull
@@ -377,6 +436,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         this.manageDisposable(RxView.clicks(this.avatar).subscribe(irrelevant -> this.avatarClicks.onNext(Irrelevant.INSTANCE)));
         this.manageDisposable(RxView.clicks(this.source).subscribe(irrelevant -> this.sourceClicks.onNext(Irrelevant.INSTANCE)));
+        this.manageDisposable(RxView.clicks(this.textToSpeechAction).subscribe(irrelevant -> this.textToSpeechClicks.onNext(Irrelevant.INSTANCE)));
         this.manageDisposable(RxView.clicks(this.bookmarkAction).subscribe(irrelevant -> this.bookmarkClicks.onNext(Irrelevant.INSTANCE)));
         this.manageDisposable(RxView.clicks(this.shareAction).subscribe(irrelevant -> this.shareClicks.onNext(Irrelevant.INSTANCE)));
 
@@ -396,6 +456,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         if (this.videoView != null) this.removeView(this.videoView);
 
         if (this.isPanoramaEnabled) this.gyroscopeObserver.unregister();
+
+        if (this.isTtsActive) this.textToSpeech();
 
         super.onDetachedFromWindow();
 
