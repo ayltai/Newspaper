@@ -50,6 +50,7 @@ import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
+import com.github.ayltai.newspaper.util.SnackbarUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.util.ViewUtils;
 import com.github.piasy.biv.view.BigImageView;
@@ -323,12 +324,12 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
                     .setOnNotSupported(irrelevant -> {
                         this.updateTextToSpeechUi(false);
 
-                        Snackbar.make(this, R.string.error_tts_not_supported, Snackbar.LENGTH_LONG).show();
+                        SnackbarUtils.show(this, R.string.error_tts_not_supported, Snackbar.LENGTH_LONG);
                     })
                     .setOnInitError(error -> {
                         this.updateTextToSpeechUi(false);
 
-                        Snackbar.make(this, R.string.error_tts_not_initialized, Snackbar.LENGTH_LONG).show();
+                        SnackbarUtils.show(this, R.string.error_tts_not_initialized, Snackbar.LENGTH_LONG);
                     })
                     .setOnUtteranceCompleted(irrelevant -> {
                         if (this.isTtsActive) this.textToSpeech();
@@ -343,7 +344,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
                             this.tts.addText(this.description.getText());
                         } else {
                             this.updateTextToSpeechUi(false);
-                            this.tts.shutdown();
+                            if (this.tts != null) this.tts.shutdown();
                         }
                     });
             }
