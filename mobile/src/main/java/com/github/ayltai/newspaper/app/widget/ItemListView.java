@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
-import com.github.ayltai.newspaper.util.ViewUtils;
+import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.view.ListPresenter;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView;
@@ -119,7 +119,7 @@ public abstract class ItemListView extends ListView<Item> implements ListPresent
         if (this.loadingView != null) {
             this.findViewById(R.id.scrolling_background).setVisibility(View.GONE);
 
-            ViewUtils.startShimmerAnimation(this.loadingView);
+            if (Animations.isEnabled()) Animations.startShimmerAnimation(this.loadingView);
         }
     }
 

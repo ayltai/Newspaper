@@ -23,8 +23,8 @@ android {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
         targetSdkVersion 26
-        versionCode      19
-        versionName      '3.1.' + VERSION_REVISION + '-' + VERSION_HASH
+        versionCode      20
+        versionName      '3.2.' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
@@ -244,7 +244,7 @@ dependencies {
     testCompile    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testCompile 'org.mockito:mockito-core:2.10.4'
+    testCompile 'org.mockito:mockito-core:2.10.5'
     testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
     testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
@@ -386,7 +386,8 @@ task (codacyDepsize) << {
 
 task (codacyLocs) << {
     configurations.codacy.each {
-        String  jarName = it
+        String jarName = it
+
         println jarName
     }
 }

@@ -20,10 +20,13 @@ references:
 
   workspace: &workspace
     ~/workspace
-  attach_workspace: &attach_workspace
+  attach_debug_workspace: &attach_debug_workspace
     attach_workspace:
       at: *workspace
-  persist_to_workspace: &persist_to_workspace
+  attach_release_workspace: &attach_release_workspace
+    attach_workspace:
+      at: *workspace
+  persist_debug_workspace: &persist_debug_workspace
     persist_to_workspace:
       root: *workspace
       paths:
@@ -31,10 +34,15 @@ references:
         - mobile/build/outputs/apk
         - mobile/build/outputs/code-coverage
         - mobile/build/test-results
-  attach_firebase: &attach_firebase
+  persist_to_release_workspace: &persist_to_release_workspace
+    persist_to_workspace:
+      root: *workspace
+      paths:
+        - mobile/build
+  attach_firebase_workspace: &attach_firebase_workspace
     attach_workspace:
       at: *workspace
-  persist_firebase: &persist_firebase
+  persist_firebase_workspace: &persist_firebase_workspace
     persist_to_workspace:
       root: *workspace
       paths:
@@ -121,7 +129,7 @@ jobs:
       - run:
           name: Gradle build (debug)
           command: ./gradlew -PciBuild=true :mobile:assembleDebug :mobile:assembleAndroidTest
-      - *persist_to_workspace
+      - *persist_debug_workspace
       - store_artifacts:
           path: mobile/build/outputs/apk/
           destination: /apk/
@@ -146,7 +154,7 @@ jobs:
       - run:
           name: Gradle build (release)
           command: ./gradlew -PciBuild=true :mobile:assembleRelease
-      - *persist_to_workspace
+      - *persist_to_release_workspace
       - store_artifacts:
           path: mobile/build/outputs/apk/
           destination: /apk/
@@ -170,7 +178,7 @@ jobs:
       - run:
           name: Run unit tests
           command: ./gradlew -PciBuild=true :mobile:testDebugUnitTest
-      - *persist_to_workspace
+      - *persist_debug_workspace
       - store_artifacts:
           path: mobile/build/reports/
           destination: /reports/
@@ -183,7 +191,7 @@ jobs:
   test_instrumented:
     <<: *gcloud_config
     steps:
-      - *attach_workspace
+      - *attach_debug_workspace
       - *export_gcloud_key
       - *decode_gcloud_key
       - run:
@@ -201,7 +209,7 @@ jobs:
       - run:
           name: Download instrumented test results from Firebase Test Lab
           command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-3udbiqpdyp0d0-miwcp7d69v80m | tail -1`*" /root/workspace/firebase/
-      - *persist_firebase
+      - *persist_firebase_workspace
       - store_artifacts:
           path: firebase/
           destination: /firebase/
@@ -216,8 +224,8 @@ jobs:
       - run:
           name: Download dependencies
           command: ./gradlew androidDependencies
-      - *attach_workspace
-      - *attach_firebase
+      - *attach_debug_workspace
+      - *attach_firebase_workspace
       - run:
           name: Move Firebase coverage report
           command: mkdir -p mobile/build/outputs/code-coverage/connected && cp firebase/Nexus5X-26-en_US-portrait/artifacts/coverage.ec mobile/build/outputs/code-coverage/connected/coverage.ec
@@ -227,7 +235,10 @@ jobs:
           name: Generate JaCoCo report
           command: ./gradlew -PciBuild=true :mobile:jacocoTestReport
       - run:
-          name: Upload unit tests results to CodeCov
+          name: Upload coverage report to Codacy
+          command: ./gradlew -PciBuild=true uploadCoverageToCodacy
+      - run:
+          name: Upload coverage report to CodeCov
           command: bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: mobile/build/reports/
@@ -239,8 +250,11 @@ jobs:
     <<: *android_config
     steps:
       - checkout
-      - *attach_workspace
+      - *attach_release_workspace
       - *restore_cache
+      - run:
+          name: Download dependencies
+          command: ./gradlew androidDependencies
       - *export_fabric_key
       - *decode_fabric_key
       - run:
