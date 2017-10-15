@@ -232,8 +232,9 @@ dependencies {
         transitive = true;
     }
 
-    // Flurry Analytics
+    // Analytics
     compile 'com.flurry.android:analytics:7.2.3@aar'
+    compile 'com.mixpanel.android:mixpanel-android:5.2.1'
 
     // Instabug
     compile 'com.instabug.library:instabug:4.3.1'
