@@ -33,13 +33,6 @@ public final class AnalyticsModule {
     @NonNull
     @Singleton
     @Provides
-    FlurryEventLogger provideFlurryEventLogger() {
-        return new FlurryEventLogger();
-    }
-
-    @NonNull
-    @Singleton
-    @Provides
     MixpanelEventLogger provideMixpanelEventLogger() {
         return new MixpanelEventLogger(this.context);
     }
@@ -51,7 +44,6 @@ public final class AnalyticsModule {
         return new CompositeEventLogger.Builder()
             .add(this.provideFabricEventLogger())
             .add(this.provideFirebaseEventLogger())
-            .add(this.provideFlurryEventLogger())
             .add(this.provideMixpanelEventLogger())
             .build();
     }

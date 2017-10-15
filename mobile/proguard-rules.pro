@@ -1,3 +1,8 @@
+-keepattributes *Annotation*,EnclosingMethod,Signature
+-keepclasseswithmembers class * {
+   public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
 ## Facebook Fresco
 
 # Keep our interfaces so they can be used by other ProGuard rules.
@@ -31,15 +36,7 @@
 ## BottomBar
 -dontwarn com.roughike.bottombar.**
 
-## Flurry Analytics
--keep class com.flurry.** { *; }
--dontwarn com.flurry.**
--keepattributes *Annotation*,EnclosingMethod,Signature
--keepclasseswithmembers class * {
-   public <init>(android.content.Context, android.util.AttributeSet, int);
-}
-
- # Google Play Services library
+ ## Google Play Services library
 -keep class * extends java.util.ListResourceBundle {
    protected Object[][] getContents();
 }
