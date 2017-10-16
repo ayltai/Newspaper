@@ -45,12 +45,12 @@ public abstract class RssClient extends Client {
 
                     Collections.sort(items);
 
-                    emitter.onSuccess(items);
+                    if (!emitter.isDisposed()) emitter.onSuccess(items);
                 },
                 error -> {
                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
 
-                    emitter.onSuccess(Collections.emptyList());
+                    if (!emitter.isDisposed()) emitter.onSuccess(Collections.emptyList());
                 }
             ));
     }

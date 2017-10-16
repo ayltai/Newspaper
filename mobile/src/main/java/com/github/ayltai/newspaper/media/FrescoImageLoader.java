@@ -85,9 +85,9 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
                 final DataSource<CloseableReference<CloseableImage>> source = Fresco.getImagePipeline().fetchDecodedImage(ImageRequest.fromUri(uri), false);
 
                 try {
-                    emitter.onSuccess(DataSources.waitForFinalResult(source));
+                    if (!emitter.isDisposed()) emitter.onSuccess(DataSources.waitForFinalResult(source));
                 } catch (final Throwable error) {
-                    emitter.onError(error);
+                    if (!emitter.isDisposed()) emitter.onError(error);
                 } finally {
                     source.close();
                 }

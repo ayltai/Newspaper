@@ -87,12 +87,12 @@ final class MingPaoClient extends RssClient {
                     item.setDescription(json.getString("DESCRIPTION"));
                     item.setIsFullDescription(true);
 
-                    emitter.onSuccess(item);
+                    if (!emitter.isDisposed()) emitter.onSuccess(item);
                 },
                 error -> {
                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
-                    emitter.onError(error);
+                    if (!emitter.isDisposed()) emitter.onError(error);
                 }
             ));
     }

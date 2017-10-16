@@ -63,7 +63,7 @@ public final class ItemManager extends DataManager {
                 .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
                 .endGroup();
 
-            emitter.onSuccess(this.getRealm().copyFromRealm(query.findAll()));
+            if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.findAll()));
         });
     }
 
@@ -87,7 +87,7 @@ public final class ItemManager extends DataManager {
                 .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
                 .endGroup();
 
-            emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
+            if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
         });
     }
 
@@ -111,7 +111,7 @@ public final class ItemManager extends DataManager {
                 .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
                 .endGroup();
 
-            emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
+            if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
         });
     }
 
@@ -158,7 +158,7 @@ public final class ItemManager extends DataManager {
 
             if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
 
-            emitter.onSuccess(newItems);
+            if (!emitter.isDisposed()) emitter.onSuccess(newItems);
         });
     }
 
@@ -178,7 +178,7 @@ public final class ItemManager extends DataManager {
 
             if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
 
-            emitter.onSuccess(Irrelevant.INSTANCE);
+            if (!emitter.isDisposed()) emitter.onSuccess(Irrelevant.INSTANCE);
         });
     }
 
@@ -198,7 +198,7 @@ public final class ItemManager extends DataManager {
 
             if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
 
-            emitter.onSuccess(Irrelevant.INSTANCE);
+            if (!emitter.isDisposed()) emitter.onSuccess(Irrelevant.INSTANCE);
         });
     }
 }
