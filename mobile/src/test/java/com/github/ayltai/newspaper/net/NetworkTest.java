@@ -11,7 +11,7 @@ import okhttp3.OkHttpClient;
 
 public abstract class NetworkTest extends UnitTest {
     protected OkHttpClient httpClient;
-    protected ApiService   apiService;
+    protected NewsApiService apiService;
 
     @CallSuper
     @Before
@@ -19,6 +19,6 @@ public abstract class NetworkTest extends UnitTest {
         super.setUp();
 
         this.httpClient = Mockito.mock(OkHttpClient.class);
-        this.apiService = Mockito.mock(ApiService.class);
+        this.apiService = Mockito.mock(NewsApiService.class);
     }
 }

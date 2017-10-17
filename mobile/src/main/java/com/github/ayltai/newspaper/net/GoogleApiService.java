@@ -4,18 +4,13 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.GsonBuilder;
 
-import com.github.ayltai.newspaper.rss.RssFeed;
-
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.Url;
 
-public interface ApiService {
-    String API_END_POINT = "";
-
+public interface GoogleApiService {
     final class Factory {
         private final Retrofit retrofit;
 
@@ -26,7 +21,7 @@ public interface ApiService {
                     .registerTypeAdapterFactory(AutoTypeAdapterFactory.create())
                     .create()))
                 .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
-                .baseUrl(ApiService.API_END_POINT)
+                .baseUrl("https://us-central1-newspaper-84169.cloudfunctions.net/")
                 .client(DaggerHttpComponent.builder()
                     .build()
                     .httpClient())
@@ -39,12 +34,6 @@ public interface ApiService {
         }
     }
 
-    @GET
-    Observable<RssFeed> getFeed(@Url String url);
-
-    @GET
-    Observable<String> getHtml(@Url String url);
-
-    @GET
-    Observable<AuthToken> getToken(@Url String url);
+    @GET("getToken")
+    Observable<AuthToken> getToken();
 }

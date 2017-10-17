@@ -12,9 +12,6 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 @Module
 public final class HttpModule {
@@ -42,25 +39,14 @@ public final class HttpModule {
     @Singleton
     @NonNull
     @Provides
-    static Retrofit provideRetrofit() {
-        return new Retrofit.Builder()
-            .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(SimpleXmlConverterFactory.create())
-            .baseUrl("http://dummy.base.url")
-            .client(DaggerHttpComponent.builder()
-                .build()
-                .httpClient())
-            .build();
+    static NewsApiService provideNewsApiService() {
+        return new NewsApiService.Factory().create(NewsApiService.class);
     }
 
     @Singleton
     @NonNull
     @Provides
-    static ApiService provideApiService() {
-        return DaggerHttpComponent.builder()
-            .build()
-            .retrofit()
-            .create(ApiService.class);
+    static GoogleApiService provideGoogleApiService() {
+        return new GoogleApiService.Factory().create(GoogleApiService.class);
     }
 }

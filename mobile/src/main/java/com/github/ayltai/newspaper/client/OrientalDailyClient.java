@@ -15,7 +15,7 @@ import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.Video;
-import com.github.ayltai.newspaper.net.ApiService;
+import com.github.ayltai.newspaper.net.NewsApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
@@ -34,7 +34,7 @@ final class OrientalDailyClient extends RssClient {
     //endregion
 
     @Inject
-    OrientalDailyClient(@NonNull final OkHttpClient client, @NonNull final ApiService apiService, @NonNull final Source source) {
+    OrientalDailyClient(@NonNull final OkHttpClient client, @NonNull final NewsApiService apiService, @NonNull final Source source) {
         super(client, apiService, source);
     }
 

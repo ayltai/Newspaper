@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
-import com.github.ayltai.newspaper.net.ApiService;
+import com.github.ayltai.newspaper.net.NewsApiService;
 import com.github.ayltai.newspaper.net.DaggerHttpComponent;
 import com.github.ayltai.newspaper.net.HttpComponent;
 
@@ -28,10 +28,10 @@ public final class ClientFactory {
     }
 
     private ClientFactory(@NonNull final Context context) {
-        final HttpComponent httpComponent = DaggerHttpComponent.builder().build();
-        final OkHttpClient  client        = httpComponent.httpClient();
-        final ApiService    apiService    = httpComponent.apiService();
-        final String[]      sources       = context.getResources().getStringArray(R.array.sources);
+        final HttpComponent  httpComponent = DaggerHttpComponent.builder().build();
+        final OkHttpClient   client        = httpComponent.httpClient();
+        final NewsApiService apiService    = httpComponent.newsApiService();
+        final String[]       sources       = context.getResources().getStringArray(R.array.sources);
 
         int i = 0;
 

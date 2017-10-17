@@ -15,7 +15,7 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Source;
-import com.github.ayltai.newspaper.net.ApiService;
+import com.github.ayltai.newspaper.net.NewsApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.rss.RssFeed;
 import com.github.ayltai.newspaper.rss.RssItem;
@@ -59,7 +59,7 @@ public final class HeadlineClient extends RssClient {
     }
 
     @Inject
-    HeadlineClient(@NonNull final OkHttpClient client, @NonNull final ApiService apiService, @NonNull final Source source) {
+    HeadlineClient(@NonNull final OkHttpClient client, @NonNull final NewsApiService apiService, @NonNull final Source source) {
         super(client, apiService, source);
     }
 

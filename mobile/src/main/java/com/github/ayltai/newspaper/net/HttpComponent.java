@@ -8,7 +8,6 @@ import com.github.ayltai.newspaper.client.Client;
 
 import dagger.Component;
 import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
 
 @Singleton
 @Component(modules = { HttpModule.class })
@@ -17,10 +16,10 @@ public interface HttpComponent {
     OkHttpClient httpClient();
 
     @NonNull
-    Retrofit retrofit();
+    NewsApiService newsApiService();
 
     @NonNull
-    ApiService apiService();
+    GoogleApiService googleApiService();
 
     void inject(Client client);
 }
