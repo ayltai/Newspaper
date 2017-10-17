@@ -235,7 +235,9 @@ dependencies {
     compile 'com.mixpanel.android:mixpanel-android:5.2.1'
 
     // Instabug
-    compile 'com.instabug.library:instabug:4.3.1'
+    compile ('com.instabug.library:instabug:4.3.1') {
+        exclude group : 'com.instabug.library', module : 'instabug-survey'
+    }
 
     // Debugging
     debugCompile   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
