@@ -104,12 +104,12 @@ final class HketClient extends Client {
                         }
                     }
 
-                    emitter.onSuccess(this.filter(items));
+                    if (!emitter.isDisposed()) emitter.onSuccess(this.filter(items));
                 },
                 error -> {
                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
 
-                    emitter.onSuccess(Collections.emptyList());
+                    if (!emitter.isDisposed()) emitter.onSuccess(Collections.emptyList());
                 }
             ));
     }
@@ -130,7 +130,7 @@ final class HketClient extends Client {
                     html = StringUtils.substringBetween(html, isChinaNews || isInvestNews ? "<div id=\"content-main\">" : "<div class=\"article-detail\">", isChinaNews ? "<div class=\"fb-like\"" : isInvestNews ? "<div class=\"fb-page-like\">" : "<div class=\"article-detail_facebook-like\">");
 
                     if (html == null) {
-                        emitter.onError(new ParseException("Unparseable content", 0));
+                        if (!emitter.isDisposed()) emitter.onError(new ParseException("Unparseable content", 0));
                     } else {
                         HketClient.extraImages(html, item);
 
@@ -147,13 +147,13 @@ final class HketClient extends Client {
                         item.setDescription(builder.toString());
                         item.setIsFullDescription(true);
 
-                        emitter.onSuccess(item);
+                        if (!emitter.isDisposed()) emitter.onSuccess(item);
                     }
                 },
                 error -> {
                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
-                    emitter.onError(error);
+                    if (!emitter.isDisposed()) emitter.onError(error);
                 }
             ));
     }

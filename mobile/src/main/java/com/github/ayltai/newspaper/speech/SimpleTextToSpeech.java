@@ -127,7 +127,7 @@ public abstract class SimpleTextToSpeech {
                     if (this.getOnInitError() != null) this.getOnInitError().call(status);
                 }
 
-                emitter.onSuccess(Irrelevant.INSTANCE);
+                if (!emitter.isDisposed()) emitter.onSuccess(Irrelevant.INSTANCE);
             });
         });
     }

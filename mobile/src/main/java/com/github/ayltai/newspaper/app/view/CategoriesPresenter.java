@@ -39,7 +39,7 @@ public class CategoriesPresenter extends OptionsPresenter<String, OptionsPresent
                 if (!displayNames.contains(displayName)) displayNames.add(displayName);
             }
 
-            emitter.onSuccess(new ArrayList<>(displayNames));
+            if (!emitter.isDisposed()) emitter.onSuccess(new ArrayList<>(displayNames));
         });
     }
 
