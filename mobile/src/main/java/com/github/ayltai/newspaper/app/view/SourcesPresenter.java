@@ -38,7 +38,7 @@ public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.
 
             for (final String source : sources) displayNames.add(Source.toDisplayName(source));
 
-            emitter.onSuccess(new ArrayList<>(displayNames));
+            if (!emitter.isDisposed()) emitter.onSuccess(new ArrayList<>(displayNames));
         });
     }
 

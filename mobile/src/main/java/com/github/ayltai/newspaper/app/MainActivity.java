@@ -138,7 +138,7 @@ public final class MainActivity extends AppCompatActivity {
                 emitter -> {
                     this.realm.close();
 
-                    emitter.onSuccess(Irrelevant.INSTANCE);
+                    if (!emitter.isDisposed()) emitter.onSuccess(Irrelevant.INSTANCE);
                 })
                 .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
                 .subscribe();

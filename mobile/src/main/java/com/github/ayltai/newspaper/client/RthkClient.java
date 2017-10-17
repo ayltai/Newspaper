@@ -64,12 +64,12 @@ final class RthkClient extends RssClient {
                     item.setDescription(StringUtils.substringBetween(html, "<div class=\"itemFullText\">", RthkClient.TAG_CLOSE));
                     item.setIsFullDescription(true);
 
-                    emitter.onSuccess(item);
+                    if (!emitter.isDisposed()) emitter.onSuccess(item);
                 },
                 error -> {
                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
-                    emitter.onError(error);
+                    if (!emitter.isDisposed()) emitter.onError(error);
                 }
             ));
     }
