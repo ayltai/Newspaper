@@ -6,7 +6,6 @@ import android.os.StrictMode;
 import android.util.Log;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -61,7 +60,6 @@ public final class MainApplication extends BaseApplication {
 
         //noinspection CheckStyle
         try {
-            FirebaseCrash.setCrashCollectionEnabled(!TestUtils.isLoggable());
             FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(!TestUtils.isLoggable());
         } catch (final RuntimeException e) {
             if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
