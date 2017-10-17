@@ -1,5 +1,5 @@
 {
-  "projects": {
-    "default": "newspaper-84169"
-  }
+    "projects" : {
+        "default" : "newspaper-84169"
+    }
 }

@@ -1,9 +1,9 @@
 {
-  "name"         : "functions",
-  "dependencies" : {
-    "firebase-admin"     : "~4.2.1",
-    "firebase-functions" : "^0.5.7",
-    "googleapis"         : "^22.2.0"
-  },
-  "private"      : true
+    "name"         : "functions",
+    "dependencies" : {
+        "firebase-admin"     : "^5.4.2",
+        "firebase-functions" : "^0.7.1",
+        "googleapis"         : "^22.2.0"
+    },
+    "private"      : true
 }
