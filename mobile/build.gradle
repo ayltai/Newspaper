@@ -96,6 +96,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    packagingOptions {
+        exclude 'project.properties'
+        exclude 'META-INF/io.netty.versions.properties'
+        exclude 'META-INF/INDEX.LIST'
+    }
 }
 
 checkstyle {
@@ -214,6 +220,12 @@ dependencies {
     compile 'com.gjiazhe:PanoramaImageView:1.0'
     compile 'io.github.inflationx:calligraphy3:3.0.0'
 
+    // Natural language processing
+    compile ('com.google.cloud:google-cloud-language:0.25.0-beta') {
+        exclude group : 'org.json'
+        exclude group : 'org.apache.httpcomponents'
+    }
+
     // Code generation tools
     provided            "com.jakewharton.auto.value:auto-value-annotations:$autoValueVersion"
     annotationProcessor "com.google.auto.value:auto-value:$autoValueVersion"
@@ -245,7 +257,7 @@ dependencies {
     testCompile    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testCompile 'org.mockito:mockito-core:2.10.5'
+    testCompile 'org.mockito:mockito-core:2.11.0'
     testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
     testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
@@ -276,6 +288,9 @@ dependencies {
 configurations.all {
     resolutionStrategy {
         force 'com.google.code.findbugs:jsr305:3.0.2'
+        force 'com.google.protobuf:protobuf-java:3.4.0'
+        force 'junit:junit:4.12'
+        force 'org.mockito:mockito-core:2.11.0'
     }
 }
 
