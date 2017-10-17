@@ -157,7 +157,6 @@ dependencies {
 
     // Firebase
     compile "com.google.firebase:firebase-core:$firebaseSdkVersion"
-    compile "com.google.firebase:firebase-crash:$firebaseSdkVersion"
     compile "com.google.firebase:firebase-config:$firebaseSdkVersion"
     compile "com.google.firebase:firebase-perf:$firebaseSdkVersion"
 
