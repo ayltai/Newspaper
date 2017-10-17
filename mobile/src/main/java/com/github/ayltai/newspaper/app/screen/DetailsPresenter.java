@@ -50,12 +50,16 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     public void bindModel(final Item model) {
         if (this.getView() == null) {
             super.bindModel(model);
+
+            this.analyzeEntities(model);
         } else {
             if (model instanceof NewsItem) {
                 final NewsItem newsItem = (NewsItem)model;
 
                 if (newsItem.isFullDescription()) {
                     super.bindModel(model);
+
+                    this.analyzeEntities(model);
 
                     this.manageDisposable(DetailsPresenter.updateItem(this.getView().getContext(), newsItem)
                         .compose(RxUtils.applySingleBackgroundToMainSchedulers())
@@ -91,7 +95,11 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                             .compose(RxUtils.applySingleBackgroundSchedulers())
                             .flatMap(item -> DetailsPresenter.updateItem(this.getView().getContext(), item)).compose(RxUtils.applySingleBackgroundToMainSchedulers())
                             .subscribe(
-                                items -> super.bindModel(items.get(0)),
+                                items -> {
+                                    super.bindModel(items.get(0));
+
+                                    this.analyzeEntities(items.get(0));
+                                },
                                 error -> {
                                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                                 }));
@@ -169,6 +177,10 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         if (shareClicks != null) this.manageDisposable(shareClicks.subscribe(irrelevant -> this.onShareClick()));
 
         super.onViewAttached(view, isFirstTimeAttachment);
+    }
+
+    private void analyzeEntities(@NonNull final Item model) {
+        // TODO
     }
 
     private static Single<List<NewsItem>> updateItem(@NonNull final Context context, @NonNull final NewsItem item) {

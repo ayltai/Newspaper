@@ -36,6 +36,11 @@
 ## BottomBar
 -dontwarn com.roughike.bottombar.**
 
+## Google API Client
+-keepclassmembers class * {
+  @com.google.api.client.util.Key <fields>;
+}
+
  ## Google Play Services library
 -keep class * extends java.util.ListResourceBundle {
    protected Object[][] getContents();
