@@ -22,6 +22,8 @@ import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.DataManager;
+import com.github.ayltai.newspaper.net.AuthToken;
+import com.github.ayltai.newspaper.net.DaggerHttpComponent;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -180,7 +182,18 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     }
 
     private void analyzeEntities(@NonNull final Item model) {
-        // TODO
+        if (this.getView() != null) Single.defer(() -> Single.just(AuthToken.load(this.getView().getContext())))
+            .compose(RxUtils.applySingleBackgroundSchedulers())
+            .map(
+                authToken -> authToken.isValid()
+                    ? Single.just(authToken)
+                    : DaggerHttpComponent.builder()
+                        .build()
+                        .googleApiService()
+                        .getToken()
+                        .singleOrError())
+            .compose(RxUtils.applySingleBackgroundSchedulers())
+            .subscribe();
     }
 
     private static Single<List<NewsItem>> updateItem(@NonNull final Context context, @NonNull final NewsItem item) {

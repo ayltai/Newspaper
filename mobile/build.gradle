@@ -180,7 +180,7 @@ dependencies {
         exclude module : 'httpclient'
         exclude module : 'jsr305'
     }
-    compile ("com.google.apis:google-api-services-language:v1-rev395-$googleApiClientVersion") {
+    compile ("com.google.apis:google-api-services-language:v1-rev396-$googleApiClientVersion") {
         exclude module : 'httpclient'
         exclude module : 'jsr305'
     }
