@@ -245,7 +245,7 @@ dependencies {
     testCompile    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testCompile 'org.mockito:mockito-core:2.10.5'
+    testCompile 'org.mockito:mockito-core:2.11.0'
     testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
     testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
