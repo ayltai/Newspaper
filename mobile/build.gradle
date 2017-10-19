@@ -171,7 +171,7 @@ dependencies {
     // Google Play Services
     compile "com.google.android.gms:play-services-analytics:$firebaseSdkVersion"
 
-    // Google API Client
+    // Google APIs
     compile ("com.google.http-client:google-http-client:$googleApiClientVersion") {
         exclude module : 'httpclient'
         exclude module : 'jsr305'
@@ -180,7 +180,7 @@ dependencies {
         exclude module : 'httpclient'
         exclude module : 'jsr305'
     }
-    compile ("com.google.apis:google-api-services-language:v1-rev396-$googleApiClientVersion") {
+    compile ("com.google.apis:google-api-services-language:v1beta2-rev18-$googleApiClientVersion") {
         exclude module : 'httpclient'
         exclude module : 'jsr305'
     }

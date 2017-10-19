@@ -3,6 +3,7 @@ package com.github.ayltai.newspaper.app.screen;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.support.annotation.CallSuper;
@@ -10,6 +11,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.util.Log;
+
+import com.google.api.services.language.v1.CloudNaturalLanguageScopes;
+import com.google.api.services.language.v1.model.Entity;
+import com.google.api.services.language.v1.model.EntityMention;
+import com.google.api.services.language.v1.model.Sentiment;
 
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.analytics.ShareEvent;
@@ -22,7 +28,7 @@ import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.DataManager;
-import com.github.ayltai.newspaper.net.AuthToken;
+import com.github.ayltai.newspaper.language.AuthToken;
 import com.github.ayltai.newspaper.net.DaggerHttpComponent;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
@@ -182,18 +188,72 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     }
 
     private void analyzeEntities(@NonNull final Item model) {
-        if (this.getView() != null) Single.defer(() -> Single.just(AuthToken.load(this.getView().getContext())))
+        if (this.getView() != null && model.getDescription() != null) Single.defer(() -> Single.just(AuthToken.load(this.getView().getContext())))
             .compose(RxUtils.applySingleBackgroundSchedulers())
-            .map(
-                authToken -> authToken.isValid()
-                    ? Single.just(authToken)
-                    : DaggerHttpComponent.builder()
-                        .build()
-                        .googleApiService()
-                        .getToken()
-                        .singleOrError())
+            .flatMap(token -> token.isValid()
+                ? Single.just(token)
+                : DaggerHttpComponent.builder()
+                    .build()
+                    .googleApiService()
+                    .getToken()
+                    .singleOrError())
             .compose(RxUtils.applySingleBackgroundSchedulers())
-            .subscribe();
+            .map(token -> token.toGoogleCredential(Collections.singletonList(CloudNaturalLanguageScopes.CLOUD_LANGUAGE)))
+            .map(credential -> ComponentFactory.getInstance()
+                .getLanguageComponent(credential)
+                .languageService()
+                .analyzeEntities(model.getDescription()))
+            .compose(RxUtils.applySingleBackgroundToMainSchedulers())
+            .subscribe(
+                entities -> {
+                    for (final Entity entity : entities) {
+                        Log.d(this.getClass().getSimpleName(), "Entity { name = " + entity.getName() + ", type = " + entity.getType() + ", salience = " + entity.getSalience() + ", mentions = " + DetailsPresenter.toString(entity.getMentions()) + ", sentiment = " + DetailsPresenter.toString(entity.getSentiment()) + ", metadata = " + DetailsPresenter.toString(entity.getMetadata()));
+                    }
+
+                    // TODO
+                },
+                error -> {
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                });
+    }
+
+    @NonNull
+    private static String toString(@Nullable final List<EntityMention> mentions) {
+        if (mentions == null) return "";
+
+        final StringBuilder builder = new StringBuilder();
+
+        for (final EntityMention mention : mentions) {
+            if (builder.length() > 0) builder.append(", ");
+
+            builder.append("Mention { text = " + mention.getText() + ", type = " + mention.getType() + ", sentiment = " + DetailsPresenter.toString(mention.getSentiment()));
+        }
+
+        return builder.toString();
+    }
+
+    @NonNull
+    private static String toString(@Nullable final Sentiment sentiment) {
+        if (sentiment == null) return "";
+
+        return "Sentiment { score = " + sentiment.getScore() + ", magnitude = " + sentiment.getMagnitude() + " }";
+    }
+
+    @NonNull
+    private static String toString(@Nullable final Map<String, String> metadata) {
+        if (metadata == null) return "";
+
+        final StringBuilder builder = new StringBuilder();
+
+        for (final Map.Entry<String, String> entry : metadata.entrySet()) {
+            if (builder.length() > 0) builder.append(", ");
+
+            builder.append(entry.getKey())
+                .append(" = ")
+                .append(entry.getValue());
+        }
+
+        return builder.toString();
     }
 
     private static Single<List<NewsItem>> updateItem(@NonNull final Context context, @NonNull final NewsItem item) {

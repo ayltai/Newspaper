@@ -1,4 +1,6 @@
-package com.github.ayltai.newspaper.net;
+package com.github.ayltai.newspaper.language;
+
+import java.util.Collection;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
@@ -23,7 +26,7 @@ public abstract class AuthToken {
 
     //endregion
 
-    @NonNull
+    @Nullable
     @SerializedName("access_token")
     public abstract String getAccessToken();
 
@@ -37,6 +40,15 @@ public abstract class AuthToken {
 
     public boolean isValid() {
         return this.getExpiryTime() != null && System.currentTimeMillis() + AuthToken.ONE_HOUR < this.getExpiryTime();
+    }
+
+    @NonNull
+    public GoogleCredential toGoogleCredential(@NonNull final Collection<String> scopes) {
+        return new GoogleCredential()
+            .setAccessToken(this.getAccessToken())
+            .setRefreshToken(this.getRefreshToken())
+            .setExpirationTimeMilliseconds(this.getExpiryTime())
+            .createScoped(scopes);
     }
 
     public void save(@NonNull final Context context) {

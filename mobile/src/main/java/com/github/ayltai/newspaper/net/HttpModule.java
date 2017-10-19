@@ -29,7 +29,10 @@ public final class HttpModule {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
             .connectTimeout(HttpModule.TIMEOUT_CONNECT, TimeUnit.SECONDS)
             .readTimeout(HttpModule.TIMEOUT_READ, TimeUnit.SECONDS)
-            .writeTimeout(HttpModule.TIMEOUT_WRITE, TimeUnit.SECONDS);
+            .writeTimeout(HttpModule.TIMEOUT_WRITE, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .followRedirects(true)
+            .followSslRedirects(true);
 
         if (TestUtils.isLoggable()) builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS));
 

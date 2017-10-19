@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.GsonBuilder;
 
+import com.github.ayltai.newspaper.language.AuthToken;
+
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

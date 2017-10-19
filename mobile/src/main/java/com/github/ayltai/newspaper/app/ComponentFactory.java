@@ -7,6 +7,8 @@ import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+
 import com.github.ayltai.newspaper.analytics.AnalyticsComponent;
 import com.github.ayltai.newspaper.analytics.AnalyticsModule;
 import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
@@ -16,6 +18,9 @@ import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataComponent;
 import com.github.ayltai.newspaper.data.DataModule;
+import com.github.ayltai.newspaper.language.DaggerLanguageComponent;
+import com.github.ayltai.newspaper.language.LanguageComponent;
+import com.github.ayltai.newspaper.language.LanguageModule;
 import com.github.ayltai.newspaper.media.DaggerImageComponent;
 import com.github.ayltai.newspaper.media.ImageComponent;
 import com.github.ayltai.newspaper.media.ImageModule;
@@ -28,6 +33,7 @@ public final class ComponentFactory implements Disposable, LifecycleObserver {
     private ConfigComponent    configComponent;
     private ImageComponent     imageComponent;
     private AnalyticsComponent analyticsComponent;
+    private LanguageComponent  languageComponent;
 
     public static ComponentFactory getInstance() {
         if (ComponentFactory.instance == null) ComponentFactory.init();
@@ -50,6 +56,7 @@ public final class ComponentFactory implements Disposable, LifecycleObserver {
         this.configComponent    = null;
         this.imageComponent     = null;
         this.analyticsComponent = null;
+        this.languageComponent  = null;
 
         ComponentFactory.init();
     }
@@ -82,5 +89,13 @@ public final class ComponentFactory implements Disposable, LifecycleObserver {
             .build();
 
         return this.analyticsComponent;
+    }
+
+    public LanguageComponent getLanguageComponent(@NonNull final GoogleCredential credential) {
+        if (this.languageComponent == null) this.languageComponent = DaggerLanguageComponent.builder()
+            .languageModule(new LanguageModule(credential))
+            .build();
+
+        return this.languageComponent;
     }
 }
