@@ -33,6 +33,7 @@
                     android:layout_toEndOf="@+id/avatar"
                     android:layout_alignTop="@+id/avatar"
                     android:layout_alignWithParentIfMissing="true"
+                    android:textIsSelectable="true"
                     tools:text="Proin rutrum ipsum"
                     style="@style/Source.Full" />
                 <TextView
@@ -42,6 +43,7 @@
                     android:layout_toEndOf="@+id/avatar"
                     android:layout_below="@+id/source"
                     android:layout_alignWithParentIfMissing="true"
+                    android:textIsSelectable="true"
                     tools:text="Phasellus at aliquam dolor"
                     style="@style/Subhead.Full" />
                 <ImageView
@@ -88,11 +90,13 @@
                 <TextView
                     android:id="@+id/title"
                     android:layout_marginBottom="@dimen/space16"
+                    android:textIsSelectable="true"
                     tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
                     style="@style/Title.Full" />
                 <TextView
                     android:id="@+id/description"
                     android:layout_marginBottom="@dimen/space16"
+                    android:textIsSelectable="true"
                     tools:text="Sed eu rhoncus enim, sit amet iaculis ante. Sed at finibus lectus, at consequat lacus. Etiam ipsum erat, facilisis vel sagittis sed, scelerisque ut eros. Praesent at mauris laoreet, imperdiet urna imperdiet, sollicitudin erat. Etiam iaculis mauris eu libero dignissim mattis mollis vitae enim. Quisque nec semper arcu. Ut lobortis, justo vitae finibus tempus, mauris elit fermentum mi, at cursus leo nisi et dui. Phasellus turpis diam, mollis at elementum aliquet, ullamcorper in metus. In lobortis scelerisque ante in mollis. Curabitur eget efficitur massa."
                     style="@style/Description.Full" />
                 <FrameLayout
