@@ -84,6 +84,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     private final FlowableProcessor<Irrelevant> sourceClicks       = PublishProcessor.create();
     private final FlowableProcessor<Irrelevant> textToSpeechClicks = PublishProcessor.create();
     private final FlowableProcessor<Irrelevant> bookmarkClicks     = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> viewOnWebClicks    = PublishProcessor.create();
     private final FlowableProcessor<Irrelevant> shareClicks        = PublishProcessor.create();
     private final FlowableProcessor<Image>      imageClicks        = PublishProcessor.create();
 
@@ -108,6 +109,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     private final TextView                description;
     private final ImageView               textToSpeechAction;
     private final ImageView               bookmarkAction;
+    private final ImageView               viewOnWebAction;
     private final ImageView               shareAction;
     private final ViewGroup               imagesContainer;
     private final ViewGroup               videoContainer;
@@ -140,6 +142,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.description             = view.findViewById(R.id.description);
         this.textToSpeechAction      = view.findViewById(R.id.action_text_to_speech);
         this.bookmarkAction          = view.findViewById(R.id.action_bookmark);
+        this.viewOnWebAction         = view.findViewById(R.id.action_view_on_web);
         this.shareAction             = view.findViewById(R.id.action_share);
         this.imagesContainer         = view.findViewById(R.id.images_container);
         this.videoContainer          = view.findViewById(R.id.video_container);
@@ -359,6 +362,11 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     }
 
     @Override
+    public void viewOnWeb(@NonNull final String url) {
+        this.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(url)), this.getContext().getText(R.string.view_via)));
+    }
+
+    @Override
     public void share(@NonNull final String url) {
         this.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT, url).setType("text/plain"), this.getContext().getText(R.string.share_to)));
     }
@@ -396,6 +404,12 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     @Override
     public Flowable<Irrelevant> bookmarkClicks() {
         return this.bookmarkClicks;
+    }
+
+    @Nullable
+    @Override
+    public Flowable<Irrelevant> viewOnWebClicks() {
+        return this.viewOnWebClicks;
     }
 
     @NonNull
@@ -439,6 +453,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.manageDisposable(RxView.clicks(this.source).subscribe(irrelevant -> this.sourceClicks.onNext(Irrelevant.INSTANCE)));
         this.manageDisposable(RxView.clicks(this.textToSpeechAction).subscribe(irrelevant -> this.textToSpeechClicks.onNext(Irrelevant.INSTANCE)));
         this.manageDisposable(RxView.clicks(this.bookmarkAction).subscribe(irrelevant -> this.bookmarkClicks.onNext(Irrelevant.INSTANCE)));
+        this.manageDisposable(RxView.clicks(this.viewOnWebAction).subscribe(irrelevant -> this.viewOnWebClicks.onNext(Irrelevant.INSTANCE)));
         this.manageDisposable(RxView.clicks(this.shareAction).subscribe(irrelevant -> this.shareClicks.onNext(Irrelevant.INSTANCE)));
 
         super.onAttachedToWindow();

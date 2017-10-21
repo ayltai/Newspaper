@@ -4,6 +4,7 @@ import android.support.annotation.IntDef;
 
 public final class Constants {
     public static final String ENCODING_UTF8 = "UTF-8";
+    public static final String LINE_BREAK    = "\n";
 
     public static final int INITIAL_RETRY_DELAY            = 2;
     public static final int MAX_RETRIES                    = 5;
@@ -19,7 +20,7 @@ public final class Constants {
     public static final long CACHE_SIZE_MAX_SMALLEST = 4 * 1024 * 1024;
 
     public static final int   FEATURED_IMAGE_ROTATION  = 10;
-    public static final int   IMAGE_ZOOM_MAX           = 8;
+    public static final int   IMAGE_ZOOM_MAX           = 16;
     public static final float FACE_DETECTION_RATIO_MIN = 0.05f;
     public static final int   FACE_DETECTION_SIZE_MAX  = 262144;
 

@@ -61,7 +61,14 @@ public abstract class RssClient extends Client {
         final List<NewsItem> items    = new ArrayList<>();
 
         if (feed.getItems() != null) {
-            for (final RssItem item : feed.getItems()) items.add(new NewsItem(item, this.source.getName(), category));
+            for (final RssItem item : feed.getItems()) {
+                final NewsItem newsItem = new NewsItem(item, this.source.getName(), category);
+
+                final String title = newsItem.getTitle();
+                if (title != null) newsItem.setTitle(title.replaceAll("<br>", "\n"));
+
+                items.add(newsItem);
+            }
         }
 
         return items;

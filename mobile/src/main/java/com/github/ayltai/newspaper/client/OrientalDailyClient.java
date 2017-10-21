@@ -17,6 +17,7 @@ import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
+import com.github.ayltai.newspaper.rss.RssFeed;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -84,6 +85,16 @@ final class OrientalDailyClient extends RssClient {
                     if (!emitter.isDisposed()) emitter.onError(error);
                 }
             ));
+    }
+
+    @NonNull
+    @Override
+    protected List<NewsItem> filter(@NonNull final String url, @NonNull final RssFeed feed) {
+        final List<NewsItem> items = super.filter(url, feed);
+
+        for (final NewsItem item : items) item.setDescription(StringUtils.substringBetween(item.getDescription(), "<div style=\"float:left;\">", "</div>"));
+
+        return items;
     }
 
     @SuppressWarnings("checkstyle:magicnumber")

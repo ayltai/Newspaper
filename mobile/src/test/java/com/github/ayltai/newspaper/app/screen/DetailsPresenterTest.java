@@ -31,6 +31,7 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
     private final FlowableProcessor<Irrelevant> bookmarkClicks     = PublishProcessor.create();
     private final FlowableProcessor<Image>      imageClicks        = PublishProcessor.create();
     private final FlowableProcessor<Irrelevant> videoClicks        = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> viewOnWebClicks    = PublishProcessor.create();
     private final FlowableProcessor<Irrelevant> shareClicks        = PublishProcessor.create();
 
     @NonNull
@@ -55,6 +56,7 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
         Mockito.doReturn(this.bookmarkClicks).when(view).bookmarkClicks();
         Mockito.doReturn(this.imageClicks).when(view).imageClicks();
         Mockito.doReturn(this.videoClicks).when(view).videoClicks();
+        Mockito.doReturn(this.viewOnWebClicks).when(view).viewOnWebClicks();
         Mockito.doReturn(this.shareClicks).when(view).shareClicks();
 
         return view;
@@ -90,6 +92,18 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
         this.textToSpeechClicks.onNext(Irrelevant.INSTANCE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).textToSpeech();
+    }
+
+    @Test
+    public void Given_onViewAttached_When_viewOnWebClicks_Then_viewOnWebIsCalled() {
+        // Given
+        this.getPresenter().bindModel(this.getModel());
+
+        // When
+        this.attachments.onNext(true);
+        this.viewOnWebClicks.onNext(Irrelevant.INSTANCE);
+
+        Mockito.verify(this.getView(), Mockito.times(1)).viewOnWeb("link");
     }
 
     @Test
