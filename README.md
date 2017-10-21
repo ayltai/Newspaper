@@ -88,9 +88,8 @@ This app is made with the support of open source software:
 
 * [CircleCI](https://circleci.com)
 * [Firebase Test Lab](https://firebase.google.com/docs/test-lab)
-* [Firebase Crash Reporting](https://firebase.google.com/docs/crash)
 * [Firebase Analytics](https://firebase.google.com/docs/analytics)
-* [Flurry Analytics](https://developer.yahoo.com/analytics)
 * [Fabric Answers](https://answers.io)
 * [Fabric Crashlytics](https://fabric.io/kits/android/crashlytics)
 * [Instabug](https://instabug.com)
+* [Mixpanel](https://mixpanel.com)
