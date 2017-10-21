@@ -36,9 +36,14 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         Flowable<Irrelevant> textToSpeechClicks();
 
         @Nullable
+        Flowable<Irrelevant> viewOnWebClicks();
+
+        @Nullable
         Flowable<Irrelevant> shareClicks();
 
         void textToSpeech();
+
+        void viewOnWeb(@NonNull String url);
 
         void share(@NonNull String url);
 
@@ -138,7 +143,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         super.onBookmarkClick();
     }
 
-    protected void onShareClick() {
+    protected void onViewOnWebClick() {
         if (this.getView() != null) {
             ComponentFactory.getInstance()
                 .getAnalyticsComponent(this.getView().getContext())
@@ -147,7 +152,19 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                     .setSource(this.getModel().getSource())
                     .setCategory(this.getModel().getCategory()));
 
-            this.getView().share(this.getModel().getLink());
+            this.getView().viewOnWeb(this.getModel().getLink());
+        }
+    }
+
+    protected void onShareClick() {
+        if (this.getView() != null) {
+            ComponentFactory.getInstance()
+                .getAnalyticsComponent(this.getView().getContext())
+                .eventLogger()
+                .logEvent(new ClickEvent()
+                    .setElementName("View on web"));
+
+            this.getView().viewOnWeb(this.getModel().getLink());
         }
     }
 
@@ -164,6 +181,9 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     public void onViewAttached(@NonNull final DetailsPresenter.View view, final boolean isFirstTimeAttachment) {
         final Flowable<Irrelevant> textToSpeechClicks = view.textToSpeechClicks();
         if (textToSpeechClicks != null) this.manageDisposable(textToSpeechClicks.subscribe(irrelevant -> this.onTextToSpeechClick()));
+
+        final Flowable<Irrelevant> viewOnWebClicks = view.viewOnWebClicks();
+        if (viewOnWebClicks != null) this.manageDisposable(viewOnWebClicks.subscribe(irrelevant -> this.onViewOnWebClick()));
 
         final Flowable<Irrelevant> shareClicks = view.shareClicks();
         if (shareClicks != null) this.manageDisposable(shareClicks.subscribe(irrelevant -> this.onShareClick()));
