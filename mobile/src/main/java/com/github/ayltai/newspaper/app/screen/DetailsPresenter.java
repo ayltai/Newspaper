@@ -161,10 +161,11 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
             ComponentFactory.getInstance()
                 .getAnalyticsComponent(this.getView().getContext())
                 .eventLogger()
-                .logEvent(new ClickEvent()
-                    .setElementName("View on web"));
+                .logEvent(new ShareEvent()
+                    .setSource(this.getModel().getSource())
+                    .setCategory(this.getModel().getCategory()));
 
-            this.getView().viewOnWeb(this.getModel().getLink());
+            this.getView().share(this.getModel().getLink());
         }
     }
 
