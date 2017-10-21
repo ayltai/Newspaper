@@ -58,13 +58,18 @@ public abstract class DataTest extends UnitTest {
         PowerMockito.when(query.or()).thenReturn(query);
         PowerMockito.when(query.contains(Mockito.anyString(), Mockito.anyString(), Mockito.any(Case.class))).thenReturn(query);
         PowerMockito.when(query.greaterThan(Mockito.anyString(), Mockito.anyInt())).thenReturn(query);
+        PowerMockito.when(query.lessThan(Mockito.anyString(), Mockito.anyLong())).thenReturn(query);
         PowerMockito.when(query.equalTo(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(query);
         PowerMockito.when(query.equalTo(Mockito.anyString(), Mockito.anyString())).thenReturn(query);
+        PowerMockito.when(query.equalTo(Mockito.anyString(), Mockito.anyInt())).thenReturn(query);
+        PowerMockito.when(query.equalTo(Mockito.anyString(), Mockito.anyLong())).thenReturn(query);
+        PowerMockito.when(query.notEqualTo(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(query);
 
         final RealmResults<NewsItem> results = PowerMockito.mock(RealmResults.class);
         PowerMockito.when(query.findAll()).thenReturn(results);
         PowerMockito.when(query.findAllSorted(Mockito.anyString(), Mockito.any(Sort.class))).thenReturn(results);
         PowerMockito.when(results.iterator()).thenReturn(Collections.emptyList().iterator());
+        PowerMockito.when(results.deleteAllFromRealm()).thenReturn(true);
 
         final NewsItem item = new NewsItem();
         PowerMockito.when(results.first()).thenReturn(item);
