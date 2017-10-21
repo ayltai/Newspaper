@@ -97,6 +97,7 @@
                     android:id="@+id/description"
                     android:layout_marginBottom="@dimen/space16"
                     android:textIsSelectable="true"
+                    android:autoLink="all"
                     tools:text="Sed eu rhoncus enim, sit amet iaculis ante. Sed at finibus lectus, at consequat lacus. Etiam ipsum erat, facilisis vel sagittis sed, scelerisque ut eros. Praesent at mauris laoreet, imperdiet urna imperdiet, sollicitudin erat. Etiam iaculis mauris eu libero dignissim mattis mollis vitae enim. Quisque nec semper arcu. Ut lobortis, justo vitae finibus tempus, mauris elit fermentum mi, at cursus leo nisi et dui. Phasellus turpis diam, mollis at elementum aliquet, ullamcorper in metus. In lobortis scelerisque ante in mollis. Curabitur eget efficitur massa."
                     style="@style/Description.Full" />
                 <FrameLayout
