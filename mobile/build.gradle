@@ -23,8 +23,8 @@ android {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
         targetSdkVersion 26
-        versionCode      20
-        versionName      '3.2.' + VERSION_REVISION + '-' + VERSION_HASH
+        versionCode      21
+        versionName      '3.3.' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
@@ -110,7 +110,7 @@ configurations {
 ext {
     multidexVersion       = '1.0.2'
     supportLibraryVersion = '26.1.0'
-    architectureVersion   = '1.0.0-beta2'
+    architectureVersion   = '1.0.0-rc1'
     firebaseSdkVersion    = '11.4.2'
     daggerVersion         = '2.12'
     rxBindingVersion      = '2.0.0'
@@ -118,10 +118,10 @@ ext {
     retrofitVersion       = '2.3.0'
     frescoVersion         = '1.5.0'
     bigImageViewerVersion = '1.3.2'
-    exoPlayerVersion      = 'r2.5.3'
+    exoPlayerVersion      = 'r2.5.4'
     autoValueVersion      = '1.5'
     leakCanaryVersion     = '1.5.4'
-    robolectricVersion    = '3.4.2'
+    robolectricVersion    = '3.5'
     powerMockVersion      = '2.0.0-beta.5'
     espressoVersion       = '3.0.1'
 }
@@ -140,7 +140,7 @@ dependencies {
     androidTestCompile "com.android.support:multidex-instrumentation:$multidexVersion"
 
     // Android Architecture libraries
-    compile ('android.arch.lifecycle:runtime:1.0.0') {
+    compile ('android.arch.lifecycle:runtime:1.0.3') {
         exclude group : 'com.android.support'
     }
     compile ("android.arch.lifecycle:extensions:$architectureVersion") {
@@ -221,13 +221,13 @@ dependencies {
     compile             'com.google.code.gson:gson:2.8.2'
 
     // Fabric
-    compile ('io.fabric.sdk.android:fabric:1.4.0@aar') {
+    compile ('io.fabric.sdk.android:fabric:1.4.1@aar') {
         transitive = true;
     }
-    compile ('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
+    compile ('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true;
     }
-    compile ('com.crashlytics.sdk.android:answers:1.4.0@aar') {
+    compile ('com.crashlytics.sdk.android:answers:1.4.1@aar') {
         transitive = true;
     }
 
@@ -245,13 +245,13 @@ dependencies {
     testCompile    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testCompile 'org.mockito:mockito-core:2.11.0'
+    testCompile 'org.mockito:mockito-core:2.11.1'
     testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
     testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
     testCompile "org.powermock:powermock-classloading-xstream:$powerMockVersion"
     testCompile "org.robolectric:robolectric:$robolectricVersion"
-    testCompile "org.robolectric:multidex:$robolectricVersion"
+    testCompile "org.robolectric:multidex:3.4.2"
     testCompile 'org.json:json:20170516'
 
     // Instrumented testing
