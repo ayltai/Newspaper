@@ -4,6 +4,7 @@ import android.support.annotation.IntDef;
 
 public final class Constants {
     public static final String ENCODING_UTF8 = "UTF-8";
+    public static final String LINE_BREAK    = "\n";
 
     public static final int INITIAL_RETRY_DELAY            = 2;
     public static final int MAX_RETRIES                    = 5;
