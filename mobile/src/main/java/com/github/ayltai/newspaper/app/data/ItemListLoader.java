@@ -129,8 +129,11 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
     @Override
     protected Flowable<List<NewsItem>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
         if (NetworkUtils.isOnline(context)) {
+            final List<Single<List<NewsItem>>> singles = this.createSingles(context, args);
+            if (singles.isEmpty()) Flowable.just(Collections.emptyList());
+
             return Flowable.create(emitter -> Single.zip(
-                this.createSingles(context, args),
+                singles,
                 lists -> {
                     final List<NewsItem> combinedList = new ArrayList<>();
                     for (final Object list : lists) combinedList.addAll((List<NewsItem>)list);
@@ -153,7 +156,7 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
                                 error -> {
                                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
 
-                                    e.onError(error);
+                                    if (!e.isDisposed()) e.onError(error);
                                 }));
                     } else {
                         return Single.just(items);

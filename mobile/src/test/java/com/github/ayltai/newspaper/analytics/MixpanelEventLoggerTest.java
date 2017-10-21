@@ -2,15 +2,16 @@ package com.github.ayltai.newspaper.analytics;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.robolectric.RuntimeEnvironment;
 
 import com.github.ayltai.newspaper.UnitTest;
 
-public final class FlurryEventLoggerTest extends UnitTest {
+public final class MixpanelEventLoggerTest extends UnitTest {
     @Test
     public void testLogAppOpenEvent() {
         final AppOpenEvent event = new AppOpenEvent();
 
-        new FlurryEventLogger().logEvent(event);
+        new MixpanelEventLogger(RuntimeEnvironment.application).logEvent(event);
 
         Assert.assertEquals(AppOpenEvent.NAME, event.getName());
     }
@@ -19,7 +20,7 @@ public final class FlurryEventLoggerTest extends UnitTest {
     public void testLogCountEvent() {
         final CountEvent event = new CountEvent("name", 1);
 
-        new FlurryEventLogger().logEvent(event);
+        new MixpanelEventLogger(RuntimeEnvironment.application).logEvent(event);
 
         Assert.assertEquals("Count (name)", event.getName());
         Assert.assertEquals(CountEvent.ATTRIBUTE_COUNTER_NAME, event.getAttribute(CountEvent.ATTRIBUTE_COUNTER_NAME).getName());
@@ -32,7 +33,7 @@ public final class FlurryEventLoggerTest extends UnitTest {
             .setCategory("category")
             .setSource("source");
 
-        new FlurryEventLogger().logEvent(event);
+        new MixpanelEventLogger(RuntimeEnvironment.application).logEvent(event);
 
         Assert.assertEquals(ShareEvent.NAME, event.getName());
         Assert.assertEquals("category", event.getAttribute(ShareEvent.ATTRIBUTE_CATEGORY).getValue());
@@ -46,7 +47,7 @@ public final class FlurryEventLoggerTest extends UnitTest {
             .setScreenName("screen")
             .setQuery("query");
 
-        new FlurryEventLogger().logEvent(event);
+        new MixpanelEventLogger(RuntimeEnvironment.application).logEvent(event);
 
         Assert.assertEquals(SearchEvent.NAME, event.getName());
         Assert.assertEquals("category", event.getAttribute(SearchEvent.ATTRIBUTE_CATEGORY).getValue());
@@ -61,7 +62,7 @@ public final class FlurryEventLoggerTest extends UnitTest {
             .setSource("source")
             .setScreenName("screen");
 
-        new FlurryEventLogger().logEvent(event);
+        new MixpanelEventLogger(RuntimeEnvironment.application).logEvent(event);
 
         Assert.assertEquals(ViewEvent.NAME, event.getName());
         Assert.assertEquals("category", event.getAttribute(ViewEvent.ATTRIBUTE_CATEGORY).getValue());
@@ -74,7 +75,7 @@ public final class FlurryEventLoggerTest extends UnitTest {
         final ClickEvent event = new ClickEvent()
             .setElementName("element");
 
-        new FlurryEventLogger().logEvent(event);
+        new MixpanelEventLogger(RuntimeEnvironment.application).logEvent(event);
 
         Assert.assertEquals(ClickEvent.NAME, event.getName());
         Assert.assertEquals("element", event.getAttribute(ClickEvent.ATTRIBUTE_ELEMENT_NAME).getValue());

@@ -29,6 +29,7 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
     public static final String FIELD_DESCRIPTION        = "description";
     public static final String FIELD_SOURCE             = "source";
     public static final String FIELD_CATEGORY           = "category";
+    public static final String FIELD_PUBLISH_DATE       = "publishDate";
     public static final String FIELD_LINK               = "link";
     public static final String FIELD_BOOKMARKED         = "bookmarked";
     public static final String FIELD_LAST_ACCESSED_DATE = "lastAccessedDate";

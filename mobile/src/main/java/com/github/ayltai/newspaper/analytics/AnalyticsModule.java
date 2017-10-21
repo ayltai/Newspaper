@@ -16,31 +16,35 @@ public final class AnalyticsModule {
         this.context = context;
     }
 
+    @NonNull
     @Singleton
     @Provides
     FabricEventLogger provideFabricEventLogger() {
         return new FabricEventLogger();
     }
 
+    @NonNull
     @Singleton
     @Provides
     FirebaseEventLogger provideFirebaseEventLogger() {
         return new FirebaseEventLogger(this.context);
     }
 
+    @NonNull
     @Singleton
     @Provides
-    FlurryEventLogger provideFlurryEventLogger() {
-        return new FlurryEventLogger();
+    MixpanelEventLogger provideMixpanelEventLogger() {
+        return new MixpanelEventLogger(this.context);
     }
 
+    @NonNull
     @Singleton
     @Provides
     public EventLogger provideEventLogger() {
         return new CompositeEventLogger.Builder()
             .add(this.provideFabricEventLogger())
             .add(this.provideFirebaseEventLogger())
-            .add(this.provideFlurryEventLogger())
+            .add(this.provideMixpanelEventLogger())
             .build();
     }
 }

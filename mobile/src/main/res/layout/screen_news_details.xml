@@ -26,13 +26,14 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     app:placeholderImage="?attr/placeholderImage"
-                    app:fadeDuration="@integer/image_fade_duration" />
+                    app:fadeDuration="@android:integer/config_shortAnimTime" />
                 <TextView
                     android:id="@+id/source"
                     android:layout_toRightOf="@+id/avatar"
                     android:layout_toEndOf="@+id/avatar"
                     android:layout_alignTop="@+id/avatar"
                     android:layout_alignWithParentIfMissing="true"
+                    android:textIsSelectable="true"
                     tools:text="Proin rutrum ipsum"
                     style="@style/Source.Full" />
                 <TextView
@@ -42,17 +43,44 @@
                     android:layout_toEndOf="@+id/avatar"
                     android:layout_below="@+id/source"
                     android:layout_alignWithParentIfMissing="true"
+                    android:textIsSelectable="true"
                     tools:text="Phasellus at aliquam dolor"
                     style="@style/Subhead.Full" />
                 <ImageView
-                    android:id="@+id/action_bookmark"
+                    android:id="@+id/action_text_to_speech"
                     android:layout_margin="@dimen/space16"
-                    android:layout_toLeftOf="@+id/action_share"
-                    android:layout_toStartOf="@+id/action_share"
+                    android:layout_toLeftOf="@+id/action_bookmark"
+                    android:layout_toStartOf="@+id/action_bookmark"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/action_text_to_speech"
+                    android:tint="?attr/textColorHint"
+                    app:srcCompat="@drawable/ic_volume_off_black_24dp"
+                    style="@style/Icon.Small" />
+                <ImageView
+                    android:id="@+id/action_bookmark"
+                    android:layout_marginRight="@dimen/space16"
+                    android:layout_marginEnd="@dimen/space16"
+                    android:layout_marginTop="@dimen/space16"
+                    android:layout_marginBottom="@dimen/space16"
+                    android:layout_toLeftOf="@+id/action_view_on_web"
+                    android:layout_toStartOf="@+id/action_view_on_web"
                     android:layout_alignParentTop="true"
                     android:contentDescription="@string/action_bookmark"
                     android:tint="?attr/textColorHint"
                     app:srcCompat="@drawable/ic_bookmark_border_black_24dp"
+                    style="@style/Icon.Small" />
+                <ImageView
+                    android:id="@+id/action_view_on_web"
+                    android:layout_marginRight="@dimen/space16"
+                    android:layout_marginEnd="@dimen/space16"
+                    android:layout_marginTop="@dimen/space16"
+                    android:layout_marginBottom="@dimen/space16"
+                    android:layout_toLeftOf="@+id/action_share"
+                    android:layout_toStartOf="@+id/action_share"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/action_view_on_web"
+                    android:tint="?attr/textColorHint"
+                    app:srcCompat="@drawable/ic_launch_black_24dp"
                     style="@style/Icon.Small" />
                 <ImageView
                     android:id="@+id/action_share"
@@ -75,11 +103,14 @@
                 <TextView
                     android:id="@+id/title"
                     android:layout_marginBottom="@dimen/space16"
+                    android:textIsSelectable="true"
                     tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
                     style="@style/Title.Full" />
                 <TextView
                     android:id="@+id/description"
                     android:layout_marginBottom="@dimen/space16"
+                    android:textIsSelectable="true"
+                    android:autoLink="all"
                     tools:text="Sed eu rhoncus enim, sit amet iaculis ante. Sed at finibus lectus, at consequat lacus. Etiam ipsum erat, facilisis vel sagittis sed, scelerisque ut eros. Praesent at mauris laoreet, imperdiet urna imperdiet, sollicitudin erat. Etiam iaculis mauris eu libero dignissim mattis mollis vitae enim. Quisque nec semper arcu. Ut lobortis, justo vitae finibus tempus, mauris elit fermentum mi, at cursus leo nisi et dui. Phasellus turpis diam, mollis at elementum aliquet, ullamcorper in metus. In lobortis scelerisque ante in mollis. Curabitur eget efficitur massa."
                     style="@style/Description.Full" />
                 <FrameLayout

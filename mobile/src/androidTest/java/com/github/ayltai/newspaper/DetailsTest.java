@@ -67,12 +67,30 @@ public final class DetailsTest extends BaseTest {
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
-        final Matcher<Intent> intent = Matchers.allOf(
+        final Matcher<Intent> viewOnWebIntent = Matchers.allOf(
+            IntentMatchers.hasAction(Intent.ACTION_CHOOSER),
+            IntentMatchers.hasExtra(Matchers.is(Intent.EXTRA_INTENT), IntentMatchers.hasAction(Intent.ACTION_VIEW)));
+
+        Intents.init();
+        Intents.intending(viewOnWebIntent).respondWith(new Instrumentation.ActivityResult(0, null));
+
+        // Clicks Share button
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_view_on_web),
+            ViewMatchers.withContentDescription("View on web"),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
+
+        // Checks that the fired Intent is correct
+        Intents.intended(viewOnWebIntent);
+        Intents.release();
+
+        final Matcher<Intent> shareIntent = Matchers.allOf(
             IntentMatchers.hasAction(Intent.ACTION_CHOOSER),
             IntentMatchers.hasExtra(Matchers.is(Intent.EXTRA_INTENT), Matchers.allOf(IntentMatchers.hasAction(Intent.ACTION_SEND), IntentMatchers.hasExtraWithKey(Intent.EXTRA_TEXT), IntentMatchers.hasType("text/plain"))));
 
         Intents.init();
-        Intents.intending(intent).respondWith(new Instrumentation.ActivityResult(0, null));
+        Intents.intending(shareIntent).respondWith(new Instrumentation.ActivityResult(0, null));
 
         // Clicks Share button
         Espresso.onView(Matchers.allOf(
@@ -82,7 +100,14 @@ public final class DetailsTest extends BaseTest {
             .perform(ViewActions.click());
 
         // Checks that the fired Intent is correct
-        Intents.intended(intent);
+        Intents.intended(shareIntent);
         Intents.release();
+
+        // Clicks Text-to-Speech button
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_text_to_speech),
+            ViewMatchers.withContentDescription("Text to speech"),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
     }
 }

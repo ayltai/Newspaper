@@ -45,12 +45,12 @@ public abstract class RssClient extends Client {
 
                     Collections.sort(items);
 
-                    emitter.onSuccess(items);
+                    if (!emitter.isDisposed()) emitter.onSuccess(items);
                 },
                 error -> {
                     if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
 
-                    emitter.onSuccess(Collections.emptyList());
+                    if (!emitter.isDisposed()) emitter.onSuccess(Collections.emptyList());
                 }
             ));
     }
@@ -61,7 +61,14 @@ public abstract class RssClient extends Client {
         final List<NewsItem> items    = new ArrayList<>();
 
         if (feed.getItems() != null) {
-            for (final RssItem item : feed.getItems()) items.add(new NewsItem(item, this.source.getName(), category));
+            for (final RssItem item : feed.getItems()) {
+                final NewsItem newsItem = new NewsItem(item, this.source.getName(), category);
+
+                final String title = newsItem.getTitle();
+                if (title != null) newsItem.setTitle(title.replaceAll("<br>", "\n"));
+
+                items.add(newsItem);
+            }
         }
 
         return items;

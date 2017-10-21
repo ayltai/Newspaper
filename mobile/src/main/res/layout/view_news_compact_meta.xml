@@ -31,7 +31,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 app:placeholderImage="?attr/placeholderImage"
-                app:fadeDuration="@integer/image_fade_duration" />
+                app:fadeDuration="@android:integer/config_shortAnimTime" />
             <TextView
                 android:id="@+id/source"
                 android:layout_marginRight="@dimen/space16"

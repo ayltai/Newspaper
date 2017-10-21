@@ -6,7 +6,6 @@ import android.os.StrictMode;
 import android.util.Log;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -19,7 +18,6 @@ import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
-import com.flurry.android.FlurryAgent;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.debug.ThreadPolicyFactory;
@@ -58,16 +56,10 @@ public final class MainApplication extends BaseApplication {
                         .disabled(TestUtils.isLoggable())
                         .build())
                     .build());
-
-            new FlurryAgent.Builder()
-                .withCaptureUncaughtExceptions(true)
-                .withLogEnabled(false)
-                .build(this, "YVP5NNQJ5CJBJQS84MBQ");
         }
 
         //noinspection CheckStyle
         try {
-            FirebaseCrash.setCrashCollectionEnabled(!TestUtils.isLoggable());
             FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(!TestUtils.isLoggable());
         } catch (final RuntimeException e) {
             if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);

@@ -236,6 +236,8 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
             this.clearAllActions.onNext(Irrelevant.INSTANCE);
         }));
 
+        this.moreAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.pop_in));
+
         super.onAttachedToWindow();
     }
 
@@ -345,13 +347,13 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
     private void hideMoreActions() {
         this.isMoreActionsShown = false;
 
-        this.moreAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.rotate_anti_clockwise, R.integer.fab_animation_duration));
+        this.moreAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.rotate_anti_clockwise, android.R.integer.config_shortAnimTime));
 
         if (Animations.isEnabled()) {
-            this.upAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
-            this.refreshAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
-            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
-            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, R.integer.fab_animation_duration));
+            this.upAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
+            this.refreshAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
         } else {
             this.upAction.setVisibility(View.INVISIBLE);
             this.refreshAction.setVisibility(View.INVISIBLE);

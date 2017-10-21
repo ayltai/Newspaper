@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.util.Log;
 
+import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.analytics.ShareEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.data.ItemManager;
@@ -32,7 +33,17 @@ import io.reactivex.Single;
 public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     public interface View extends ItemPresenter.View {
         @Nullable
+        Flowable<Irrelevant> textToSpeechClicks();
+
+        @Nullable
+        Flowable<Irrelevant> viewOnWebClicks();
+
+        @Nullable
         Flowable<Irrelevant> shareClicks();
+
+        void textToSpeech();
+
+        void viewOnWeb(@NonNull String url);
 
         void share(@NonNull String url);
 
@@ -77,7 +88,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                                 final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(model.getSource());
 
                                 if (client == null) {
-                                    emitter.onError(new IllegalArgumentException("Unrecognized source " + model.getSource()));
+                                    if (!emitter.isDisposed()) emitter.onError(new IllegalArgumentException("Unrecognized source " + model.getSource()));
                                 } else {
                                     client.updateItem((NewsItem)model).subscribe(emitter::onSuccess);
                                 }
@@ -94,6 +105,18 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
             } else {
                 super.bindModel(model);
             }
+        }
+    }
+
+    protected void onTextToSpeechClick() {
+        if (this.getView() != null) {
+            this.getView().textToSpeech();
+
+            ComponentFactory.getInstance()
+                .getAnalyticsComponent(this.getView().getContext())
+                .eventLogger()
+                .logEvent(new ClickEvent()
+                    .setElementName("TTS"));
         }
     }
 
@@ -120,6 +143,19 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         super.onBookmarkClick();
     }
 
+    protected void onViewOnWebClick() {
+        if (this.getView() != null) {
+            ComponentFactory.getInstance()
+                .getAnalyticsComponent(this.getView().getContext())
+                .eventLogger()
+                .logEvent(new ShareEvent()
+                    .setSource(this.getModel().getSource())
+                    .setCategory(this.getModel().getCategory()));
+
+            this.getView().viewOnWeb(this.getModel().getLink());
+        }
+    }
+
     protected void onShareClick() {
         if (this.getView() != null) {
             ComponentFactory.getInstance()
@@ -144,6 +180,12 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     @CallSuper
     @Override
     public void onViewAttached(@NonNull final DetailsPresenter.View view, final boolean isFirstTimeAttachment) {
+        final Flowable<Irrelevant> textToSpeechClicks = view.textToSpeechClicks();
+        if (textToSpeechClicks != null) this.manageDisposable(textToSpeechClicks.subscribe(irrelevant -> this.onTextToSpeechClick()));
+
+        final Flowable<Irrelevant> viewOnWebClicks = view.viewOnWebClicks();
+        if (viewOnWebClicks != null) this.manageDisposable(viewOnWebClicks.subscribe(irrelevant -> this.onViewOnWebClick()));
+
         final Flowable<Irrelevant> shareClicks = view.shareClicks();
         if (shareClicks != null) this.manageDisposable(shareClicks.subscribe(irrelevant -> this.onShareClick()));
 

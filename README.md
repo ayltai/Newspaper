@@ -1,7 +1,7 @@
 Newspaper
 =========
 
-[![Release](https://img.shields.io/github/release/ayltai/Newspaper.svg?label=release&maxAge=1800)](https://669-77390316-gh.circle-artifacts.com/0/apk/mobile-release.apk) [![Build Status](https://circleci.com/gh/ayltai/Newspaper.svg?style=shield)](https://circleci.com/gh/ayltai/Newspaper) [![Code Quality](https://api.codacy.com/project/badge/Grade/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Grade) [![Code Coverage](https://api.codacy.com/project/badge/Coverage/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Coverage) [![Code Coverage](https://codecov.io/gh/ayltai/Newspaper/branch/master/graph/badge.svg)](https://codecov.io/gh/ayltai/Newspaper) [![Dependency Status](https://www.versioneye.com/user/projects/59d118a0368b0865338c52b0/badge.svg?style=shield)](https://www.versioneye.com/user/projects/59d118a0368b0865338c52b0) [![Android API](https://img.shields.io/badge/API-16%2B-blue.svg?style=flat&label=API&maxAge=300)](https://www.android.com/history/) [![License](https://img.shields.io/badge/License-apache%202.0-blue.svg?label=license&maxAge=1800)](https://github.com/ayltai/Newspaper/blob/master/LICENSE)
+[![Release](https://img.shields.io/github/release/ayltai/Newspaper.svg?label=release&maxAge=1800)](https://1026-77390316-gh.circle-artifacts.com/0/apk/mobile-release.apk) [![Build Status](https://circleci.com/gh/ayltai/Newspaper.svg?style=shield)](https://circleci.com/gh/ayltai/Newspaper) [![Code Quality](https://api.codacy.com/project/badge/Grade/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Grade) [![Code Coverage](https://api.codacy.com/project/badge/Coverage/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Coverage) [![Code Coverage](https://codecov.io/gh/ayltai/Newspaper/branch/master/graph/badge.svg)](https://codecov.io/gh/ayltai/Newspaper) [![Dependency Status](https://www.versioneye.com/user/projects/59d118a0368b0865338c52b0/badge.svg?style=shield)](https://www.versioneye.com/user/projects/59d118a0368b0865338c52b0) [![Android API](https://img.shields.io/badge/API-16%2B-blue.svg?style=flat&label=API&maxAge=300)](https://www.android.com/history/) [![License](https://img.shields.io/badge/License-apache%202.0-blue.svg?label=license&maxAge=1800)](https://github.com/ayltai/Newspaper/blob/master/LICENSE)
 
 An aggregated news app containing news from 10+ local news publishers in Hong Kong. Made with ❤
 
@@ -88,9 +88,8 @@ This app is made with the support of open source software:
 
 * [CircleCI](https://circleci.com)
 * [Firebase Test Lab](https://firebase.google.com/docs/test-lab)
-* [Firebase Crash Reporting](https://firebase.google.com/docs/crash)
 * [Firebase Analytics](https://firebase.google.com/docs/analytics)
-* [Flurry Analytics](https://developer.yahoo.com/analytics)
 * [Fabric Answers](https://answers.io)
 * [Fabric Crashlytics](https://fabric.io/kits/android/crashlytics)
 * [Instabug](https://instabug.com)
+* [Mixpanel](https://mixpanel.com)

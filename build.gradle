@@ -8,10 +8,10 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'me.tatarka:gradle-retrolambda:3.7.0'
-        classpath 'io.realm:realm-gradle-plugin:3.7.2'
-        classpath 'com.google.gms:google-services:3.1.0'
+        classpath 'io.realm:realm-gradle-plugin:4.1.0'
+        classpath 'com.google.gms:google-services:3.1.1'
         classpath 'com.google.firebase:firebase-plugins:1.1.1'
-        classpath 'io.fabric.tools:gradle:1.24.2'
+        classpath 'io.fabric.tools:gradle:1.24.4'
         classpath 'org.standardout:gradle-versioneye-plugin:1.5.0'
     }
 }

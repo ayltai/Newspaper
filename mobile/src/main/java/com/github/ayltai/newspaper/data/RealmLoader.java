@@ -124,7 +124,7 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
                     this.realm = null;
                 }
 
-                emitter.onSuccess(Irrelevant.INSTANCE);
+                if (!emitter.isDisposed()) emitter.onSuccess(Irrelevant.INSTANCE);
             })
             .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
             .subscribe(

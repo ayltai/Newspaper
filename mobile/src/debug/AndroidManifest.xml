@@ -4,4 +4,9 @@
     package="com.github.ayltai.newspaper">
     <uses-sdk tools:overrideLibrary="android.support.v7.appcompat,android.support.v7.preference,android.support.graphics.drawable,android.support.compat,android.support.v4,android.support.coreutils,android.support.mediacompat,android.support.coreui,android.support.fragment,android.support.v7.recyclerview" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <application>
+        <meta-data
+            android:name="com.mixpanel.android.MPConfig.EnableDebugLogging"
+            android:value="true" />
+    </application>
 </manifest>

@@ -54,6 +54,9 @@ public abstract class Client {
         final List<NewsItem> filteredItems = new ArrayList<>();
 
         for (final NewsItem item : items) {
+            final String title = item.getTitle();
+            if (title != null) item.setTitle(title.replaceAll("<br>", "\n"));
+
             if (TestUtils.isRunningUnitTest()) {
                 filteredItems.add(item);
             } else if (item.getPublishDate() != null && item.getPublishDate().getTime() > System.currentTimeMillis() - Constants.HOUSEKEEP_TIME) {

@@ -143,12 +143,12 @@ final class AppleDailyClient extends Client {
                         item.setDescription(builder.toString());
                         item.setIsFullDescription(true);
 
-                        emitter.onSuccess(item);
+                        if (!emitter.isDisposed()) emitter.onSuccess(item);
                     },
                     error -> {
                         if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
-                        emitter.onError(error);
+                        if (!emitter.isDisposed()) emitter.onError(error);
                     }
                 );
         });

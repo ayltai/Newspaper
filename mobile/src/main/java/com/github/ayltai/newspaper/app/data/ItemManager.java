@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
@@ -52,6 +53,10 @@ public final class ItemManager extends DataManager {
     @NonNull
     public Single<List<NewsItem>> getItems(@Nullable final CharSequence searchText, @NonNull final String[] sources, @NonNull final String[] categories) {
         return Single.create(emitter -> {
+            if (!this.getRealm().isInTransaction()) this.getRealm().beginTransaction();
+            this.clearObsoleteItems();
+            this.getRealm().commitTransaction();
+
             final RealmQuery<NewsItem> query = this.getRealm()
                 .where(NewsItem.class)
                 .in(NewsItem.FIELD_SOURCE, sources)
@@ -63,7 +68,7 @@ public final class ItemManager extends DataManager {
                 .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
                 .endGroup();
 
-            emitter.onSuccess(this.getRealm().copyFromRealm(query.findAll()));
+            if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.findAll()));
         });
     }
 
@@ -87,7 +92,7 @@ public final class ItemManager extends DataManager {
                 .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
                 .endGroup();
 
-            emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
+            if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
         });
     }
 
@@ -111,7 +116,7 @@ public final class ItemManager extends DataManager {
                 .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
                 .endGroup();
 
-            emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
+            if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
         });
     }
 
@@ -158,7 +163,7 @@ public final class ItemManager extends DataManager {
 
             if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
 
-            emitter.onSuccess(newItems);
+            if (!emitter.isDisposed()) emitter.onSuccess(newItems);
         });
     }
 
@@ -176,9 +181,11 @@ public final class ItemManager extends DataManager {
 
             this.getRealm().insertOrUpdate(items);
 
+            this.clearObsoleteItems();
+
             if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
 
-            emitter.onSuccess(Irrelevant.INSTANCE);
+            if (!emitter.isDisposed()) emitter.onSuccess(Irrelevant.INSTANCE);
         });
     }
 
@@ -196,9 +203,21 @@ public final class ItemManager extends DataManager {
 
             this.getRealm().insertOrUpdate(items);
 
+            this.clearObsoleteItems();
+
             if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
 
-            emitter.onSuccess(Irrelevant.INSTANCE);
+            if (!emitter.isDisposed()) emitter.onSuccess(Irrelevant.INSTANCE);
         });
+    }
+
+    private void clearObsoleteItems() {
+        this.getRealm()
+            .where(NewsItem.class)
+            .lessThan(NewsItem.FIELD_PUBLISH_DATE, System.currentTimeMillis() - Constants.HOUSEKEEP_TIME)
+            .notEqualTo(NewsItem.FIELD_BOOKMARKED, true)
+            .equalTo(NewsItem.FIELD_LAST_ACCESSED_DATE, 0)
+            .findAll()
+            .deleteAllFromRealm();
     }
 }
