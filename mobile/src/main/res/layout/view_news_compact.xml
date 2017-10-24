@@ -9,11 +9,16 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space16"
+        android:layout_marginLeft="-4dp"
+        android:layout_marginStart="-4dp"
+        android:layout_marginRight="-4dp"
+        android:layout_marginEnd="-4dp"
+        android:layout_marginBottom="@dimen/space12"
         android:foreground="?attr/selectableItemBackground"
         app:cardBackgroundColor="?attr/cardBackground"
         app:cardCornerRadius="@dimen/compact_card_radius"
-        app:cardElevation="@dimen/compact_card_elevation">
+        app:cardElevation="@dimen/card_elevation"
+        app:cardUseCompatPadding="true">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
