@@ -21,12 +21,9 @@ import com.github.ayltai.newspaper.app.data.ItemManager;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
-import com.github.ayltai.newspaper.app.widget.ContentView;
+import com.github.ayltai.newspaper.app.widget.CompactItemView;
+import com.github.ayltai.newspaper.app.widget.CozyItemView;
 import com.github.ayltai.newspaper.app.widget.FeaturedView;
-import com.github.ayltai.newspaper.app.widget.FooterView;
-import com.github.ayltai.newspaper.app.widget.HeaderView;
-import com.github.ayltai.newspaper.app.widget.ImageView;
-import com.github.ayltai.newspaper.app.widget.MetaView;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -173,20 +170,11 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
             case FeaturedView.VIEW_TYPE:
                 return new SimpleViewHolder<>(new FeaturedView(this.context));
 
-            case HeaderView.VIEW_TYPE:
-                return new SimpleViewHolder<>(new HeaderView(this.context));
+            case CozyItemView.VIEW_TYPE:
+                return new SimpleViewHolder<>(new CozyItemView(this.context));
 
-            case ImageView.VIEW_TYPE:
-                return new SimpleViewHolder<>(new ImageView(this.context));
-
-            case FooterView.VIEW_TYPE:
-                return new SimpleViewHolder<>(new FooterView(this.context));
-
-            case ContentView.VIEW_TYPE:
-                return new SimpleViewHolder<>(new ContentView(this.context));
-
-            case MetaView.VIEW_TYPE:
-                return new SimpleViewHolder<>(new MetaView(this.context));
+            case CompactItemView.VIEW_TYPE:
+                return new SimpleViewHolder<>(new CompactItemView(this.context));
 
             default:
                 throw new IllegalArgumentException("Unsupported view type: " + viewType);

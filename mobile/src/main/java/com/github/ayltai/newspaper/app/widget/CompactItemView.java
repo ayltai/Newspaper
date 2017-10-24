@@ -1,10 +1,12 @@
 package com.github.ayltai.newspaper.app.widget;
 
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.CallSuper;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
@@ -14,39 +16,49 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Image;
+import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
 import com.jakewharton.rxbinding2.view.RxView;
 
-public final class ContentView extends ItemView {
-    public static final int VIEW_TYPE = R.id.view_type_item_content;
+public final class CompactItemView extends ItemView {
+    public static final int VIEW_TYPE = R.id.view_type_compact;
 
     //region Components
 
-    private final BigImageView image;
-    private final TextView     title;
-    private final TextView     description;
+    private final BigImageView     image;
+    private final TextView         title;
+    private final TextView         description;
+    private final SimpleDraweeView avatar;
+    private final TextView         source;
+    private final TextView         publishDate;
 
     //endregion
 
-    public ContentView(@NonNull final Context context) {
+    public CompactItemView(@NonNull final Context context) {
         super(context);
 
-        final View view = LayoutInflater.from(context).inflate(R.layout.view_news_compact_content, this, true);
+        final View view = LayoutInflater.from(context).inflate(R.layout.view_news_compact, this, true);
 
         this.container   = view.findViewById(R.id.container);
         this.image       = view.findViewById(R.id.image);
         this.title       = view.findViewById(R.id.title);
         this.description = view.findViewById(R.id.description);
+        this.avatar      = view.findViewById(R.id.avatar);
+        this.source      = view.findViewById(R.id.source);
+        this.publishDate = view.findViewById(R.id.publish_date);
 
         this.image.getSSIV().setMaxScale(Constants.IMAGE_ZOOM_MAX);
         this.image.getSSIV().setPanEnabled(false);
         this.image.getSSIV().setZoomEnabled(false);
     }
+
+    //region Properties
 
     @SuppressWarnings("deprecation")
     @Override
@@ -98,6 +110,43 @@ public final class ContentView extends ItemView {
     protected int getImageVisibility() {
         return this.image.getVisibility();
     }
+
+    @Override
+    public void setAvatar(@DrawableRes final int avatar) {
+        this.avatar.setImageResource(avatar);
+    }
+
+    @Override
+    public void setSource(@Nullable final CharSequence source) {
+        if (TextUtils.isEmpty(source)) {
+            this.source.setVisibility(View.GONE);
+        } else {
+            this.source.setVisibility(View.VISIBLE);
+            this.source.setText(source);
+        }
+    }
+
+    @VisibleForTesting
+    protected CharSequence getSource() {
+        return this.source.getText();
+    }
+
+    @Override
+    public void setPublishDate(@Nullable final Date date) {
+        if (date == null) {
+            this.publishDate.setVisibility(View.GONE);
+        } else {
+            this.publishDate.setVisibility(View.VISIBLE);
+            this.publishDate.setText(DateUtils.toApproximateTime(this.getContext(), date.getTime()));
+        }
+    }
+
+    @VisibleForTesting
+    protected String getPublishDate() {
+        return this.publishDate.getText().toString();
+    }
+
+    //endregion
 
     @CallSuper
     @Override

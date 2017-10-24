@@ -5,14 +5,14 @@ import org.junit.Test;
 
 import com.github.ayltai.newspaper.UnitTest;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
-import com.github.ayltai.newspaper.app.widget.ContentView;
+import com.github.ayltai.newspaper.app.widget.CompactItemView;
 
-public final class ContenBinderFactoryTest extends UnitTest {
+public final class CompactBinderFactoryTest extends UnitTest {
     @Test
     public void test() {
-        final ContentBinderFactory factory = new ContentBinderFactory();
+        final CompactBinderFactory factory = new CompactBinderFactory();
 
-        Assert.assertEquals(ContentView.VIEW_TYPE, factory.getPartType());
+        Assert.assertEquals(CompactItemView.VIEW_TYPE, factory.getPartType());
         Assert.assertFalse(factory.isNeeded(null));
         Assert.assertTrue(factory.isNeeded(new NewsItem()));
     }

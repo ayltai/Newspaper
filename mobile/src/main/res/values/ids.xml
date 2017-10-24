@@ -4,21 +4,12 @@
         name="view_type_infinite_loading"
         type="id" />
     <item
-        name="view_type_item_header"
-        type="id" />
-    <item
-        name="view_type_item_image"
-        type="id" />
-    <item
-        name="view_type_item_footer"
-        type="id" />
-    <item
-        name="view_type_item_content"
-        type="id" />
-    <item
-        name="view_type_item_meta"
-        type="id" />
-    <item
         name="view_type_featured"
+        type="id" />
+    <item
+        name="view_type_cozy"
+        type="id" />
+    <item
+        name="view_type_compact"
         type="id" />
 </resources>

@@ -6,10 +6,8 @@ import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 
 import org.hamcrest.Matchers;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -103,9 +101,7 @@ public final class HistoricalNewsTest extends BaseTest {
             ViewMatchers.withId(R.id.image),
             MoreTestUtils.childAtPosition(Matchers.allOf(
                 ViewMatchers.withId(R.id.image),
-                MoreTestUtils.childAtPosition(Matchers.allOf(
-                    ViewMatchers.withId(R.id.container),
-                    MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0), 0)), 0)), 0),
+                MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3)), 0),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
@@ -137,9 +133,7 @@ public final class HistoricalNewsTest extends BaseTest {
             ViewMatchers.withId(R.id.image),
             MoreTestUtils.childAtPosition(Matchers.allOf(
                 ViewMatchers.withId(R.id.image),
-                MoreTestUtils.childAtPosition(Matchers.allOf(
-                    ViewMatchers.withId(R.id.container),
-                    MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0), 0)), 0)), 0),
+                MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3)), 0),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.doesNotExist());
 
@@ -169,9 +163,7 @@ public final class HistoricalNewsTest extends BaseTest {
             ViewMatchers.withId(R.id.image),
             MoreTestUtils.childAtPosition(Matchers.allOf(
                 ViewMatchers.withId(R.id.image),
-                MoreTestUtils.childAtPosition(Matchers.allOf(
-                    ViewMatchers.withId(R.id.container),
-                    MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0), 0)), 0)), 0),
+                MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3)), 0),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
     }
