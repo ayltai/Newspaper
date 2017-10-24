@@ -15,6 +15,7 @@
         android:layout_marginEnd="-4dp"
         android:layout_marginBottom="@dimen/space12"
         android:foreground="?attr/selectableItemBackground"
+        android:stateListAnimator="@animator/lift_on_pressed"
         app:cardBackgroundColor="?attr/cardBackground"
         app:cardCornerRadius="@dimen/compact_card_radius"
         app:cardElevation="@dimen/card_elevation"

@@ -21,6 +21,7 @@
     <dimen name="cozy_card_radius">4dp</dimen>
     <dimen name="compact_card_radius">0dp</dimen>
     <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_elevation_on_press">4dp</dimen>
     <dimen name="featured_image_height">240dp</dimen>
     <dimen name="featured_title_height">96dp</dimen>
     <dimen name="featured_extend_height">120dp</dimen>
