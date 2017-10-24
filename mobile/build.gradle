@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.firebase.firebase-crash'
 apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
@@ -208,7 +207,9 @@ dependencies {
     // Eye candies
     compile 'jp.wasabeef:recyclerview-animators:2.2.7'
     compile 'io.supercharge:shimmerlayout:1.0.2'
-    compile 'com.fujiyuu75:sequent:0.2.1'
+    compile ('com.fujiyuu75:sequent:0.2.1') {
+        exclude group : 'com.android.support'
+    }
     compile 'hanks.xyz:smallbang-library:0.1.2'
     compile 'com.flaviofaria:kenburnsview:1.0.7'
     compile 'com.gjiazhe:PanoramaImageView:1.0'
@@ -245,13 +246,13 @@ dependencies {
     testCompile    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testCompile 'org.mockito:mockito-core:2.11.1'
+    testCompile 'org.mockito:mockito-core:2.11.2'
     testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
     testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
     testCompile "org.powermock:powermock-classloading-xstream:$powerMockVersion"
     testCompile "org.robolectric:robolectric:$robolectricVersion"
-    testCompile "org.robolectric:multidex:3.4.2"
+    testCompile "org.robolectric:shadows-multidex:$robolectricVersion"
     testCompile 'org.json:json:20170516'
 
     // Instrumented testing
