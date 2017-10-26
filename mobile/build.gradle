@@ -16,12 +16,12 @@ String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
 String VERSION_HASH     = 'git rev-parse --short HEAD'.execute().text.trim()
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.0'
     defaultConfig {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode      21
         versionName      '3.3.' + VERSION_REVISION + '-' + VERSION_HASH
 
@@ -108,7 +108,7 @@ configurations {
 
 ext {
     multidexVersion       = '1.0.2'
-    supportLibraryVersion = '26.1.0'
+    supportLibraryVersion = '27.0.0'
     architectureVersion   = '1.0.0-rc1'
     firebaseSdkVersion    = '11.4.2'
     daggerVersion         = '2.12'
@@ -236,9 +236,7 @@ dependencies {
     compile 'com.mixpanel.android:mixpanel-android:5.2.1'
 
     // Instabug
-    compile ('com.instabug.library:instabug:4.3.1') {
-        exclude group : 'com.instabug.library', module : 'instabug-survey'
-    }
+    compile 'com.instabug.library:instabug:4.3.1'
 
     // Debugging
     debugCompile   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
