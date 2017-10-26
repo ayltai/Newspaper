@@ -111,5 +111,12 @@ public final class ViewStyleTest extends BaseTest {
                         MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.coordinator), 1)), 0), 0), 1))), 0)), 0),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(MoreTestUtils.isNotChecked()));
+
+        // Restores to Cozy view style
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withText("Cozy layout"),
+            ViewMatchers.withParent(ViewMatchers.withId(R.id.linearLayout)),
+            ViewMatchers.isDisplayed()))
+            .perform(ViewActions.click());
     }
 }
