@@ -22,8 +22,8 @@ android {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
         targetSdkVersion 27
-        versionCode      21
-        versionName      '3.3.' + VERSION_REVISION + '-' + VERSION_HASH
+        versionCode      22
+        versionName      '3.4.' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
