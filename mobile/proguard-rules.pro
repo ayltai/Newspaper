@@ -3,6 +3,10 @@
    public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 
+## Retrolambda
+-dontwarn java.lang.invoke.*
+-dontwarn **$$Lambda$*
+
 ## Facebook Fresco
 
 # Keep our interfaces so they can be used by other ProGuard rules.

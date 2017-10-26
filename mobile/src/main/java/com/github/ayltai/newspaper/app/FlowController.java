@@ -14,16 +14,19 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.ViewEvent;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.screen.DetailsPresenter;
 import com.github.ayltai.newspaper.app.screen.DetailsScreen;
 import com.github.ayltai.newspaper.app.screen.MainPresenter;
 import com.github.ayltai.newspaper.app.screen.MainScreen;
+import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.view.BindingPresenter;
 import com.github.ayltai.newspaper.view.Presenter;
 
+import flow.Direction;
 import flow.Flow;
 import flow.KeyDispatcher;
 import flow.KeyParceler;
@@ -41,7 +44,7 @@ final class FlowController {
         this.activity = activity;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "CyclomaticComplexity" })
     @NonNull
     Context attachNewBase(@NonNull final Context newBase) {
         return Flow.configure(newBase, this.activity)
@@ -101,7 +104,7 @@ final class FlowController {
                     if (incomingState.getKey() instanceof DetailsScreen.Key && presenter instanceof BindingPresenter) ((BindingPresenter)presenter).bindModel(((DetailsScreen.Key)incomingState.getKey()).getItem());
 
                     this.subscribe(presenter, view);
-                    this.dispatch((View)view, incomingState, callback);
+                    this.dispatch((View)view, incomingState, direction, callback);
                 }
             }).build())
             .defaultKey(MainScreen.KEY)
@@ -123,10 +126,28 @@ final class FlowController {
         this.disposables.clear();
     }
 
-    private void dispatch(@NonNull final View view, @NonNull final State incomingState, @NonNull final TraversalCallback callback) {
-        incomingState.restore(view);
+    private void dispatch(@NonNull final View toView, @NonNull final State incomingState, @NonNull final Direction direction, @NonNull final TraversalCallback callback) {
+        incomingState.restore(toView);
 
-        this.activity.setContentView(view);
+        final ViewGroup container = this.activity.findViewById(R.id.container);
+        final View      fromView  = container.getChildCount() == 0 ? null : container.getChildAt(0);
+
+        if (fromView != toView) {
+            if (direction == Direction.FORWARD) {
+                container.addView(toView);
+
+                toView.startAnimation(Animations.getAnimation(this.activity, R.anim.reveal_enter, android.R.integer.config_mediumAnimTime, null, () -> {
+                    if (fromView != null) container.removeView(fromView);
+                }));
+            } else if (direction == Direction.BACKWARD) {
+                container.addView(toView, 0);
+
+                if (fromView != null) fromView.startAnimation(Animations.getAnimation(this.activity, R.anim.reveal_exit, android.R.integer.config_mediumAnimTime, null, () -> container.removeView(fromView)));
+            } else if (direction == Direction.REPLACE) {
+                container.addView(toView);
+                if (fromView != null) container.removeView(fromView);
+            }
+        }
 
         callback.onTraversalCompleted();
     }

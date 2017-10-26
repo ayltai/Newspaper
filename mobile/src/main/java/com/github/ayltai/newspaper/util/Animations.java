@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.support.annotation.AnimRes;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -40,6 +41,29 @@ public final class Animations {
     }
 
     @NonNull
+    public static Animation getAnimation(@NonNull final Context context, @AnimRes final int animationId, @IntegerRes final int durationId, @Nullable final Runnable onStart, @Nullable final Runnable onEnd) {
+        final Animation animation = Animations.getAnimation(context, animationId, durationId);
+
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(@NonNull final Animation animation) {
+                if (onStart != null) onStart.run();
+            }
+
+            @Override
+            public void onAnimationEnd(@NonNull final Animation animation) {
+                if (onEnd != null) onEnd.run();
+            }
+
+            @Override
+            public void onAnimationRepeat(@NonNull final Animation animation) {
+            }
+        });
+
+        return animation;
+    }
+
+    @NonNull
     public static Iterable<Animator> createDefaultAnimators(@NonNull final View view) {
         return Arrays.asList(
             ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
@@ -49,7 +73,7 @@ public final class Animations {
 
     public static void animateViewGroup(@NonNull final ViewGroup container) {
         Sequent.origin(container)
-            .delay(0)
+            .delay(container.getResources().getInteger(android.R.integer.config_mediumAnimTime))
             .offset(Constants.ANIMATION_OFFSET)
             .duration(Constants.ANIMATION_DURATION)
             .anim(container.getContext(), R.anim.fade_in_up)

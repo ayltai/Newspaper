@@ -63,6 +63,8 @@ public final class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
+        this.setContentView(R.layout.activity_main);
+
         ComponentFactory.init();
         this.getLifecycle().addObserver(ComponentFactory.getInstance());
 

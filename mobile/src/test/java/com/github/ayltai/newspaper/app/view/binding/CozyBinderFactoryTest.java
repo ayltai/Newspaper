@@ -5,14 +5,14 @@ import org.junit.Test;
 
 import com.github.ayltai.newspaper.UnitTest;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
-import com.github.ayltai.newspaper.app.widget.MetaView;
+import com.github.ayltai.newspaper.app.widget.CozyItemView;
 
-public final class MetaBinderFactoryTest extends UnitTest {
+public final class CozyBinderFactoryTest extends UnitTest {
     @Test
     public void test() {
-        final MetaBinderFactory factory = new MetaBinderFactory();
+        final CozyBinderFactory factory = new CozyBinderFactory();
 
-        Assert.assertEquals(MetaView.VIEW_TYPE, factory.getPartType());
+        Assert.assertEquals(CozyItemView.VIEW_TYPE, factory.getPartType());
         Assert.assertFalse(factory.isNeeded(null));
         Assert.assertTrue(factory.isNeeded(new NewsItem()));
     }

@@ -3,21 +3,21 @@ package com.github.ayltai.newspaper.app.view.binding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.github.ayltai.newspaper.app.view.ItemPresenter;
-import com.github.ayltai.newspaper.app.widget.HeaderView;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
+import com.github.ayltai.newspaper.app.view.ItemPresenter;
+import com.github.ayltai.newspaper.app.widget.CompactItemView;
 import com.github.ayltai.newspaper.view.binding.PresentationBinderFactory;
 
-public final class HeaderBinderFactory extends PresentationBinderFactory<Item, HeaderView, ItemPresenter<HeaderView>> {
+public final class CompactBinderFactory extends PresentationBinderFactory<Item, CompactItemView, ItemPresenter<CompactItemView>> {
     @Override
     public int getPartType() {
-        return HeaderView.VIEW_TYPE;
+        return CompactItemView.VIEW_TYPE;
     }
 
     @NonNull
     @Override
-    protected ItemPresenter<HeaderView> createPresenter() {
+    protected ItemPresenter<CompactItemView> createPresenter() {
         return new ItemPresenter<>();
     }
 

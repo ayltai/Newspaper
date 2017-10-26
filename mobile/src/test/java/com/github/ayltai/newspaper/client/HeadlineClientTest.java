@@ -8,15 +8,16 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.robolectric.RuntimeEnvironment;
 import org.simpleframework.xml.core.Persister;
 
-import com.github.ayltai.newspaper.net.NetworkTest;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
+import com.github.ayltai.newspaper.net.NetworkTest;
 import com.github.ayltai.newspaper.rss.RssFeed;
 import com.github.ayltai.newspaper.util.IOUtils;
 
@@ -31,6 +32,7 @@ public final class HeadlineClientTest extends NetworkTest {
     private HeadlineClient client;
 
     @CallSuper
+    @Before
     @Override
     public void setUp() throws Exception {
         super.setUp();

@@ -118,8 +118,12 @@ public final class SourceFactory {
     @NonNull
     private static Source createEconomicTimesSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[4], new RealmList<>(
-            new Category("https://topick.hket.com/srat006/%E6%96%B0%E8%81%9E", categories[0]),
-            new Category("https://topick.hket.com/srat055/%E4%BC%91%E9%96%92", categories[7])), R.drawable.avatar_hket);
+            new Category("http://www.hket.com/rss/hongkong", categories[0]),
+            new Category("http://www.hket.com/rss/world", categories[1]),
+            new Category("http://www.hket.com/rss/china", categories[2]),
+            new Category("http://www.hket.com/rss/finance", categories[3]),
+            new Category("http://www.hket.com/rss/lifestyle", categories[7]),
+            new Category("http://www.hket.com/rss/technology", categories[16])), R.drawable.avatar_hket);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
