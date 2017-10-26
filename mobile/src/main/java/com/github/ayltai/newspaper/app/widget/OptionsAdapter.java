@@ -39,7 +39,7 @@ public final class OptionsAdapter extends PagerAdapter {
     }
 
     @Override
-    public boolean isViewFromObject(final View view, final Object object) {
+    public boolean isViewFromObject(@NonNull final View view, @NonNull final Object object) {
         return view == object;
     }
 
@@ -68,7 +68,7 @@ public final class OptionsAdapter extends PagerAdapter {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object instantiateItem(final ViewGroup parent, final int position) {
+    public Object instantiateItem(@NonNull final ViewGroup parent, final int position) {
         final OptionsPresenter      presenter;
         final OptionsPresenter.View view;
 
@@ -103,7 +103,7 @@ public final class OptionsAdapter extends PagerAdapter {
     }
 
     @Override
-    public void destroyItem(final ViewGroup parent, final int position, final Object object) {
+    public void destroyItem(@NonNull final ViewGroup parent, final int position, @NonNull final Object object) {
         parent.removeView((View)object);
 
         RxUtils.resetDisposables(this.disposables);

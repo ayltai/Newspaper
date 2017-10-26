@@ -113,23 +113,21 @@ public abstract class SimpleTextToSpeech {
     }
 
     private Single<Irrelevant> init() {
-        return Single.create(emitter -> {
-            this.tts = new TextToSpeech(this.activity, status -> {
-                if (status == TextToSpeech.SUCCESS) {
-                    if (!this.initIfLocaleIsAvailable() && !this.initIfLocaleIsMissing()) {
-                        if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS locale not supported");
+        return Single.create(emitter -> this.tts = new TextToSpeech(this.activity, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                if (!this.initIfLocaleIsAvailable() && !this.initIfLocaleIsMissing()) {
+                    if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS locale not supported");
 
-                        if (this.getOnNotSupported() != null) this.getOnNotSupported().call(Irrelevant.INSTANCE);
-                    }
-                } else {
-                    if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS initialization error " + status);
-
-                    if (this.getOnInitError() != null) this.getOnInitError().call(status);
+                    if (this.getOnNotSupported() != null) this.getOnNotSupported().call(Irrelevant.INSTANCE);
                 }
+            } else {
+                if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS initialization error " + status);
 
-                if (!emitter.isDisposed()) emitter.onSuccess(Irrelevant.INSTANCE);
-            });
-        });
+                if (this.getOnInitError() != null) this.getOnInitError().call(status);
+            }
+
+            if (!emitter.isDisposed()) emitter.onSuccess(Irrelevant.INSTANCE);
+        }));
     }
 
     private boolean initIfLocaleIsAvailable() {

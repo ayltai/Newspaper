@@ -45,6 +45,7 @@ final class HketClient extends RssClient {
         super(client, apiService, source);
     }
 
+    @SuppressWarnings("CyclomaticComplexity")
     @WorkerThread
     @NonNull
     @Override
