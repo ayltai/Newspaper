@@ -62,8 +62,7 @@ android {
 
     testOptions {
         unitTests {
-            // For Android Studio 3
-            //includeAndroidResources = true
+            includeAndroidResources = true
             returnDefaultValues     = true
 
             all {
@@ -132,17 +131,17 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir : 'libs', include : [ '*.jar' ])
+    implementation fileTree(dir : 'libs', include : [ '*.jar' ])
 
     // Multi-dex support
-    debugCompile       "com.android.support:multidex:$multidexVersion"
-    androidTestCompile "com.android.support:multidex-instrumentation:$multidexVersion"
+    debugImplementation       "com.android.support:multidex:$multidexVersion"
+    androidTestImplementation "com.android.support:multidex-instrumentation:$multidexVersion"
 
     // Android Architecture libraries
-    compile ('android.arch.lifecycle:runtime:1.0.3') {
+    implementation ('android.arch.lifecycle:runtime:1.0.3') {
         exclude group : 'com.android.support'
     }
-    compile ("android.arch.lifecycle:extensions:$architectureVersion") {
+    implementation ("android.arch.lifecycle:extensions:$architectureVersion") {
         exclude group : 'com.android.support'
     }
     annotationProcessor ("android.arch.lifecycle:compiler:$architectureVersion") {
@@ -150,121 +149,121 @@ dependencies {
     }
 
     // Android Support libraries
-    compile "com.android.support:cardview-v7:$supportLibraryVersion"
-    compile "com.android.support:customtabs:$supportLibraryVersion"
-    compile "com.android.support:design:$supportLibraryVersion"
+    implementation "com.android.support:cardview-v7:$supportLibraryVersion"
+    implementation "com.android.support:customtabs:$supportLibraryVersion"
+    implementation "com.android.support:design:$supportLibraryVersion"
 
     // Firebase
-    compile "com.google.firebase:firebase-core:$firebaseSdkVersion"
-    compile "com.google.firebase:firebase-config:$firebaseSdkVersion"
-    compile "com.google.firebase:firebase-perf:$firebaseSdkVersion"
+    implementation "com.google.firebase:firebase-core:$firebaseSdkVersion"
+    implementation "com.google.firebase:firebase-config:$firebaseSdkVersion"
+    implementation "com.google.firebase:firebase-perf:$firebaseSdkVersion"
 
     // Google Play Services
-    compile "com.google.android.gms:play-services-analytics:$firebaseSdkVersion"
+    implementation "com.google.android.gms:play-services-analytics:$firebaseSdkVersion"
 
     // Reactive programming
-    compile 'io.reactivex.rxjava2:rxjava:2.1.5'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile "com.jakewharton.rxbinding2:rxbinding:$rxBindingVersion"
-    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxBindingVersion"
-    compile "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxBindingVersion"
-    compile "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxBindingVersion"
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.5'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation "com.jakewharton.rxbinding2:rxbinding:$rxBindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxBindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxBindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxBindingVersion"
 
     // Dependency injection
-    compile             "com.google.dagger:dagger:$daggerVersion"
+    implementation      "com.google.dagger:dagger:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
     // Networking
-    compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
-    compile "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
-    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
-    compile "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
-    compile ("com.squareup.retrofit2:converter-simplexml:$retrofitVersion") {
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
+    implementation ("com.squareup.retrofit2:converter-simplexml:$retrofitVersion") {
         exclude group : 'stax'
         exclude group : 'xpp3'
     }
 
     // Database
-    compile 'io.realm:android-adapters:2.1.0'
+    implementation 'io.realm:android-adapters:2.1.0'
 
     // Image processing
-    compile "com.facebook.fresco:fresco:$frescoVersion"
-    compile "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
-    compile "com.github.piasy:BigImageViewer:$bigImageViewerVersion"
-    compile 'com.github.stfalcon:frescoimageviewer:0.5.0'
-    compile "com.google.android.gms:play-services-vision:$firebaseSdkVersion"
+    implementation "com.facebook.fresco:fresco:$frescoVersion"
+    implementation "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
+    implementation "com.github.piasy:BigImageViewer:$bigImageViewerVersion"
+    implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
+    implementation "com.google.android.gms:play-services-vision:$firebaseSdkVersion"
 
     // Video processing
-    compile "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
-    compile "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
 
     // UI components
-    compile 'com.squareup.flow:flow:1.0.0-alpha3'
-    compile 'com.nex3z:flow-layout:1.0.0'
-    compile 'com.roughike:bottom-bar:2.3.1'
+    implementation 'com.squareup.flow:flow:1.0.0-alpha3'
+    implementation 'com.nex3z:flow-layout:1.0.0'
+    implementation 'com.roughike:bottom-bar:2.3.1'
 
     // Eye candies
-    compile 'jp.wasabeef:recyclerview-animators:2.2.7'
-    compile 'io.supercharge:shimmerlayout:1.0.2'
-    compile ('com.fujiyuu75:sequent:0.2.1') {
+    implementation 'jp.wasabeef:recyclerview-animators:2.2.7'
+    implementation 'io.supercharge:shimmerlayout:1.0.2'
+    implementation ('com.fujiyuu75:sequent:0.2.1') {
         exclude group : 'com.android.support'
     }
-    compile 'hanks.xyz:smallbang-library:0.1.2'
-    compile 'com.flaviofaria:kenburnsview:1.0.7'
-    compile 'com.gjiazhe:PanoramaImageView:1.0'
-    compile 'io.github.inflationx:calligraphy3:3.0.0'
+    implementation 'hanks.xyz:smallbang-library:0.1.2'
+    implementation 'com.flaviofaria:kenburnsview:1.0.7'
+    implementation 'com.gjiazhe:PanoramaImageView:1.0'
+    implementation 'io.github.inflationx:calligraphy3:3.0.0'
 
     // Code generation tools
-    provided            "com.jakewharton.auto.value:auto-value-annotations:$autoValueVersion"
+    compileOnly         "com.jakewharton.auto.value:auto-value-annotations:$autoValueVersion"
     annotationProcessor "com.google.auto.value:auto-value:$autoValueVersion"
     annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
-    compile             'com.google.code.gson:gson:2.8.2'
+    implementation             'com.google.code.gson:gson:2.8.2'
 
     // Fabric
-    compile ('io.fabric.sdk.android:fabric:1.4.1@aar') {
-        transitive = true;
+    implementation ('io.fabric.sdk.android:fabric:1.4.1@aar') {
+        transitive = true
     }
-    compile ('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
-        transitive = true;
+    implementation ('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+        transitive = true
     }
-    compile ('com.crashlytics.sdk.android:answers:1.4.1@aar') {
-        transitive = true;
+    implementation ('com.crashlytics.sdk.android:answers:1.4.1@aar') {
+        transitive = true
     }
 
     // Analytics
-    compile 'com.mixpanel.android:mixpanel-android:5.2.1'
+    implementation 'com.mixpanel.android:mixpanel-android:5.2.1'
 
     // Instabug
-    compile 'com.instabug.library:instabug:4.3.1'
+    implementation 'com.instabug.library:instabug:4.3.1'
 
     // Debugging
-    debugCompile   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
-    testCompile    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    debugImplementation   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testCompile 'org.mockito:mockito-core:2.11.2'
-    testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
-    testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
-    testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
-    testCompile "org.powermock:powermock-classloading-xstream:$powerMockVersion"
-    testCompile "org.robolectric:robolectric:$robolectricVersion"
-    testCompile "org.robolectric:shadows-multidex:$robolectricVersion"
-    testCompile 'org.json:json:20170516'
+    testImplementation 'org.mockito:mockito-core:2.11.2'
+    testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
+    testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
+    testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
+    testImplementation "org.powermock:powermock-classloading-xstream:$powerMockVersion"
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
+    testImplementation "org.robolectric:shadows-multidex:$robolectricVersion"
+    testImplementation 'org.json:json:20171018'
 
     // Instrumented testing
-    androidTestCompile (name : 'cloudtestingscreenshotter_lib', ext : 'aar')
-    androidTestCompile ('com.android.support.test:runner:1.0.1') {
+    androidTestImplementation (name : 'cloudtestingscreenshotter_lib', ext : 'aar')
+    androidTestImplementation ('com.android.support.test:runner:1.0.1') {
         exclude group : 'com.android.support'
     }
-    androidTestCompile ("com.android.support.test.espresso:espresso-core:$espressoVersion") {
+    androidTestImplementation ("com.android.support.test.espresso:espresso-core:$espressoVersion") {
         exclude group : 'com.android.support'
     }
-    androidTestCompile ("com.android.support.test.espresso:espresso-contrib:$espressoVersion") {
+    androidTestImplementation ("com.android.support.test.espresso:espresso-contrib:$espressoVersion") {
         exclude group : 'com.android.support'
     }
-    androidTestCompile ("com.android.support.test.espresso:espresso-intents:$espressoVersion") {
+    androidTestImplementation ("com.android.support.test.espresso:espresso-intents:$espressoVersion") {
         exclude group : 'com.android.support'
     }
 
@@ -294,8 +293,8 @@ task customFindBugs(type : FindBugs) {
         xml.enabled      = false
         xml.withMessages = true
         html.enabled     = true
-        xml.destination  "$project.buildDir/outputs/findbugs/findbugs-output.xml"
-        html.destination "$project.buildDir/outputs/findbugs/findbugs-output.html"
+        xml.destination  file("$project.buildDir/outputs/findbugs/findbugs-output.xml")
+        html.destination file("$project.buildDir/outputs/findbugs/findbugs-output.html")
     }
 }
 
@@ -324,7 +323,6 @@ task jacocoTestReport(type : JacocoReport, dependsOn : 'testDebugUnitTest') {
             '**/*$ViewBinder*.*',
             '**/BuildConfig.*',
             '**/Manifest*.*',
-            '**/*$Lambda$*.*',
             '**/*RealmProxy.*',
             '**/*ColumnInfo.*',
             '**/*RealmModule*.*',
@@ -365,12 +363,11 @@ task uploadCoverageToCodacy(type : JavaExec, dependsOn : jacocoTestReport) {
 }
 
 task (codacyDepsize) << {
-    def size = 0;
+    def size = 0
 
     configurations.codacy.collect {
         it.length() / (1024 * 1024)
-    }
-    .each {
+    }.each {
         size += it
     }
 
@@ -378,8 +375,7 @@ task (codacyDepsize) << {
 
     configurations.codacy.sort {
         -it.length()
-    }
-    .each {
+    }.each {
         println "${it.name}: ${Math.round(it.length() / (1024) * 100) / 100} KB"
     }
 }
