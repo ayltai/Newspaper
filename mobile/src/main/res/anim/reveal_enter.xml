@@ -4,8 +4,8 @@
     android:duration="@android:integer/config_mediumAnimTime"
     android:interpolator="@android:anim/decelerate_interpolator">
     <scale
-        android:fromXScale="0"
-        android:fromYScale="0"
+        android:fromXScale="50%"
+        android:fromYScale="50%"
         android:toXScale="1"
         android:toYScale="1"
         android:pivotX="50%"
@@ -16,6 +16,6 @@
         android:toXDelta="0"
         android:toYDelta="0%" />
     <alpha
-        android:fromAlpha="0"
+        android:fromAlpha="0.4"
         android:toAlpha="1" />
 </set>
