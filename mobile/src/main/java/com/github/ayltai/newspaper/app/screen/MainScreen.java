@@ -64,7 +64,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
 
     //endregion
 
-    private Map<Integer, SoftReference<View>> cachedViews = new ArrayMap<>();
+    private final Map<Integer, SoftReference<View>> cachedViews = new ArrayMap<>();
 
     //region Components
 
