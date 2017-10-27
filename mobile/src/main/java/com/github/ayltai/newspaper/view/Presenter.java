@@ -26,6 +26,12 @@ public class Presenter<V extends Presenter.View> {
 
         @Nullable
         LifecycleOwner getLifecycleOwner();
+
+        @CallSuper
+        void onAttachedToWindow();
+
+        @CallSuper
+        void onDetachedFromWindow();
     }
 
     private V view;

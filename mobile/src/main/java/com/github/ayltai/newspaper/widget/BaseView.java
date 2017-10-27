@@ -66,7 +66,7 @@ public class BaseView extends PartView implements Presenter.View {
 
     @CallSuper
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
         this.attachments.onNext(this.isFirstTimeAttachment);
@@ -76,7 +76,7 @@ public class BaseView extends PartView implements Presenter.View {
 
     @CallSuper
     @Override
-    protected void onDetachedFromWindow() {
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
         this.detachments.onNext(Irrelevant.INSTANCE);

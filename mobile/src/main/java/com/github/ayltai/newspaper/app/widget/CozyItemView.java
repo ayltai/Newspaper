@@ -148,7 +148,7 @@ public final class CozyItemView extends ItemView {
 
     @CallSuper
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         this.manageDisposable(RxView.clicks(this.image).subscribe(irrelevant -> this.clicks.onNext(Irrelevant.INSTANCE)));
 
         super.onAttachedToWindow();

@@ -185,7 +185,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
 
     @CallSuper
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         final Activity activity = this.getActivity();
         if (activity != null) {
             final SearchManager manager = (SearchManager)this.getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -243,7 +243,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
 
     @CallSuper
     @Override
-    protected void onDetachedFromWindow() {
+    public void onDetachedFromWindow() {
         this.bottomBar.removeOnTabSelectListener();
 
         super.onDetachedFromWindow();

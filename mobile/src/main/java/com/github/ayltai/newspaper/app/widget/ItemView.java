@@ -136,7 +136,7 @@ public abstract class ItemView extends ObservableView implements ItemPresenter.V
 
     @CallSuper
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         if (this.container != null) this.manageDisposable(RxView.clicks(this.container).subscribe(irrelevant -> this.clicks.onNext(Irrelevant.INSTANCE)));
 
         super.onAttachedToWindow();

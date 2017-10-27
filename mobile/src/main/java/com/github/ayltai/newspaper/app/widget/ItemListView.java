@@ -143,7 +143,7 @@ public abstract class ItemListView extends ListView<Item> implements ListPresent
     //endregion
 
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
         final View view = this.findViewById(R.id.scrolling_background);

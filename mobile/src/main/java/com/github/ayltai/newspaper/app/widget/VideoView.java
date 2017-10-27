@@ -188,7 +188,7 @@ public class VideoView extends ItemView implements VideoPresenterView {
 
     @CallSuper
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         if (!this.isFirstTimeAttachment && this.video != null) this.setUpPlayer();
 
         this.manageDisposable(RxView.clicks(this.playAction).subscribe(irrelevant -> {
@@ -217,7 +217,7 @@ public class VideoView extends ItemView implements VideoPresenterView {
 
     @CallSuper
     @Override
-    protected void onDetachedFromWindow() {
+    public void onDetachedFromWindow() {
         this.thumbnail.setOnClickListener(null);
 
         this.releasePlayer();

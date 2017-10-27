@@ -436,7 +436,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     @CallSuper
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         final Activity activity = this.getActivity();
         this.smallBang = activity == null ? null : SmallBang.attach2Window(activity);
 
@@ -468,7 +468,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
     @CallSuper
     @Override
-    protected void onDetachedFromWindow() {
+    public void onDetachedFromWindow() {
         if (this.videoView != null) this.removeView(this.videoView);
 
         if (this.isPanoramaEnabled) this.gyroscopeObserver.unregister();

@@ -145,7 +145,7 @@ public final class AboutView extends ObservableView implements AboutPresenter.Vi
 
     @CallSuper
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
         this.manageDisposable(RxView.clicks(this.visitAction).subscribe(irrelevant -> this.visitActions.onNext(Irrelevant.INSTANCE)));
