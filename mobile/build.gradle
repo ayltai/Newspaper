@@ -66,7 +66,7 @@ android {
             returnDefaultValues     = true
 
             all {
-                jvmArgs '-noverify'
+                jvmArgs '-noverify', '-Xmx2048m'
 
                 jacoco {
                     includeNoLocationClasses true
@@ -87,7 +87,7 @@ android {
 
     dexOptions {
         preDexLibraries !project.hasProperty('ciBuild')
-        javaMaxHeapSize '1024m'
+        javaMaxHeapSize '1536m'
     }
 
     compileOptions {
@@ -323,6 +323,7 @@ task jacocoTestReport(type : JacocoReport, dependsOn : 'testDebugUnitTest') {
             '**/*$ViewBinder*.*',
             '**/BuildConfig.*',
             '**/Manifest*.*',
+            '**/*$Lambda$*.*',
             '**/*RealmProxy.*',
             '**/*ColumnInfo.*',
             '**/*RealmModule*.*',
