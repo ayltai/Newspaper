@@ -164,7 +164,6 @@ dependencies {
     // Reactive programming
     implementation 'io.reactivex.rxjava2:rxjava:2.1.6'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation "com.jakewharton.rxbinding2:rxbinding:$rxBindingVersion"
     implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxBindingVersion"
     implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxBindingVersion"
     implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxBindingVersion"
@@ -221,13 +220,7 @@ dependencies {
     implementation             'com.google.code.gson:gson:2.8.2'
 
     // Fabric
-    implementation ('io.fabric.sdk.android:fabric:1.4.1@aar') {
-        transitive = true
-    }
     implementation ('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
-        transitive = true
-    }
-    implementation ('com.crashlytics.sdk.android:answers:1.4.1@aar') {
         transitive = true
     }
 
@@ -254,9 +247,6 @@ dependencies {
 
     // Instrumented testing
     androidTestImplementation (name : 'cloudtestingscreenshotter_lib', ext : 'aar')
-    androidTestImplementation ('com.android.support.test:runner:1.0.1') {
-        exclude group : 'com.android.support'
-    }
     androidTestImplementation ("com.android.support.test.espresso:espresso-core:$espressoVersion") {
         exclude group : 'com.android.support'
     }
