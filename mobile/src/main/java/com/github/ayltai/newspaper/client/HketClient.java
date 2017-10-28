@@ -61,7 +61,7 @@ final class HketClient extends RssClient {
             .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
             .subscribe(
                 html -> {
-                    html = StringUtils.substringBetween(html, isChinaNews || isInvestNews || isPaperNews || isInternationalNews ? "<div id=\"content-main\">" : "<div class=\"article-detail\">", isChinaNews || isPaperNews || isInternationalNews ? "<div class=\"fb-like\"" : isInvestNews ? "<div class=\"fb-page-like\">" : "<div class=\"article-detail_facebook-like\">");
+                    html = StringUtils.substringBetween(html, isChinaNews || isInvestNews || isPaperNews || isInternationalNews ? "<div id=\"eti-article-content-body\"" : "<div class=\"article-detail\">", isChinaNews || isPaperNews || isInternationalNews ? "<div class=\"fb-like\"" : isInvestNews ? "<div class=\"fb-page-like\">" : "<div class=\"article-detail_facebook-like\">");
 
                     if (html == null) {
                         if (!emitter.isDisposed()) emitter.onError(new ParseException("Unparseable content", 0));
