@@ -27,6 +27,7 @@ import com.github.ayltai.newspaper.media.ImageModule;
 import com.github.ayltai.newspaper.net.DaggerHttpComponent;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.BigImageViewer;
+import com.instabug.library.Feature;
 import com.instabug.library.Instabug;
 import com.instabug.library.invocation.InstabugInvocationEvent;
 import com.squareup.leakcanary.LeakCanary;
@@ -67,6 +68,10 @@ public final class MainApplication extends BaseApplication {
 
         new Instabug.Builder(this, "1c5817a3503c2a8ece8624b8c0f5a052")
             .setInvocationEvent(InstabugInvocationEvent.NONE)
+            .setCrashReportingState(Feature.State.DISABLED)
+            .setInAppMessagingState(Feature.State.DISABLED)
+            .setPushNotificationState(Feature.State.DISABLED)
+            .setSurveysState(Feature.State.DISABLED)
             .build();
 
         if (TestUtils.isRunningUnitTest()) Instabug.disable();
