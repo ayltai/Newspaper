@@ -141,16 +141,10 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleTextAppearance="@style/TransparentText">
-            <android.support.constraint.ConstraintLayout
+            <FrameLayout
+                android:id="@+id/image_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <FrameLayout
-                    android:id="@+id/image_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintHeight_default="wrap"
-                    app:layout_constraintHeight_max="@dimen/detailed_image_height_max" />
-            </android.support.constraint.ConstraintLayout>
+                android:layout_height="wrap_content" />
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"

@@ -48,6 +48,7 @@ import com.github.ayltai.newspaper.speech.SimpleTextToSpeech;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
+import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.SnackbarUtils;
@@ -260,6 +261,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
                 this.subscribeImage(this.panoramaImageView, images.get(0));
             } else {
                 this.subscribeImage(this.toolbarImage, images.get(0));
+
+                ImageUtils.translateToFacesCenter(this.toolbarImage);
             }
 
             this.appBarLayout.setExpanded(true, true);
