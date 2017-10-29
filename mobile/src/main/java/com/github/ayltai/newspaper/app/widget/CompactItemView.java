@@ -146,6 +146,16 @@ public final class CompactItemView extends ItemView {
         return this.publishDate.getText().toString();
     }
 
+    @Override
+    public void setIsRead(final boolean isRead) {
+        this.title.setAlpha(isRead ? Constants.ALPHA_READ : 1);
+        this.description.setAlpha(isRead ? Constants.ALPHA_READ : 1);
+        this.avatar.setAlpha(isRead ? Constants.ALPHA_READ : 1);
+        this.source.setAlpha(isRead ? Constants.ALPHA_READ : 1);
+        this.publishDate.setAlpha(isRead ? Constants.ALPHA_READ : 1);
+        this.image.setAlpha(isRead ? Constants.ALPHA_READ : 1);
+    }
+
     //endregion
 
     @CallSuper

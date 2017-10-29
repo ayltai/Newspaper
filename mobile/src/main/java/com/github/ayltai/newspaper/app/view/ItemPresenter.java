@@ -59,6 +59,9 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         @UiThread
         void setVideo(@Nullable Video video);
 
+        @UiThread
+        void setIsRead(boolean isRead);
+
         @Nullable
         Flowable<Irrelevant> clicks();
 
@@ -98,6 +101,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         super.bindModel(model);
 
         if (this.getView() != null && model != null) {
+            this.getView().setIsRead(model.isFullDescription());
             this.getView().setAvatar(SourceFactory.getInstance(this.getView().getContext()).getSource(model.getSource()).getAvatar());
             this.getView().setSource(Source.toDisplayName(model.getSource()));
             this.getView().setPublishDate(model.getPublishDate());

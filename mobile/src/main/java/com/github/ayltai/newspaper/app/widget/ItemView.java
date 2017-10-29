@@ -68,6 +68,10 @@ public abstract class ItemView extends ObservableView implements ItemPresenter.V
     public void setVideo(@Nullable final Video video) {
     }
 
+    @Override
+    public void setIsRead(final boolean isRead) {
+    }
+
     //endregion
 
     //region Events
