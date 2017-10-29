@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,18 +8,20 @@
     <com.github.piasy.biv.view.BigImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="?attr/placeholderImage"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintHeight_max="@dimen/detailed_image_height_max"
         app:initScaleType="centerCrop" />
     <FrameLayout
         android:id="@+id/title_background"
         android:layout_width="match_parent"
         android:layout_height="@dimen/featured_title_height"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/bg_news_featured">
+        android:background="@drawable/bg_news_featured"
+        app:layout_constraintBottom_toBottomOf="parent">
         <TextView
             android:id="@+id/title"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
             style="@style/Title.Featured" />
     </FrameLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
