@@ -206,7 +206,7 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     @CallSuper
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
         this.manageDisposable(this.recyclerView.bestVisibleItemPositionChanges().subscribe(this.bestVisibleItemPositionChanges::onNext));
@@ -218,7 +218,7 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     @CallSuper
     @Override
-    protected void onDetachedFromWindow() {
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
         this.detachments.onNext(Irrelevant.INSTANCE);

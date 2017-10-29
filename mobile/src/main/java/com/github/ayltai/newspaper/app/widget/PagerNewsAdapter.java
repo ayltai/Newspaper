@@ -119,7 +119,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
     }
 
     @Override
-    public boolean isViewFromObject(final View view, final Object object) {
+    public boolean isViewFromObject(@NonNull final View view, @NonNull final Object object) {
         return view == object;
     }
 
@@ -143,7 +143,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
 
     @NonNull
     @Override
-    public Object instantiateItem(final ViewGroup container, final int position) {
+    public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
         final List<String>      categories = new ArrayList<>(Category.fromDisplayName(this.categories.get(position)));
         final ItemListPresenter presenter  = new ItemListPresenter(categories);
         final ItemListView      view       = this.userConfig == null || this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY ? new CozyItemListView(container.getContext()) : new CompactItemListView(container.getContext());
@@ -177,7 +177,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
     }
 
     @Override
-    public void destroyItem(final ViewGroup container, final int position, final Object object) {
+    public void destroyItem(@NonNull final ViewGroup container, final int position, @NonNull final Object object) {
         final SoftReference<View> reference = this.views.get(position);
 
         if (reference != null) {

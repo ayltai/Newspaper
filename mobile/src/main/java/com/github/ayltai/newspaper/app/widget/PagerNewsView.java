@@ -39,7 +39,7 @@ public class PagerNewsView extends ObservableView implements PagerNewsPresenterV
 
     @CallSuper
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         if (this.isFirstTimeAttachment) {
             this.adapter = new PagerNewsAdapter(this.getContext());
 

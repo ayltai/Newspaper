@@ -14,7 +14,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 @Singleton
 public class MixpanelEventLogger extends EventLogger {
-    private MixpanelAPI api;
+    private final MixpanelAPI api;
 
     public MixpanelEventLogger(@NonNull final Context context) {
         this.api = MixpanelAPI.getInstance(context, "23357b9291bde449aa7c64ef85bdff47");

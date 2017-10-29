@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.util.Pair;
 import android.util.Log;
@@ -81,7 +82,7 @@ final class FlowController {
 
                 final Pair<SoftReference<Presenter>, SoftReference<Presenter.View>> pair = this.cache.get(incomingState.getKey());
 
-                if (pair != null) {
+                if (pair != null && pair.first != null && pair.second != null) {
                     presenter = pair.first.get();
                     view      = pair.second.get();
                 }
@@ -132,7 +133,17 @@ final class FlowController {
         final ViewGroup container = this.activity.findViewById(R.id.container);
         final View      fromView  = container.getChildCount() == 0 ? null : container.getChildAt(0);
 
-        if (fromView != toView) {
+        if (fromView == toView) {
+            final Pair<SoftReference<Presenter>, SoftReference<Presenter.View>> pair = this.cache.get(incomingState.getKey());
+
+            if (pair != null && pair.first != null && pair.second != null) {
+                final Presenter.View view = pair.second.get();
+
+                this.subscribe(pair.first.get(), view);
+
+                view.onAttachedToWindow();
+            }
+        } else {
             if (direction == Direction.FORWARD) {
                 container.addView(toView);
 
@@ -153,20 +164,22 @@ final class FlowController {
     }
 
     @SuppressWarnings("unchecked")
-    private void subscribe(@NonNull final Presenter presenter, @NonNull final Presenter.View view) {
-        if (view.attachments() != null) this.manageDisposable(view.attachments(), view.attachments().subscribe(
-            isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
-            error -> {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-            }
-        ));
+    private void subscribe(@Nullable final Presenter presenter, @Nullable final Presenter.View view) {
+        if (presenter != null && view != null) {
+            if (view.attachments() != null) this.manageDisposable(view.attachments(), view.attachments().subscribe(
+                isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
+                error -> {
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                }
+            ));
 
-        if (view.detachments() != null) this.manageDisposable(view.detachments(), view.detachments().subscribe(
-            irrelevant -> presenter.onViewDetached(),
-            error -> {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-            }
-        ));
+            if (view.detachments() != null) this.manageDisposable(view.detachments(), view.detachments().subscribe(
+                irrelevant -> presenter.onViewDetached(),
+                error -> {
+                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                }
+            ));
+        }
     }
 
     private void manageDisposable(@NonNull final Object key, @NonNull final Disposable disposable) {

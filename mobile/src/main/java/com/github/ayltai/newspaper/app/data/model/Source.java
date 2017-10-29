@@ -107,7 +107,7 @@ public class Source extends RealmObject implements Parcelable {
         this.name       = in.readString();
         this.categories = new RealmList<>();
 
-        for (final Category category : in.createTypedArrayList(Category.CREATOR)) this.categories.add(category);
+        this.categories.addAll(in.createTypedArrayList(Category.CREATOR));
 
         this.avatar = in.readInt();
     }

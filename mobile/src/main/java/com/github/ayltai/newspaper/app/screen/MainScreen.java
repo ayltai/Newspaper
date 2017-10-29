@@ -64,7 +64,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
 
     //endregion
 
-    private Map<Integer, SoftReference<View>> cachedViews = new ArrayMap<>();
+    private final Map<Integer, SoftReference<View>> cachedViews = new ArrayMap<>();
 
     //region Components
 
@@ -185,7 +185,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
 
     @CallSuper
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         final Activity activity = this.getActivity();
         if (activity != null) {
             final SearchManager manager = (SearchManager)this.getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -243,7 +243,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
 
     @CallSuper
     @Override
-    protected void onDetachedFromWindow() {
+    public void onDetachedFromWindow() {
         this.bottomBar.removeOnTabSelectListener();
 
         super.onDetachedFromWindow();
@@ -352,19 +352,19 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
         if (Animations.isEnabled()) {
             this.upAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
             this.refreshAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
-            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
-            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news || this.bottomBar.getCurrentTabId() == R.id.action_about) this.settingsAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark || this.bottomBar.getCurrentTabId() == R.id.action_about) this.clearAllAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
         } else {
             this.upAction.setVisibility(View.INVISIBLE);
             this.refreshAction.setVisibility(View.INVISIBLE);
-            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setVisibility(View.INVISIBLE);
-            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setVisibility(View.INVISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_news || this.bottomBar.getCurrentTabId() == R.id.action_about) this.settingsAction.setVisibility(View.INVISIBLE);
+            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark || this.bottomBar.getCurrentTabId() == R.id.action_about) this.clearAllAction.setVisibility(View.INVISIBLE);
         }
 
         this.upAction.setClickable(false);
         this.refreshAction.setClickable(false);
-        if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setClickable(false);
-        if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setClickable(false);
+        if (this.bottomBar.getCurrentTabId() == R.id.action_news || this.bottomBar.getCurrentTabId() == R.id.action_about) this.settingsAction.setClickable(false);
+        if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark || this.bottomBar.getCurrentTabId() == R.id.action_about) this.clearAllAction.setClickable(false);
     }
 
     //endregion

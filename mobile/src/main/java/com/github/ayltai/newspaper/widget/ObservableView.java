@@ -25,7 +25,7 @@ public class ObservableView extends BaseView {
 
     @CallSuper
     @Override
-    protected void onDetachedFromWindow() {
+    public void onDetachedFromWindow() {
         RxUtils.resetDisposables(this.disposables);
 
         super.onDetachedFromWindow();

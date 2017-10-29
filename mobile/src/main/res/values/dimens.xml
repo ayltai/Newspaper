@@ -29,4 +29,5 @@
     <dimen name="cozy_avatar_size">40dp</dimen>
     <dimen name="compact_item_content_image_size">80dp</dimen>
     <dimen name="compact_avatar_size">32dp</dimen>
+    <dimen name="detailed_image_height_max">240dp</dimen>
 </resources>

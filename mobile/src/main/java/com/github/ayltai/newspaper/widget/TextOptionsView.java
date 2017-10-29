@@ -43,7 +43,7 @@ public final class TextOptionsView extends ObservableView implements OptionsPres
     }
 
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         for (int i = 0; i < this.container.getChildCount(); i++) this.subscribeToView(this.container.getChildAt(i));
 
         super.onAttachedToWindow();

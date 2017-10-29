@@ -31,6 +31,7 @@ final class OrientalDailyClient extends RssClient {
     private static final String BASE_URI  = "http://orientaldaily.on.cc";
     private static final String TAG_CLOSE = "\"";
     private static final String SLASH     = "/";
+    private static final String DIV_CLOSE = "</div>";
 
     //endregion
 
@@ -51,7 +52,7 @@ final class OrientalDailyClient extends RssClient {
                 html -> {
                     html = StringUtils.substringBetween(html, "<div id=\"contentCTN-top\"", "<p><!--AD-->");
 
-                    final String[]    imageContainers = StringUtils.substringsBetween(html, "<div class=\"photo", "</div>");
+                    final String[]    imageContainers = StringUtils.substringsBetween(html, "<div class=\"photo", OrientalDailyClient.DIV_CLOSE);
                     final List<Image> images          = new ArrayList<>();
 
                     for (final String imageContainer : imageContainers) {
@@ -92,7 +93,7 @@ final class OrientalDailyClient extends RssClient {
     protected List<NewsItem> filter(@NonNull final String url, @NonNull final RssFeed feed) {
         final List<NewsItem> items = super.filter(url, feed);
 
-        for (final NewsItem item : items) item.setDescription(StringUtils.substringBetween(item.getDescription(), "<div style=\"float:left;\">", "</div>"));
+        for (final NewsItem item : items) item.setDescription(StringUtils.substringBetween(item.getDescription(), "<div style=\"float:left;\">", OrientalDailyClient.DIV_CLOSE));
 
         return items;
     }

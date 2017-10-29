@@ -87,8 +87,10 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                             emitter -> {
                                 final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(model.getSource());
 
+                                if (emitter == null) return;
+
                                 if (client == null) {
-                                    if (!emitter.isDisposed()) emitter.onError(new IllegalArgumentException("Unrecognized source " + model.getSource()));
+                                    emitter.onError(new IllegalArgumentException("Unrecognized source " + model.getSource()));
                                 } else {
                                     client.updateItem((NewsItem)model).subscribe(emitter::onSuccess);
                                 }

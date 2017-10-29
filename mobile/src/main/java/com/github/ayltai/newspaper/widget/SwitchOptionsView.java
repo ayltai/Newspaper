@@ -43,7 +43,7 @@ public final class SwitchOptionsView extends ObservableView implements OptionsPr
     }
 
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         for (int i = 0; i < this.container.getChildCount(); i++) this.subscribeToView((SwitchCompat)this.container.getChildAt(i));
 
         super.onAttachedToWindow();
