@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="@android:integer/config_shortAnimTime"
     android:interpolator="@android:anim/accelerate_decelerate_interpolator"
-    android:startOffset="@android:integer/config_mediumAnimTime">
+    android:startOffset="@android:integer/config_shortAnimTime">
     <scale
         android:fromXScale="0"
         android:fromYScale="0"
