@@ -224,7 +224,7 @@ dependencies {
     implementation 'com.mixpanel.android:mixpanel-android:5.2.1'
 
     // Instabug
-    implementation 'com.instabug.library:instabug:4.3.2'
+    implementation 'com.instabug.library:instabug:4.3.3'
 
     // Debugging
     debugImplementation   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
