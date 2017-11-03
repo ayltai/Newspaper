@@ -9,7 +9,7 @@ import retrofit2.CallAdapter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
-public final class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
+final class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
     private final RxJava2CallAdapterFactory factory = RxJava2CallAdapterFactory.create();
 
     public static CallAdapter.Factory create() {

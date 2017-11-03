@@ -76,8 +76,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                     this.manageDisposable(DetailsPresenter.updateItem(this.getView().getContext(), newsItem)
                         .compose(RxUtils.applySingleBackgroundToMainSchedulers())
                         .subscribe(
-                            items -> {
-                            },
+                            items -> { },
                             error -> {
                                 if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                             }));
@@ -87,12 +86,16 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                             emitter -> {
                                 final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(model.getSource());
 
-                                if (emitter == null) return;
+                                if (emitter == null || emitter.isDisposed()) return;
 
                                 if (client == null) {
                                     emitter.onError(new IllegalArgumentException("Unrecognized source " + model.getSource()));
                                 } else {
-                                    client.updateItem((NewsItem)model).subscribe(emitter::onSuccess);
+                                    client.updateItem((NewsItem)model)
+                                        .subscribe(
+                                            emitter::onSuccess,
+                                            emitter::onError
+                                        );
                                 }
                             })
                             .compose(RxUtils.applySingleBackgroundSchedulers())

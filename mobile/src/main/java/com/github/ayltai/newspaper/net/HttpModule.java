@@ -18,9 +18,9 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 @Module
 public final class HttpModule {
-    public static final int TIMEOUT_CONNECT = 10;
-    public static final int TIMEOUT_READ    = 30;
-    public static final int TIMEOUT_WRITE   = 30;
+    private static final int TIMEOUT_CONNECT = 10;
+    private static final int TIMEOUT_READ    = 30;
+    private static final int TIMEOUT_WRITE   = 30;
 
     private HttpModule() {
     }
@@ -42,25 +42,20 @@ public final class HttpModule {
     @Singleton
     @NonNull
     @Provides
-    static Retrofit provideRetrofit() {
+    static Retrofit provideRetrofit(@NonNull final OkHttpClient httpClient) {
         return new Retrofit.Builder()
             .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(SimpleXmlConverterFactory.create())
             .baseUrl("http://dummy.base.url")
-            .client(DaggerHttpComponent.builder()
-                .build()
-                .httpClient())
+            .client(httpClient)
             .build();
     }
 
     @Singleton
     @NonNull
     @Provides
-    static ApiService provideApiService() {
-        return DaggerHttpComponent.builder()
-            .build()
-            .retrofit()
-            .create(ApiService.class);
+    static ApiService provideApiService(@NonNull final Retrofit retrofit) {
+        return retrofit.create(ApiService.class);
     }
 }

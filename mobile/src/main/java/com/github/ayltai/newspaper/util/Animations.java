@@ -75,7 +75,7 @@ public final class Animations {
         Sequent.origin(container)
             .delay(container.getResources().getInteger(android.R.integer.config_mediumAnimTime))
             .offset(Constants.ANIMATION_OFFSET)
-            .duration(Constants.ANIMATION_DURATION)
+            .duration(container.getResources().getInteger(android.R.integer.config_shortAnimTime))
             .anim(container.getContext(), R.anim.fade_in_up)
             .start();
     }

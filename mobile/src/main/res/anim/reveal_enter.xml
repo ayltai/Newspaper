@@ -12,10 +12,10 @@
         android:pivotY="100%" />
     <translate
         android:fromXDelta="0"
-        android:fromYDelta="100%"
+        android:fromYDelta="80%"
         android:toXDelta="0"
         android:toYDelta="0%" />
     <alpha
-        android:fromAlpha="0.4"
+        android:fromAlpha="0"
         android:toAlpha="1" />
 </set>
