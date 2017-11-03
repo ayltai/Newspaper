@@ -13,7 +13,7 @@ import io.reactivex.functions.Function;
 import retrofit2.Call;
 import retrofit2.CallAdapter;
 
-public final class RxCallAdapterWrapper implements CallAdapter<Observable<?>, Observable<?>> {
+final class RxCallAdapterWrapper implements CallAdapter<Observable<?>, Observable<?>> {
     @NonNull
     private final CallAdapter<?, ?> adapter;
 

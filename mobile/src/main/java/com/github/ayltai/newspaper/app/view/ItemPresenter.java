@@ -118,6 +118,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         this.initAppConfig();
 
         if (this.getView() != null) {
+            this.getView().setIsRead(true);
+
             final Item item = this.getModel();
 
             this.appConfig.setVideoPlaying(false);
