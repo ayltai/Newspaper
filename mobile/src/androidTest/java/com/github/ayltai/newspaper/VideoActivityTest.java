@@ -10,9 +10,11 @@ import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,12 +34,21 @@ public final class VideoActivityTest {
         }
     };
 
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
     @CallSuper
     @Before
     public void setUp() {
         final File file = new File("/sdcard/tmp/code-coverage/connected");
         if (!file.exists()) file.mkdirs();
 
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_MEDIUM);
+    }
+
+    @CallSuper
+    @After
+    public void tearDown() {
         MoreTestUtils.sleep(MoreTestUtils.DURATION_MEDIUM);
     }
 

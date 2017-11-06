@@ -26,6 +26,7 @@ import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.media.FaceCenterFinder;
 import com.github.ayltai.newspaper.util.ContextUtils;
+import com.github.ayltai.newspaper.util.CoverageReportGenerator;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
@@ -149,6 +150,9 @@ public final class MainActivity extends AppCompatActivity {
         this.disposeImageModule();
 
         this.getLifecycle().removeObserver(ComponentFactory.getInstance());
+
+        CoverageReportGenerator.verifyStoragePermissions(this);
+        CoverageReportGenerator.generate();
     }
 
     @Override

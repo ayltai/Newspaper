@@ -2,8 +2,10 @@ package com.github.ayltai.newspaper;
 
 import java.io.File;
 
+import android.Manifest;
 import android.support.annotation.CallSuper;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,6 +17,9 @@ import com.github.ayltai.newspaper.util.MoreTestUtils;
 public abstract class BaseTest {
     @Rule
     public ActivityTestRule<MainActivity> testRule = new ActivityTestRule<>(MainActivity.class);
+
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @CallSuper
     @Before
@@ -28,5 +33,6 @@ public abstract class BaseTest {
     @CallSuper
     @After
     public void tearDown() {
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_MEDIUM);
     }
 }

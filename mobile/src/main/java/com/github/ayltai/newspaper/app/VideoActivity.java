@@ -31,6 +31,7 @@ import com.google.android.exoplayer2.util.Util;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.config.AppConfig;
+import com.github.ayltai.newspaper.util.CoverageReportGenerator;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.instabug.library.InstabugTrackingDelegate;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -106,6 +107,9 @@ public final class VideoActivity extends AppCompatActivity {
         RxUtils.resetDisposables(this.disposables);
 
         this.videoPlayer.release();
+
+        CoverageReportGenerator.verifyStoragePermissions(this);
+        CoverageReportGenerator.generate();
     }
 
     @Override
