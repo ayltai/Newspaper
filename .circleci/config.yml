@@ -53,7 +53,7 @@ references:
   android_config: &android_config
     working_directory: *workspace
     docker:
-      - image: circleci/android:api-26-alpha
+      - image: circleci/android:api-27-alpha
     environment:
       TERM: dumb
       _JAVA_OPTIONS: "-Xmx2048m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
