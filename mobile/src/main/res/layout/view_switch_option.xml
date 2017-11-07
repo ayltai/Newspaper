@@ -3,5 +3,4 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/space8"
-    android:text="@string/pref_cozy_layout" />
+    android:padding="@dimen/space8" />

@@ -21,7 +21,6 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.AppOpenEvent;
 import com.github.ayltai.newspaper.analytics.Attribute;
-import com.github.ayltai.newspaper.app.config.RemoteConfig;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.media.FaceCenterFinder;
@@ -44,12 +43,7 @@ public final class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    //region Configurations
-
-    @Inject RemoteConfig remoteConfig;
-    @Inject UserConfig   userConfig;
-
-    //endregion
+    @Inject UserConfig userConfig;
 
     private FlowController controller;
     private Realm          realm;
