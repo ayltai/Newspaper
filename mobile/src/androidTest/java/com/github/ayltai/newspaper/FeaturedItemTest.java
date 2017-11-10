@@ -41,9 +41,7 @@ public final class FeaturedItemTest extends BaseTest {
         // Checks that the news image is displayed within the toolbar
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            MoreTestUtils.childAtPosition(Matchers.allOf(
-                ViewMatchers.withId(R.id.image),
-                MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.image_container), 0), 0)), 0),
+            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.image_container), 0), 0),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
     }
