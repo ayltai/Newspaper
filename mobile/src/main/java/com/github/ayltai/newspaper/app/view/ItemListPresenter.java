@@ -23,7 +23,7 @@ import io.reactivex.Single;
 public class ItemListPresenter extends ListPresenter<Item, ListPresenter.View<Item>> {
     protected final List<String> categories;
 
-    private boolean forceRefresh = false;
+    private boolean forceRefresh;
 
     public ItemListPresenter(@NonNull final List<String> categories) {
         this.categories = categories;
