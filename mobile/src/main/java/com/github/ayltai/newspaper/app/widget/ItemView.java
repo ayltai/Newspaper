@@ -26,7 +26,7 @@ public abstract class ItemView extends ObservableView implements ItemPresenter.V
 
     protected View container;
 
-    public ItemView(@NonNull final Context context) {
+    protected ItemView(@NonNull final Context context) {
         super(context);
     }
 
@@ -76,7 +76,7 @@ public abstract class ItemView extends ObservableView implements ItemPresenter.V
 
     //region Events
 
-    @Nullable
+    @NonNull
     @Override
     public Flowable<Irrelevant> clicks() {
         return this.clicks;

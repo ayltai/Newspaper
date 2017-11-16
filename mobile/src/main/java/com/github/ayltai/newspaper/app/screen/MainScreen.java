@@ -85,6 +85,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
 
     public MainScreen(@NonNull final Context context) {
         super(context);
+
         this.init();
     }
 
@@ -283,7 +284,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
             .getAnalyticsComponent(this.getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
-                .setElementName("FAB - Filter"));
+                .setElementName("FAB - Settings"));
     }
 
     @Override

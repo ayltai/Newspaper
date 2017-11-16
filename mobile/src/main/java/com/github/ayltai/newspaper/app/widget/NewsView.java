@@ -21,8 +21,9 @@ public abstract class NewsView extends ObservableView implements NewsPresenterVi
     protected List<String> categories;
     protected Set<String>  sources;
 
-    public NewsView(@NonNull final Context context) {
+    protected NewsView(@NonNull final Context context) {
         super(context);
+
         this.init();
     }
 

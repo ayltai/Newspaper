@@ -99,9 +99,7 @@ public final class HistoricalNewsTest extends BaseTest {
         // Checks that there is a historical news item
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            MoreTestUtils.childAtPosition(Matchers.allOf(
-                ViewMatchers.withId(R.id.image),
-                MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3)), 0),
+            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
@@ -131,9 +129,7 @@ public final class HistoricalNewsTest extends BaseTest {
         // Checks that no search results returned
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            MoreTestUtils.childAtPosition(Matchers.allOf(
-                ViewMatchers.withId(R.id.image),
-                MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3)), 0),
+            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.doesNotExist());
 
@@ -161,9 +157,7 @@ public final class HistoricalNewsTest extends BaseTest {
         // Checks that there is a bookmarked news item
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            MoreTestUtils.childAtPosition(Matchers.allOf(
-                ViewMatchers.withId(R.id.image),
-                MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3)), 0),
+            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
     }

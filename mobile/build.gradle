@@ -21,8 +21,8 @@ android {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
         targetSdkVersion 27
-        versionCode      24
-        versionName      '3.6.' + VERSION_REVISION + '-' + VERSION_HASH
+        versionCode      25
+        versionName      '3.7.' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
@@ -105,15 +105,15 @@ configurations {
 
 ext {
     multidexVersion       = '1.0.2'
-    supportLibraryVersion = '27.0.0'
-    architectureVersion   = '1.0.0-rc1'
-    firebaseSdkVersion    = '11.4.2'
-    daggerVersion         = '2.12'
+    supportLibraryVersion = '27.0.1'
+    architectureVersion   = '1.0.0'
+    firebaseSdkVersion    = '11.6.0'
+    daggerVersion         = '2.13'
     rxBindingVersion      = '2.0.0'
     okhttpVersion         = '3.9.0'
     retrofitVersion       = '2.3.0'
     frescoVersion         = '1.5.0'
-    bigImageViewerVersion = '1.3.2'
+    bigImageViewerVersion = '1.4.2'
     exoPlayerVersion      = 'r2.5.4'
     autoValueVersion      = '1.5'
     leakCanaryVersion     = '1.5.4'
@@ -179,7 +179,7 @@ dependencies {
     }
 
     // Database
-    implementation 'io.realm:android-adapters:2.1.0'
+    implementation 'io.realm:android-adapters:2.1.1'
 
     // Image processing
     implementation "com.facebook.fresco:fresco:$frescoVersion"
@@ -231,7 +231,7 @@ dependencies {
     testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testImplementation 'org.mockito:mockito-core:2.11.6'
+    testImplementation 'org.mockito:mockito-core:2.12.0'
     testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"

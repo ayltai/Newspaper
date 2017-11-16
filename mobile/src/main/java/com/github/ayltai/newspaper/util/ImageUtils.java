@@ -16,7 +16,7 @@ public final class ImageUtils {
     }
 
     public static void translateToFacesCenter(@NonNull final BigImageView image) {
-        image.getSSIV().setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
+        image.getSSIV().setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
             @Override
             public void onReady() {
                 Single.<PointF>create(emitter -> emitter.onSuccess(DaggerImageComponent.builder()
@@ -26,7 +26,7 @@ public final class ImageUtils {
                     .findFaceCenter(image.getCurrentImageFile())))
                     .compose(RxUtils.applySingleBackgroundToMainSchedulers())
                     .subscribe(
-                        center -> image.getSSIV().setScaleAndCenter(image.getSSIV().getScale(), new PointF(center.x, center.y)),
+                        center -> image.getSSIV().setScaleAndCenter(image.getSSIV().getScale(), center),
                         error -> {
                             if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                         }
@@ -34,26 +34,18 @@ public final class ImageUtils {
             }
 
             @Override
-            public void onImageLoaded() {
-            }
-
-            @Override
-            public void onPreviewLoadError(final Exception e) {
+            public void onPreviewLoadError(@NonNull final Exception e) {
                 if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
 
             @Override
-            public void onImageLoadError(final Exception e) {
+            public void onImageLoadError(@NonNull final Exception e) {
                 if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
 
             @Override
-            public void onTileLoadError(final Exception e) {
+            public void onTileLoadError(@NonNull final Exception e) {
                 if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
-            }
-
-            @Override
-            public void onPreviewReleased() {
             }
         });
     }

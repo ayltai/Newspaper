@@ -35,7 +35,7 @@ public abstract class ItemListView extends ListView<Item> implements ListPresent
 
     //endregion
 
-    public ItemListView(@NonNull final Context context) {
+    protected ItemListView(@NonNull final Context context) {
         super(context);
         this.init();
     }
