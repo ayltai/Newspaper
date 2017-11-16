@@ -147,13 +147,25 @@ final class FlowController {
             if (direction == Direction.FORWARD) {
                 container.addView(toView);
 
-                toView.startAnimation(Animations.getAnimation(this.activity, R.anim.reveal_enter, android.R.integer.config_mediumAnimTime, null, () -> {
-                    if (fromView != null) container.removeView(fromView);
-                }));
+                if (fromView != null) {
+                    if (Animations.isEnabled()) {
+                        toView.startAnimation(Animations.getAnimation(this.activity, R.anim.reveal_enter, android.R.integer.config_mediumAnimTime, null, () -> {
+                            if (fromView != null) container.removeView(fromView);
+                        }));
+                    } else {
+                        container.removeView(fromView);
+                    }
+                }
             } else if (direction == Direction.BACKWARD) {
                 container.addView(toView, 0);
 
-                if (fromView != null) fromView.startAnimation(Animations.getAnimation(this.activity, R.anim.reveal_exit, android.R.integer.config_mediumAnimTime, null, () -> container.removeView(fromView)));
+                if (fromView != null) {
+                    if (Animations.isEnabled()) {
+                        fromView.startAnimation(Animations.getAnimation(this.activity, R.anim.reveal_exit, android.R.integer.config_mediumAnimTime, null, () -> container.removeView(fromView)));
+                    } else {
+                        container.removeView(fromView);
+                    }
+                }
             } else if (direction == Direction.REPLACE) {
                 container.addView(toView);
                 if (fromView != null) container.removeView(fromView);
