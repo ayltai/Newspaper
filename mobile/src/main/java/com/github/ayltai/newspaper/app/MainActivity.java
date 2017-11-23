@@ -29,6 +29,7 @@ import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.view.RxFlow;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.instabug.library.Instabug;
 import com.instabug.library.InstabugColorTheme;
@@ -46,8 +47,8 @@ public final class MainActivity extends AppCompatActivity {
 
     @Inject UserConfig userConfig;
 
-    private FlowController controller;
-    private Realm          realm;
+    private RxFlow flow;
+    private Realm  realm;
 
     //region Performance monitoring
 
@@ -128,8 +129,8 @@ public final class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        this.controller.onDestroy();
-        this.controller = null;
+        this.flow.onDestroy();
+        this.flow = null;
 
         if (this.isFinishing()) {
             if (this.realm != null) Single.<Irrelevant>create(
@@ -149,9 +150,9 @@ public final class MainActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(final Context newBase) {
-        if (this.controller == null) this.controller = new FlowController(this);
+        if (this.flow == null) this.flow = new MainFlow(this);
 
-        super.attachBaseContext(this.controller.attachNewBase(ViewPumpContextWrapper.wrap(newBase)));
+        super.attachBaseContext(this.flow.attachNewBase(ViewPumpContextWrapper.wrap(newBase)));
     }
 
     @Override
@@ -167,7 +168,7 @@ public final class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!this.controller.onBackPressed()) super.onBackPressed();
+        if (!this.flow.onBackPressed()) super.onBackPressed();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.app;
+package com.github.ayltai.newspaper.view;
 
 import java.lang.ref.SoftReference;
 import java.util.Collections;
@@ -14,18 +14,11 @@ import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.analytics.ViewEvent;
-import com.github.ayltai.newspaper.app.data.model.Item;
-import com.github.ayltai.newspaper.app.screen.DetailsPresenter;
-import com.github.ayltai.newspaper.app.screen.DetailsScreen;
-import com.github.ayltai.newspaper.app.screen.MainPresenter;
-import com.github.ayltai.newspaper.app.screen.MainScreen;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.TestUtils;
-import com.github.ayltai.newspaper.view.BindingPresenter;
-import com.github.ayltai.newspaper.view.Presenter;
 
 import flow.Direction;
 import flow.Flow;
@@ -35,19 +28,36 @@ import flow.State;
 import flow.TraversalCallback;
 import io.reactivex.disposables.Disposable;
 
-final class FlowController {
+public abstract class RxFlow {
     private final Map<Object, Pair<SoftReference<Presenter>, SoftReference<Presenter.View>>> cache       = Collections.synchronizedMap(new ArrayMap<>());
     private final Map<Object, Disposable>                                                    disposables = Collections.synchronizedMap(new ArrayMap<>());
 
     private final Activity activity;
 
-    FlowController(@NonNull final Activity activity) {
+    public RxFlow(@NonNull final Activity activity) {
         this.activity = activity;
     }
 
-    @SuppressWarnings({ "unchecked", "CyclomaticComplexity" })
     @NonNull
-    Context attachNewBase(@NonNull final Context newBase) {
+    protected abstract Object getDefaultKey();
+
+    @NonNull
+    protected Context getContext() {
+        return this.activity;
+    }
+
+    @NonNull
+    protected Map<Object, Pair<SoftReference<Presenter>, SoftReference<Presenter.View>>> getCache() {
+        return this.cache;
+    }
+
+    @Nullable
+    protected Animation getAnimation(@NonNull final Direction direction, @Nullable final Runnable onStart, @Nullable final Runnable onEnd) {
+        return null;
+    }
+
+    @NonNull
+    public Context attachNewBase(@NonNull final Context newBase) {
         return Flow.configure(newBase, this.activity)
             .keyParceler(new KeyParceler() {
                 @NonNull
@@ -65,50 +75,18 @@ final class FlowController {
             .dispatcher(KeyDispatcher.configure(this.activity, (outgoingState, incomingState, direction, incomingContexts, callback) -> {
                 if (outgoingState != null) outgoingState.save(((ViewGroup)this.activity.findViewById(android.R.id.content)).getChildAt(0));
 
-                if (incomingState.getKey() instanceof DetailsScreen.Key) {
-                    final Item item = ((DetailsScreen.Key)incomingState.getKey()).getItem();
-
-                    ComponentFactory.getInstance()
-                        .getAnalyticsComponent(this.activity)
-                        .eventLogger()
-                        .logEvent(new ViewEvent()
-                            .setScreenName(DetailsScreen.class.getSimpleName())
-                            .setSource(item.getSource())
-                            .setCategory(item.getCategory()));
-                }
-
-                Presenter      presenter = null;
-                Presenter.View view      = null;
-
-                final Pair<SoftReference<Presenter>, SoftReference<Presenter.View>> pair = this.cache.get(incomingState.getKey());
-
-                if (pair != null && pair.first != null && pair.second != null) {
-                    presenter = pair.first.get();
-                    view      = pair.second.get();
-                }
-
-                if (presenter == null || view == null) {
-                    if (incomingState.getKey() instanceof MainScreen.Key) {
-                        presenter = new MainPresenter();
-                        view      = new MainScreen(this.activity);
-                    } else if (incomingState.getKey() instanceof DetailsScreen.Key) {
-                        presenter = new DetailsPresenter();
-                        view      = new DetailsScreen(this.activity);
-                    }
-                }
+                final Pair<Presenter, Presenter.View> pair      = this.onDispatch(incomingState.getKey());
+                final Presenter                       presenter = pair.first;
+                final Presenter.View                  view      = pair.second;
 
                 if (presenter != null && view != null) {
-                    if (pair == null) this.cache.put(incomingState.getKey(), Pair.create(new SoftReference<>(presenter), new SoftReference<>(view)));
-
-                    presenter.onViewDetached();
-
-                    if (incomingState.getKey() instanceof DetailsScreen.Key && presenter instanceof BindingPresenter) ((BindingPresenter)presenter).bindModel(((DetailsScreen.Key)incomingState.getKey()).getItem());
+                    this.cache.put(incomingState.getKey(), Pair.create(new SoftReference<>(presenter), new SoftReference<>(view)));
 
                     this.subscribe(presenter, view);
                     this.dispatch((View)view, incomingState, direction, callback);
                 }
             }).build())
-            .defaultKey(MainScreen.KEY)
+            .defaultKey(this.getDefaultKey())
             .install();
     }
 
@@ -116,17 +94,21 @@ final class FlowController {
      * Attempts to handle back button pressed event.
      * @return {@code true} if back button pressed event is handled; otherwise, {@code false}.
      */
-    boolean onBackPressed() {
+    public boolean onBackPressed() {
         return Flow.get(this.activity).goBack();
     }
 
-    void onDestroy() {
+    public void onDestroy() {
         this.cache.clear();
 
         for (final Disposable disposable : this.disposables.values()) disposable.dispose();
         this.disposables.clear();
     }
 
+    @NonNull
+    protected abstract Pair<Presenter, Presenter.View> onDispatch(@Nullable Object key);
+
+    @SuppressWarnings("CyclomaticComplexity")
     private void dispatch(@NonNull final View toView, @NonNull final State incomingState, @NonNull final Direction direction, @NonNull final TraversalCallback callback) {
         incomingState.restore(toView);
 
@@ -149,9 +131,8 @@ final class FlowController {
 
                 if (fromView != null) {
                     if (Animations.isEnabled()) {
-                        toView.startAnimation(Animations.getAnimation(this.activity, R.anim.reveal_enter, android.R.integer.config_mediumAnimTime, null, () -> {
-                            if (fromView != null) container.removeView(fromView);
-                        }));
+                        final Animation animation = this.getAnimation(Direction.FORWARD, null, () -> container.removeView(fromView));
+                        if (animation != null) toView.startAnimation(animation);
                     } else {
                         container.removeView(fromView);
                     }
@@ -161,7 +142,8 @@ final class FlowController {
 
                 if (fromView != null) {
                     if (Animations.isEnabled()) {
-                        fromView.startAnimation(Animations.getAnimation(this.activity, R.anim.reveal_exit, android.R.integer.config_mediumAnimTime, null, () -> container.removeView(fromView)));
+                        final Animation animation = this.getAnimation(Direction.BACKWARD, null, () -> container.removeView(fromView));
+                        if (animation != null) fromView.startAnimation(animation);
                     } else {
                         container.removeView(fromView);
                     }
