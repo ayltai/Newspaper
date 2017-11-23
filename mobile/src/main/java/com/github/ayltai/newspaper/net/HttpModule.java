@@ -17,7 +17,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 @Module
-public final class HttpModule {
+final class HttpModule {
     private static final int TIMEOUT_CONNECT = 10;
     private static final int TIMEOUT_READ    = 30;
     private static final int TIMEOUT_WRITE   = 30;

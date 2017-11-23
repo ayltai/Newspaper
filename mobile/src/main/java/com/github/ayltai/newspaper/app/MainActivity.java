@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FrameMetricsAggregator;
 import android.support.v7.app.AppCompatActivity;
@@ -55,6 +56,7 @@ public final class MainActivity extends AppCompatActivity {
 
     //endregion
 
+    @CallSuper
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         this.setContentView(R.layout.activity_main);

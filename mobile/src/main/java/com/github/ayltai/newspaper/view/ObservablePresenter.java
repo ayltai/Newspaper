@@ -16,9 +16,7 @@ public class ObservablePresenter<V extends Presenter.View> extends Presenter<V> 
     private final List<Disposable> disposables = Collections.synchronizedList(new ArrayList<>());
 
     protected void manageDisposable(@NonNull final Disposable disposable) {
-        synchronized (this.disposables) {
-            this.disposables.add(disposable);
-        }
+        this.disposables.add(disposable);
     }
 
     @CallSuper
