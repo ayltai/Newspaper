@@ -49,27 +49,32 @@
                     style="@style/Subhead.Full" />
                 <ImageView
                     android:id="@+id/action_text_to_speech"
-                    android:layout_margin="@dimen/space16"
-                    android:layout_toLeftOf="@+id/action_bookmark"
-                    android:layout_toStartOf="@+id/action_bookmark"
+                    android:layout_marginLeft="@dimen/space16"
+                    android:layout_marginStart="@dimen/space16"
+                    android:layout_marginTop="@dimen/space16"
+                    android:layout_marginBottom="@dimen/space16"
+                    android:layout_toLeftOf="@+id/smallBang"
+                    android:layout_toStartOf="@+id/smallBang"
                     android:layout_alignParentTop="true"
                     android:contentDescription="@string/action_text_to_speech"
                     android:tint="?attr/textColorHint"
                     app:srcCompat="@drawable/ic_volume_off_black_24dp"
                     style="@style/Icon.Small" />
-                <ImageView
-                    android:id="@+id/action_bookmark"
-                    android:layout_marginRight="@dimen/space16"
-                    android:layout_marginEnd="@dimen/space16"
-                    android:layout_marginTop="@dimen/space16"
-                    android:layout_marginBottom="@dimen/space16"
+                <xyz.hanks.library.bang.SmallBangView
+                    android:id="@+id/smallBang"
+                    android:layout_width="@dimen/iconLarge"
+                    android:layout_height="@dimen/iconLarge"
                     android:layout_toLeftOf="@+id/action_view_on_web"
                     android:layout_toStartOf="@+id/action_view_on_web"
-                    android:layout_alignParentTop="true"
-                    android:contentDescription="@string/action_bookmark"
-                    android:tint="?attr/textColorHint"
-                    app:srcCompat="@drawable/ic_bookmark_border_black_24dp"
-                    style="@style/Icon.Small" />
+                    android:layout_alignParentTop="true">
+                    <ImageView
+                        android:id="@+id/action_bookmark"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/action_bookmark"
+                        android:tint="?attr/textColorHint"
+                        app:srcCompat="@drawable/ic_bookmark_border_black_24dp"
+                        style="@style/Icon.Small"/>
+                </xyz.hanks.library.bang.SmallBangView>
                 <ImageView
                     android:id="@+id/action_view_on_web"
                     android:layout_marginRight="@dimen/space16"
@@ -139,7 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="?attr/primaryColor"
             app:expandedTitleTextAppearance="@style/TransparentText">
             <FrameLayout
                 android:id="@+id/image_container"

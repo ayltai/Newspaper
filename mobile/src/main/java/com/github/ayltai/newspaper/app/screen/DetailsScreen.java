@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -64,8 +66,7 @@ import flow.ClassKey;
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
-import xyz.hanks.library.SmallBang;
-import xyz.hanks.library.SmallBangListener;
+import xyz.hanks.library.bang.SmallBangView;
 
 public final class DetailsScreen extends ItemView implements DetailsPresenter.View {
     @AutoValue
@@ -120,7 +121,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     //endregion
 
     private GyroscopeObserver  gyroscopeObserver;
-    private SmallBang          smallBang;
+    private SmallBangView      smallBang;
     private boolean            isPanoramaEnabled;
     private boolean            hasAnimated;
     private boolean            isTtsActive;
@@ -142,6 +143,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.title                   = view.findViewById(R.id.title);
         this.description             = view.findViewById(R.id.description);
         this.textToSpeechAction      = view.findViewById(R.id.action_text_to_speech);
+        this.smallBang               = view.findViewById(R.id.smallBang);
         this.bookmarkAction          = view.findViewById(R.id.action_bookmark);
         this.viewOnWebAction         = view.findViewById(R.id.action_view_on_web);
         this.shareAction             = view.findViewById(R.id.action_share);
@@ -233,13 +235,9 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             this.bookmarkAction.setImageDrawable(drawable);
             this.bookmarkAction.setClickable(false);
 
-            if (Animations.isEnabled()) this.smallBang.bang(this.bookmarkAction, new SmallBangListener() {
+            if (Animations.isEnabled()) this.smallBang.likeAnimation(new AnimatorListenerAdapter() {
                 @Override
-                public void onAnimationStart() {
-                }
-
-                @Override
-                public void onAnimationEnd() {
+                public void onAnimationEnd(final Animator animation) {
                     DetailsScreen.this.bookmarkAction.setClickable(true);
                 }
             });
@@ -440,9 +438,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     @CallSuper
     @Override
     public void onAttachedToWindow() {
-        final Activity activity = this.getActivity();
-        this.smallBang = activity == null ? null : SmallBang.attach2Window(activity);
-
         this.hasAnimated = false;
 
         if (this.isPanoramaEnabled) {
@@ -460,6 +455,8 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         this.manageDisposable(RxView.clicks(this.shareAction).subscribe(irrelevant -> this.shareClicks.onNext(Irrelevant.INSTANCE)));
 
         super.onAttachedToWindow();
+
+        final Activity activity = this.getActivity();
 
         if (activity instanceof AppCompatActivity) {
             final AppCompatActivity appCompatActivity = (AppCompatActivity)activity;
@@ -479,8 +476,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         if (this.isTtsActive) this.textToSpeech();
 
         super.onDetachedFromWindow();
-
-        this.smallBang = null;
     }
 
     //endregion

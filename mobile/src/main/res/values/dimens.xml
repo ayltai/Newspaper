@@ -18,6 +18,7 @@
     <dimen name="fabMarginLarge">0dp</dimen>
     <dimen name="iconSmall">24dp</dimen>
     <dimen name="iconNormal">40dp</dimen>
+    <dimen name="iconLarge">56dp</dimen>
     <dimen name="cozy_card_radius">4dp</dimen>
     <dimen name="compact_card_radius">0dp</dimen>
     <dimen name="card_elevation">2dp</dimen>

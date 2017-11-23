@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'io.fabric'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
@@ -65,8 +64,6 @@ android {
             returnDefaultValues     = true
 
             all {
-                jvmArgs '-noverify', '-Xmx1536m'
-
                 jacoco {
                     includeNoLocationClasses true
                 }
@@ -110,12 +107,11 @@ ext {
     firebaseSdkVersion    = '11.6.0'
     daggerVersion         = '2.13'
     rxBindingVersion      = '2.0.0'
-    okhttpVersion         = '3.9.0'
+    okhttpVersion         = '3.9.1'
     retrofitVersion       = '2.3.0'
     frescoVersion         = '1.5.0'
-    bigImageViewerVersion = '1.4.2'
+    bigImageViewerVersion = '1.4.3'
     exoPlayerVersion      = 'r2.5.4'
-    autoValueVersion      = '1.5'
     leakCanaryVersion     = '1.5.4'
     robolectricVersion    = '3.5.1'
     powerMockVersion      = '2.0.0-beta.5'
@@ -186,6 +182,7 @@ dependencies {
     implementation "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
     implementation "com.github.piasy:BigImageViewer:$bigImageViewerVersion"
     implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
+    implementation "com.android.support:exifinterface:$supportLibraryVersion"
     implementation "com.google.android.gms:play-services-vision:$firebaseSdkVersion"
 
     // Video processing
@@ -194,7 +191,7 @@ dependencies {
 
     // UI components
     implementation 'com.squareup.flow:flow:1.0.0-alpha3'
-    implementation 'com.nex3z:flow-layout:1.0.0'
+    implementation 'com.nex3z:flow-layout:1.1.0'
     implementation 'com.roughike:bottom-bar:2.3.1'
 
     // Eye candies
@@ -203,14 +200,14 @@ dependencies {
     implementation ('com.fujiyuu75:sequent:0.2.1') {
         exclude group : 'com.android.support'
     }
-    implementation 'hanks.xyz:smallbang-library:0.1.2'
+    implementation 'pub.hanks:smallbang:1.2.2'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.gjiazhe:PanoramaImageView:1.0'
     implementation 'io.github.inflationx:calligraphy3:3.0.0'
 
     // Code generation tools
-    compileOnly         "com.jakewharton.auto.value:auto-value-annotations:$autoValueVersion"
-    annotationProcessor "com.google.auto.value:auto-value:$autoValueVersion"
+    compileOnly         "com.jakewharton.auto.value:auto-value-annotations:1.5"
+    annotationProcessor "com.google.auto.value:auto-value:1.5.2"
     annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
     implementation      'com.google.code.gson:gson:2.8.2'
 
