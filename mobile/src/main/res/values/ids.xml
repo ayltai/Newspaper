@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item
-        name="view_type_infinite_loading"
-        type="id" />
-    <item
         name="view_type_featured"
         type="id" />
     <item
