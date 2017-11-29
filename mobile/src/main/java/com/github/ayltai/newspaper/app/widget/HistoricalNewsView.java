@@ -47,9 +47,19 @@ public final class HistoricalNewsView extends NewsView {
 
                 @Override
                 protected int getLoadingViewId() {
-                        return 0;
-                    }
+                    return 0;
                 }
+
+                @Override
+                protected int getEmptyTitle() {
+                    return R.string.empty_history_title;
+                }
+
+                @Override
+                protected int getEmptyDescription() {
+                    return R.string.empty_history_description;
+                }
+            }
             : new CompactItemListView(this.getContext()) {
                 @Override
                 protected int getLayoutId() {
@@ -59,6 +69,16 @@ public final class HistoricalNewsView extends NewsView {
                 @Override
                 protected int getLoadingViewId() {
                     return 0;
+                }
+
+                @Override
+                protected int getEmptyTitle() {
+                    return R.string.empty_history_title;
+                }
+
+                @Override
+                protected int getEmptyDescription() {
+                    return R.string.empty_history_description;
                 }
             };
 

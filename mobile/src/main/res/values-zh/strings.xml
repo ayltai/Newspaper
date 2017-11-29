@@ -2,8 +2,6 @@
 <resources>
     <string name="app_name">報紙</string>
     <string name="app_version">版本 %s</string>
-    <string name="empty_bookmark_title">你還沒有任何喜歡的新聞</string>
-    <string name="empty_bookmark_description">點擊書籤圖標可收集新聞到此處</string>
     <string name="view_via">查看…</string>
     <string name="share_to">分享給…</string>
     <string name="update_indicator">有新的新聞</string>
@@ -37,6 +35,10 @@
     <!-- Empty states -->
     <string name="empty_news_title">這裡什麼都沒有</string>
     <string name="empty_news_description">您可以在其他類別中閱讀更多新聞，也可以刷新再次嘗試。</string>
+    <string name="empty_history_title">您還沒有看過任何新聞</string>
+    <string name="empty_history_description">您看過的新聞都會收集在這裡</string>
+    <string name="empty_bookmark_title">你還沒有任何喜歡的新聞</string>
+    <string name="empty_bookmark_description">點擊書籤圖標可收集新聞到此處</string>
 
     <!-- Errors -->
     <string name="error_tts_not_supported">此設備不支持語音引擎</string>

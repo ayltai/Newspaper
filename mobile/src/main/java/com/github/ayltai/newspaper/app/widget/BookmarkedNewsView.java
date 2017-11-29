@@ -46,10 +46,20 @@ public final class BookmarkedNewsView extends NewsView {
                 }
 
                 @Override
-                    protected int getLoadingViewId() {
+                protected int getLoadingViewId() {
                     return 0;
                 }
+
+                @Override
+                protected int getEmptyTitle() {
+                    return R.string.empty_bookmark_title;
                 }
+
+                @Override
+                protected int getEmptyDescription() {
+                    return R.string.empty_bookmark_description;
+                }
+            }
             : new CompactItemListView(this.getContext()) {
                 @Override
                 protected int getLayoutId() {
@@ -59,6 +69,16 @@ public final class BookmarkedNewsView extends NewsView {
                 @Override
                 protected int getLoadingViewId() {
                     return 0;
+                }
+
+                @Override
+                protected int getEmptyTitle() {
+                    return R.string.empty_bookmark_title;
+                }
+
+                @Override
+                protected int getEmptyDescription() {
+                    return R.string.empty_bookmark_description;
                 }
             };
 

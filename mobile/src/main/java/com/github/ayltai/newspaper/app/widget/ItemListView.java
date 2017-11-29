@@ -11,6 +11,7 @@ import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Filterable;
@@ -56,6 +57,8 @@ public abstract class ItemListView extends ListView<Item> implements ListPresent
 
     //endregion
 
+    //region Properties
+
     @Override
     public boolean isDisposed() {
         return false;
@@ -84,6 +87,20 @@ public abstract class ItemListView extends ListView<Item> implements ListPresent
     protected int getEmptyViewId() {
         return android.R.id.empty;
     }
+
+    @StringRes
+    @Override
+    protected int getEmptyTitle() {
+        return R.string.empty_news_title;
+    }
+
+    @StringRes
+    @Override
+    protected int getEmptyDescription() {
+        return R.string.empty_news_description;
+    }
+
+    //endregion
 
     //region Methods
 

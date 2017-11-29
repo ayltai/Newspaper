@@ -10,6 +10,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,6 +75,12 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     @IdRes
     protected abstract int getEmptyViewId();
+
+    @StringRes
+    protected abstract int getEmptyTitle();
+
+    @StringRes
+    protected abstract int getEmptyDescription();
 
     //endregion
 
