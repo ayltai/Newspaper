@@ -168,8 +168,8 @@ public abstract class ItemListView extends ListView<Item> implements ListPresent
     }
 
     private void init() {
-        ((TextView)this.emptyView.findViewById(R.id.empty_title)).setText(R.string.empty_news_title);
-        ((TextView)this.emptyView.findViewById(R.id.empty_description)).setText(R.string.empty_news_description);
+        if (this.getEmptyTitle() > 0) ((TextView)this.emptyView.findViewById(R.id.empty_title)).setText(this.getEmptyTitle());
+        if (this.getEmptyDescription() > 0) ((TextView)this.emptyView.findViewById(R.id.empty_description)).setText(this.getEmptyDescription());
 
         final LifecycleOwner owner = this.getLifecycleOwner();
         if (owner != null) owner.getLifecycle().addObserver(this);
