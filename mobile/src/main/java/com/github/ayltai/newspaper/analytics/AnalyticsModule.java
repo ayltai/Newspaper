@@ -33,18 +33,10 @@ public final class AnalyticsModule {
     @NonNull
     @Singleton
     @Provides
-    MixpanelEventLogger provideMixpanelEventLogger() {
-        return new MixpanelEventLogger(this.context);
-    }
-
-    @NonNull
-    @Singleton
-    @Provides
     public EventLogger provideEventLogger() {
         return new CompositeEventLogger.Builder()
             .add(this.provideFabricEventLogger())
             .add(this.provideFirebaseEventLogger())
-            .add(this.provideMixpanelEventLogger())
             .build();
     }
 }
