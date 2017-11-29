@@ -33,11 +33,17 @@ public final class FloatingActionButtonBehavior extends CoordinatorLayout.Behavi
         if (this.layoutDependsOn(parent, child, dependency)) {
             child.setTranslationY((this.fabHeight + this.bottomMargin) * (dependency.getY() / -this.toolbarHeight));
 
-            if (child instanceof ViewGroup) {
-                final ViewGroup container = (ViewGroup)child;
-                final float     alpha     = 1f - dependency.getY() / -this.toolbarHeight;
+            final float alpha = 1f - dependency.getY() / -this.toolbarHeight;
 
-                for (int i = 0; i < container.getChildCount(); i++) container.getChildAt(i).setAlpha(alpha);
+            if (alpha == 0) {
+                child.setVisibility(View.GONE);
+            } else {
+                child.setVisibility(View.VISIBLE);
+
+                if (child instanceof ViewGroup) {
+                    final ViewGroup container = (ViewGroup)child;
+                    for (int i = 0; i < container.getChildCount(); i++) container.getChildAt(i).setAlpha(alpha);
+                }
             }
 
             return true;
