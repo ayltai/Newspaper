@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.view.ListPresenter;
@@ -239,6 +240,7 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
         final View view = LayoutInflater.from(this.getContext()).inflate(this.getLayoutId(), this, false);
 
         this.swipeRefreshLayout = view.findViewById(this.getSwipeRefreshLayoutId());
+        this.swipeRefreshLayout.setColorSchemeResources(R.color.refreshColor1, R.color.refreshColor2, R.color.refreshColor3, R.color.refreshColor4);
         this.swipeRefreshLayout.setOnRefreshListener(() -> this.pullToRefreshes.onNext(Irrelevant.INSTANCE));
 
         this.recyclerView = view.findViewById(this.getRecyclerViewId());
