@@ -12,7 +12,7 @@ import android.util.Log;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -32,7 +32,7 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
 
     @NonNull
     protected Scheduler getScheduler() {
-        return TestUtils.isRunningUnitTest() ? Schedulers.trampoline() : DataManager.SCHEDULER;
+        return DevUtils.isRunningUnitTest() ? Schedulers.trampoline() : DataManager.SCHEDULER;
     }
 
     @Nullable
@@ -42,7 +42,7 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
 
     protected boolean isValid() {
         if (this.realm == null) {
-            if (TestUtils.isLoggable()) throw new IllegalStateException("No Realm instance is available");
+            if (DevUtils.isLoggable()) throw new IllegalStateException("No Realm instance is available");
 
             return false;
         }
@@ -78,7 +78,7 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
                         }
                     },
                     error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                     }), BackpressureStrategy.LATEST);
         }
 
@@ -103,12 +103,12 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
                 realm -> {
                     this.realm = realm;
 
-                    if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "A Realm instance is created");
+                    if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "A Realm instance is created");
 
                     super.onForceLoad();
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                 });
     }
 
@@ -129,10 +129,10 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
             .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
             .subscribe(
                 irrelevant -> {
-                    if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "A Realm instance is closed");
+                    if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "A Realm instance is closed");
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                 });
 
         return result;

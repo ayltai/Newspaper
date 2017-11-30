@@ -16,7 +16,7 @@ import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.rss.RssFeed;
 import com.github.ayltai.newspaper.rss.RssItem;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -48,7 +48,7 @@ public abstract class RssClient extends Client {
                     if (!emitter.isDisposed()) emitter.onSuccess(items);
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
 
                     if (!emitter.isDisposed()) emitter.onSuccess(Collections.emptyList());
                 }

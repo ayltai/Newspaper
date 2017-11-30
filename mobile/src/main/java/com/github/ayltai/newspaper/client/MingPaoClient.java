@@ -22,7 +22,7 @@ import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -90,7 +90,7 @@ final class MingPaoClient extends RssClient {
                     if (!emitter.isDisposed()) emitter.onSuccess(item);
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
                     if (!emitter.isDisposed()) emitter.onError(error);
                 }
@@ -112,7 +112,7 @@ final class MingPaoClient extends RssClient {
                     if (img != null) fullImages.add(img);
                 }
             } catch (final JSONException e) {
-                if (TestUtils.isLoggable()) Log.e(MingPaoClient.class.getSimpleName(), e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(MingPaoClient.class.getSimpleName(), e.getMessage(), e);
             }
         }
 
@@ -138,7 +138,7 @@ final class MingPaoClient extends RssClient {
                     item.setVideo(new Video(videoUrl, videoUrl.replace("mp4", "jpg")));
                 }
             } catch (final JSONException e) {
-                if (TestUtils.isLoggable()) Log.e(MingPaoClient.class.getSimpleName(), e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(MingPaoClient.class.getSimpleName(), e.getMessage(), e);
             }
         }
 

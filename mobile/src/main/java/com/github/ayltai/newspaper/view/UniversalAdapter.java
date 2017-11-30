@@ -17,7 +17,7 @@ import android.view.animation.Interpolator;
 import com.github.ayltai.newspaper.view.binding.Binder;
 import com.github.ayltai.newspaper.view.binding.FullBinderFactory;
 import com.github.ayltai.newspaper.view.binding.PartBinderFactory;
-import com.github.ayltai.newspaper.view.binding.ViewBinderUtils;
+import com.github.ayltai.newspaper.view.binding.Binders;
 
 import io.reactivex.disposables.Disposable;
 
@@ -104,7 +104,7 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
      * @param items The items changed.
      */
     public void onDataSetChanged(@NonNull final Iterable<M> items) {
-        this.binders.addAll(ViewBinderUtils.createViewBinders(items, this.factories));
+        this.binders.addAll(Binders.createBinders(items, this.factories));
 
         this.notifyDataSetChanged();
     }
@@ -115,7 +115,7 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
      * @param positionStart Position of the first item that was inserted.
      */
     public void onItemRangeInserted(@NonNull final Collection<M> items, final int positionStart) {
-        this.binders.addAll(positionStart, ViewBinderUtils.createViewBinders(items, this.factories));
+        this.binders.addAll(positionStart, Binders.createBinders(items, this.factories));
 
         this.notifyItemRangeInserted(positionStart, items.size());
     }

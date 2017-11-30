@@ -33,7 +33,7 @@ public final class AnalyticsModule {
     @NonNull
     @Singleton
     @Provides
-    public EventLogger provideEventLogger() {
+    EventLogger provideEventLogger() {
         return new CompositeEventLogger.Builder()
             .add(this.provideFabricEventLogger())
             .add(this.provideFirebaseEventLogger())

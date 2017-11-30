@@ -9,7 +9,7 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -39,7 +39,7 @@ public abstract class RxLoader<D> extends Loader<D> {
             .subscribe(
                 this::deliverResult,
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                 }));
     }
 

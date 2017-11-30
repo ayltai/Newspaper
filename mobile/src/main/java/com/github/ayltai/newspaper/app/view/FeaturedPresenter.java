@@ -18,8 +18,8 @@ import com.github.ayltai.newspaper.app.widget.FeaturedView;
 import com.github.ayltai.newspaper.media.DaggerImageComponent;
 import com.github.ayltai.newspaper.media.ImageModule;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
-import com.github.ayltai.newspaper.util.ViewUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.Views;
 import com.github.piasy.biv.loader.ImageLoader;
 
 import io.reactivex.Observable;
@@ -71,7 +71,7 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
 
                             @Override
                             public void onFail(final Exception error) {
-                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                             }
                         });
 
@@ -89,7 +89,7 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
     public void onViewAttached(@NonNull final FeaturedView view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
-        final Activity activity = ViewUtils.getActivity(view);
+        final Activity activity = Views.getActivity(view);
         if (activity instanceof AppCompatActivity) ((AppCompatActivity)activity).getLifecycle().addObserver(this);
     }
 
@@ -98,7 +98,7 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
         super.onViewDetached();
 
         if (this.getView() != null) {
-            final Activity activity = ViewUtils.getActivity(this.getView());
+            final Activity activity = Views.getActivity(this.getView());
             if (activity instanceof AppCompatActivity) ((AppCompatActivity)activity).getLifecycle().removeObserver(this);
         }
     }

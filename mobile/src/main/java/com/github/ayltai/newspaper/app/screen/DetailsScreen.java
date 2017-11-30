@@ -54,8 +54,8 @@ import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.SnackbarUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
-import com.github.ayltai.newspaper.util.ViewUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.Views;
 import com.github.piasy.biv.view.BigImageView;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
 import com.gjiazhe.panoramaimageview.PanoramaImageView;
@@ -173,7 +173,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) ((CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout)).setExpandedTitleTextAppearance(R.style.TransparentText);
 
-        this.setLayoutParams(ViewUtils.createMatchParentLayoutParams());
+        this.setLayoutParams(Views.createMatchParentLayoutParams());
     }
 
     //region Properties
@@ -497,7 +497,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             .subscribe(
                 imageView::setImageBitmap,
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                 }
             );
         imageView.setOnClickListener(view -> this.imageClicks.onNext(image));

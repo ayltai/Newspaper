@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.view.Presenter;
 
-public abstract class PresentationBinderFactory<M, V extends Presenter.View, P extends PresentationBinder<M, V>> implements PartBinderFactory<M, V> {
+public abstract class BindingPresenterFactory<M, V extends Presenter.View, P extends BindingPresenter<M, V>> implements PartBinderFactory<M, V> {
     @NonNull
     protected abstract P createPresenter();
 

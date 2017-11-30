@@ -2,7 +2,7 @@ package com.github.ayltai.newspaper.view;
 
 import android.support.annotation.UiThread;
 
-public class BindingPresenter<M, V extends Presenter.View> extends ObservablePresenter<V> {
+public class ModelPresenter<M, V extends Presenter.View> extends Presenter<V> {
     private M model;
 
     protected M getModel() {

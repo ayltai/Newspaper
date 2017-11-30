@@ -27,8 +27,8 @@ import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
-import com.github.ayltai.newspaper.util.TestUtils;
-import com.github.ayltai.newspaper.util.ViewUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.Views;
 import com.github.ayltai.newspaper.widget.ListView;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -93,7 +93,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
     private CharSequence        searchText;
 
     PagerNewsAdapter(@NonNull final Context context) {
-        final Activity activity = ViewUtils.getActivity(context);
+        final Activity activity = Views.getActivity(context);
         this.userConfig = activity == null
             ? null
             : ComponentFactory.getInstance()
@@ -153,14 +153,14 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
         this.disposables.add(view.attachments().subscribe(
             isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
             error -> {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
             }
         ));
 
         this.disposables.add(view.detachments().subscribe(
             irrelevant -> presenter.onViewDetached(),
             error -> {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
             }
         ));
 

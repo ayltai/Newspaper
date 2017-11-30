@@ -7,9 +7,9 @@ import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.app.widget.CompactItemView;
-import com.github.ayltai.newspaper.view.binding.PresentationBinderFactory;
+import com.github.ayltai.newspaper.view.binding.BindingPresenterFactory;
 
-public final class CompactBinderFactory extends PresentationBinderFactory<Item, CompactItemView, ItemPresenter<CompactItemView>> {
+public final class CompactBinderFactory extends BindingPresenterFactory<Item, CompactItemView, ItemPresenter<CompactItemView>> {
     @Override
     public int getPartType() {
         return CompactItemView.VIEW_TYPE;

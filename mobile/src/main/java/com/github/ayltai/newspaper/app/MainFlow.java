@@ -16,7 +16,7 @@ import com.github.ayltai.newspaper.app.screen.DetailsScreen;
 import com.github.ayltai.newspaper.app.screen.MainPresenter;
 import com.github.ayltai.newspaper.app.screen.MainScreen;
 import com.github.ayltai.newspaper.util.Animations;
-import com.github.ayltai.newspaper.view.BindingPresenter;
+import com.github.ayltai.newspaper.view.ModelPresenter;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.RxFlow;
 
@@ -81,7 +81,7 @@ final class MainFlow extends RxFlow {
         if (presenter != null && view != null) {
             presenter.onViewDetached();
 
-            if (key instanceof DetailsScreen.Key && presenter instanceof BindingPresenter) ((BindingPresenter)presenter).bindModel(((DetailsScreen.Key)key).getItem());
+            if (key instanceof DetailsScreen.Key && presenter instanceof ModelPresenter) ((ModelPresenter)presenter).bindModel(((DetailsScreen.Key)key).getItem());
         }
 
         return Pair.create(presenter, view);

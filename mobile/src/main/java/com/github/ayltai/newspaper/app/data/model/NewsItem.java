@@ -15,7 +15,7 @@ import android.util.Log;
 import com.github.ayltai.newspaper.rss.Enclosure;
 import com.github.ayltai.newspaper.rss.RssItem;
 import com.github.ayltai.newspaper.util.RealmLists;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -77,7 +77,7 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
             try {
                 this.publishDate = NewsItem.DATE_FORMAT.get().parse(rss.getPubDate().trim().replaceAll("EDT", "+0800")).getTime();
             } catch (final ParseException e) {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
         }
 

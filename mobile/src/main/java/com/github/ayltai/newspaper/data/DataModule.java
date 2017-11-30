@@ -3,7 +3,7 @@ package com.github.ayltai.newspaper.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import dagger.Module;
 import dagger.Provides;
@@ -32,7 +32,7 @@ public final class DataModule {
     @Provides
     Realm provideRealm() {
         if (!DataModule.isInitialized) {
-            if (!TestUtils.isRunningUnitTest()) {
+            if (!DevUtils.isRunningUnitTest()) {
                 Realm.init(this.context);
 
                 Realm.setDefaultConfiguration(new RealmConfiguration.Builder()

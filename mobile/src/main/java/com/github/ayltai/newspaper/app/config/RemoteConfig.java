@@ -11,19 +11,19 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 @Singleton
 public final class RemoteConfig {
     private final FirebaseRemoteConfig remoteConfig;
 
     RemoteConfig(@NonNull final Activity activity) {
-        if (TestUtils.isRunningUnitTest()) {
+        if (DevUtils.isRunningUnitTest()) {
             this.remoteConfig = null;
         } else {
             this.remoteConfig = FirebaseRemoteConfig.getInstance();
             this.remoteConfig.setConfigSettings(new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(TestUtils.isLoggable() && !TestUtils.isRunningTests())
+                .setDeveloperModeEnabled(DevUtils.isLoggable() && !DevUtils.isRunningTests())
                 .build());
 
             this.remoteConfig.setDefaults(R.xml.config);
@@ -31,7 +31,7 @@ public final class RemoteConfig {
             this.remoteConfig.fetch(this.remoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled() ? 0 : Constants.REMOTE_CONFIG_CACHE_EXPIRATION)
                 .addOnSuccessListener(activity, irrelevant -> remoteConfig.activateFetched())
                 .addOnFailureListener(activity, error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                 });
         }
     }

@@ -4,23 +4,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.github.ayltai.newspaper.BuildConfig;
 
-public final class TestUtils {
+public final class DevUtils {
     private static AtomicBoolean isRunningUnitTest;
     private static AtomicBoolean isRunningInstrumentedTest;
 
-    private TestUtils() {
+    private DevUtils() {
     }
 
     public static boolean isLoggable() {
-        return BuildConfig.DEBUG && !TestUtils.isRunningTests();
+        return BuildConfig.DEBUG && !DevUtils.isRunningTests();
     }
 
     public static boolean isRunningTests() {
-        return TestUtils.isRunningUnitTest() || TestUtils.isRunningInstrumentedTest();
+        return DevUtils.isRunningUnitTest() || DevUtils.isRunningInstrumentedTest();
     }
 
     public static synchronized boolean isRunningUnitTest() {
-        if (TestUtils.isRunningUnitTest == null) {
+        if (DevUtils.isRunningUnitTest == null) {
             boolean isRunningUnitTest = false;
 
             try {
@@ -30,14 +30,14 @@ public final class TestUtils {
                 // Ignored
             }
 
-            TestUtils.isRunningUnitTest = new AtomicBoolean(isRunningUnitTest);
+            DevUtils.isRunningUnitTest = new AtomicBoolean(isRunningUnitTest);
         }
 
-        return TestUtils.isRunningUnitTest.get();
+        return DevUtils.isRunningUnitTest.get();
     }
 
     public static synchronized boolean isRunningInstrumentedTest() {
-        if (TestUtils.isRunningInstrumentedTest == null) {
+        if (DevUtils.isRunningInstrumentedTest == null) {
             boolean isRunningInstrumentedTest = false;
 
             try {
@@ -47,9 +47,9 @@ public final class TestUtils {
                 // Ignored
             }
 
-            TestUtils.isRunningInstrumentedTest = new AtomicBoolean(isRunningInstrumentedTest);
+            DevUtils.isRunningInstrumentedTest = new AtomicBoolean(isRunningInstrumentedTest);
         }
 
-        return TestUtils.isRunningInstrumentedTest.get();
+        return DevUtils.isRunningInstrumentedTest.get();
     }
 }

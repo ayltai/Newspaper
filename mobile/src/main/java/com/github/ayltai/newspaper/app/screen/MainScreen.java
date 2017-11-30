@@ -33,7 +33,7 @@ import com.github.ayltai.newspaper.app.widget.PagerNewsView;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.widget.ObservableView;
+import com.github.ayltai.newspaper.widget.BaseView;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.roughike.bottombar.BottomBar;
@@ -44,7 +44,7 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public final class MainScreen extends ObservableView implements MainPresenter.View, OnTabSelectListener {
+public final class MainScreen extends BaseView implements MainPresenter.View, OnTabSelectListener {
     @AutoValue
     public abstract static class Key extends ClassKey implements Parcelable {
         @NonNull
@@ -85,8 +85,6 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
 
     public MainScreen(@NonNull final Context context) {
         super(context);
-
-        this.init();
     }
 
     //region Events
@@ -298,7 +296,10 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
                 .setElementName("FAB - Clear All"));
     }
 
-    private void init() {
+    @Override
+    protected void init() {
+        super.init();
+
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, true);
 
         this.content        = view.findViewById(R.id.content);

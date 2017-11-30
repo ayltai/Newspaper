@@ -20,12 +20,12 @@ import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.debug.ThreadPolicyFactory;
-import com.github.ayltai.newspaper.debug.VmPolicyFactory;
+import com.github.ayltai.newspaper.util.ThreadPolicyFactory;
+import com.github.ayltai.newspaper.util.VmPolicyFactory;
 import com.github.ayltai.newspaper.media.DaggerImageComponent;
 import com.github.ayltai.newspaper.media.ImageModule;
 import com.github.ayltai.newspaper.net.DaggerHttpComponent;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.piasy.biv.BigImageViewer;
 import com.instabug.library.Feature;
 import com.instabug.library.Instabug;
@@ -42,28 +42,28 @@ public final class MainApplication extends BaseApplication {
     public void onCreate() {
         super.onCreate();
 
-        if (!TestUtils.isRunningTests()) {
+        if (!DevUtils.isRunningTests()) {
             StrictMode.setThreadPolicy(ThreadPolicyFactory.newThreadPolicy());
             StrictMode.setVmPolicy(VmPolicyFactory.newVmPolicy());
 
             if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
         }
 
-        if (!TestUtils.isLoggable() && !TestUtils.isRunningTests()) {
+        if (!DevUtils.isLoggable() && !DevUtils.isRunningTests()) {
             Fabric.with(this,
                 new Answers(),
                 new Crashlytics.Builder()
                     .core(new CrashlyticsCore.Builder()
-                        .disabled(TestUtils.isLoggable())
+                        .disabled(DevUtils.isLoggable())
                         .build())
                     .build());
         }
 
         //noinspection CheckStyle
         try {
-            FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(!TestUtils.isLoggable());
+            FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(!DevUtils.isLoggable());
         } catch (final RuntimeException e) {
-            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
         }
 
         new Instabug.Builder(this, "1c5817a3503c2a8ece8624b8c0f5a052")
@@ -74,9 +74,9 @@ public final class MainApplication extends BaseApplication {
             .setSurveysState(Feature.State.DISABLED)
             .build();
 
-        if (TestUtils.isRunningUnitTest()) Instabug.disable();
+        if (DevUtils.isRunningUnitTest()) Instabug.disable();
 
-        FLog.setMinimumLoggingLevel(TestUtils.isLoggable() ? FLog.INFO : FLog.ERROR);
+        FLog.setMinimumLoggingLevel(DevUtils.isLoggable() ? FLog.INFO : FLog.ERROR);
 
         ImagePipelineConfig.getDefaultImageRequestConfig()
             .setProgressiveRenderingEnabled(true);

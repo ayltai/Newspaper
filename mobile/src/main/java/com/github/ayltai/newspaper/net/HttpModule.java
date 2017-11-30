@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 
 import android.support.annotation.NonNull;
 
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import dagger.Module;
 import dagger.Provides;
@@ -34,7 +34,7 @@ final class HttpModule {
             .readTimeout(HttpModule.TIMEOUT_READ, TimeUnit.SECONDS)
             .writeTimeout(HttpModule.TIMEOUT_WRITE, TimeUnit.SECONDS);
 
-        if (TestUtils.isLoggable()) builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS));
+        if (DevUtils.isLoggable()) builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS));
 
         return builder.build();
     }

@@ -1,10 +1,6 @@
 package com.github.ayltai.newspaper.util;
 
 public final class Optional<T> {
-    public interface Action<T> {
-        void apply(T value);
-    }
-
     private final T value;
 
     private Optional() {

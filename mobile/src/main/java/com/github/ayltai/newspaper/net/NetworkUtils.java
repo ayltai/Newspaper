@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import retrofit2.HttpException;
 
@@ -15,7 +15,7 @@ public final class NetworkUtils {
     }
 
     public static boolean isOnline(@NonNull final Context context) {
-        if (TestUtils.isRunningUnitTest()) return true;
+        if (DevUtils.isRunningUnitTest()) return true;
 
         final ConnectivityManager manager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 

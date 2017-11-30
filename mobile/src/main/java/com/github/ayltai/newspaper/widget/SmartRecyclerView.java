@@ -11,7 +11,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.processors.BehaviorProcessor;
 import io.reactivex.processors.FlowableProcessor;
 
-public class SmartRecyclerView extends RecyclerView {
+public final class SmartRecyclerView extends RecyclerView {
     private final FlowableProcessor<Integer> bestVisibleItemPositionChanges = BehaviorProcessor.create();
 
     private Disposable disposable;

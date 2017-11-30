@@ -38,7 +38,6 @@ public abstract class ItemListView extends ListView<Item> implements ListPresent
 
     protected ItemListView(@NonNull final Context context) {
         super(context);
-        this.init();
     }
 
     //region Search properties
@@ -167,7 +166,10 @@ public abstract class ItemListView extends ListView<Item> implements ListPresent
         if (view != null) this.manageDisposable(RxRecyclerView.scrollEvents(this.recyclerView).subscribe(event -> view.setTranslationY(view.getTranslationY() - event.dy())));
     }
 
-    private void init() {
+    @Override
+    protected void init() {
+        super.init();
+
         if (this.getEmptyTitle() > 0) ((TextView)this.emptyView.findViewById(R.id.empty_title)).setText(this.getEmptyTitle());
         if (this.getEmptyDescription() > 0) ((TextView)this.emptyView.findViewById(R.id.empty_description)).setText(this.getEmptyDescription());
 

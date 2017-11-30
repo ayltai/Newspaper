@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.debug;
+package com.github.ayltai.newspaper.util;
 
 import android.os.Build;
 import android.os.StrictMode;

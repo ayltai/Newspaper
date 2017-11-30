@@ -1,21 +1,30 @@
 package com.github.ayltai.newspaper.widget;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import android.app.Activity;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.FrameLayout;
 
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.util.ViewUtils;
+import com.github.ayltai.newspaper.util.RxUtils;
+import com.github.ayltai.newspaper.util.Views;
 import com.github.ayltai.newspaper.view.Presenter;
 
 import io.reactivex.Flowable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public class BaseView extends PartView implements Presenter.View {
+public class BaseView extends FrameLayout implements Presenter.View {
+    private final List<Disposable> disposables = Collections.synchronizedList(new ArrayList<>());
+
     //region Subscriptions
 
     protected final FlowableProcessor<Boolean>    attachments = PublishProcessor.create();
@@ -27,12 +36,15 @@ public class BaseView extends PartView implements Presenter.View {
 
     public BaseView(@NonNull final Context context) {
         super(context);
+        init();
     }
+
+    //region Properties
 
     @Nullable
     @Override
     public Activity getActivity() {
-        return ViewUtils.getActivity(this);
+        return Views.getActivity(this);
     }
 
     @Nullable
@@ -45,6 +57,8 @@ public class BaseView extends PartView implements Presenter.View {
 
         return null;
     }
+
+    //endregion
 
     //region Events
 
@@ -62,6 +76,10 @@ public class BaseView extends PartView implements Presenter.View {
 
     //endregion
 
+    protected void manageDisposable(@NonNull final Disposable disposable) {
+        this.disposables.add(disposable);
+    }
+
     //region Lifecycle
 
     @CallSuper
@@ -77,10 +95,16 @@ public class BaseView extends PartView implements Presenter.View {
     @CallSuper
     @Override
     public void onDetachedFromWindow() {
+        RxUtils.resetDisposables(this.disposables);
+
         super.onDetachedFromWindow();
 
         this.detachments.onNext(Irrelevant.INSTANCE);
     }
 
     //endregion
+
+    protected void init() {
+        this.setLayoutParams(Views.createWrapContentLayoutParams());
+    }
 }

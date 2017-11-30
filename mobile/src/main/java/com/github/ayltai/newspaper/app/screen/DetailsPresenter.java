@@ -25,7 +25,7 @@ import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -68,7 +68,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                             items -> {
                             },
                             error -> {
-                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                             }));
                 } else {
                     super.bindModel(model);
@@ -78,7 +78,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                         .subscribe(
                             items -> { },
                             error -> {
-                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                             }));
 
                     if (NetworkUtils.isOnline(this.getView().getContext())) {
@@ -103,7 +103,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                             .subscribe(
                                 items -> super.bindModel(items.get(0)),
                                 error -> {
-                                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                                 }));
                     }
                 }
@@ -138,7 +138,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                     items -> {
                     },
                     error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                     }
                 ));
         }

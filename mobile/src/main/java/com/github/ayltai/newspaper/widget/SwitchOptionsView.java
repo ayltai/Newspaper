@@ -15,14 +15,13 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public final class SwitchOptionsView extends ObservableView implements OptionsPresenter.View {
+public final class SwitchOptionsView extends BaseView implements OptionsPresenter.View {
     private final FlowableProcessor<Integer> optionChanges = PublishProcessor.create();
 
     private ViewGroup container;
 
     public SwitchOptionsView(@NonNull final Context context) {
         super(context);
-        this.init();
     }
 
     @Override
@@ -49,7 +48,10 @@ public final class SwitchOptionsView extends ObservableView implements OptionsPr
         super.onAttachedToWindow();
     }
 
-    private void init() {
+    @Override
+    protected void init() {
+        super.init();
+
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.widget_linear_layout, this, true);
         this.container = view.findViewById(R.id.linearLayout);
     }

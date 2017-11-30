@@ -28,7 +28,7 @@ import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.view.SimpleUniversalAdapter;
 import com.github.ayltai.newspaper.view.binding.BinderFactory;
 import com.github.ayltai.newspaper.view.binding.FullBinderFactory;
@@ -119,7 +119,7 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
                 results.values = items;
                 results.count  = items.size();
             } catch (final Throwable e) {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
 
             return results;

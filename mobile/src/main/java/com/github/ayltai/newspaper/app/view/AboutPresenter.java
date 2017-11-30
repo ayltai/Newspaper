@@ -8,12 +8,11 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.view.ObservablePresenter;
 import com.github.ayltai.newspaper.view.Presenter;
 
 import io.reactivex.Flowable;
 
-public class AboutPresenter extends ObservablePresenter<AboutPresenter.View> {
+public class AboutPresenter extends Presenter<AboutPresenter.View> {
     public interface View extends Presenter.View {
         void setAppName(@NonNull CharSequence appName);
 

@@ -11,12 +11,12 @@ import android.util.Log;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
-public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends BindingPresenter<List<M>, V> {
+public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends ModelPresenter<List<M>, V> {
     public interface View<M> extends Presenter.View {
         void bind(@NonNull List<M> models);
 
@@ -88,7 +88,7 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
                 .subscribe(
                     this::bindModel,
                     error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                     }));
         } else {
             view.scrollTo(this.scrollPosition);
@@ -103,7 +103,7 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
     private void subscribeClears(@NonNull final V view) {
         this.manageDisposable(view.clears().subscribe(
             irrelevant -> {
-                if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Clear");
+                if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Clear");
 
                 this.resetState();
 
@@ -114,12 +114,12 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
                     .subscribe(
                         this::bindModel,
                         error -> {
-                            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                         }
                     );
             },
             error -> {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
             }
         ));
     }
@@ -127,7 +127,7 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
     private void subscribePullToRefreshes(@NonNull final V view) {
         this.manageDisposable(view.pullToRefreshes().subscribe(
             irrelevant -> {
-                if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Pull-to-refresh");
+                if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Pull-to-refresh");
 
                 this.onPullToRefresh();
                 this.resetState();
@@ -146,11 +146,11 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
                             this.bindModel(models);
                         },
                         error -> {
-                            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                         }));
             },
             error -> {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
             }
         ));
     }

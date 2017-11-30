@@ -7,9 +7,9 @@ import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.app.widget.CozyItemView;
-import com.github.ayltai.newspaper.view.binding.PresentationBinderFactory;
+import com.github.ayltai.newspaper.view.binding.BindingPresenterFactory;
 
-public final class CozyBinderFactory extends PresentationBinderFactory<Item, CozyItemView, ItemPresenter<CozyItemView>> {
+public final class CozyBinderFactory extends BindingPresenterFactory<Item, CozyItemView, ItemPresenter<CozyItemView>> {
     @Override
     public int getPartType() {
         return CozyItemView.VIEW_TYPE;

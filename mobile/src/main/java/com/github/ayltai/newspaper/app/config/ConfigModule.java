@@ -19,21 +19,21 @@ public final class ConfigModule {
     @Singleton
     @NonNull
     @Provides
-    public AppConfig provideAppConfig() {
+    AppConfig provideAppConfig() {
         return new AppConfig();
     }
 
     @Singleton
     @NonNull
     @Provides
-    public UserConfig provideUserConfig() {
+    UserConfig provideUserConfig() {
         return new UserConfig(this.activity, this.provideRemoteConfig());
     }
 
     @Singleton
     @NonNull
     @Provides
-    public RemoteConfig provideRemoteConfig() {
+    RemoteConfig provideRemoteConfig() {
         return new RemoteConfig(this.activity);
     }
 }
