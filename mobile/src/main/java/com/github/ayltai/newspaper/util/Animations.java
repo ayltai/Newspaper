@@ -113,9 +113,7 @@ public final class Animations {
 
             Flowable.interval(this.offset, TimeUnit.MILLISECONDS)
                 .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
-                .takeUntil(time -> {
-                    return queue.isEmpty();
-                })
+                .take(queue.size())
                 .subscribe(time -> {
                     if (!queue.isEmpty()) {
                         final View view = queue.poll();
