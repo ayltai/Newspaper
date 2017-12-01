@@ -24,7 +24,6 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 
 import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
 import io.supercharge.shimmerlayout.ShimmerLayout;
 
 public final class Animations {
@@ -36,8 +35,6 @@ public final class Animations {
         private long      delay;
         private long      offset;
         private Animation animation;
-
-        private Disposable disposable;
 
         //endregion
 
@@ -114,12 +111,13 @@ public final class Animations {
                 }
             }
 
-            this.disposable = Flowable.interval(this.offset, TimeUnit.MILLISECONDS)
+            Flowable.interval(this.offset, TimeUnit.MILLISECONDS)
                 .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
+                .takeUntil(time -> {
+                    return queue.isEmpty();
+                })
                 .subscribe(time -> {
-                    if (queue.isEmpty()) {
-                        if (this.disposable != null) this.disposable.dispose();
-                    } else {
+                    if (!queue.isEmpty()) {
                         final View view = queue.poll();
 
                         view.setVisibility(View.VISIBLE);
