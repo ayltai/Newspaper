@@ -26,6 +26,7 @@ public final class Constants {
 
     public static final double VIDEO_ASPECT_RATIO = 16.0 / 9.0;
 
+    public static final long ANIMATION_DELAY  = 100;
     public static final long ANIMATION_OFFSET = 200;
 
     public static final int DURATION_SLOW_FRAME   = 16;

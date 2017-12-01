@@ -24,6 +24,7 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 
 import io.reactivex.Flowable;
+import io.reactivex.disposables.Disposable;
 import io.supercharge.shimmerlayout.ShimmerLayout;
 
 public final class Animations {
@@ -35,6 +36,8 @@ public final class Animations {
         private long      delay;
         private long      offset;
         private Animation animation;
+
+        private Disposable disposable;
 
         //endregion
 
@@ -111,10 +114,12 @@ public final class Animations {
                 }
             }
 
-            Flowable.interval(this.offset, TimeUnit.MILLISECONDS)
+            this.disposable = Flowable.interval(this.offset, TimeUnit.MILLISECONDS)
                 .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
                 .subscribe(time -> {
-                    if (!queue.isEmpty()) {
+                    if (queue.isEmpty()) {
+                        if (this.disposable != null) this.disposable.dispose();
+                    } else {
                         final View view = queue.poll();
 
                         view.setVisibility(View.VISIBLE);
@@ -185,7 +190,7 @@ public final class Animations {
 
     public static void animateViewGroup(@NonNull final ViewGroup container) {
         new Animations.Builder(container)
-            .delay(android.R.integer.config_shortAnimTime)
+            .delay(Constants.ANIMATION_DELAY)
             .offset(Constants.ANIMATION_OFFSET)
             .animate(R.anim.fade_in_up)
             .start(true);

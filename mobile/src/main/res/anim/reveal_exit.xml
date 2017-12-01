@@ -3,19 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="@android:integer/config_mediumAnimTime"
     android:interpolator="@android:interpolator/decelerate_cubic">
-    <scale
-        android:fromXScale="1"
-        android:fromYScale="1"
-        android:toXScale="50%"
-        android:toYScale="50%"
-        android:pivotX="50%"
-        android:pivotY="100%" />
     <translate
         android:fromXDelta="0"
         android:fromYDelta="0"
         android:toXDelta="0"
-        android:toYDelta="80%" />
+        android:toYDelta="50%" />
     <alpha
         android:fromAlpha="1"
-        android:toAlpha="0.4" />
+        android:toAlpha="0" />
 </set>
