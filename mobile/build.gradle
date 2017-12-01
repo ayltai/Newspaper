@@ -197,9 +197,6 @@ dependencies {
     // Eye candies
     implementation 'jp.wasabeef:recyclerview-animators:2.2.7'
     implementation 'io.supercharge:shimmerlayout:1.0.2'
-    implementation ('com.fujiyuu75:sequent:0.2.1') {
-        exclude group : 'com.android.support'
-    }
     implementation 'pub.hanks:smallbang:1.2.2'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.gjiazhe:PanoramaImageView:1.0'

@@ -2,7 +2,7 @@
 <set
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="@android:integer/config_mediumAnimTime"
-    android:interpolator="@android:anim/decelerate_interpolator">
+    android:interpolator="@android:interpolator/decelerate_cubic">
     <scale
         android:fromXScale="1"
         android:fromYScale="1"
@@ -12,7 +12,7 @@
         android:pivotY="100%" />
     <translate
         android:fromXDelta="0"
-        android:fromYDelta="0%"
+        android:fromYDelta="0"
         android:toXDelta="0"
         android:toYDelta="80%" />
     <alpha

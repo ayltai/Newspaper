@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.speech;
+package com.github.ayltai.newspaper.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +16,6 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import com.google.auto.value.AutoValue;
-
-import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Single;
 import rx.functions.Action1;

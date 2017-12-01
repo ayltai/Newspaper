@@ -46,7 +46,7 @@ import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.widget.ItemView;
 import com.github.ayltai.newspaper.app.widget.VideoView;
 import com.github.ayltai.newspaper.media.FrescoImageLoader;
-import com.github.ayltai.newspaper.speech.SimpleTextToSpeech;
+import com.github.ayltai.newspaper.util.SimpleTextToSpeech;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
