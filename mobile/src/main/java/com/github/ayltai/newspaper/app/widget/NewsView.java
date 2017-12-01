@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.UserConfig;
-import com.github.ayltai.newspaper.app.view.NewsPresenterView;
+import com.github.ayltai.newspaper.app.view.BaseNewsView;
 import com.github.ayltai.newspaper.widget.BaseView;
 
-public abstract class NewsView extends BaseView implements NewsPresenterView {
+public abstract class NewsView extends BaseView implements BaseNewsView {
     protected ItemListView listView;
 
     protected List<String> categories;

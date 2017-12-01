@@ -25,11 +25,11 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.view.AboutPresenter;
-import com.github.ayltai.newspaper.app.view.NewsPresenterView;
+import com.github.ayltai.newspaper.app.view.BaseNewsView;
 import com.github.ayltai.newspaper.app.widget.AboutView;
 import com.github.ayltai.newspaper.app.widget.BookmarkedNewsView;
 import com.github.ayltai.newspaper.app.widget.HistoricalNewsView;
-import com.github.ayltai.newspaper.app.widget.PagerNewsView;
+import com.github.ayltai.newspaper.app.widget.PagedNewsView;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
@@ -71,7 +71,7 @@ public final class MainScreen extends BaseView implements MainPresenter.View, On
     private Toolbar              toolbar;
     private SearchView           searchView;
     private ViewGroup            content;
-    private NewsPresenterView    newsView;
+    private BaseNewsView newsView;
     private BottomBar            bottomBar;
     private FloatingActionButton upAction;
     private FloatingActionButton refreshAction;
@@ -140,7 +140,7 @@ public final class MainScreen extends BaseView implements MainPresenter.View, On
             boolean isCached = false;
 
             if (this.cachedViews.containsKey(tabId)) {
-                this.newsView = (NewsPresenterView)this.cachedViews.get(tabId).get();
+                this.newsView = (BaseNewsView)this.cachedViews.get(tabId).get();
 
                 if (this.newsView != null) {
                     if (this.content.indexOfChild((View)this.newsView) < 0) {
@@ -164,7 +164,7 @@ public final class MainScreen extends BaseView implements MainPresenter.View, On
             this.toolbar.getMenu().findItem(R.id.action_search).setVisible(true);
 
             if (!isCached) {
-                this.newsView = tabId == R.id.action_news ? new PagerNewsView(this.getContext()) : tabId == R.id.action_history ? new HistoricalNewsView(this.getContext()) : new BookmarkedNewsView(this.getContext());
+                this.newsView = tabId == R.id.action_news ? new PagedNewsView(this.getContext()) : tabId == R.id.action_history ? new HistoricalNewsView(this.getContext()) : new BookmarkedNewsView(this.getContext());
                 this.content.addView((View)this.newsView);
 
                 this.cachedViews.put(tabId, new SoftReference<>((View)this.newsView));
@@ -276,7 +276,7 @@ public final class MainScreen extends BaseView implements MainPresenter.View, On
 
     @Override
     public void settings() {
-        if (this.newsView instanceof PagerNewsView) ((PagerNewsView)this.newsView).settings();
+        if (this.newsView instanceof PagedNewsView) ((PagedNewsView)this.newsView).settings();
 
         ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getContext())

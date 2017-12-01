@@ -114,7 +114,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
         }
     }
 
-    protected void onClick() {
+    private void onClick() {
         this.initAppConfig();
 
         if (this.getView() != null) {
@@ -136,7 +136,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
     }
 
     @CallSuper
-    protected void onAvatarClick() {
+    private void onAvatarClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -145,7 +145,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
     }
 
     @CallSuper
-    protected void onSourceClick() {
+    private void onSourceClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -154,7 +154,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
     }
 
     @CallSuper
-    protected void onPublishDateClick() {
+    private void onPublishDateClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -163,7 +163,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
     }
 
     @CallSuper
-    protected void onTitleClick() {
+    private void onTitleClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -172,7 +172,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
     }
 
     @CallSuper
-    protected void onDescriptionClick() {
+    private void onDescriptionClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -180,7 +180,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
                 .setElementName("Description"));
     }
 
-    protected void onLinkClick() {
+    private void onLinkClick() {
     }
 
     @CallSuper
@@ -202,7 +202,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
     }
 
     @CallSuper
-    protected void onVideoClick() {
+    private void onVideoClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()

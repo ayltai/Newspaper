@@ -33,39 +33,39 @@ import com.github.ayltai.newspaper.widget.ListView;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObserver {
+class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObserver {
     private final class MainFilter extends Filter {
         @Nullable
         @Override
         protected Filter.FilterResults performFiltering(@Nullable final CharSequence searchText) {
-            PagerNewsAdapter.this.searchText = searchText;
+            PagedNewsAdapter.this.searchText = searchText;
 
-            for (int i = 0; i < PagerNewsAdapter.this.getCount(); i++) {
-                final ListView listView = PagerNewsAdapter.this.getItem(i);
+            for (int i = 0; i < PagedNewsAdapter.this.getCount(); i++) {
+                final ListView listView = PagedNewsAdapter.this.getItem(i);
 
                 if (listView instanceof ItemListView && listView.getAdapter() instanceof Filterable && ((Filterable)listView.getAdapter()).getFilter() instanceof ItemListAdapter.ItemListFilter) {
                     ((ItemListView)listView).setSearchText(searchText);
 
                     final ItemListAdapter.ItemListFilter filter = (ItemListAdapter.ItemListFilter)((Filterable)listView.getAdapter()).getFilter();
 
-                    filter.setCategories(new ArrayList<>(Category.fromDisplayName(PagerNewsAdapter.this.categories.get(i))));
-                    filter.setSources(PagerNewsAdapter.this.userConfig == null ? Collections.emptySet() : PagerNewsAdapter.this.userConfig.getSources());
+                    filter.setCategories(new ArrayList<>(Category.fromDisplayName(PagedNewsAdapter.this.categories.get(i))));
+                    filter.setSources(PagedNewsAdapter.this.userConfig == null ? Collections.emptySet() : PagedNewsAdapter.this.userConfig.getSources());
                     filter.setFeatured(true);
 
-                    PagerNewsAdapter.this.filterResults.put(i, filter.performFiltering(searchText));
+                    PagedNewsAdapter.this.filterResults.put(i, filter.performFiltering(searchText));
                 }
             }
 
-            return (FilterResults)PagerNewsAdapter.this.filterResults.get(PagerNewsAdapter.this.position);
+            return (FilterResults)PagedNewsAdapter.this.filterResults.get(PagedNewsAdapter.this.position);
         }
 
         @Override
         protected void publishResults(@Nullable final CharSequence searchText, @Nullable final FilterResults filterResults) {
-            for (int i = 0; i < PagerNewsAdapter.this.getCount(); i++) {
-                final ListView listView = PagerNewsAdapter.this.getItem(i);
+            for (int i = 0; i < PagedNewsAdapter.this.getCount(); i++) {
+                final ListView listView = PagedNewsAdapter.this.getItem(i);
 
                 if (listView != null && listView.getAdapter() instanceof Filterable && ((Filterable)listView.getAdapter()).getFilter() instanceof ItemListAdapter.ItemListFilter) {
-                    final FilterResults                  results = (FilterResults)PagerNewsAdapter.this.filterResults.get(i);
+                    final FilterResults                  results = (FilterResults)PagedNewsAdapter.this.filterResults.get(i);
                     final ItemListAdapter.ItemListFilter filter  = (ItemListAdapter.ItemListFilter)((Filterable)listView.getAdapter()).getFilter();
 
                     filter.publishResults(searchText, results);
@@ -92,7 +92,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
     private int                 position;
     private CharSequence        searchText;
 
-    PagerNewsAdapter(@NonNull final Context context) {
+    PagedNewsAdapter(@NonNull final Context context) {
         final Activity activity = Views.getActivity(context);
         this.userConfig = activity == null
             ? null
@@ -110,7 +110,7 @@ class PagerNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
     @NonNull
     @Override
     public Filter getFilter() {
-        return this.filter == null ? this.filter = new PagerNewsAdapter.MainFilter() : this.filter;
+        return this.filter == null ? this.filter = new PagedNewsAdapter.MainFilter() : this.filter;
     }
 
     @Override

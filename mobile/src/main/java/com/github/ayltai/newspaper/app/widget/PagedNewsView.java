@@ -22,17 +22,17 @@ import com.github.ayltai.newspaper.analytics.SearchEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.config.UserConfig;
-import com.github.ayltai.newspaper.app.view.PagerNewsPresenterView;
+import com.github.ayltai.newspaper.app.view.BaseNewsView;
 import com.github.ayltai.newspaper.widget.BaseView;
 import com.github.ayltai.newspaper.widget.ListView;
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
 
-public class PagerNewsView extends BaseView implements PagerNewsPresenterView {
+public class PagedNewsView extends BaseView implements BaseNewsView {
     private UserConfig       userConfig;
     private ViewPager        viewPager;
-    private PagerNewsAdapter adapter;
+    private PagedNewsAdapter adapter;
 
-    public PagerNewsView(@NonNull final Context context) {
+    public PagedNewsView(@NonNull final Context context) {
         super(context);
     }
 
@@ -40,7 +40,7 @@ public class PagerNewsView extends BaseView implements PagerNewsPresenterView {
     @Override
     public void onAttachedToWindow() {
         if (this.isFirstTimeAttachment) {
-            this.adapter = new PagerNewsAdapter(this.getContext());
+            this.adapter = new PagedNewsAdapter(this.getContext());
 
             final LifecycleOwner lifecycleOwner = this.getLifecycleOwner();
             if (lifecycleOwner != null) lifecycleOwner.getLifecycle().addObserver(this.adapter);
@@ -79,7 +79,6 @@ public class PagerNewsView extends BaseView implements PagerNewsPresenterView {
     public void clear() {
     }
 
-    @Override
     public void settings() {
         final OptionsView view = new OptionsView(this.getContext(), this.userConfig != null && this.userConfig.getTheme() == Constants.THEME_LIGHT ? R.style.AppDialogThemeLight : R.style.AppDialogThemeDark);
 

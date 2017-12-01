@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.github.ayltai.newspaper.view.Presenter;
 
-public interface NewsPresenterView extends Presenter.View {
+public interface BaseNewsView extends Presenter.View {
     void up();
 
     void refresh();
