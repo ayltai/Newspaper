@@ -69,11 +69,11 @@ public final class SourceFactory {
         final String date = SourceFactory.DATE_FORMAT.get().format(new Date());
 
         return new Source(sources[0], new RealmList<>(
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/local/home/0", date), categories[9]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/chinainternational/home/0", date), categories[10]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/finance/home/0", date), categories[12]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/entertainment/home/0", date), categories[14]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[15])), R.drawable.avatar_apple_daily);
+            new Category(String.format("https://hk.appledaily.com/video/videolist/%s/local/home/0", date), categories[9]),
+            new Category(String.format("https://hk.appledaily.com/video/videolist/%s/international/home/0", date), categories[10]),
+            new Category(String.format("https://hk.appledaily.com/video/videolist/%s/finance/home/0", date), categories[12]),
+            new Category(String.format("https://hk.appledaily.com/video/videolist/%s/entertainment/home/0", date), categories[14]),
+            new Category(String.format("https://hk.appledaily.com/video/videolist/%s/sports/home/0", date), categories[15])), R.drawable.avatar_apple_daily);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")

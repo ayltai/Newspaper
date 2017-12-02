@@ -22,7 +22,7 @@ import com.github.ayltai.newspaper.util.IOUtils;
 import io.reactivex.Observable;
 
 public final class AppleDailyClientTest extends NetworkTest {
-    private static final String APPLE_DAILY_URL         = "http://hk.apple.nextmedia.com/video/videolist/20170909/local/home/0";
+    private static final String APPLE_DAILY_URL         = "https://hk.appledaily.com/video/videolist/20170909/local/home/0";
     private static final String APPLE_DAILY_DETAILS_URL = "http://hk.apple.nextmedia.com/news/art/20170909/20147535";
     private static final String ERROR_URL               = "error 1";
     private static final String ERROR_DETAILS_URL       = "error 2";

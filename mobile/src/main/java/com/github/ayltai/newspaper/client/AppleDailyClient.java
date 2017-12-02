@@ -164,7 +164,7 @@ final class AppleDailyClient extends Client {
 
         if (ids.length > 4) {
             final JSONArray items = this.apiService
-                .getHtml("http://hk.dv.nextmedia.com/video/videoplayer/" + ids[ids.length - 2] + AppleDailyClient.SLASH + category + AppleDailyClient.SLASH + category + AppleDailyClient.SLASH + ids[ids.length - 1] + AppleDailyClient.SLASH + videoId + "/0/0/0?ts=" + String.valueOf(System.currentTimeMillis() / 1000L))
+                .getHtml("https://hk.video.appledaily.com/video/videoplayer/" + ids[ids.length - 2] + AppleDailyClient.SLASH + category + AppleDailyClient.SLASH + category + AppleDailyClient.SLASH + ids[ids.length - 1] + AppleDailyClient.SLASH + videoId + "/0/0/0?ts=" + String.valueOf(System.currentTimeMillis() / 1000L))
                 .compose(RxUtils.applyObservableBackgroundSchedulers())
                 .map(html -> new JSONArray(StringUtils.substringBetween(html, "window.videoPlaylistOriginal = ", "];") + "]"))
                 .blockingSingle();
