@@ -28,9 +28,6 @@
         name="cardBackground"
         format="color" />
     <attr
-        name="dividerColor"
-        format="color" />
-    <attr
         name="indicatorColor"
         format="color" />
     <attr

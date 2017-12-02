@@ -24,7 +24,7 @@ import com.github.ayltai.newspaper.data.RealmLoader;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -83,7 +83,7 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
         public Flowable<List<NewsItem>> build() {
             final ArrayList<String> categories = this.args.getStringArrayList(ItemListLoader.KEY_CATEGORIES);
 
-            if (TestUtils.isRunningUnitTest()) return Flowable.just(Collections.emptyList());
+            if (DevUtils.isRunningUnitTest()) return Flowable.just(Collections.emptyList());
 
             return Flowable.create(emitter -> this.activity
                 .getSupportLoaderManager()
@@ -154,7 +154,7 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
                             .subscribe(
                                 e::onSuccess,
                                 error -> {
-                                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
 
                                     if (!e.isDisposed()) e.onError(error);
                                 }));
@@ -165,7 +165,7 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
                 .subscribe(
                     emitter::onNext,
                     error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                     }
                 ), BackpressureStrategy.LATEST);
         }
@@ -187,7 +187,7 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
                         // TODO: If the previous refresh timestamp is very old, wait for a longer time to refresh
                         .timeout(forceRefresh ? Constants.REFRESH_TIMEOUT : Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
                         .onErrorResumeNext(error -> {
-                            if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                            if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
 
                             return Single.just(Collections.emptyList());
                         })

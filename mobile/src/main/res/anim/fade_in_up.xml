@@ -2,10 +2,10 @@
 <set
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="@android:integer/config_mediumAnimTime"
-    android:interpolator="@android:interpolator/decelerate_cubic">
+    android:interpolator="@android:interpolator/overshoot">
     <translate
         android:fromXDelta="0"
-        android:fromYDelta="50%"
+        android:fromYDelta="100%"
         android:toXDelta="0"
         android:toYDelta="0" />
     <alpha

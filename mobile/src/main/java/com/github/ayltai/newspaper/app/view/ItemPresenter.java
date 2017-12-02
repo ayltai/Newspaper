@@ -22,15 +22,15 @@ import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.screen.DetailsScreen;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.binding.Binder;
-import com.github.ayltai.newspaper.view.binding.PresentationBinder;
+import com.github.ayltai.newspaper.view.binding.BindingPresenter;
 
 import flow.Flow;
 import io.reactivex.Flowable;
 
-public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBinder<Item, V> implements Binder<V> {
+public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresenter<Item, V> implements Binder<V> {
     public interface View extends Presenter.View {
         @UiThread
         void setAvatar(@DrawableRes int avatar);
@@ -114,7 +114,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         }
     }
 
-    protected void onClick() {
+    private void onClick() {
         this.initAppConfig();
 
         if (this.getView() != null) {
@@ -131,12 +131,12 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
                 .logEvent(new ClickEvent()
                     .setElementName("Featured"));
 
-            if (!TestUtils.isRunningUnitTest()) Flow.get(this.getView().getContext()).set(DetailsScreen.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem()));
+            if (!DevUtils.isRunningUnitTest()) Flow.get(this.getView().getContext()).set(DetailsScreen.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem()));
         }
     }
 
     @CallSuper
-    protected void onAvatarClick() {
+    private void onAvatarClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -145,7 +145,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     }
 
     @CallSuper
-    protected void onSourceClick() {
+    private void onSourceClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -154,7 +154,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     }
 
     @CallSuper
-    protected void onPublishDateClick() {
+    private void onPublishDateClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -163,7 +163,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     }
 
     @CallSuper
-    protected void onTitleClick() {
+    private void onTitleClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -172,7 +172,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     }
 
     @CallSuper
-    protected void onDescriptionClick() {
+    private void onDescriptionClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -180,7 +180,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
                 .setElementName("Description"));
     }
 
-    protected void onLinkClick() {
+    private void onLinkClick() {
     }
 
     @CallSuper
@@ -202,7 +202,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     }
 
     @CallSuper
-    protected void onVideoClick() {
+    private void onVideoClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()

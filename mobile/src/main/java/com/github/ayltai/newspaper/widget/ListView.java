@@ -10,13 +10,15 @@ import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.view.ListPresenter;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
@@ -24,7 +26,8 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public abstract class ListView<M> extends ObservableView implements ListPresenter.View<M> {
+@SuppressWarnings("MethodCount")
+public abstract class ListView<M> extends BaseView implements ListPresenter.View<M> {
     //region Subscriptions
 
     protected final FlowableProcessor<Integer>    bestVisibleItemPositionChanges = PublishProcessor.create();
@@ -50,7 +53,6 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     protected ListView(@NonNull final Context context) {
         super(context);
-        this.init();
     }
 
     //region Properties
@@ -75,13 +77,19 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
     @IdRes
     protected abstract int getEmptyViewId();
 
+    @StringRes
+    protected abstract int getEmptyTitle();
+
+    @StringRes
+    protected abstract int getEmptyDescription();
+
     //endregion
 
     //region Methods
 
     @Override
     public void bind(@NonNull final List<M> models) {
-        if (TestUtils.isLoggable()) {
+        if (DevUtils.isLoggable()) {
             for (final M model : models) Log.v(this.getClass().getSimpleName(), model.toString());
         }
 
@@ -226,12 +234,16 @@ public abstract class ListView<M> extends ObservableView implements ListPresente
 
     //endregion
 
-    private void init() {
+    @Override
+    protected void init() {
+        super.init();
+
         this.adapter = this.createAdapter();
 
         final View view = LayoutInflater.from(this.getContext()).inflate(this.getLayoutId(), this, false);
 
         this.swipeRefreshLayout = view.findViewById(this.getSwipeRefreshLayoutId());
+        this.swipeRefreshLayout.setColorSchemeResources(R.color.refreshColor1, R.color.refreshColor2, R.color.refreshColor3, R.color.refreshColor4);
         this.swipeRefreshLayout.setOnRefreshListener(() -> this.pullToRefreshes.onNext(Irrelevant.INSTANCE));
 
         this.recyclerView = view.findViewById(this.getRecyclerViewId());

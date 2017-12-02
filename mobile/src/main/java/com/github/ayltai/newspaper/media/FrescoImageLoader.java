@@ -45,7 +45,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Optional;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 
@@ -117,8 +117,8 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
         final ImageRequest request = ImageRequest.fromUri(uri);
         final File         file    = FrescoImageLoader.getFileCache(request);
 
-        if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Load image = " + uri.toString());
-        if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "File cache = " + file.getAbsolutePath());
+        if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Load image = " + uri.toString());
+        if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "File cache = " + file.getAbsolutePath());
 
         if (file.exists()) {
             if (callback != null) callback.onCacheHit(file);
@@ -163,7 +163,7 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
                         FrescoImageLoader.SOURCES.remove(source);
                     }
 
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
 
                     FrescoImageLoader.HANDLER.post(() -> {
                         if (callback != null) callback.onFail(new RuntimeException(error));

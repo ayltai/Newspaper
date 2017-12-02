@@ -2,7 +2,7 @@
 <resources>
     <style
         name="Source"
-        parent="TextAppearance.AppCompat.Title">
+        parent="@style/TextAppearance.AppCompat.Title">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:lines">1</item>
@@ -24,7 +24,7 @@
     </style>
     <style
         name="Subhead"
-        parent="TextAppearance.AppCompat.Subhead">
+        parent="@style/TextAppearance.AppCompat.Subhead">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:lines">1</item>
@@ -46,7 +46,7 @@
     </style>
     <style
         name="Title"
-        parent="TextAppearance.AppCompat.Title">
+        parent="@style/TextAppearance.AppCompat.Title">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>
@@ -58,7 +58,7 @@
         <item name="android:padding">@dimen/space16</item>
         <item name="android:layout_gravity">bottom</item>
         <item name="android:maxLines">2</item>
-        <item name="android:textSize">@dimen/textHeading3</item>
+        <item name="android:textSize">@dimen/textHeading</item>
         <item name="android:textColor">@color/textColorInverseLight</item>
         <item name="android:shadowDx">1.5</item>
         <item name="android:shadowDy">1.5</item>
@@ -67,7 +67,7 @@
     </style>
     <style name="Title.Cozy">
         <item name="android:maxLines">2</item>
-        <item name="android:textSize">@dimen/textHeading3</item>
+        <item name="android:textSize">@dimen/textHeading</item>
     </style>
     <style name="Title.Compact">
         <item name="android:maxLines">1</item>
@@ -82,11 +82,11 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:maxLines">2147483647</item>
         <item name="android:ellipsize">none</item>
-        <item name="android:textSize">@dimen/textHeading3</item>
+        <item name="android:textSize">@dimen/textHeading</item>
     </style>
     <style
         name="Description"
-        parent="TextAppearance.AppCompat.Body1">
+        parent="@style/TextAppearance.AppCompat.Body1">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>
@@ -114,7 +114,7 @@
     </style>
     <style
         name="Button"
-        parent="Widget.AppCompat.Button">
+        parent="@style/Widget.AppCompat.Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textSmall</item>
@@ -125,7 +125,7 @@
     </style>
     <style
         name="Button.Dialog"
-        parent="Base.Widget.AppCompat.Button.Borderless">
+        parent="@style/Base.Widget.AppCompat.Button.Borderless">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textSmall</item>
@@ -137,7 +137,7 @@
     </style>
     <style
         name="Icon"
-        parent="Widget.AppCompat.Button.Borderless">
+        parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
     <style name="Icon.Small">

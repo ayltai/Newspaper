@@ -10,18 +10,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Video;
+import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.widget.ObservableView;
+import com.github.ayltai.newspaper.widget.BaseView;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public abstract class ItemView extends ObservableView implements ItemPresenter.View {
+public abstract class ItemView extends BaseView implements ItemPresenter.View {
     protected final FlowableProcessor<Irrelevant> clicks = PublishProcessor.create();
 
     protected View container;

@@ -25,7 +25,7 @@ import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -96,7 +96,7 @@ final class AppleDailyClient extends Client {
                     emitter.onSuccess(this.filter(items));
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
 
                     emitter.onSuccess(Collections.emptyList());
                 }
@@ -108,7 +108,7 @@ final class AppleDailyClient extends Client {
     @Override
     public Single<NewsItem> updateItem(@NonNull final NewsItem item) {
         return Single.create(emitter -> {
-            if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), item.getLink());
+            if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), item.getLink());
 
             this.apiService
                 .getHtml(item.getLink())
@@ -146,7 +146,7 @@ final class AppleDailyClient extends Client {
                         if (!emitter.isDisposed()) emitter.onSuccess(item);
                     },
                     error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
                         if (!emitter.isDisposed()) emitter.onError(error);
                     }
@@ -164,7 +164,7 @@ final class AppleDailyClient extends Client {
 
         if (ids.length > 4) {
             final JSONArray items = this.apiService
-                .getHtml("http://hk.dv.nextmedia.com/video/videoplayer/" + ids[ids.length - 2] + AppleDailyClient.SLASH + category + AppleDailyClient.SLASH + category + AppleDailyClient.SLASH + ids[ids.length - 1] + AppleDailyClient.SLASH + videoId + "/0/0/0?ts=" + String.valueOf(System.currentTimeMillis() / 1000L))
+                .getHtml("https://hk.video.appledaily.com/video/videoplayer/" + ids[ids.length - 2] + AppleDailyClient.SLASH + category + AppleDailyClient.SLASH + category + AppleDailyClient.SLASH + ids[ids.length - 1] + AppleDailyClient.SLASH + videoId + "/0/0/0?ts=" + String.valueOf(System.currentTimeMillis() / 1000L))
                 .compose(RxUtils.applyObservableBackgroundSchedulers())
                 .map(html -> new JSONArray(StringUtils.substringBetween(html, "window.videoPlaylistOriginal = ", "];") + "]"))
                 .blockingSingle();
@@ -175,7 +175,7 @@ final class AppleDailyClient extends Client {
 
                     if (videoId.equals(item.getString("video_id"))) return new Video(item.getString("video"), item.getString("image_zoom"));
                 } catch (final JSONException e) {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
                 }
             }
         }

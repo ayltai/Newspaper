@@ -19,7 +19,7 @@ import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.view.HistoricalItemListPresenter;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 public final class HistoricalNewsView extends NewsView {
     public HistoricalNewsView(@NonNull final Context context) {
@@ -47,9 +47,19 @@ public final class HistoricalNewsView extends NewsView {
 
                 @Override
                 protected int getLoadingViewId() {
-                        return 0;
-                    }
+                    return 0;
                 }
+
+                @Override
+                protected int getEmptyTitle() {
+                    return R.string.empty_history_title;
+                }
+
+                @Override
+                protected int getEmptyDescription() {
+                    return R.string.empty_history_description;
+                }
+            }
             : new CompactItemListView(this.getContext()) {
                 @Override
                 protected int getLayoutId() {
@@ -60,19 +70,29 @@ public final class HistoricalNewsView extends NewsView {
                 protected int getLoadingViewId() {
                     return 0;
                 }
+
+                @Override
+                protected int getEmptyTitle() {
+                    return R.string.empty_history_title;
+                }
+
+                @Override
+                protected int getEmptyDescription() {
+                    return R.string.empty_history_description;
+                }
             };
 
         view.attachments().subscribe(
             isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
             error -> {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
             }
         );
 
         view.detachments().subscribe(
             irrelevant -> presenter.onViewDetached(),
             error -> {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
             }
         );
 

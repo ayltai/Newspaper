@@ -22,7 +22,7 @@ abstract class FileDataSubscriber extends BaseDataSubscriber<CloseableReference<
 
     private volatile boolean isFinished;
 
-    protected FileDataSubscriber(@NonNull final Context context) {
+    FileDataSubscriber(@NonNull final Context context) {
         this.context = context;
     }
 

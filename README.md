@@ -1,7 +1,7 @@
 Newspaper
 =========
 
-[![Release](https://img.shields.io/github/release/ayltai/Newspaper.svg?label=release&maxAge=1800)](https://1196-77390316-gh.circle-artifacts.com/0/apk/release/mobile-release.apk) [![Build Status](https://circleci.com/gh/ayltai/Newspaper.svg?style=shield)](https://circleci.com/gh/ayltai/Newspaper) [![Code Quality](https://api.codacy.com/project/badge/Grade/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Grade) [![Code Coverage](https://api.codacy.com/project/badge/Coverage/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Coverage) [![Code Coverage](https://codecov.io/gh/ayltai/Newspaper/branch/master/graph/badge.svg)](https://codecov.io/gh/ayltai/Newspaper) [![Android API](https://img.shields.io/badge/API-16%2B-blue.svg?style=flat&label=API&maxAge=300)](https://www.android.com/history/) [![License](https://img.shields.io/badge/License-apache%202.0-blue.svg?label=license&maxAge=1800)](https://github.com/ayltai/Newspaper/blob/master/LICENSE)
+[![Release](https://img.shields.io/github/release/ayltai/Newspaper.svg?label=release&maxAge=1800)](https://1244-77390316-gh.circle-artifacts.com/0/apk/release/mobile-release.apk) [![Build Status](https://circleci.com/gh/ayltai/Newspaper.svg?style=shield)](https://circleci.com/gh/ayltai/Newspaper) [![Code Quality](https://api.codacy.com/project/badge/Grade/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Grade) [![Code Coverage](https://api.codacy.com/project/badge/Coverage/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Coverage) [![Code Coverage](https://codecov.io/gh/ayltai/Newspaper/branch/master/graph/badge.svg)](https://codecov.io/gh/ayltai/Newspaper) [![Android API](https://img.shields.io/badge/API-16%2B-blue.svg?style=flat&label=API&maxAge=300)](https://www.android.com/history/) [![License](https://img.shields.io/badge/License-apache%202.0-blue.svg?label=license&maxAge=1800)](https://github.com/ayltai/Newspaper/blob/master/LICENSE)
 
 An aggregated news app containing news from 10+ local news publishers in Hong Kong. Made with ❤
 
@@ -32,7 +32,7 @@ An aggregated news app containing news from 10+ local news publishers in Hong Ko
 This app supports Android 4.1 Jelly Bean (API 16) or later.
 
 ## Acknowledgements
-This app is made with the support of open source software:
+This app is made with the support of open source projects:
 
 * [Flow](https://github.com/square/flow)
 * [Realm](https://realm.io/news/realm-for-android)
@@ -45,12 +45,9 @@ This app is made with the support of open source software:
 * [PanoramaImageView](https://github.com/gjiazhe/PanoramaImageView)
 * [ExoPlayer](https://github.com/google/ExoPlayer)
 * [SmallBang](https://github.com/hanks-zyh/SmallBang)
-* [Sequent](https://github.com/fujiyuu75/Sequent)
 * [OkHttp](https://github.com/square/okhttp)
 * [BottomBar](https://github.com/roughike/BottomBar)
 * [FlowLayout](https://github.com/nex3z/FlowLayout)
-* [Retrolambda](https://github.com/orfjackal/retrolambda)
-* [Gradle Retrolambda Plugin](https://github.com/evant/gradle-retrolambda)
 * [RxJava](https://github.com/ReactiveX/RxJava)
 * [RxAndroid](https://github.com/ReactiveX/RxAndroid)
 * [RxBinding](https://github.com/JakeWharton/RxBinding)
@@ -65,17 +62,14 @@ This app is made with the support of open source software:
 * [Robolectric](http://robolectric.org)
 * [LeakCanary](https://github.com/square/leakcanary)
 
-… and closed source software:
+… and closed source services:
 
 * [Google Mobile Vision](https://developers.google.com/vision/face-detection-concepts)
-* [Firebase Remote Config](https://firebase.google.com/docs/remote-config)
-
-… and free cloud services:
-
-* [CircleCI](https://circleci.com)
-* [Firebase Test Lab](https://firebase.google.com/docs/test-lab)
 * [Firebase Analytics](https://firebase.google.com/docs/analytics)
+* [Firebase Remote Config](https://firebase.google.com/docs/remote-config)
+* [Firebase Performance Monitoring](https://firebase.google.com/docs/perf-mon)
+* [Firebase Test Lab](https://firebase.google.com/docs/test-lab)
+* [CircleCI](https://circleci.com)
 * [Fabric Answers](https://answers.io)
 * [Fabric Crashlytics](https://fabric.io/kits/android/crashlytics)
 * [Instabug](https://instabug.com)
-* [Mixpanel](https://mixpanel.com)

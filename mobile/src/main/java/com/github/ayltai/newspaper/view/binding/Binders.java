@@ -7,15 +7,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
-public final class ViewBinderUtils {
-    private ViewBinderUtils() {
+public final class Binders {
+    private Binders() {
     }
 
     @NonNull
-    public static <M, V> Collection<Pair<PartBinderFactory<M, V>, Binder<V>>> createViewBinders(@NonNull final Iterable<M> models, @NonNull final Iterable<FullBinderFactory<M>> factories) {
+    public static <M, V> Collection<Pair<PartBinderFactory<M, V>, Binder<V>>> createBinders(@NonNull final Iterable<M> models, @NonNull final Iterable<FullBinderFactory<M>> factories) {
         final Collection<Pair<PartBinderFactory<M, V>, Binder<V>>> list = new ArrayList<>();
 
-        for (final M model : models) list.addAll(ViewBinderUtils.create(model, ViewBinderUtils.simplify(model, factories)));
+        for (final M model : models) list.addAll(Binders.create(model, Binders.simplify(model, factories)));
 
         return list;
     }
@@ -23,7 +23,7 @@ public final class ViewBinderUtils {
     private static <M, V> Iterable<PartBinderFactory<M, V>> simplify(@Nullable final M model, @NonNull final Iterable<FullBinderFactory<M>> factories) {
         final Collection<PartBinderFactory<M, V>> list = new ArrayList<>();
 
-        for (final BinderFactory<M> factory : factories) list.addAll(ViewBinderUtils.simplify(model, factory));
+        for (final BinderFactory<M> factory : factories) list.addAll(Binders.simplify(model, factory));
 
         return list;
     }
@@ -33,7 +33,7 @@ public final class ViewBinderUtils {
 
         if (factory.isNeeded(model)) {
             if (factory instanceof FullBinderFactory) {
-                for (final BinderFactory<M> child : ((FullBinderFactory<M>)factory).getParts(model)) list.addAll(ViewBinderUtils.simplify(model, child));
+                for (final BinderFactory<M> child : ((FullBinderFactory<M>)factory).getParts(model)) list.addAll(Binders.simplify(model, child));
             } else {
                 list.add((PartBinderFactory<M, V>)factory);
             }

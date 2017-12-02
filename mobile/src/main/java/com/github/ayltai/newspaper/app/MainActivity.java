@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FrameMetricsAggregator;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +28,8 @@ import com.github.ayltai.newspaper.media.FaceCenterFinder;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.view.RxFlow;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.instabug.library.Instabug;
 import com.instabug.library.InstabugColorTheme;
@@ -45,8 +47,8 @@ public final class MainActivity extends AppCompatActivity {
 
     @Inject UserConfig userConfig;
 
-    private FlowController controller;
-    private Realm          realm;
+    private RxFlow flow;
+    private Realm  realm;
 
     //region Performance monitoring
 
@@ -55,6 +57,7 @@ public final class MainActivity extends AppCompatActivity {
 
     //endregion
 
+    @CallSuper
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         this.setContentView(R.layout.activity_main);
@@ -70,7 +73,7 @@ public final class MainActivity extends AppCompatActivity {
 
         this.setTheme(this.userConfig.getTheme() == Constants.THEME_LIGHT ? R.style.AppTheme_Light : R.style.AppTheme_Dark);
 
-        if (!TestUtils.isRunningUnitTest()) this.initInstabug();
+        if (!DevUtils.isRunningUnitTest()) this.initInstabug();
 
         Single.<Realm>create(emitter -> emitter.onSuccess(ComponentFactory.getInstance()
             .getDataComponent(this)
@@ -94,7 +97,7 @@ public final class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (TestUtils.isLoggable()) {
+        if (DevUtils.isLoggable()) {
             this.trace      = FirebasePerformance.getInstance().newTrace(this.getClass().getSimpleName());
             this.aggregator = new FrameMetricsAggregator(FrameMetricsAggregator.TOTAL_DURATION);
             this.aggregator.add(this);
@@ -105,7 +108,7 @@ public final class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if (TestUtils.isLoggable()) {
+        if (DevUtils.isLoggable()) {
             try {
                 final SparseIntArray totalDurations = this.aggregator.getMetrics()[FrameMetricsAggregator.TOTAL_INDEX];
 
@@ -115,7 +118,7 @@ public final class MainActivity extends AppCompatActivity {
                     if (totalDurations.get(i) > Constants.DURATION_FROZEN_FRAME) this.trace.incrementCounter("frozen_frames");
                 }
             } catch (final NullPointerException e) {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
 
             this.trace.stop();
@@ -126,8 +129,8 @@ public final class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        this.controller.onDestroy();
-        this.controller = null;
+        this.flow.onDestroy();
+        this.flow = null;
 
         if (this.isFinishing()) {
             if (this.realm != null) Single.<Irrelevant>create(
@@ -147,9 +150,9 @@ public final class MainActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(final Context newBase) {
-        if (this.controller == null) this.controller = new FlowController(this);
+        if (this.flow == null) this.flow = new MainFlow(this);
 
-        super.attachBaseContext(this.controller.attachNewBase(ViewPumpContextWrapper.wrap(newBase)));
+        super.attachBaseContext(this.flow.attachNewBase(ViewPumpContextWrapper.wrap(newBase)));
     }
 
     @Override
@@ -165,7 +168,7 @@ public final class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!this.controller.onBackPressed()) super.onBackPressed();
+        if (!this.flow.onBackPressed()) super.onBackPressed();
     }
 
     @Override

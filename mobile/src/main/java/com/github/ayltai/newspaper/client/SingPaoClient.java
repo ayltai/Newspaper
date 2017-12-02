@@ -22,7 +22,7 @@ import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -77,14 +77,14 @@ final class SingPaoClient extends Client {
 
                             items.add(item);
                         } catch (final ParseException e) {
-                            if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), e.getMessage(), e);
+                            if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), e.getMessage(), e);
                         }
                     }
 
                     if (!emitter.isDisposed()) emitter.onSuccess(this.filter(items));
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
 
                     if (!emitter.isDisposed()) emitter.onSuccess(Collections.emptyList());
                 }
@@ -96,7 +96,7 @@ final class SingPaoClient extends Client {
     @Override
     public Single<NewsItem> updateItem(@NonNull final NewsItem item) {
         return Single.create(emitter -> {
-            if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), item.getLink());
+            if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), item.getLink());
 
             this.apiService
                 .getHtml(item.getLink())
@@ -132,7 +132,7 @@ final class SingPaoClient extends Client {
                         if (!emitter.isDisposed()) emitter.onSuccess(item);
                     },
                     error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
                         if (!emitter.isDisposed()) emitter.onError(error);
                     }

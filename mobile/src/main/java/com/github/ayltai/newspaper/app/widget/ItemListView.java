@@ -11,6 +11,7 @@ import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Filterable;
@@ -37,7 +38,6 @@ public abstract class ItemListView extends ListView<Item> implements ListPresent
 
     protected ItemListView(@NonNull final Context context) {
         super(context);
-        this.init();
     }
 
     //region Search properties
@@ -55,6 +55,8 @@ public abstract class ItemListView extends ListView<Item> implements ListPresent
     }
 
     //endregion
+
+    //region Properties
 
     @Override
     public boolean isDisposed() {
@@ -84,6 +86,20 @@ public abstract class ItemListView extends ListView<Item> implements ListPresent
     protected int getEmptyViewId() {
         return android.R.id.empty;
     }
+
+    @StringRes
+    @Override
+    protected int getEmptyTitle() {
+        return R.string.empty_news_title;
+    }
+
+    @StringRes
+    @Override
+    protected int getEmptyDescription() {
+        return R.string.empty_news_description;
+    }
+
+    //endregion
 
     //region Methods
 
@@ -150,9 +166,12 @@ public abstract class ItemListView extends ListView<Item> implements ListPresent
         if (view != null) this.manageDisposable(RxRecyclerView.scrollEvents(this.recyclerView).subscribe(event -> view.setTranslationY(view.getTranslationY() - event.dy())));
     }
 
-    private void init() {
-        ((TextView)this.emptyView.findViewById(R.id.empty_title)).setText(R.string.empty_news_title);
-        ((TextView)this.emptyView.findViewById(R.id.empty_description)).setText(R.string.empty_news_description);
+    @Override
+    protected void init() {
+        super.init();
+
+        if (this.getEmptyTitle() > 0) ((TextView)this.emptyView.findViewById(R.id.empty_title)).setText(this.getEmptyTitle());
+        if (this.getEmptyDescription() > 0) ((TextView)this.emptyView.findViewById(R.id.empty_description)).setText(this.getEmptyDescription());
 
         final LifecycleOwner owner = this.getLifecycleOwner();
         if (owner != null) owner.getLifecycle().addObserver(this);

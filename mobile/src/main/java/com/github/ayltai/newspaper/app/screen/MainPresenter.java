@@ -3,12 +3,11 @@ package com.github.ayltai.newspaper.app.screen;
 import android.support.annotation.NonNull;
 
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.view.ObservablePresenter;
 import com.github.ayltai.newspaper.view.Presenter;
 
 import io.reactivex.Flowable;
 
-public class MainPresenter extends ObservablePresenter<MainPresenter.View> {
+public class MainPresenter extends Presenter<MainPresenter.View> {
     public interface View extends Presenter.View {
         void up();
 

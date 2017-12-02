@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="@android:integer/config_shortAnimTime"
-    android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+    android:duration="@android:integer/config_mediumAnimTime"
+    android:interpolator="@android:interpolator/overshoot"
     android:startOffset="@android:integer/config_shortAnimTime">
     <scale
         android:fromXScale="0"

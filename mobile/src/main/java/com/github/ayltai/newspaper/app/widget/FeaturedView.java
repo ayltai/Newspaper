@@ -19,7 +19,7 @@ import com.github.ayltai.newspaper.media.FrescoImageLoader;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.jakewharton.rxbinding2.view.RxView;
 
 public final class FeaturedView extends ItemView {
@@ -60,7 +60,7 @@ public final class FeaturedView extends ItemView {
         if (images.isEmpty()) {
             this.image.setVisibility(View.GONE);
         } else {
-            if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Featured image = " + images.get(0).getUrl());
+            if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Featured image = " + images.get(0).getUrl());
 
             FrescoImageLoader.loadImage(images.get(0).getUrl())
                 .compose(RxUtils.applyMaybeBackgroundToMainSchedulers())
@@ -71,7 +71,7 @@ public final class FeaturedView extends ItemView {
                         if (!Animations.isEnabled()) this.image.pause();
                     },
                     error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                     }
                 );
 

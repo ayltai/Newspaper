@@ -12,7 +12,7 @@ import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.net.ApiService;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -57,7 +57,7 @@ public abstract class Client {
             final String title = item.getTitle();
             if (title != null) item.setTitle(title.replaceAll("<br>", "\n"));
 
-            if (TestUtils.isRunningUnitTest()) {
+            if (DevUtils.isRunningUnitTest()) {
                 filteredItems.add(item);
             } else if (item.getPublishDate() != null && item.getPublishDate().getTime() > System.currentTimeMillis() - Constants.HOUSEKEEP_TIME) {
                 filteredItems.add(item);

@@ -48,7 +48,7 @@ public final class IOUtils {
             try {
                 closeable.close();
             } catch (IOException e) {
-                if (TestUtils.isLoggable()) Log.e(IOUtils.TAG, e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(IOUtils.TAG, e.getMessage(), e);
             }
         }
     }

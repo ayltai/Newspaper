@@ -67,6 +67,7 @@ public final class OptionsAdapter extends PagerAdapter {
     }
 
     @SuppressWarnings("unchecked")
+    @NonNull
     @Override
     public Object instantiateItem(@NonNull final ViewGroup parent, final int position) {
         final OptionsPresenter      presenter;

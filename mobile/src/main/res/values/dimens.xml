@@ -6,9 +6,7 @@
     <dimen name="space16">16dp</dimen>
     <dimen name="space24">24dp</dimen>
     <dimen name="space32">32dp</dimen>
-    <dimen name="textHeading1">45sp</dimen>
-    <dimen name="textHeading2">34sp</dimen>
-    <dimen name="textHeading3">24sp</dimen>
+    <dimen name="textHeading">24sp</dimen>
     <dimen name="textNormal">16sp</dimen>
     <dimen name="textSmall">14sp</dimen>
     <dimen name="bottombar_height">56dp</dimen>
@@ -18,6 +16,7 @@
     <dimen name="fabMarginLarge">0dp</dimen>
     <dimen name="iconSmall">24dp</dimen>
     <dimen name="iconNormal">40dp</dimen>
+    <dimen name="iconLarge">56dp</dimen>
     <dimen name="cozy_card_radius">4dp</dimen>
     <dimen name="compact_card_radius">0dp</dimen>
     <dimen name="card_elevation">2dp</dimen>

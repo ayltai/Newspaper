@@ -25,15 +25,15 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.view.AboutPresenter;
-import com.github.ayltai.newspaper.app.view.NewsPresenterView;
+import com.github.ayltai.newspaper.app.view.BaseNewsView;
 import com.github.ayltai.newspaper.app.widget.AboutView;
 import com.github.ayltai.newspaper.app.widget.BookmarkedNewsView;
 import com.github.ayltai.newspaper.app.widget.HistoricalNewsView;
-import com.github.ayltai.newspaper.app.widget.PagerNewsView;
+import com.github.ayltai.newspaper.app.widget.PagedNewsView;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.widget.ObservableView;
+import com.github.ayltai.newspaper.widget.BaseView;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.roughike.bottombar.BottomBar;
@@ -44,7 +44,7 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public final class MainScreen extends ObservableView implements MainPresenter.View, OnTabSelectListener {
+public final class MainScreen extends BaseView implements MainPresenter.View, OnTabSelectListener {
     @AutoValue
     public abstract static class Key extends ClassKey implements Parcelable {
         @NonNull
@@ -71,7 +71,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
     private Toolbar              toolbar;
     private SearchView           searchView;
     private ViewGroup            content;
-    private NewsPresenterView    newsView;
+    private BaseNewsView newsView;
     private BottomBar            bottomBar;
     private FloatingActionButton upAction;
     private FloatingActionButton refreshAction;
@@ -85,8 +85,6 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
 
     public MainScreen(@NonNull final Context context) {
         super(context);
-
-        this.init();
     }
 
     //region Events
@@ -142,7 +140,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
             boolean isCached = false;
 
             if (this.cachedViews.containsKey(tabId)) {
-                this.newsView = (NewsPresenterView)this.cachedViews.get(tabId).get();
+                this.newsView = (BaseNewsView)this.cachedViews.get(tabId).get();
 
                 if (this.newsView != null) {
                     if (this.content.indexOfChild((View)this.newsView) < 0) {
@@ -166,7 +164,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
             this.toolbar.getMenu().findItem(R.id.action_search).setVisible(true);
 
             if (!isCached) {
-                this.newsView = tabId == R.id.action_news ? new PagerNewsView(this.getContext()) : tabId == R.id.action_history ? new HistoricalNewsView(this.getContext()) : new BookmarkedNewsView(this.getContext());
+                this.newsView = tabId == R.id.action_news ? new PagedNewsView(this.getContext()) : tabId == R.id.action_history ? new HistoricalNewsView(this.getContext()) : new BookmarkedNewsView(this.getContext());
                 this.content.addView((View)this.newsView);
 
                 this.cachedViews.put(tabId, new SoftReference<>((View)this.newsView));
@@ -278,7 +276,7 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
 
     @Override
     public void settings() {
-        if (this.newsView instanceof PagerNewsView) ((PagerNewsView)this.newsView).settings();
+        if (this.newsView instanceof PagedNewsView) ((PagedNewsView)this.newsView).settings();
 
         ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getContext())
@@ -298,7 +296,10 @@ public final class MainScreen extends ObservableView implements MainPresenter.Vi
                 .setElementName("FAB - Clear All"));
     }
 
-    private void init() {
+    @Override
+    protected void init() {
+        super.init();
+
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, true);
 
         this.content        = view.findViewById(R.id.content);

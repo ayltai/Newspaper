@@ -4,15 +4,20 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 
-import com.github.ayltai.newspaper.view.BindingPresenter;
+import com.github.ayltai.newspaper.view.ModelPresenter;
 import com.github.ayltai.newspaper.view.Presenter;
 
 import io.reactivex.disposables.Disposable;
 
-public abstract class PresentationBinder<M, V extends Presenter.View> extends BindingPresenter<M, V> implements Binder<V>, Disposable {
+public abstract class BindingPresenter<M, V extends Presenter.View> extends ModelPresenter<M, V> implements Binder<V>, Disposable {
     @Override
     public boolean isDisposed() {
         return false;
+    }
+
+    @Override
+    public void dispose() {
+        this.onViewDetached();
     }
 
     @UiThread
@@ -22,10 +27,5 @@ public abstract class PresentationBinder<M, V extends Presenter.View> extends Bi
         this.onViewDetached();
         this.onViewAttached(view, false);
         this.bindModel(this.getModel());
-    }
-
-    @Override
-    public void dispose() {
-        this.onViewDetached();
     }
 }

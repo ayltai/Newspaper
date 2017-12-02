@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
-public abstract class OptionsPresenter<M, V extends OptionsPresenter.View> extends ObservablePresenter<V> {
+public abstract class OptionsPresenter<M, V extends OptionsPresenter.View> extends Presenter<V> {
     public interface View extends Presenter.View {
         void addOption(@NonNull CharSequence text, boolean selected);
 

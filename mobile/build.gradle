@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'io.fabric'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
@@ -21,11 +20,11 @@ android {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
         targetSdkVersion 27
-        versionCode      25
-        versionName      '3.7.' + VERSION_REVISION + '-' + VERSION_HASH
+        versionCode      26
+        versionName      '3.8.' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
-        testInstrumentationRunnerArguments disableAnalytics: 'true'
+        testInstrumentationRunnerArguments disableAnalytics : 'true'
 
         vectorDrawables {
             useSupportLibrary true
@@ -65,8 +64,6 @@ android {
             returnDefaultValues     = true
 
             all {
-                jvmArgs '-noverify', '-Xmx1536m'
-
                 jacoco {
                     includeNoLocationClasses true
                 }
@@ -105,17 +102,16 @@ configurations {
 
 ext {
     multidexVersion       = '1.0.2'
-    supportLibraryVersion = '27.0.1'
+    supportLibraryVersion = '27.0.2'
     architectureVersion   = '1.0.0'
-    firebaseSdkVersion    = '11.6.0'
+    firebaseSdkVersion    = '11.6.2'
     daggerVersion         = '2.13'
     rxBindingVersion      = '2.0.0'
-    okhttpVersion         = '3.9.0'
+    okhttpVersion         = '3.9.1'
     retrofitVersion       = '2.3.0'
     frescoVersion         = '1.5.0'
-    bigImageViewerVersion = '1.4.2'
-    exoPlayerVersion      = 'r2.5.4'
-    autoValueVersion      = '1.5'
+    bigImageViewerVersion = '1.4.4'
+    exoPlayerVersion      = '2.6.0'
     leakCanaryVersion     = '1.5.4'
     robolectricVersion    = '3.5.1'
     powerMockVersion      = '2.0.0-beta.5'
@@ -157,7 +153,7 @@ dependencies {
     implementation "com.google.firebase:firebase-perf:$firebaseSdkVersion"
 
     // Reactive programming
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.6'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxBindingVersion"
     implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxBindingVersion"
@@ -186,6 +182,7 @@ dependencies {
     implementation "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
     implementation "com.github.piasy:BigImageViewer:$bigImageViewerVersion"
     implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
+    implementation "com.android.support:exifinterface:$supportLibraryVersion"
     implementation "com.google.android.gms:play-services-vision:$firebaseSdkVersion"
 
     // Video processing
@@ -194,33 +191,27 @@ dependencies {
 
     // UI components
     implementation 'com.squareup.flow:flow:1.0.0-alpha3'
-    implementation 'com.nex3z:flow-layout:1.0.0'
+    implementation 'com.nex3z:flow-layout:1.1.0'
     implementation 'com.roughike:bottom-bar:2.3.1'
 
     // Eye candies
     implementation 'jp.wasabeef:recyclerview-animators:2.2.7'
     implementation 'io.supercharge:shimmerlayout:1.0.2'
-    implementation ('com.fujiyuu75:sequent:0.2.1') {
-        exclude group : 'com.android.support'
-    }
-    implementation 'hanks.xyz:smallbang-library:0.1.2'
+    implementation 'pub.hanks:smallbang:1.2.2'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.gjiazhe:PanoramaImageView:1.0'
     implementation 'io.github.inflationx:calligraphy3:3.0.0'
 
     // Code generation tools
-    compileOnly         "com.jakewharton.auto.value:auto-value-annotations:$autoValueVersion"
-    annotationProcessor "com.google.auto.value:auto-value:$autoValueVersion"
+    compileOnly         "com.jakewharton.auto.value:auto-value-annotations:1.5"
+    annotationProcessor "com.google.auto.value:auto-value:1.5.2"
     annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
     implementation      'com.google.code.gson:gson:2.8.2'
 
     // Fabric
-    implementation ('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+    implementation ('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true
     }
-
-    // Analytics
-    implementation 'com.mixpanel.android:mixpanel-android:5.2.1'
 
     // Instabug
     implementation 'com.instabug.library:instabug:4.3.3'
@@ -231,7 +222,7 @@ dependencies {
     testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testImplementation 'org.mockito:mockito-core:2.12.0'
+    testImplementation 'org.mockito:mockito-core:2.12.2'
     testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
@@ -308,7 +299,6 @@ task jacocoTestReport(type : JacocoReport, dependsOn : 'testDebugUnitTest') {
             '**/*$ViewBinder*.*',
             '**/BuildConfig.*',
             '**/Manifest*.*',
-            '**/*$Lambda$*.*',
             '**/*RealmProxy.*',
             '**/*ColumnInfo.*',
             '**/*RealmModule*.*',

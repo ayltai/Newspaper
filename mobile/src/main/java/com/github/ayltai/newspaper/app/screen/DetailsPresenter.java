@@ -25,7 +25,7 @@ import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -57,29 +57,15 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
             super.bindModel(model);
         } else {
             if (model instanceof NewsItem) {
+                super.bindModel(model);
+
                 final NewsItem newsItem = (NewsItem)model;
+                this.updateItem(newsItem);
 
-                if (newsItem.isFullDescription()) {
+                if (!newsItem.isFullDescription()) {
                     super.bindModel(model);
 
-                    this.manageDisposable(DetailsPresenter.updateItem(this.getView().getContext(), newsItem)
-                        .compose(RxUtils.applySingleBackgroundToMainSchedulers())
-                        .subscribe(
-                            items -> {
-                            },
-                            error -> {
-                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                            }));
-                } else {
-                    super.bindModel(model);
-
-                    this.manageDisposable(DetailsPresenter.updateItem(this.getView().getContext(), newsItem)
-                        .compose(RxUtils.applySingleBackgroundToMainSchedulers())
-                        .subscribe(
-                            items -> { },
-                            error -> {
-                                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
-                            }));
+                    this.updateItem(newsItem);
 
                     if (NetworkUtils.isOnline(this.getView().getContext())) {
                         this.manageDisposable(Single.<NewsItem>create(
@@ -103,7 +89,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                             .subscribe(
                                 items -> super.bindModel(items.get(0)),
                                 error -> {
-                                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                                 }));
                     }
                 }
@@ -113,7 +99,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         }
     }
 
-    protected void onTextToSpeechClick() {
+    private void onTextToSpeechClick() {
         if (this.getView() != null) {
             this.getView().textToSpeech();
 
@@ -138,7 +124,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                     items -> {
                     },
                     error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                     }
                 ));
         }
@@ -148,7 +134,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         super.onBookmarkClick();
     }
 
-    protected void onViewOnWebClick() {
+    private void onViewOnWebClick() {
         if (this.getView() != null) {
             ComponentFactory.getInstance()
                 .getAnalyticsComponent(this.getView().getContext())
@@ -161,7 +147,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         }
     }
 
-    protected void onShareClick() {
+    private void onShareClick() {
         if (this.getView() != null) {
             ComponentFactory.getInstance()
                 .getAnalyticsComponent(this.getView().getContext())
@@ -195,6 +181,16 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         if (shareClicks != null) this.manageDisposable(shareClicks.subscribe(irrelevant -> this.onShareClick()));
 
         super.onViewAttached(view, isFirstTimeAttachment);
+    }
+
+    private void updateItem(@NonNull final NewsItem item) {
+        this.manageDisposable(DetailsPresenter.updateItem(this.getView().getContext(), item)
+            .compose(RxUtils.applySingleBackgroundToMainSchedulers())
+            .subscribe(
+                items -> { },
+                error -> {
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                }));
     }
 
     private static Single<List<NewsItem>> updateItem(@NonNull final Context context, @NonNull final NewsItem item) {

@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/space16"
                 android:gravity="center_horizontal"
-                android:textSize="@dimen/textHeading3"
+                android:textSize="@dimen/textHeading"
                 android:textColor="@color/textColorInverseLight"
                 tools:text="Nothing here" />
             <TextView

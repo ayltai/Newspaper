@@ -2,11 +2,11 @@ package com.github.ayltai.newspaper.analytics;
 
 import android.support.annotation.NonNull;
 
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 
 public abstract class EventLogger {
     public <T extends Event> void logEvent(@NonNull final T event) {
-        if (!TestUtils.isLoggable() && !TestUtils.isRunningTests()) {
+        if (!DevUtils.isLoggable() && !DevUtils.isRunningTests()) {
             if (event instanceof ClickEvent) {
                 this.logEvent((ClickEvent)event);
             } else if (event instanceof CountEvent) {

@@ -32,4 +32,8 @@
     <color name="emptyBackgroundBottomDark">#686868</color>
     <color name="shadowStart">#001f242c</color>
     <color name="shadowEnd">#ff1f242c</color>
+    <color name="refreshColor1">#D50000</color>
+    <color name="refreshColor2">#FFAB00</color>
+    <color name="refreshColor3">#64DD17</color>
+    <color name="refreshColor4">#304FFE</color>
 </resources>

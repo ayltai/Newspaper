@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.speech;
+package com.github.ayltai.newspaper.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +16,6 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import com.google.auto.value.AutoValue;
-
-import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.Single;
 import rx.functions.Action1;
@@ -116,12 +112,12 @@ public abstract class SimpleTextToSpeech {
         return Single.create(emitter -> this.tts = new TextToSpeech(this.activity, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 if (!this.initIfLocaleIsAvailable() && !this.initIfLocaleIsMissing()) {
-                    if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS locale not supported");
+                    if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS locale not supported");
 
                     if (this.getOnNotSupported() != null) this.getOnNotSupported().call(Irrelevant.INSTANCE);
                 }
             } else {
-                if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS initialization error " + status);
+                if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS initialization error " + status);
 
                 if (this.getOnInitError() != null) this.getOnInitError().call(status);
             }
@@ -150,12 +146,12 @@ public abstract class SimpleTextToSpeech {
 
                     @Override
                     public void onError(final String utteranceId) {
-                        if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS utterance error for utterance ID " + utteranceId);
+                        if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS utterance error for utterance ID " + utteranceId);
                     }
 
                     @Override
                     public void onError(final String utteranceId, final int errorCode) {
-                        if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS utterance error " + errorCode + " for utterance ID " + utteranceId);
+                        if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS utterance error " + errorCode + " for utterance ID " + utteranceId);
                     }
                 });
 
@@ -178,7 +174,7 @@ public abstract class SimpleTextToSpeech {
             }
 
             if (availability == TextToSpeech.LANG_MISSING_DATA) {
-                if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS missing locale data");
+                if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS missing locale data");
 
                 this.activity.startActivity(new Intent().setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA));
 

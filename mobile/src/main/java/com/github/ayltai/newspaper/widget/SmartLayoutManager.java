@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-class SmartLayoutManager extends LinearLayoutManager {
+final class SmartLayoutManager extends LinearLayoutManager {
     SmartLayoutManager(final Context context) {
         super(context);
     }

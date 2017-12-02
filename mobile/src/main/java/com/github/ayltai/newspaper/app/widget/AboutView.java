@@ -21,8 +21,8 @@ import com.github.ayltai.newspaper.app.view.AboutPresenter;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.util.TestUtils;
-import com.github.ayltai.newspaper.widget.ObservableView;
+import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.widget.BaseView;
 import com.instabug.library.Instabug;
 import com.jakewharton.rxbinding2.view.RxView;
 
@@ -30,7 +30,7 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public final class AboutView extends ObservableView implements AboutPresenter.View {
+public final class AboutView extends BaseView implements AboutPresenter.View {
     //region Subscriptions
 
     private final FlowableProcessor<Irrelevant> visitActions   = PublishProcessor.create();
@@ -55,7 +55,6 @@ public final class AboutView extends ObservableView implements AboutPresenter.Vi
 
     public AboutView(@NonNull final Context context) {
         super(context);
-        this.init();
     }
 
     //region Properties
@@ -116,7 +115,7 @@ public final class AboutView extends ObservableView implements AboutPresenter.Vi
         try {
             Instabug.invoke();
         } catch (final IllegalStateException e) {
-            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
 
             this.openUrl(url);
         }
@@ -153,7 +152,10 @@ public final class AboutView extends ObservableView implements AboutPresenter.Vi
         this.manageDisposable(RxView.clicks(this.reportAction).subscribe(irrelevant -> this.reportActions.onNext(Irrelevant.INSTANCE)));
     }
 
-    private void init() {
+    @Override
+    protected void init() {
+        super.init();
+
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_about, this, true);
 
         this.container     = view.findViewById(R.id.container);
@@ -172,7 +174,7 @@ public final class AboutView extends ObservableView implements AboutPresenter.Vi
                 .build()
                 .launchUrl(this.getContext(), Uri.parse(url));
         } catch (final ActivityNotFoundException e) {
-            if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), e.getMessage(), e);
+            if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), e.getMessage(), e);
 
             final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             if (this.getContext().getPackageManager().resolveActivity(intent, 0) != null) this.getContext().startActivity(intent);

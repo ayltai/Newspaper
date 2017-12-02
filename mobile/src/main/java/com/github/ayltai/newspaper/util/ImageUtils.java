@@ -28,24 +28,24 @@ public final class ImageUtils {
                     .subscribe(
                         center -> image.getSSIV().setScaleAndCenter(image.getSSIV().getScale(), center),
                         error -> {
-                            if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                         }
                     );
             }
 
             @Override
             public void onPreviewLoadError(@NonNull final Exception e) {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
 
             @Override
             public void onImageLoadError(@NonNull final Exception e) {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
 
             @Override
             public void onTileLoadError(@NonNull final Exception e) {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
             }
         });
     }

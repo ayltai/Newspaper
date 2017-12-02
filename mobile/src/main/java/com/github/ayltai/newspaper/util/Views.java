@@ -8,13 +8,13 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-public final class ViewUtils {
-    private ViewUtils() {
+public final class Views {
+    private Views() {
     }
 
     @Nullable
     public static Activity getActivity(@NonNull final View view) {
-        return ViewUtils.getActivity(view.getContext());
+        return Views.getActivity(view.getContext());
     }
 
     @Nullable
@@ -22,7 +22,7 @@ public final class ViewUtils {
         if (context instanceof ContextWrapper) {
             if (context instanceof Activity) return (Activity)context;
 
-            return ViewUtils.getActivity(((ContextWrapper)context).getBaseContext());
+            return Views.getActivity(((ContextWrapper)context).getBaseContext());
         }
 
         return null;
