@@ -52,7 +52,7 @@ public final class HistoricalNewsTest extends BaseTest {
         // Checks that the empty placeholder is displayed
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.empty_title),
-            ViewMatchers.withText("Nothing here"),
+            ViewMatchers.withText("You haven't read any news yet"),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
