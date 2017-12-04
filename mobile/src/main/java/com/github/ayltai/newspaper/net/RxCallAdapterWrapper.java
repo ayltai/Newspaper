@@ -38,7 +38,7 @@ final class RxCallAdapterWrapper implements CallAdapter<Observable<?>, Observabl
             public Observable apply(@NonNull final Throwable throwable) {
                 if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + call.request().url().toString());
 
-                return Observable.error(throwable);
+                return Observable.empty();
             }
         });
     }
