@@ -104,6 +104,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     private final View                    toolbarBackground;
     private final ViewGroup               imageContainer;
     private final ViewGroup               container;
+    private final View                    progress;
     private final SimpleDraweeView        avatar;
     private final TextView                source;
     private final TextView                publishDate;
@@ -123,20 +124,20 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     private GyroscopeObserver  gyroscopeObserver;
     private SmallBangView      smallBang;
     private boolean            isPanoramaEnabled;
-    private boolean            hasAnimated;
     private boolean            isTtsActive;
     private SimpleTextToSpeech tts;
 
     public DetailsScreen(@NonNull final Context context) {
         super(context);
 
-        final View view = LayoutInflater.from(context).inflate(R.layout.screen_news_details, this, true);
+        final View view = LayoutInflater.from(context).inflate(R.layout.screen_details, this, true);
 
         this.appBarLayout            = view.findViewById(R.id.appBarLayout);
         this.collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbarLayout);
         this.toolbar                 = view.findViewById(R.id.toolbar);
         this.imageContainer          = view.findViewById(R.id.image_container);
         this.container               = view.findViewById(R.id.container);
+        this.progress                = view.findViewById(R.id.progress);
         this.avatar                  = view.findViewById(R.id.avatar);
         this.source                  = view.findViewById(R.id.source);
         this.publishDate             = view.findViewById(R.id.publish_date);
@@ -300,17 +301,16 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
             this.videoContainer.addView(this.videoView);
         }
-
-        if (Animations.isEnabled() && !this.hasAnimated) {
-            this.hasAnimated = true;
-
-            Animations.animateViewGroup(this.container);
-        }
     }
 
     //endregion
 
     //region Methods
+
+    @Override
+    public void showProgress(final boolean show) {
+        this.progress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+    }
 
     @Override
     public void textToSpeech() {
@@ -438,8 +438,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     @CallSuper
     @Override
     public void onAttachedToWindow() {
-        this.hasAnimated = false;
-
         if (this.isPanoramaEnabled) {
             this.gyroscopeObserver.register(this.getContext());
             this.panoramaImageView.setImageDrawable(null);

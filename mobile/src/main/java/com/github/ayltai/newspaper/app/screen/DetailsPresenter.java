@@ -41,6 +41,8 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         @Nullable
         Flowable<Irrelevant> shareClicks();
 
+        void showProgress(boolean show);
+
         void textToSpeech();
 
         void viewOnWeb(@NonNull String url);
@@ -63,6 +65,8 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                 this.updateItem(newsItem);
 
                 if (!newsItem.isFullDescription()) {
+                    this.getView().showProgress(true);
+
                     super.bindModel(model);
 
                     this.updateItem(newsItem);
@@ -87,7 +91,11 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                             .compose(RxUtils.applySingleBackgroundSchedulers())
                             .flatMap(item -> DetailsPresenter.updateItem(this.getView().getContext(), item)).compose(RxUtils.applySingleBackgroundToMainSchedulers())
                             .subscribe(
-                                items -> super.bindModel(items.get(0)),
+                                items -> {
+                                    super.bindModel(items.get(0));
+
+                                    this.getView().showProgress(false);
+                                },
                                 error -> {
                                     if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
                                 }));

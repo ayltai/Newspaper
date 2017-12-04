@@ -16,6 +16,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+                android:id="@+id/progress"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:indeterminate="true"
+                android:visibility="invisible"
+                app:spb_colors="@array/progress_colors"
+                app:spb_interpolator="spb_interpolator_decelerate"
+                app:spb_sections_count="4"
+                app:spb_speed="2"
+                app:spb_stroke_separator_length="0dp" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
