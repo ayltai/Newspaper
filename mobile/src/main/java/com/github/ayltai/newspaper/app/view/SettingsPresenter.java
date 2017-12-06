@@ -10,14 +10,15 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.analytics.EventLogger;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.UserConfig;
-import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.view.OptionsPresenter;
 
 import io.reactivex.Single;
@@ -89,7 +90,7 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
                     }
                 ),
             error -> {
-                if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
             }
         ));
 
@@ -104,7 +105,7 @@ public class SettingsPresenter extends OptionsPresenter<Boolean, OptionsPresente
                         view.addOption(view.getContext().getText(R.string.pref_panorama), settings.get(SettingsPresenter.INDEX_PANORAMA));
                     },
                     error -> {
-                        if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                     }
                 );
         }

@@ -10,11 +10,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.ArraySet;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Source;
-import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.view.OptionsPresenter;
 
 import io.reactivex.Single;
@@ -66,7 +67,7 @@ public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.
                 if (userConfig != null) userConfig.setSources(sources);
             },
             error -> {
-                if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
             }
         ));
 
@@ -87,7 +88,7 @@ public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.
                         }
                     },
                     error -> {
-                        if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                     }
                 );
         }

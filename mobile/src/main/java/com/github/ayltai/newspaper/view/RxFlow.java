@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.DevUtils;
@@ -163,14 +164,14 @@ public abstract class RxFlow {
             if (view.attachments() != null) this.manageDisposable(view.attachments(), view.attachments().subscribe(
                 isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                 }
             ));
 
             if (view.detachments() != null) this.manageDisposable(view.detachments(), view.detachments().subscribe(
                 irrelevant -> presenter.onViewDetached(),
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                 }
             ));
         }

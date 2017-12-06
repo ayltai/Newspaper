@@ -15,13 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.view.AboutPresenter;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
-import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.BaseView;
 import com.instabug.library.Instabug;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -115,7 +116,7 @@ public final class AboutView extends BaseView implements AboutPresenter.View {
         try {
             Instabug.invoke();
         } catch (final IllegalStateException e) {
-            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
 
             this.openUrl(url);
         }
@@ -174,7 +175,7 @@ public final class AboutView extends BaseView implements AboutPresenter.View {
                 .build()
                 .launchUrl(this.getContext(), Uri.parse(url));
         } catch (final ActivityNotFoundException e) {
-            if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), e.getMessage(), e);
+            if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
 
             final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             if (this.getContext().getPackageManager().resolveActivity(intent, 0) != null) this.getContext().startActivity(intent);

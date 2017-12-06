@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 import com.google.auto.value.AutoValue;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
@@ -46,15 +47,15 @@ import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.widget.ItemView;
 import com.github.ayltai.newspaper.app.widget.VideoView;
 import com.github.ayltai.newspaper.media.FrescoImageLoader;
-import com.github.ayltai.newspaper.util.SimpleTextToSpeech;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
+import com.github.ayltai.newspaper.util.SimpleTextToSpeech;
 import com.github.ayltai.newspaper.util.SnackbarUtils;
-import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Views;
 import com.github.piasy.biv.view.BigImageView;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
@@ -495,7 +496,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             .subscribe(
                 imageView::setImageBitmap,
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                 }
             );
         imageView.setOnClickListener(view -> this.imageClicks.onNext(image));

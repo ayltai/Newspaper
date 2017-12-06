@@ -8,10 +8,11 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.data.DataManager;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -88,7 +89,7 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
                 .subscribe(
                     this::bindModel,
                     error -> {
-                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                     }));
         } else {
             view.scrollTo(this.scrollPosition);
@@ -114,12 +115,12 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
                     .subscribe(
                         this::bindModel,
                         error -> {
-                            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                         }
                     );
             },
             error -> {
-                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
             }
         ));
     }
@@ -146,11 +147,11 @@ public abstract class ListPresenter<M, V extends ListPresenter.View<M>> extends 
                             this.bindModel(models);
                         },
                         error -> {
-                            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                         }));
             },
             error -> {
-                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
             }
         ));
     }

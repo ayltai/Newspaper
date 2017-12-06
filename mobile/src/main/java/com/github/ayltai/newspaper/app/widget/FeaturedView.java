@@ -12,14 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.media.FrescoImageLoader;
 import com.github.ayltai.newspaper.util.Animations;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.DevUtils;
 import com.jakewharton.rxbinding2.view.RxView;
 
 public final class FeaturedView extends ItemView {
@@ -71,7 +72,7 @@ public final class FeaturedView extends ItemView {
                         if (!Animations.isEnabled()) this.image.pause();
                     },
                     error -> {
-                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                     }
                 );
 

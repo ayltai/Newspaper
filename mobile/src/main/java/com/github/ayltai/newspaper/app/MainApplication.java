@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -18,14 +19,15 @@ import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
+import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.util.ThreadPolicyFactory;
-import com.github.ayltai.newspaper.util.VmPolicyFactory;
 import com.github.ayltai.newspaper.media.DaggerImageComponent;
 import com.github.ayltai.newspaper.media.ImageModule;
 import com.github.ayltai.newspaper.net.DaggerHttpComponent;
 import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.ThreadPolicyFactory;
+import com.github.ayltai.newspaper.util.VmPolicyFactory;
 import com.github.piasy.biv.BigImageViewer;
 import com.instabug.library.Feature;
 import com.instabug.library.Instabug;
@@ -58,6 +60,8 @@ public final class MainApplication extends BaseApplication {
                         .build())
                     .build());
         }
+
+        RxJava2Debug.enableRxJava2AssemblyTracking(new String[] { BuildConfig.APPLICATION_ID });
 
         //noinspection CheckStyle
         try {

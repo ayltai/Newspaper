@@ -8,8 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
-import com.github.ayltai.newspaper.util.RxUtils;
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.RxUtils;
 
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -39,7 +40,7 @@ public abstract class RxLoader<D> extends Loader<D> {
             .subscribe(
                 this::deliverResult,
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                 }));
     }
 

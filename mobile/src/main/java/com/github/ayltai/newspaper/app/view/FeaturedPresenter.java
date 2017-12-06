@@ -12,13 +12,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.widget.FeaturedView;
 import com.github.ayltai.newspaper.media.DaggerImageComponent;
 import com.github.ayltai.newspaper.media.ImageModule;
-import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.Views;
 import com.github.piasy.biv.loader.ImageLoader;
 
@@ -71,7 +72,7 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
 
                             @Override
                             public void onFail(final Exception error) {
-                                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                             }
                         });
 

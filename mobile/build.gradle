@@ -218,6 +218,7 @@ dependencies {
     implementation 'com.instabug.library:instabug:4.3.3'
 
     // Debugging
+    implementation        'com.akaita.java:rxjava2-debug:1.2.1'
     debugImplementation   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"

@@ -14,6 +14,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.Category;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
@@ -22,9 +23,9 @@ import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.RealmLoader;
 import com.github.ayltai.newspaper.net.NetworkUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
-import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -154,7 +155,7 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
                             .subscribe(
                                 e::onSuccess,
                                 error -> {
-                                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
 
                                     if (!e.isDisposed()) e.onError(error);
                                 }));
@@ -165,7 +166,7 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
                 .subscribe(
                     emitter::onNext,
                     error -> {
-                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                     }
                 ), BackpressureStrategy.LATEST);
         }
@@ -187,7 +188,7 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
                         // TODO: If the previous refresh timestamp is very old, wait for a longer time to refresh
                         .timeout(forceRefresh ? Constants.REFRESH_TIMEOUT : Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
                         .onErrorResumeNext(error -> {
-                            if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                            if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
 
                             return Single.just(Collections.emptyList());
                         })
