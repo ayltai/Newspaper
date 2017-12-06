@@ -37,6 +37,7 @@
                     android:layout_margin="@dimen/space16"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    tools:src="@tools:sample/avatars"
                     app:placeholderImage="?attr/placeholderImage"
                     app:fadeDuration="@android:integer/config_shortAnimTime" />
                 <TextView
@@ -46,7 +47,7 @@
                     android:layout_alignTop="@+id/avatar"
                     android:layout_alignWithParentIfMissing="true"
                     android:textIsSelectable="true"
-                    tools:text="Proin rutrum ipsum"
+                    tools:text="@tools:sample/cities"
                     style="@style/Source.Full" />
                 <TextView
                     android:id="@+id/publish_date"
@@ -56,7 +57,7 @@
                     android:layout_below="@+id/source"
                     android:layout_alignWithParentIfMissing="true"
                     android:textIsSelectable="true"
-                    tools:text="Phasellus at aliquam dolor"
+                    tools:text="@tools:sample/date/day_of_week"
                     style="@style/Subhead.Full" />
                 <ImageView
                     android:id="@+id/action_text_to_speech"
@@ -121,14 +122,14 @@
                     android:id="@+id/title"
                     android:layout_marginBottom="@dimen/space16"
                     android:textIsSelectable="true"
-                    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                    tools:text="@tools:sample/lorem"
                     style="@style/Title.Full" />
                 <TextView
                     android:id="@+id/description"
                     android:layout_marginBottom="@dimen/space16"
                     android:textIsSelectable="true"
                     android:autoLink="all"
-                    tools:text="Sed eu rhoncus enim, sit amet iaculis ante. Sed at finibus lectus, at consequat lacus. Etiam ipsum erat, facilisis vel sagittis sed, scelerisque ut eros. Praesent at mauris laoreet, imperdiet urna imperdiet, sollicitudin erat. Etiam iaculis mauris eu libero dignissim mattis mollis vitae enim. Quisque nec semper arcu. Ut lobortis, justo vitae finibus tempus, mauris elit fermentum mi, at cursus leo nisi et dui. Phasellus turpis diam, mollis at elementum aliquet, ullamcorper in metus. In lobortis scelerisque ante in mollis. Curabitur eget efficitur massa."
+                    tools:text="@tools:sample/lorem/random"
                     style="@style/Description.Full" />
                 <FrameLayout
                     android:id="@+id/video_container"
