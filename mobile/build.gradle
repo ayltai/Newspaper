@@ -15,7 +15,7 @@ String VERSION_HASH     = 'git rev-parse --short HEAD'.execute().text.trim()
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.2'
     defaultConfig {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
@@ -141,6 +141,7 @@ dependencies {
     annotationProcessor ("android.arch.lifecycle:compiler:$architectureVersion") {
         exclude group : 'com.android.support'
     }
+    implementation "android.arch.lifecycle:common-java8:$architectureVersion"
 
     // Android Support libraries
     implementation "com.android.support:cardview-v7:$supportLibraryVersion"
