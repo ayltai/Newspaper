@@ -23,8 +23,8 @@ import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.util.DevUtils;
 
 public final class BookmarkedNewsView extends NewsView {
-    public BookmarkedNewsView(@NonNull final Context context, @Nullable final String category, final boolean isHistorical, final boolean isBookmarked) {
-        super(context, category, isHistorical, isBookmarked);
+    public BookmarkedNewsView(@NonNull final Context context) {
+        super(context);
     }
 
     @NonNull
@@ -40,7 +40,7 @@ public final class BookmarkedNewsView extends NewsView {
         final ItemListPresenter presenter = new BookmarkedItemListPresenter(userConfig == null ? Collections.emptyList() : userConfig.getCategories());
 
         final ItemListView view = userConfig == null || userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY
-            ? new CozyItemListView(this.getContext(), this.category, this.isHistorical, this.isBookmarked) {
+            ? new CozyItemListView(this.getContext()) {
                 @Override
                 protected int getLayoutId() {
                     return R.layout.view_list_cozy_local;
@@ -61,7 +61,7 @@ public final class BookmarkedNewsView extends NewsView {
                     return R.string.empty_bookmark_description;
                 }
             }
-            : new CompactItemListView(this.getContext(), this.category, this.isHistorical, this.isBookmarked) {
+            : new CompactItemListView(this.getContext()) {
                 @Override
                 protected int getLayoutId() {
                     return R.layout.view_list_compact_local;

@@ -40,28 +40,9 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
     public static final class Builder {
         private final Collection<BinderFactory<Item>> factories = new ArrayList<>();
         private final Context                         context;
-        private final String                          category;
 
-        private boolean isHistorical;
-        private boolean isBookmarked;
-
-        public Builder(@NonNull final Context context, @NonNull final String category) {
-            this.context  = context;
-            this.category = category;
-        }
-
-        @NonNull
-        public ItemListAdapter.Builder setIsHistorical(final boolean isHistorical) {
-            this.isHistorical = isHistorical;
-
-            return this;
-        }
-
-        @NonNull
-        public ItemListAdapter.Builder setIsBookmarked(final boolean isBookmarked) {
-            this.isBookmarked = isBookmarked;
-
-            return this;
+        public Builder(@NonNull final Context context) {
+            this.context = context;
         }
 
         @NonNull
@@ -73,7 +54,7 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
 
         @NonNull
         public ItemListAdapter build() {
-            return new ItemListAdapter(this.context, this.category, this.isHistorical, this.isBookmarked, Collections.singletonList(new FullBinderFactory<Item>() {
+            return new ItemListAdapter(this.context, Collections.singletonList(new FullBinderFactory<Item>() {
                 @NonNull
                 @Override
                 public Collection<BinderFactory<Item>> getParts(@Nullable final Item model) {
@@ -171,21 +152,15 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
     //region Variables
 
     private final Context context;
-    private final String  category;
-    private final boolean isHistorical;
-    private final boolean isBookmarked;
 
     private Filter filter;
 
     //endregion
 
-    private ItemListAdapter(@NonNull final Context context, @NonNull final String category, final boolean isHistorical, final boolean isBookmarked, @NonNull final List<FullBinderFactory<Item>> factories) {
+    private ItemListAdapter(@NonNull final Context context, @NonNull final List<FullBinderFactory<Item>> factories) {
         super(factories);
 
-        this.context      = context;
-        this.category     = category;
-        this.isHistorical = isHistorical;
-        this.isBookmarked = isBookmarked;
+        this.context = context;
     }
 
     @NonNull
@@ -210,17 +185,6 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
             default:
                 throw new IllegalArgumentException("Unsupported view type: " + viewType);
         }
-    }
-
-    @Override
-    public void onBindViewHolder(final SimpleViewHolder<View> holder, final int position) {
-        final ItemPresenter presenter = (ItemPresenter)this.getBinder(position);
-        presenter.setCategory(this.category);
-        presenter.setIsHistorical(this.isHistorical);
-        presenter.setIsBookmarked(this.isBookmarked);
-        presenter.setItemPosition(((ItemPresenter)this.getBinder(0)).getModel() instanceof FeaturedItem ? position - 1 : position);
-
-        super.onBindViewHolder(holder, position);
     }
 
     @NonNull

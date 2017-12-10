@@ -30,10 +30,6 @@ import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView;
 import io.reactivex.disposables.Disposable;
 
 public abstract class ItemListView extends VerticalListView<Item> implements Disposable, LifecycleObserver {
-    protected final String  category;
-    protected final boolean isHistorical;
-    protected final boolean isBookmarked;
-
     //region Supports initial searching
 
     private List<String> categories;
@@ -42,12 +38,8 @@ public abstract class ItemListView extends VerticalListView<Item> implements Dis
 
     //endregion
 
-    protected ItemListView(@NonNull final Context context, @NonNull final String category, final boolean isHistorical, final boolean isBookmarked) {
+    protected ItemListView(@NonNull final Context context) {
         super(context);
-
-        this.category     = category;
-        this.isHistorical = isHistorical;
-        this.isBookmarked = isBookmarked;
 
         this.init();
     }

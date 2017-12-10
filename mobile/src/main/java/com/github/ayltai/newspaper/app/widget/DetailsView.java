@@ -80,8 +80,6 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
         }
     }
 
-    public static final int VIEW_TYPE = R.id.view_type_details;
-
     //region Subscriptions
 
     private final FlowableProcessor<Irrelevant> avatarClicks       = PublishProcessor.create();

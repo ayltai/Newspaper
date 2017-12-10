@@ -13,8 +13,8 @@ import com.github.ayltai.newspaper.app.view.binding.FeaturedBinderFactory;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
 public class CozyItemListView extends ItemListView {
-    public CozyItemListView(@NonNull final Context context, @NonNull final String category, final boolean isHistorical, final boolean isBookmarked) {
-        super(context, category, isHistorical, isBookmarked);
+    public CozyItemListView(@NonNull final Context context) {
+        super(context);
     }
 
     @LayoutRes
@@ -26,9 +26,7 @@ public class CozyItemListView extends ItemListView {
     @NonNull
     @Override
     protected UniversalAdapter<Item, ?, ?> createAdapter() {
-        final ItemListAdapter adapter = new ItemListAdapter.Builder(this.getContext(), this.category)
-            .setIsHistorical(this.isHistorical)
-            .setIsBookmarked(this.isBookmarked)
+        final ItemListAdapter adapter = new ItemListAdapter.Builder(this.getContext())
             .addBinderFactory(new FeaturedBinderFactory())
             .addBinderFactory(new CozyBinderFactory())
             .build();

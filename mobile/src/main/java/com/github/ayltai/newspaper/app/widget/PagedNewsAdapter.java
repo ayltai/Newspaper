@@ -148,7 +148,7 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
         final String            category   = this.categories.get(position);
         final List<String>      categories = new ArrayList<>(Category.fromDisplayName(category));
         final ItemListPresenter presenter  = new ItemListPresenter(categories);
-        final ItemListView      view       = this.userConfig == null || this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY ? new CozyItemListView(container.getContext(), category, false, false) : new CompactItemListView(container.getContext(), category, false, false);
+        final ItemListView      view       = this.userConfig == null || this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY ? new CozyItemListView(container.getContext()) : new CompactItemListView(container.getContext());
 
         if (this.disposables == null) this.disposables = new CompositeDisposable();
 

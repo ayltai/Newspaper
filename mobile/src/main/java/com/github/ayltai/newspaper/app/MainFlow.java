@@ -11,10 +11,8 @@ import android.view.animation.Animation;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.ViewEvent;
 import com.github.ayltai.newspaper.app.data.model.Item;
-import com.github.ayltai.newspaper.app.view.DetailsListPresenter;
 import com.github.ayltai.newspaper.app.view.DetailsPresenter;
 import com.github.ayltai.newspaper.app.view.MainPresenter;
-import com.github.ayltai.newspaper.app.widget.DetailsListView;
 import com.github.ayltai.newspaper.app.widget.DetailsView;
 import com.github.ayltai.newspaper.app.widget.MainView;
 import com.github.ayltai.newspaper.util.Animations;
@@ -77,24 +75,13 @@ final class MainFlow extends RxFlow {
             } else if (key instanceof DetailsView.Key) {
                 presenter = new DetailsPresenter();
                 view      = new DetailsView(this.getContext());
-            } else if (key instanceof DetailsListView.Key) {
-                presenter = new DetailsListPresenter();
-                view      = new DetailsListView(this.getContext());
             }
         }
 
         if (presenter != null && view != null) {
             presenter.onViewDetached();
 
-            if (key instanceof DetailsListView.Key) {
-                final DetailsListPresenter detailsListPresenter = ((DetailsListPresenter)presenter);
-                final DetailsListView.Key  detailsListViewKey   = (DetailsListView.Key)key;
-
-                detailsListPresenter.setCategory(detailsListViewKey.getCategory());
-                detailsListPresenter.setItemPosition(detailsListViewKey.getItemPosition());
-            } else if (key instanceof DetailsView.Key && presenter instanceof ModelPresenter) {
-                ((ModelPresenter)presenter).bindModel(((DetailsView.Key)key).getItem());
-            }
+            if (key instanceof DetailsView.Key && presenter instanceof ModelPresenter) ((ModelPresenter)presenter).bindModel(((DetailsView.Key)key).getItem());
         }
 
         return Pair.create(presenter, view);

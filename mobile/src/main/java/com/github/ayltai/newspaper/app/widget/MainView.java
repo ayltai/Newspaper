@@ -163,7 +163,7 @@ public final class MainView extends BaseView implements MainPresenter.View, OnTa
             this.toolbar.getMenu().findItem(R.id.action_search).setVisible(true);
 
             if (!isCached) {
-                this.newsView = tabId == R.id.action_news ? new PagedNewsView(this.getContext()) : tabId == R.id.action_history ? new HistoricalNewsView(this.getContext(), null, true, false) : new BookmarkedNewsView(this.getContext(), null, false, true);
+                this.newsView = tabId == R.id.action_news ? new PagedNewsView(this.getContext()) : tabId == R.id.action_history ? new HistoricalNewsView(this.getContext()) : new BookmarkedNewsView(this.getContext());
                 this.content.addView((View)this.newsView);
 
                 this.cachedViews.put(tabId, new SoftReference<>((View)this.newsView));
