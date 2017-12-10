@@ -20,9 +20,10 @@ import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.app.data.model.Video;
-import com.github.ayltai.newspaper.app.screen.DetailsScreen;
-import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.app.widget.DetailsListView;
+import com.github.ayltai.newspaper.app.widget.DetailsView;
 import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.binding.Binder;
 import com.github.ayltai.newspaper.view.binding.BindingPresenter;
@@ -93,7 +94,36 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
         Flowable<Irrelevant> videoClicks();
     }
 
+    //region Variables
+
+    private String  category;
+    private boolean isHistorical;
+    private boolean isBookmarked;
+    private int     itemPosition;
+
     private AppConfig appConfig;
+
+    //endregion
+
+    //region Properties
+
+    public void setCategory(@NonNull final String category) {
+        this.category = category;
+    }
+
+    public void setIsHistorical(final boolean isHistorical) {
+        this.isHistorical = isHistorical;
+    }
+
+    public void setIsBookmarked(final boolean isBookmarked) {
+        this.isBookmarked = isBookmarked;
+    }
+
+    public void setItemPosition(final int itemPosition) {
+        this.itemPosition = itemPosition;
+    }
+
+    //endregion
 
     @UiThread
     @Override
@@ -125,13 +155,16 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
             this.appConfig.setVideoPlaying(false);
             this.appConfig.setVideoSeekPosition(0);
 
-            if (item instanceof FeaturedItem) ComponentFactory.getInstance()
+            ComponentFactory.getInstance()
                 .getAnalyticsComponent(this.getView().getContext())
                 .eventLogger()
                 .logEvent(new ClickEvent()
-                    .setElementName("Featured"));
+                    .setElementName(item instanceof FeaturedItem ? "Featured" : "Non-featured"));
 
-            if (!DevUtils.isRunningUnitTest()) Flow.get(this.getView().getContext()).set(DetailsScreen.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem()));
+            if (!DevUtils.isRunningUnitTest()) {
+                if (item instanceof FeaturedItem) Flow.get(this.getView().getContext()).set(DetailsView.Key.create((NewsItem)((FeaturedItem)item).getItem()));
+                if (item instanceof NewsItem) Flow.get(this.getView().getContext()).set(DetailsListView.Key.create(this.category, this.isHistorical, this.isBookmarked, this.itemPosition));
+            }
         }
     }
 

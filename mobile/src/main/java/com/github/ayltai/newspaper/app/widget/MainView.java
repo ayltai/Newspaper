@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.app.screen;
+package com.github.ayltai.newspaper.app.widget;
 
 import java.lang.ref.SoftReference;
 import java.util.Map;
@@ -26,10 +26,7 @@ import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.view.AboutPresenter;
 import com.github.ayltai.newspaper.app.view.BaseNewsView;
-import com.github.ayltai.newspaper.app.widget.AboutView;
-import com.github.ayltai.newspaper.app.widget.BookmarkedNewsView;
-import com.github.ayltai.newspaper.app.widget.HistoricalNewsView;
-import com.github.ayltai.newspaper.app.widget.PagedNewsView;
+import com.github.ayltai.newspaper.app.view.MainPresenter;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
@@ -44,16 +41,16 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public final class MainScreen extends BaseView implements MainPresenter.View, OnTabSelectListener {
+public final class MainView extends BaseView implements MainPresenter.View, OnTabSelectListener {
     @AutoValue
     public abstract static class Key extends ClassKey implements Parcelable {
         @NonNull
-        static MainScreen.Key create() {
-            return new AutoValue_MainScreen_Key();
+        static MainView.Key create() {
+            return new AutoValue_MainView_Key();
         }
     }
 
-    public static final MainScreen.Key KEY = MainScreen.Key.create();
+    public static final MainView.Key KEY = MainView.Key.create();
 
     //region Subscriptions
 
@@ -83,8 +80,10 @@ public final class MainScreen extends BaseView implements MainPresenter.View, On
 
     private boolean isMoreActionsShown;
 
-    public MainScreen(@NonNull final Context context) {
+    public MainView(@NonNull final Context context) {
         super(context);
+
+        this.init();
     }
 
     //region Events
@@ -164,7 +163,7 @@ public final class MainScreen extends BaseView implements MainPresenter.View, On
             this.toolbar.getMenu().findItem(R.id.action_search).setVisible(true);
 
             if (!isCached) {
-                this.newsView = tabId == R.id.action_news ? new PagedNewsView(this.getContext()) : tabId == R.id.action_history ? new HistoricalNewsView(this.getContext()) : new BookmarkedNewsView(this.getContext());
+                this.newsView = tabId == R.id.action_news ? new PagedNewsView(this.getContext()) : tabId == R.id.action_history ? new HistoricalNewsView(this.getContext(), null, true, false) : new BookmarkedNewsView(this.getContext(), null, false, true);
                 this.content.addView((View)this.newsView);
 
                 this.cachedViews.put(tabId, new SoftReference<>((View)this.newsView));
@@ -300,7 +299,7 @@ public final class MainScreen extends BaseView implements MainPresenter.View, On
     protected void init() {
         super.init();
 
-        final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.screen_main, this, true);
+        final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_main, this, true);
 
         this.content        = view.findViewById(R.id.content);
         this.upAction       = view.findViewById(R.id.action_up);

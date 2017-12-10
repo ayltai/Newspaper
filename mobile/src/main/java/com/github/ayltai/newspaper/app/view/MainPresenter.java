@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.app.screen;
+package com.github.ayltai.newspaper.app.view;
 
 import android.support.annotation.NonNull;
 

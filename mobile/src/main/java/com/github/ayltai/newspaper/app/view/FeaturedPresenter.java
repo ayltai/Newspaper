@@ -99,6 +99,8 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
     }
 
     private void cancelImageRequests() {
+        if (this.getView() == null) return;
+
         for (final Integer requestId : this.requestIds) DaggerImageComponent.builder()
             .imageModule(new ImageModule(this.getView().getContext()))
             .build()

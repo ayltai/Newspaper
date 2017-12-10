@@ -36,7 +36,6 @@ public class BaseView extends FrameLayout implements Presenter.View {
 
     public BaseView(@NonNull final Context context) {
         super(context);
-        init();
     }
 
     //region Properties

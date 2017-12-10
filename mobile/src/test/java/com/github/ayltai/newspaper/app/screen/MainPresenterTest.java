@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 
 import com.github.ayltai.newspaper.app.MainActivity;
+import com.github.ayltai.newspaper.app.view.MainPresenter;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.PresenterTest;
 

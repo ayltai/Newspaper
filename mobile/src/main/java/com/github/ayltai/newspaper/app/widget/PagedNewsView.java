@@ -24,7 +24,7 @@ import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.view.BaseNewsView;
 import com.github.ayltai.newspaper.widget.BaseView;
-import com.github.ayltai.newspaper.widget.ListView;
+import com.github.ayltai.newspaper.widget.VerticalListView;
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
 
 public class PagedNewsView extends BaseView implements BaseNewsView {
@@ -34,6 +34,8 @@ public class PagedNewsView extends BaseView implements BaseNewsView {
 
     public PagedNewsView(@NonNull final Context context) {
         super(context);
+
+        this.init();
     }
 
     @CallSuper
@@ -65,13 +67,13 @@ public class PagedNewsView extends BaseView implements BaseNewsView {
 
     @Override
     public void up() {
-        final ListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
+        final VerticalListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
         if (view != null) view.up();
     }
 
     @Override
     public void refresh() {
-        final ListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
+        final VerticalListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
         if (view != null) view.refresh();
     }
 

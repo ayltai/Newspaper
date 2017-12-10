@@ -11,10 +11,12 @@ import android.view.animation.Animation;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.ViewEvent;
 import com.github.ayltai.newspaper.app.data.model.Item;
-import com.github.ayltai.newspaper.app.screen.DetailsPresenter;
-import com.github.ayltai.newspaper.app.screen.DetailsScreen;
-import com.github.ayltai.newspaper.app.screen.MainPresenter;
-import com.github.ayltai.newspaper.app.screen.MainScreen;
+import com.github.ayltai.newspaper.app.view.DetailsListPresenter;
+import com.github.ayltai.newspaper.app.view.DetailsPresenter;
+import com.github.ayltai.newspaper.app.view.MainPresenter;
+import com.github.ayltai.newspaper.app.widget.DetailsListView;
+import com.github.ayltai.newspaper.app.widget.DetailsView;
+import com.github.ayltai.newspaper.app.widget.MainView;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.view.ModelPresenter;
 import com.github.ayltai.newspaper.view.Presenter;
@@ -30,7 +32,7 @@ final class MainFlow extends RxFlow {
     @NonNull
     @Override
     protected Object getDefaultKey() {
-        return MainScreen.KEY;
+        return MainView.KEY;
     }
 
     @Nullable
@@ -46,14 +48,14 @@ final class MainFlow extends RxFlow {
     @NonNull
     @Override
     protected Pair<Presenter, Presenter.View> onDispatch(@Nullable final Object key) {
-        if (key instanceof DetailsScreen.Key) {
-            final Item item = ((DetailsScreen.Key)key).getItem();
+        if (key instanceof DetailsView.Key) {
+            final Item item = ((DetailsView.Key)key).getItem();
 
             ComponentFactory.getInstance()
                 .getAnalyticsComponent(this.getContext())
                 .eventLogger()
                 .logEvent(new ViewEvent()
-                    .setScreenName(DetailsScreen.class.getSimpleName())
+                    .setScreenName(DetailsView.class.getSimpleName())
                     .setSource(item.getSource())
                     .setCategory(item.getCategory()));
         }
@@ -69,19 +71,30 @@ final class MainFlow extends RxFlow {
         }
 
         if (presenter == null || view == null) {
-            if (key instanceof MainScreen.Key) {
+            if (key instanceof MainView.Key) {
                 presenter = new MainPresenter();
-                view      = new MainScreen(this.getContext());
-            } else if (key instanceof DetailsScreen.Key) {
+                view      = new MainView(this.getContext());
+            } else if (key instanceof DetailsView.Key) {
                 presenter = new DetailsPresenter();
-                view      = new DetailsScreen(this.getContext());
+                view      = new DetailsView(this.getContext());
+            } else if (key instanceof DetailsListView.Key) {
+                presenter = new DetailsListPresenter();
+                view      = new DetailsListView(this.getContext());
             }
         }
 
         if (presenter != null && view != null) {
             presenter.onViewDetached();
 
-            if (key instanceof DetailsScreen.Key && presenter instanceof ModelPresenter) ((ModelPresenter)presenter).bindModel(((DetailsScreen.Key)key).getItem());
+            if (key instanceof DetailsListView.Key) {
+                final DetailsListPresenter detailsListPresenter = ((DetailsListPresenter)presenter);
+                final DetailsListView.Key  detailsListViewKey   = (DetailsListView.Key)key;
+
+                detailsListPresenter.setCategory(detailsListViewKey.getCategory());
+                detailsListPresenter.setItemPosition(detailsListViewKey.getItemPosition());
+            } else if (key instanceof DetailsView.Key && presenter instanceof ModelPresenter) {
+                ((ModelPresenter)presenter).bindModel(((DetailsView.Key)key).getItem());
+            }
         }
 
         return Pair.create(presenter, view);

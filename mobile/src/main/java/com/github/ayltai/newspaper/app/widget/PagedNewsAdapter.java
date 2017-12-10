@@ -30,7 +30,7 @@ import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Views;
-import com.github.ayltai.newspaper.widget.ListView;
+import com.github.ayltai.newspaper.widget.VerticalListView;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -42,7 +42,7 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
             PagedNewsAdapter.this.searchText = searchText;
 
             for (int i = 0; i < PagedNewsAdapter.this.getCount(); i++) {
-                final ListView listView = PagedNewsAdapter.this.getItem(i);
+                final VerticalListView listView = PagedNewsAdapter.this.getItem(i);
 
                 if (listView instanceof ItemListView && listView.getAdapter() instanceof Filterable && ((Filterable)listView.getAdapter()).getFilter() instanceof ItemListAdapter.ItemListFilter) {
                     ((ItemListView)listView).setSearchText(searchText);
@@ -63,7 +63,7 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
         @Override
         protected void publishResults(@Nullable final CharSequence searchText, @Nullable final FilterResults filterResults) {
             for (int i = 0; i < PagedNewsAdapter.this.getCount(); i++) {
-                final ListView listView = PagedNewsAdapter.this.getItem(i);
+                final VerticalListView listView = PagedNewsAdapter.this.getItem(i);
 
                 if (listView != null && listView.getAdapter() instanceof Filterable && ((Filterable)listView.getAdapter()).getFilter() instanceof ItemListAdapter.ItemListFilter) {
                     final FilterResults                  results = (FilterResults)PagedNewsAdapter.this.filterResults.get(i);
@@ -131,11 +131,11 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
     }
 
     @Nullable
-    public ListView getItem(final int position) {
+    public VerticalListView getItem(final int position) {
         final SoftReference<View> view = this.views.get(position);
 
         if (view == null) return null;
-        return (ListView)view.get();
+        return (VerticalListView)view.get();
     }
 
     public void setCurrentPosition(final int position) {
@@ -145,9 +145,10 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
     @NonNull
     @Override
     public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
-        final List<String>      categories = new ArrayList<>(Category.fromDisplayName(this.categories.get(position)));
+        final String            category   = this.categories.get(position);
+        final List<String>      categories = new ArrayList<>(Category.fromDisplayName(category));
         final ItemListPresenter presenter  = new ItemListPresenter(categories);
-        final ItemListView      view       = this.userConfig == null || this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY ? new CozyItemListView(container.getContext()) : new CompactItemListView(container.getContext());
+        final ItemListView      view       = this.userConfig == null || this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY ? new CozyItemListView(container.getContext(), category, false, false) : new CompactItemListView(container.getContext(), category, false, false);
 
         if (this.disposables == null) this.disposables = new CompositeDisposable();
 

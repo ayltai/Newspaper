@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.app.screen;
+package com.github.ayltai.newspaper.app.widget;
 
 import java.util.Date;
 import java.util.List;
@@ -44,8 +44,7 @@ import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Video;
-import com.github.ayltai.newspaper.app.widget.ItemView;
-import com.github.ayltai.newspaper.app.widget.VideoView;
+import com.github.ayltai.newspaper.app.view.DetailsPresenter;
 import com.github.ayltai.newspaper.media.FrescoImageLoader;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
@@ -69,17 +68,19 @@ import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 import xyz.hanks.library.bang.SmallBangView;
 
-public final class DetailsScreen extends ItemView implements DetailsPresenter.View {
+public final class DetailsView extends ItemView implements DetailsPresenter.View {
     @AutoValue
     public abstract static class Key extends ClassKey implements Parcelable {
         @NonNull
         public abstract NewsItem getItem();
 
         @NonNull
-        public static DetailsScreen.Key create(@NonNull final NewsItem item) {
-            return new AutoValue_DetailsScreen_Key(item);
+        public static DetailsView.Key create(@NonNull final NewsItem item) {
+            return new AutoValue_DetailsView_Key(item);
         }
     }
+
+    public static final int VIEW_TYPE = R.id.view_type_details;
 
     //region Subscriptions
 
@@ -104,7 +105,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     private final TextView                toolbarTitle;
     private final View                    toolbarBackground;
     private final ViewGroup               imageContainer;
-    private final ViewGroup               container;
     private final View                    progress;
     private final SimpleDraweeView        avatar;
     private final TextView                source;
@@ -128,16 +128,15 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     private boolean            isTtsActive;
     private SimpleTextToSpeech tts;
 
-    public DetailsScreen(@NonNull final Context context) {
+    public DetailsView(@NonNull final Context context) {
         super(context);
 
-        final View view = LayoutInflater.from(context).inflate(R.layout.screen_details, this, true);
+        final View view = LayoutInflater.from(context).inflate(R.layout.view_details, this, true);
 
         this.appBarLayout            = view.findViewById(R.id.appBarLayout);
         this.collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbarLayout);
         this.toolbar                 = view.findViewById(R.id.toolbar);
         this.imageContainer          = view.findViewById(R.id.image_container);
-        this.container               = view.findViewById(R.id.container);
         this.progress                = view.findViewById(R.id.progress);
         this.avatar                  = view.findViewById(R.id.avatar);
         this.source                  = view.findViewById(R.id.source);
@@ -240,7 +239,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             if (Animations.isEnabled()) this.smallBang.likeAnimation(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(final Animator animation) {
-                    DetailsScreen.this.bookmarkAction.setClickable(true);
+                    DetailsView.this.bookmarkAction.setClickable(true);
                 }
             });
         } else {

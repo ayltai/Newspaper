@@ -5,11 +5,11 @@ import android.support.annotation.UiThread;
 public class ModelPresenter<M, V extends Presenter.View> extends Presenter<V> {
     private M model;
 
-    protected M getModel() {
+    public M getModel() {
         return this.model;
     }
 
-    protected void setModel(final M model) {
+    public void setModel(final M model) {
         this.model = model;
     }
 

@@ -56,6 +56,8 @@ public final class AboutView extends BaseView implements AboutPresenter.View {
 
     public AboutView(@NonNull final Context context) {
         super(context);
+
+        this.init();
     }
 
     //region Properties

@@ -9,4 +9,7 @@
     <item
         name="view_type_compact"
         type="id" />
+    <item
+        name="view_type_details"
+        type="id" />
 </resources>
