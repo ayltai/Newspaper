@@ -21,7 +21,6 @@ import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.jakewharton.rxbinding2.view.RxView;
 
 public final class FeaturedView extends ItemView {
     public static final int VIEW_TYPE = R.id.view_type_featured;
@@ -85,7 +84,7 @@ public final class FeaturedView extends ItemView {
     @CallSuper
     @Override
     public void onAttachedToWindow() {
-        this.manageDisposable(RxView.clicks(this.image).subscribe(irrelevant -> this.clicks.onNext(Irrelevant.INSTANCE)));
+        this.image.setOnClickListener(view -> this.clicks.onNext(Irrelevant.INSTANCE));
 
         super.onAttachedToWindow();
     }

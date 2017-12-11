@@ -39,7 +39,6 @@ import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.util.DeviceUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
@@ -188,11 +187,11 @@ public class VideoView extends ItemView implements ItemPresenter.View {
     public void onAttachedToWindow() {
         if (!this.isFirstTimeAttachment && this.video != null) this.setUpPlayer();
 
-        this.manageDisposable(RxView.clicks(this.playAction).subscribe(irrelevant -> {
+        this.playAction.setOnClickListener(view -> {
             this.startPlayer();
 
             this.videoClicks.onNext(Irrelevant.INSTANCE);
-        }));
+        });
 
         this.thumbnail.setOnClickListener(irrelevant -> {
             this.startPlayer();
@@ -200,14 +199,14 @@ public class VideoView extends ItemView implements ItemPresenter.View {
             this.videoClicks.onNext(Irrelevant.INSTANCE);
         });
 
-        if (this.player != null) this.manageDisposable(RxView.clicks(this.fullScreenAction).subscribe(irrelevant -> {
+        this.fullScreenAction.setOnClickListener(view -> {
             final boolean isPlaying    = this.player.getPlaybackState() == Player.STATE_READY && this.player.getPlayWhenReady();
             final long    seekPosition = this.player.getCurrentPosition();
 
             this.player.setPlayWhenReady(false);
 
             this.getContext().startActivity(VideoActivity.createIntent(this.getContext(), this.video.getVideoUrl(), isPlaying, seekPosition));
-        }));
+        });
 
         super.onAttachedToWindow();
     }

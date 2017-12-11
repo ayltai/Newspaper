@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.view.OptionsPresenter;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
@@ -59,10 +58,10 @@ public final class TextOptionsView extends BaseView implements OptionsPresenter.
     }
 
     private void subscribeToView(@NonNull final View view) {
-        this.manageDisposable(RxView.clicks(view).subscribe(irrelevant -> {
-            view.setSelected(!view.isSelected());
+        view.setOnClickListener(v -> {
+            v.setSelected(!v.isSelected());
 
-            this.optionChanges.onNext(this.container.indexOfChild(view));
-        }));
+            this.optionChanges.onNext(this.container.indexOfChild(v));
+        });
     }
 }

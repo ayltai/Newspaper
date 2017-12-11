@@ -23,8 +23,7 @@
         <item name="windowBackground">@color/windowBackgroundLight</item>
         <item name="cardBackground">@color/cardBackgroundLight</item>
         <item name="indicatorColor">@color/indicatorColorLight</item>
-        <item name="tabActiveColor">@color/tabActiveColorLight</item>
-        <item name="tabInactiveColor">@color/tabInactiveColorLight</item>
+        <item name="tabItemColor">@color/bottom_tab_item_light</item>
         <item name="tabBarBackgroundColor">@color/tabBarBackgroundColorLight</item>
         <item name="placeholderTextColor">@color/placeholderTextColorLight</item>
         <item name="placeholderImage">@drawable/thumbnail_placeholder</item>
@@ -48,8 +47,7 @@
         <item name="windowBackground">@color/windowBackgroundDark</item>
         <item name="cardBackground">@color/cardBackgroundDark</item>
         <item name="indicatorColor">@color/indicatorColorDark</item>
-        <item name="tabActiveColor">@color/tabActiveColorDark</item>
-        <item name="tabInactiveColor">@color/tabInactiveColorDark</item>
+        <item name="tabItemColor">@color/bottom_tab_item_dark</item>
         <item name="tabBarBackgroundColor">@color/tabBarBackgroundColorDark</item>
         <item name="placeholderTextColor">@color/placeholderTextColorDark</item>
         <item name="placeholderImage">@drawable/thumbnail_placeholder</item>

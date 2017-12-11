@@ -59,7 +59,6 @@ import com.github.ayltai.newspaper.util.Views;
 import com.github.piasy.biv.view.BigImageView;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
 import com.gjiazhe.panoramaimageview.PanoramaImageView;
-import com.jakewharton.rxbinding2.view.RxView;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import flow.ClassKey;
@@ -443,12 +442,12 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
             this.toolbarImage.getSSIV().setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
         }
 
-        this.manageDisposable(RxView.clicks(this.avatar).subscribe(irrelevant -> this.avatarClicks.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.source).subscribe(irrelevant -> this.sourceClicks.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.textToSpeechAction).subscribe(irrelevant -> this.textToSpeechClicks.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.bookmarkAction).subscribe(irrelevant -> this.bookmarkClicks.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.viewOnWebAction).subscribe(irrelevant -> this.viewOnWebClicks.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.shareAction).subscribe(irrelevant -> this.shareClicks.onNext(Irrelevant.INSTANCE)));
+        this.avatar.setOnClickListener(view -> this.avatarClicks.onNext(Irrelevant.INSTANCE));
+        this.source.setOnClickListener(view -> this.sourceClicks.onNext(Irrelevant.INSTANCE));
+        this.textToSpeechAction.setOnClickListener(view -> this.textToSpeechClicks.onNext(Irrelevant.INSTANCE));
+        this.bookmarkAction.setOnClickListener(view -> this.bookmarkClicks.onNext(Irrelevant.INSTANCE));
+        this.viewOnWebAction.setOnClickListener(view -> this.viewOnWebClicks.onNext(Irrelevant.INSTANCE));
+        this.shareAction.setOnClickListener(view -> this.shareClicks.onNext(Irrelevant.INSTANCE));
 
         super.onAttachedToWindow();
 
@@ -484,7 +483,7 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
         imageView.showImage(Uri.parse(image.getUrl()));
 
         imageView.setOnClickListener(view -> this.imageClicks.onNext(image));
-        this.manageDisposable(RxView.clicks((View)imageView.getParent()).subscribe(irrelevant -> this.imageClicks.onNext(image)));
+        ((View)imageView.getParent()).setOnClickListener(view -> this.imageClicks.onNext(image));
     }
 
     private void subscribeImage(@NonNull final PanoramaImageView imageView, @NonNull final Image image) {
@@ -497,6 +496,6 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
                 }
             );
         imageView.setOnClickListener(view -> this.imageClicks.onNext(image));
-        this.manageDisposable(RxView.clicks((View)imageView.getParent()).subscribe(irrelevant -> this.imageClicks.onNext(image)));
+        ((View)imageView.getParent()).setOnClickListener(view -> this.imageClicks.onNext(image));
     }
 }

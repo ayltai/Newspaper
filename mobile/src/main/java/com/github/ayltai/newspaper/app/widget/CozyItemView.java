@@ -24,7 +24,6 @@ import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
-import com.jakewharton.rxbinding2.view.RxView;
 
 public final class CozyItemView extends ItemView {
     public static final int VIEW_TYPE = R.id.view_type_cozy;
@@ -159,7 +158,7 @@ public final class CozyItemView extends ItemView {
     @CallSuper
     @Override
     public void onAttachedToWindow() {
-        this.manageDisposable(RxView.clicks(this.image).subscribe(irrelevant -> this.clicks.onNext(Irrelevant.INSTANCE)));
+        this.image.setOnClickListener(view -> this.clicks.onNext(Irrelevant.INSTANCE));
 
         super.onAttachedToWindow();
     }

@@ -25,7 +25,6 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.BaseView;
 import com.instabug.library.Instabug;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
@@ -150,9 +149,9 @@ public final class AboutView extends BaseView implements AboutPresenter.View {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        this.manageDisposable(RxView.clicks(this.visitAction).subscribe(irrelevant -> this.visitActions.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.rateAction).subscribe(irrelevant -> this.rateActions.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.reportAction).subscribe(irrelevant -> this.reportActions.onNext(Irrelevant.INSTANCE)));
+        this.visitAction.setOnClickListener(view -> this.visitActions.onNext(Irrelevant.INSTANCE));
+        this.rateAction.setOnClickListener(view -> this.rateActions.onNext(Irrelevant.INSTANCE));
+        this.reportAction.setOnClickListener(view -> this.reportActions.onNext(Irrelevant.INSTANCE));
     }
 
     @Override

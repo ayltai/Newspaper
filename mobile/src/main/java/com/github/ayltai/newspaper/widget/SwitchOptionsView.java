@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.view.OptionsPresenter;
-import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
@@ -59,6 +58,6 @@ public final class SwitchOptionsView extends BaseView implements OptionsPresente
     }
 
     private void subscribeToView(@NonNull final SwitchCompat view) {
-        this.manageDisposable(RxCompoundButton.checkedChanges(view).subscribe(selected -> this.optionChanges.onNext(this.container.indexOfChild(view))));
+        view.setOnCheckedChangeListener((v, selected) -> this.optionChanges.onNext(this.container.indexOfChild(v)));
     }
 }

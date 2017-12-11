@@ -33,7 +33,6 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.config.AppConfig;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.instabug.library.InstabugTrackingDelegate;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.disposables.Disposable;
 
@@ -86,10 +85,10 @@ public final class VideoActivity extends AppCompatActivity {
         final boolean isPlaying    = this.getIntent().getBooleanExtra(VideoActivity.EXTRA_IS_PLAYING, false);
         final long    seekPosition = this.getIntent().getLongExtra(VideoActivity.EXTRA_SEEK_POSITION, 0);
 
-        this.disposables.add(RxView.clicks(videoFullScreenExit).subscribe(irrelevant -> {
+        videoFullScreenExit.setOnClickListener(view -> {
             this.notifyCurrentPlaybackState();
             this.finish();
-        }));
+        });
 
         this.videoPlayer.prepare(new ExtractorMediaSource(Uri.parse(videoUrl), new DefaultDataSourceFactory(this, Util.getUserAgent(this, BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
         this.videoPlayer.seekTo(seekPosition);

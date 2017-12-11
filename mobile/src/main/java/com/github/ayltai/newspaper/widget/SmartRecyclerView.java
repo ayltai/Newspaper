@@ -1,21 +1,32 @@
 package com.github.ayltai.newspaper.widget;
 
 import android.content.Context;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView;
-
-import io.reactivex.disposables.Disposable;
 import io.reactivex.processors.BehaviorProcessor;
 import io.reactivex.processors.FlowableProcessor;
 
 public final class SmartRecyclerView extends RecyclerView {
+    private final class OnScrollListener extends RecyclerView.OnScrollListener {
+        @Override
+        public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
+            final int bestVisibleItemPosition = ((SmartLayoutManager)SmartRecyclerView.this.getLayoutManager()).findBestVisibleItemPosition();
+
+            if (bestVisibleItemPosition != SmartRecyclerView.this.previousBestVisibleItemPosition) {
+                SmartRecyclerView.this.previousBestVisibleItemPosition = bestVisibleItemPosition;
+                SmartRecyclerView.this.bestVisibleItemPositionChanges.onNext(bestVisibleItemPosition);
+            }
+        }
+    }
+
     private final FlowableProcessor<Integer> bestVisibleItemPositionChanges = BehaviorProcessor.create();
 
-    private Disposable disposable;
-    private int        previousBestVisibleItemPosition = RecyclerView.NO_POSITION;
+    private final OnScrollListener onScrollListener = new OnScrollListener();
+
+    private int previousBestVisibleItemPosition = RecyclerView.NO_POSITION;
 
     //region Constructors
 
@@ -42,29 +53,25 @@ public final class SmartRecyclerView extends RecyclerView {
         }
     }
 
+    //region Lifecycle
+
+    @CallSuper
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        if (this.disposable == null) this.disposable = RxRecyclerView.scrollEvents(this).subscribe(event -> {
-            final int bestVisibleItemPosition = ((SmartLayoutManager)this.getLayoutManager()).findBestVisibleItemPosition();
-
-            if (bestVisibleItemPosition != this.previousBestVisibleItemPosition) {
-                this.previousBestVisibleItemPosition = bestVisibleItemPosition;
-                this.bestVisibleItemPositionChanges.onNext(bestVisibleItemPosition);
-            }
-        });
+        this.addOnScrollListener(this.onScrollListener);
     }
 
+    @CallSuper
     @Override
     protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
+        this.removeOnScrollListener(this.onScrollListener);
 
-        if (this.disposable != null && !this.disposable.isDisposed()) {
-            this.disposable.dispose();
-            this.disposable = null;
-        }
+        super.onDetachedFromWindow();
     }
+
+    //endregion
 
     public FlowableProcessor<Integer> bestVisibleItemPositionChanges() {
         return this.bestVisibleItemPositionChanges;

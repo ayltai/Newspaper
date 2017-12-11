@@ -18,7 +18,6 @@ import android.view.View;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
@@ -65,8 +64,8 @@ public final class OptionsView extends BottomSheetDialog {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        this.manageDisposable(RxView.clicks(this.cancelAction).subscribe(irrelevant -> this.cancelClicks.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.okAction).subscribe(irrelevant -> this.okClicks.onNext(Irrelevant.INSTANCE)));
+        this.cancelAction.setOnClickListener(view -> this.cancelClicks.onNext(Irrelevant.INSTANCE));
+        this.okAction.setOnClickListener(view -> this.okClicks.onNext(Irrelevant.INSTANCE));
     }
 
     @CallSuper

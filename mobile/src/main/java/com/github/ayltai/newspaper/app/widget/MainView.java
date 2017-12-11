@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.app.widget;
 
 import java.lang.ref.SoftReference;
+import java.lang.reflect.Field;
 import java.util.Map;
 
 import android.app.Activity;
@@ -8,13 +9,17 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.Parcelable;
 import android.support.annotation.CallSuper;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -28,20 +33,16 @@ import com.github.ayltai.newspaper.app.view.AboutPresenter;
 import com.github.ayltai.newspaper.app.view.BaseNewsView;
 import com.github.ayltai.newspaper.app.view.MainPresenter;
 import com.github.ayltai.newspaper.util.Animations;
-import com.github.ayltai.newspaper.util.ContextUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.BaseView;
-import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
-import com.jakewharton.rxbinding2.view.RxView;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabSelectListener;
 
 import flow.ClassKey;
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public final class MainView extends BaseView implements MainPresenter.View, OnTabSelectListener {
+public final class MainView extends BaseView implements MainPresenter.View, BottomNavigationView.OnNavigationItemSelectedListener {
     @AutoValue
     public abstract static class Key extends ClassKey implements Parcelable {
         @NonNull
@@ -68,8 +69,8 @@ public final class MainView extends BaseView implements MainPresenter.View, OnTa
     private Toolbar              toolbar;
     private SearchView           searchView;
     private ViewGroup            content;
-    private BaseNewsView newsView;
-    private BottomBar            bottomBar;
+    private BaseNewsView         newsView;
+    private BottomNavigationView bottomNavigationView;
     private FloatingActionButton upAction;
     private FloatingActionButton refreshAction;
     private FloatingActionButton settingsAction;
@@ -114,12 +115,12 @@ public final class MainView extends BaseView implements MainPresenter.View, OnTa
 
     //endregion
 
-    @SuppressWarnings("CyclomaticComplexity")
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
-    public void onTabSelected(@IdRes final int tabId) {
+    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         this.toolbar.getMenu().findItem(R.id.action_search).collapseActionView();
 
-        if (tabId == R.id.action_about) {
+        if (item.getItemId() == R.id.action_about) {
             this.upAction.setVisibility(View.GONE);
             this.refreshAction.setVisibility(View.GONE);
             this.settingsAction.setVisibility(View.GONE);
@@ -138,8 +139,8 @@ public final class MainView extends BaseView implements MainPresenter.View, OnTa
         } else {
             boolean isCached = false;
 
-            if (this.cachedViews.containsKey(tabId)) {
-                this.newsView = (BaseNewsView)this.cachedViews.get(tabId).get();
+            if (this.cachedViews.containsKey(item.getItemId())) {
+                this.newsView = (BaseNewsView)this.cachedViews.get(item.getItemId()).get();
 
                 if (this.newsView != null) {
                     if (this.content.indexOfChild((View)this.newsView) < 0) {
@@ -156,17 +157,17 @@ public final class MainView extends BaseView implements MainPresenter.View, OnTa
 
             this.upAction.setVisibility(View.INVISIBLE);
             this.refreshAction.setVisibility(View.INVISIBLE);
-            this.settingsAction.setVisibility(tabId == R.id.action_news ? View.INVISIBLE : View.GONE);
-            this.clearAllAction.setVisibility(tabId == R.id.action_news ? View.GONE : View.INVISIBLE);
+            this.settingsAction.setVisibility(item.getItemId() == R.id.action_news ? View.INVISIBLE : View.GONE);
+            this.clearAllAction.setVisibility(item.getItemId() == R.id.action_news ? View.GONE : View.INVISIBLE);
             this.moreAction.setVisibility(View.VISIBLE);
 
             this.toolbar.getMenu().findItem(R.id.action_search).setVisible(true);
 
             if (!isCached) {
-                this.newsView = tabId == R.id.action_news ? new PagedNewsView(this.getContext()) : tabId == R.id.action_history ? new HistoricalNewsView(this.getContext()) : new BookmarkedNewsView(this.getContext());
+                this.newsView = item.getItemId() == R.id.action_news ? new PagedNewsView(this.getContext()) : item.getItemId() == R.id.action_history ? new HistoricalNewsView(this.getContext()) : new BookmarkedNewsView(this.getContext());
                 this.content.addView((View)this.newsView);
 
-                this.cachedViews.put(tabId, new SoftReference<>((View)this.newsView));
+                this.cachedViews.put(item.getItemId(), new SoftReference<>((View)this.newsView));
             }
         }
 
@@ -176,10 +177,10 @@ public final class MainView extends BaseView implements MainPresenter.View, OnTa
             .getAnalyticsComponent(this.getContext())
             .eventLogger()
             .logEvent(new ClickEvent()
-                .setElementName("BottomBar-" + this.bottomBar.findPositionForTabWithId(tabId)));
-    }
+                .setElementName("BottomNavigationView-" + item.getOrder()));
 
-    //region Lifecycle
+        return true;
+    }
 
     @CallSuper
     @Override
@@ -190,13 +191,23 @@ public final class MainView extends BaseView implements MainPresenter.View, OnTa
             this.searchView.setSearchableInfo(manager.getSearchableInfo(activity.getComponentName()));
         }
 
-        this.manageDisposable(RxSearchView.queryTextChanges(this.searchView).skipInitialValue().subscribe(newText -> {
-            if (this.newsView != null) this.newsView.search(newText);
-        }));
+        this.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(final String query) {
+                return false;
+            }
 
-        this.bottomBar.setOnTabSelectListener(this);
+            @Override
+            public boolean onQueryTextChange(final String newText) {
+                if (MainView.this.newsView == null) return false;
 
-        this.manageDisposable(RxView.clicks(this.moreAction).subscribe(irrelevant -> {
+                MainView.this.newsView.search(newText);
+
+                return true;
+            }
+        });
+
+        this.moreAction.setOnClickListener(view -> {
             if (this.isMoreActionsShown) {
                 this.hideMoreActions();
             } else {
@@ -208,46 +219,36 @@ public final class MainView extends BaseView implements MainPresenter.View, OnTa
                     .logEvent(new ClickEvent()
                         .setElementName("FAB - More"));
             }
-        }));
+        });
 
-        this.manageDisposable(RxView.clicks(this.upAction).subscribe(irrelevant -> {
+        this.upAction.setOnClickListener(view -> {
             this.hideMoreActions();
 
             this.upActions.onNext(Irrelevant.INSTANCE);
-        }));
+        });
 
-        this.manageDisposable(RxView.clicks(this.refreshAction).subscribe(irrelevant -> {
+        this.refreshAction.setOnClickListener(view -> {
             this.hideMoreActions();
 
             this.refreshActions.onNext(Irrelevant.INSTANCE);
-        }));
+        });
 
-        this.manageDisposable(RxView.clicks(this.settingsAction).subscribe(irrelevant -> {
+        this.settingsAction.setOnClickListener(view -> {
             this.hideMoreActions();
 
             this.filterActions.onNext(Irrelevant.INSTANCE);
-        }));
+        });
 
-        this.manageDisposable(RxView.clicks(this.clearAllAction).subscribe(irrelevant -> {
+        this.clearAllAction.setOnClickListener(view -> {
             this.hideMoreActions();
 
             this.clearAllActions.onNext(Irrelevant.INSTANCE);
-        }));
+        });
 
         this.moreAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.pop_in));
 
         super.onAttachedToWindow();
     }
-
-    @CallSuper
-    @Override
-    public void onDetachedFromWindow() {
-        this.bottomBar.removeOnTabSelectListener();
-
-        super.onDetachedFromWindow();
-    }
-
-    //endregion
 
     //region Methods
 
@@ -315,9 +316,11 @@ public final class MainView extends BaseView implements MainPresenter.View, OnTa
         this.searchView.setQueryHint(this.getContext().getText(R.string.search_hint));
         this.searchView.setMaxWidth(Integer.MAX_VALUE);
 
-        this.bottomBar = view.findViewById(R.id.bottomBar);
-        for (int i = 0; i < this.bottomBar.getTabCount(); i++) this.bottomBar.getTabAtPosition(i).setBarColorWhenSelected(ContextUtils.getColor(this.getContext(), R.attr.tabBarBackgroundColor));
-        this.bottomBar.selectTabAtPosition(0);
+        this.bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
+        this.bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        this.bottomNavigationView.setSelectedItemId(R.id.action_news);
+
+        MainView.setShiftMode(this.bottomNavigationView, false, false);
     }
 
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
@@ -329,19 +332,19 @@ public final class MainView extends BaseView implements MainPresenter.View, OnTa
         if (Animations.isEnabled()) {
             this.upAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
             this.refreshAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
-            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
-            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+            if (this.bottomNavigationView.getSelectedItemId() == R.id.action_news) this.settingsAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
+            if (this.bottomNavigationView.getSelectedItemId() == R.id.action_history || this.bottomNavigationView.getSelectedItemId() == R.id.action_bookmark) this.clearAllAction.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fab_open));
         } else {
             this.upAction.setVisibility(View.VISIBLE);
             this.refreshAction.setVisibility(View.VISIBLE);
-            if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setVisibility(View.VISIBLE);
-            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setVisibility(View.VISIBLE);
+            if (this.bottomNavigationView.getSelectedItemId() == R.id.action_news) this.settingsAction.setVisibility(View.VISIBLE);
+            if (this.bottomNavigationView.getSelectedItemId() == R.id.action_history || this.bottomNavigationView.getSelectedItemId() == R.id.action_bookmark) this.clearAllAction.setVisibility(View.VISIBLE);
         }
 
         this.upAction.setClickable(true);
         this.refreshAction.setClickable(true);
-        if (this.bottomBar.getCurrentTabId() == R.id.action_news) this.settingsAction.setClickable(true);
-        if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark) this.clearAllAction.setClickable(true);
+        if (this.bottomNavigationView.getSelectedItemId() == R.id.action_news) this.settingsAction.setClickable(true);
+        if (this.bottomNavigationView.getSelectedItemId() == R.id.action_history || this.bottomNavigationView.getSelectedItemId() == R.id.action_bookmark) this.clearAllAction.setClickable(true);
     }
 
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
@@ -353,19 +356,45 @@ public final class MainView extends BaseView implements MainPresenter.View, OnTa
         if (Animations.isEnabled()) {
             this.upAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
             this.refreshAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
-            if (this.bottomBar.getCurrentTabId() == R.id.action_news || this.bottomBar.getCurrentTabId() == R.id.action_about) this.settingsAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
-            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark || this.bottomBar.getCurrentTabId() == R.id.action_about) this.clearAllAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
+            if (this.bottomNavigationView.getSelectedItemId() == R.id.action_news || this.bottomNavigationView.getSelectedItemId() == R.id.action_about) this.settingsAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
+            if (this.bottomNavigationView.getSelectedItemId() == R.id.action_history || this.bottomNavigationView.getSelectedItemId() == R.id.action_bookmark || this.bottomNavigationView.getSelectedItemId() == R.id.action_about) this.clearAllAction.startAnimation(Animations.getAnimation(this.getContext(), R.anim.fab_close, android.R.integer.config_shortAnimTime));
         } else {
             this.upAction.setVisibility(View.INVISIBLE);
             this.refreshAction.setVisibility(View.INVISIBLE);
-            if (this.bottomBar.getCurrentTabId() == R.id.action_news || this.bottomBar.getCurrentTabId() == R.id.action_about) this.settingsAction.setVisibility(View.INVISIBLE);
-            if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark || this.bottomBar.getCurrentTabId() == R.id.action_about) this.clearAllAction.setVisibility(View.INVISIBLE);
+            if (this.bottomNavigationView.getSelectedItemId() == R.id.action_news || this.bottomNavigationView.getSelectedItemId() == R.id.action_about) this.settingsAction.setVisibility(View.INVISIBLE);
+            if (this.bottomNavigationView.getSelectedItemId() == R.id.action_history || this.bottomNavigationView.getSelectedItemId() == R.id.action_bookmark || this.bottomNavigationView.getSelectedItemId() == R.id.action_about) this.clearAllAction.setVisibility(View.INVISIBLE);
         }
 
         this.upAction.setClickable(false);
         this.refreshAction.setClickable(false);
-        if (this.bottomBar.getCurrentTabId() == R.id.action_news || this.bottomBar.getCurrentTabId() == R.id.action_about) this.settingsAction.setClickable(false);
-        if (this.bottomBar.getCurrentTabId() == R.id.action_history || this.bottomBar.getCurrentTabId() == R.id.action_bookmark || this.bottomBar.getCurrentTabId() == R.id.action_about) this.clearAllAction.setClickable(false);
+        if (this.bottomNavigationView.getSelectedItemId() == R.id.action_news || this.bottomNavigationView.getSelectedItemId() == R.id.action_about) this.settingsAction.setClickable(false);
+        if (this.bottomNavigationView.getSelectedItemId() == R.id.action_history || this.bottomNavigationView.getSelectedItemId() == R.id.action_bookmark || this.bottomNavigationView.getSelectedItemId() == R.id.action_about) this.clearAllAction.setClickable(false);
+    }
+
+    private static void setShiftMode(@NonNull final BottomNavigationView bottomNavigationView, final boolean shiftModeEnabled, final boolean itemShiftModeEnabled) {
+        try {
+            final BottomNavigationMenuView menuView = (BottomNavigationMenuView)bottomNavigationView.getChildAt(0);
+
+            if (menuView != null) {
+                final Field field = menuView.getClass().getDeclaredField("mShiftingMode");
+                field.setAccessible(true);
+                field.setBoolean(menuView, shiftModeEnabled);
+                field.setAccessible(false);
+
+                for (int i = 0; i < menuView.getChildCount(); i++) {
+                    final BottomNavigationItemView itemView = (BottomNavigationItemView)menuView.getChildAt(i);
+
+                    if (itemView != null) {
+                        itemView.setShiftingMode(itemShiftModeEnabled);
+                        itemView.setChecked(itemView.getItemData().isChecked());
+                    }
+                }
+
+                menuView.updateMenuView();
+            }
+        } catch (final IllegalAccessException | NoSuchFieldException e) {
+            if (DevUtils.isLoggable()) Log.e(MainView.class.getSimpleName(), e.getMessage(), e);
+        }
     }
 
     //endregion
