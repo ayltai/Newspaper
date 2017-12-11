@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
@@ -128,7 +129,7 @@ public class VideoView extends ItemView implements ItemPresenter.View {
             final View fullScreenExitAction = this.playerView.findViewById(R.id.exo_fullscreen_exit);
             fullScreenExitAction.setVisibility(View.GONE);
 
-            this.player.prepare(new ExtractorMediaSource(Uri.parse(this.video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
+            this.player.prepare(new ExtractorMediaSource(Uri.parse(this.video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), null, new OkHttpDataSourceFactory(ComponentFactory.getInstance().getHttpComponent().httpClient(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null)), new DefaultExtractorsFactory(), null, null));
 
             final Point                  size   = DeviceUtils.getScreenSize(this.getContext());
             final ViewGroup.LayoutParams params = this.playerView.getLayoutParams();

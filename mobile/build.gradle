@@ -189,6 +189,7 @@ dependencies {
     // Video processing
     implementation "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
     implementation "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:extension-okhttp:$exoPlayerVersion"
 
     // UI components
     implementation 'com.squareup.flow:flow:1.0.0-alpha3'
