@@ -14,7 +14,6 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -38,6 +37,7 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.BaseView;
 
 import flow.ClassKey;
+import gnu.trove.map.hash.THashMap;
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
@@ -62,7 +62,7 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
 
     //endregion
 
-    private final Map<Integer, SoftReference<View>> cachedViews = new ArrayMap<>();
+    private final Map<Integer, SoftReference<View>> cachedViews = new THashMap<>();
 
     //region Components
 

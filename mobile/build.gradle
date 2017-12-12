@@ -200,6 +200,8 @@ dependencies {
     implementation 'com.gjiazhe:PanoramaImageView:1.0'
     implementation 'io.github.inflationx:calligraphy3:3.0.0'
 
+    implementation 'net.sf.trove4j:trove4j:3.0.3'
+
     // Code generation tools
     compileOnly         "com.jakewharton.auto.value:auto-value-annotations:1.5"
     annotationProcessor "com.google.auto.value:auto-value:1.5.2"

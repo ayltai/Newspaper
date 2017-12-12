@@ -1,7 +1,6 @@
 package com.github.ayltai.newspaper.client;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +23,7 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
+import gnu.trove.map.hash.THashMap;
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 
@@ -46,7 +46,7 @@ public final class HeadlineClient extends RssClient {
 
     //endregion
 
-    private static final Map<String, String> KEYWORDS = new HashMap<>(8);
+    private static final Map<String, String> KEYWORDS = new THashMap<>(8);
 
     static {
         HeadlineClient.KEYWORDS.put(HeadlineClient.CATEGORY_HONG_KONG, " (港聞) ");

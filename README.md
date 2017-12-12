@@ -59,6 +59,7 @@ This app is made with the support of open source projects:
 * [Calligraphy](https://github.com/InflationX/Calligraphy)
 * [AutoValue](https://github.com/google/auto/tree/master/value)
 * [Gson](https://github.com/google/gson)
+* [GNU Trove](https://bitbucket.org/trove4j/trove)
 * [Espresso](https://google.github.io/android-testing-support-library)
 * [JUnit 4](https://github.com/junit-team/junit4)
 * [Mockito](https://github.com/mockito/mockito)

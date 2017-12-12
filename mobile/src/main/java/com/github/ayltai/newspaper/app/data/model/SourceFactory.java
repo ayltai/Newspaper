@@ -3,7 +3,6 @@ package com.github.ayltai.newspaper.app.data.model;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -13,6 +12,7 @@ import android.support.annotation.NonNull;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.client.HeadlineClient;
 
+import gnu.trove.map.hash.THashMap;
 import io.realm.RealmList;
 
 public final class SourceFactory {
@@ -25,7 +25,7 @@ public final class SourceFactory {
 
     private static SourceFactory instance;
 
-    private final Map<String, Source> sources = new HashMap<>(12);
+    private final Map<String, Source> sources = new THashMap<>(12);
 
     @NonNull
     public static SourceFactory getInstance(@NonNull final Context context) {
