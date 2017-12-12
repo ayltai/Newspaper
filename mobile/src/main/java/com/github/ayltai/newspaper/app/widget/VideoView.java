@@ -199,7 +199,8 @@ public class VideoView extends ItemView implements ItemPresenter.View {
             this.videoClicks.onNext(Irrelevant.INSTANCE);
         });
 
-        this.fullScreenAction.setOnClickListener(view -> {
+
+        if (this.fullScreenAction != null) this.fullScreenAction.setOnClickListener(view -> {
             final boolean isPlaying    = this.player.getPlaybackState() == Player.STATE_READY && this.player.getPlayWhenReady();
             final long    seekPosition = this.player.getCurrentPosition();
 

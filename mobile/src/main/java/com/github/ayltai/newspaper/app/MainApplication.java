@@ -86,8 +86,6 @@ public final class MainApplication extends BaseApplication {
     }
 
     private void initInstabug() {
-        if (DevUtils.isRunningUnitTest()) Instabug.disable();
-
         new Instabug.Builder(this, "1c5817a3503c2a8ece8624b8c0f5a052")
             .setInvocationEvent(InstabugInvocationEvent.NONE)
             .setCrashReportingState(Feature.State.DISABLED)
@@ -95,6 +93,8 @@ public final class MainApplication extends BaseApplication {
             .setPushNotificationState(Feature.State.DISABLED)
             .setSurveysState(Feature.State.DISABLED)
             .build();
+
+        if (DevUtils.isRunningUnitTest()) Instabug.disable();
     }
 
     private void initFresco() {
