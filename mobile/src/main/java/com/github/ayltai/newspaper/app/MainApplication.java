@@ -44,31 +44,49 @@ public final class MainApplication extends BaseApplication {
     public void onCreate() {
         super.onCreate();
 
+        this.applyDevMode();
+
+        this.initFabric();
+
+        RxJava2Debug.enableRxJava2AssemblyTracking(new String[] { BuildConfig.APPLICATION_ID });
+
+        this.initFirebase();
+        this.initInstabug();
+        this.initFresco();
+        this.initBigImageViewer();
+        this.initCalligraphy();
+    }
+
+    private void applyDevMode() {
         if (!DevUtils.isRunningTests()) {
             StrictMode.setThreadPolicy(ThreadPolicyFactory.newThreadPolicy());
             StrictMode.setVmPolicy(VmPolicyFactory.newVmPolicy());
 
             if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this);
         }
+    }
 
-        if (!DevUtils.isLoggable() && !DevUtils.isRunningTests()) {
-            Fabric.with(this,
-                new Answers(),
-                new Crashlytics.Builder()
-                    .core(new CrashlyticsCore.Builder()
-                        .disabled(DevUtils.isLoggable())
-                        .build())
-                    .build());
-        }
+    private void initFabric() {
+        if (!DevUtils.isLoggable() && !DevUtils.isRunningTests()) Fabric.with(this,
+            new Answers(),
+            new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder()
+                    .disabled(DevUtils.isLoggable())
+                    .build())
+                .build());
+    }
 
-        RxJava2Debug.enableRxJava2AssemblyTracking(new String[] { BuildConfig.APPLICATION_ID });
-
+    private void initFirebase() {
         //noinspection CheckStyle
         try {
             FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(!DevUtils.isLoggable());
         } catch (final RuntimeException e) {
             if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
         }
+    }
+
+    private void initInstabug() {
+        if (DevUtils.isRunningUnitTest()) Instabug.disable();
 
         new Instabug.Builder(this, "1c5817a3503c2a8ece8624b8c0f5a052")
             .setInvocationEvent(InstabugInvocationEvent.NONE)
@@ -77,17 +95,17 @@ public final class MainApplication extends BaseApplication {
             .setPushNotificationState(Feature.State.DISABLED)
             .setSurveysState(Feature.State.DISABLED)
             .build();
+    }
 
-        if (DevUtils.isRunningUnitTest()) Instabug.disable();
-
+    private void initFresco() {
         FLog.setMinimumLoggingLevel(DevUtils.isLoggable() ? FLog.INFO : FLog.ERROR);
 
         ImagePipelineConfig.getDefaultImageRequestConfig()
             .setProgressiveRenderingEnabled(true);
 
         Fresco.initialize(this, OkHttpImagePipelineConfigFactory.newBuilder(this, DaggerHttpComponent.builder()
-                .build()
-                .httpClient())
+            .build()
+            .httpClient())
             .setDownsampleEnabled(true)
             .setResizeAndRotateEnabledForNetwork(true)
             .setExecutorSupplier(new DefaultExecutorSupplier(Runtime.getRuntime().availableProcessors()))
@@ -106,12 +124,16 @@ public final class MainApplication extends BaseApplication {
                 .setMaxCacheSizeOnVeryLowDiskSpace(Constants.CACHE_SIZE_MAX_SMALLEST)
                 .build())
             .build());
+    }
 
+    private void initBigImageViewer() {
         BigImageViewer.initialize(DaggerImageComponent.builder()
             .imageModule(new ImageModule(this))
             .build()
             .imageLoader());
+    }
 
+    private void initCalligraphy() {
         ViewPump.init(ViewPump.builder()
             .addInterceptor(new CalligraphyInterceptor(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/Lato-Regular.ttf")
