@@ -106,7 +106,6 @@ ext {
     architectureVersion   = '1.0.0'
     firebaseSdkVersion    = '11.6.2'
     daggerVersion         = '2.13'
-    rxBindingVersion      = '2.0.0'
     okhttpVersion         = '3.9.1'
     retrofitVersion       = '2.3.0'
     frescoVersion         = '1.5.0'
@@ -213,10 +212,10 @@ dependencies {
     }
 
     // Instabug
-    implementation 'com.instabug.library:instabug:4.3.3'
+    implementation 'com.instabug.library:instabug:4.5.0'
 
     // Debugging
-    implementation        'com.akaita.java:rxjava2-debug:1.2.1'
+    implementation        'com.akaita.java:rxjava2-debug:1.2.2'
     debugImplementation   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
