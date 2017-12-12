@@ -21,14 +21,18 @@
         android:allowBackup="true"
         tools:replace="android:supportsRtl,android:allowBackup">
         <activity
-            android:name=".app.MainActivity"
-            android:label="@string/app_name"
-            android:configChanges="density|fontScale|locale|orientation|screenSize">
+            android:name=".app.SplashActivity"
+            android:theme="@style/AppSplashThemeLight"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".app.MainActivity"
+            android:label="@string/app_name"
+            android:configChanges="density|fontScale|locale|orientation|screenSize" />
         <activity
             android:name=".app.VideoActivity"
             android:theme="@style/AppTheme.Dark"

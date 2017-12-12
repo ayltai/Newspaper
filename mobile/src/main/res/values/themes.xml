@@ -102,4 +102,14 @@
         <item name="roundedRectangle">@drawable/rounded_rectangle_dark</item>
         <item name="textOption">@color/text_option_dark</item>
     </style>
+    <style
+        name="AppSplashThemeLight"
+        parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_light</item>
+    </style>
+    <style
+        name="AppSplashThemeDark"
+        parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_dark</item>
+    </style>
 </resources>

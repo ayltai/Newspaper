@@ -32,8 +32,12 @@
     <color name="emptyBackgroundBottomDark">#686868</color>
     <color name="shadowStart">#001f242c</color>
     <color name="shadowEnd">#ff1f242c</color>
-    <color name="refreshColor1">#D50000</color>
-    <color name="refreshColor2">#FFAB00</color>
-    <color name="refreshColor3">#64DD17</color>
-    <color name="refreshColor4">#304FFE</color>
+    <color name="refreshColor1">#d50000</color>
+    <color name="refreshColor2">#ffab00</color>
+    <color name="refreshColor3">#64dd17</color>
+    <color name="refreshColor4">#304ffe</color>
+    <color name="splashStartLight">#ff5722</color>
+    <color name="splashEndLight">#dd2c00</color>
+    <color name="splashStartDark">#e64a19</color>
+    <color name="splashEndDark">#bf360c</color>
 </resources>
