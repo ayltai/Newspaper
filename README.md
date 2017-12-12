@@ -28,6 +28,10 @@ An aggregated news app containing news from 10+ local news publishers in Hong Ko
 * [Hong Kong Economic Journal (信報)](http://www.hkej.com)
 * [RTHK (香港電台)](http://news.rthk.hk)
 
+## Blog posts
+* [All you need to know about CircleCI 2.0 with Firebase Test Lab](https://medium.com/@ayltai/all-you-need-to-know-about-circleci-2-0-with-firebase-test-lab-2a66785ff3c2)
+* [You’re cropping images wrong](https://medium.com/@ayltai/youre-cropping-images-wrong-a79e8f67e6c9)
+
 ## Requirements
 This app supports Android 4.1 Jelly Bean (API 16) or later.
 
@@ -38,7 +42,7 @@ This app is made with the support of open source projects:
 * [Realm](https://realm.io/news/realm-for-android)
 * [RxJava](https://github.com/ReactiveX/RxJava)
 * [RxAndroid](https://github.com/ReactiveX/RxAndroid)
-* [RxBinding](https://github.com/JakeWharton/RxBinding)
+* [RxJava2Debug](https://github.com/akaita/RxJava2Debug)
 * [Dagger 2](https://google.github.io/dagger)
 * [Facebook Fresco](https://github.com/facebook/fresco)
 * [FrescoImageViewer](https://github.com/stfalcon-studio/FrescoImageViewer)
@@ -51,7 +55,6 @@ This app is made with the support of open source projects:
 * [ShimmerLayout](https://github.com/team-supercharge/ShimmerLayout)
 * [SmallBang](https://github.com/hanks-zyh/SmallBang)
 * [OkHttp](https://github.com/square/okhttp)
-* [BottomBar](https://github.com/roughike/BottomBar)
 * [FlowLayout](https://github.com/nex3z/FlowLayout)
 * [Calligraphy](https://github.com/InflationX/Calligraphy)
 * [AutoValue](https://github.com/google/auto/tree/master/value)
