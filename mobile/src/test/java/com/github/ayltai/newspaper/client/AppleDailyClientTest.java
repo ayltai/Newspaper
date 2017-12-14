@@ -23,7 +23,7 @@ import io.reactivex.Observable;
 
 public final class AppleDailyClientTest extends NetworkTest {
     private static final String APPLE_DAILY_URL         = "https://hk.appledaily.com/video/videolist/20170909/local/home/0";
-    private static final String APPLE_DAILY_DETAILS_URL = "http://hk.apple.nextmedia.com/news/art/20170909/20147535";
+    private static final String APPLE_DAILY_DETAILS_URL = "https://hk.news.appledaily.com/local/daily/article/20170909/20147535";
     private static final String ERROR_URL               = "error 1";
     private static final String ERROR_DETAILS_URL       = "error 2";
 
@@ -71,7 +71,7 @@ public final class AppleDailyClientTest extends NetworkTest {
         final Item item = this.client.updateItem(this.client.getItems(AppleDailyClientTest.APPLE_DAILY_URL).blockingGet().get(0)).blockingGet();
 
         Assert.assertEquals("Incorrect item.getImages().size()", 6, item.getImages().size());
-        Assert.assertEquals("Incorrect image URL", "http://static.apple.nextmedia.com/images/apple-photos/apple/20170909/large/09la1p201new.jpg", item.getImages().get(0).getUrl());
+        Assert.assertEquals("Incorrect image URL", "https://static.appledaily.hk/images/apple-photos/apple/20170909/large/09la1p201new.jpg", item.getImages().get(0).getUrl());
         Assert.assertEquals("Incorrect image description", "■教大校長張仁良昨譴責冒犯性標語時眼泛淚光。王心義攝", item.getImages().get(0).getDescription());
         Assert.assertNotNull("item.getVideo() is null", item.getVideo());
         Assert.assertEquals("Incorrect video URL", "http://video.appledaily.com.hk/mcp/encode/2017/09/09/3437461/20170908_news_53_newADAD_w.mp4", item.getVideo().getVideoUrl());
