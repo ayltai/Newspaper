@@ -35,9 +35,8 @@ final class HketClient extends RssClient {
     private static final String PAPER_BASE_URI         = "http://paper.hket.com/";
     private static final String INTERNATIONAL_BASE_URI = "http://inews.hket.com/";
 
-    private static final String TAG_DATA_SRC  = "data-src=\"";
-    private static final String TAG_PARAGRAPH = "</p>";
-    private static final String TAG_QUOTE     = "\"";
+    private static final String TAG_DATA_SRC = "data-src=\"";
+    private static final String TAG_QUOTE    = "\"";
 
     //endregion
 
@@ -78,7 +77,7 @@ final class HketClient extends RssClient {
                         final String videoId = StringUtils.substringBetween(html, " src=\"//www.youtube.com/embed/", "?rel=0");
                         if (videoId != null) item.setVideo(new Video("https://www.youtube.com/watch?v=" + videoId, String.format("https://img.youtube.com/vi/%s/mqdefault.jpg", videoId)));
 
-                        final String[]      contents = StringUtils.substringsBetween(html, "<p>", HketClient.TAG_PARAGRAPH);
+                        final String[]      contents = StringUtils.substringsBetween(html, isPaperNews ? "<P>" : "<p>", isPaperNews ? "</P>" : "</p>");
                         final StringBuilder builder  = new StringBuilder();
 
                         for (final String content : contents) {
