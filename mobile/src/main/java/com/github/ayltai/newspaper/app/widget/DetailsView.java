@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.app.screen;
+package com.github.ayltai.newspaper.app.widget;
 
 import java.util.Date;
 import java.util.List;
@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 import com.google.auto.value.AutoValue;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
@@ -43,23 +44,21 @@ import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Video;
-import com.github.ayltai.newspaper.app.widget.ItemView;
-import com.github.ayltai.newspaper.app.widget.VideoView;
+import com.github.ayltai.newspaper.app.view.DetailsPresenter;
 import com.github.ayltai.newspaper.media.FrescoImageLoader;
-import com.github.ayltai.newspaper.util.SimpleTextToSpeech;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
+import com.github.ayltai.newspaper.util.SimpleTextToSpeech;
 import com.github.ayltai.newspaper.util.SnackbarUtils;
-import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Views;
 import com.github.piasy.biv.view.BigImageView;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
 import com.gjiazhe.panoramaimageview.PanoramaImageView;
-import com.jakewharton.rxbinding2.view.RxView;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import flow.ClassKey;
@@ -68,15 +67,15 @@ import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 import xyz.hanks.library.bang.SmallBangView;
 
-public final class DetailsScreen extends ItemView implements DetailsPresenter.View {
+public final class DetailsView extends ItemView implements DetailsPresenter.View {
     @AutoValue
     public abstract static class Key extends ClassKey implements Parcelable {
         @NonNull
         public abstract NewsItem getItem();
 
         @NonNull
-        public static DetailsScreen.Key create(@NonNull final NewsItem item) {
-            return new AutoValue_DetailsScreen_Key(item);
+        public static DetailsView.Key create(@NonNull final NewsItem item) {
+            return new AutoValue_DetailsView_Key(item);
         }
     }
 
@@ -103,7 +102,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     private final TextView                toolbarTitle;
     private final View                    toolbarBackground;
     private final ViewGroup               imageContainer;
-    private final ViewGroup               container;
+    private final View                    progress;
     private final SimpleDraweeView        avatar;
     private final TextView                source;
     private final TextView                publishDate;
@@ -123,20 +122,19 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     private GyroscopeObserver  gyroscopeObserver;
     private SmallBangView      smallBang;
     private boolean            isPanoramaEnabled;
-    private boolean            hasAnimated;
     private boolean            isTtsActive;
     private SimpleTextToSpeech tts;
 
-    public DetailsScreen(@NonNull final Context context) {
+    public DetailsView(@NonNull final Context context) {
         super(context);
 
-        final View view = LayoutInflater.from(context).inflate(R.layout.screen_news_details, this, true);
+        final View view = LayoutInflater.from(context).inflate(R.layout.view_details, this, true);
 
         this.appBarLayout            = view.findViewById(R.id.appBarLayout);
         this.collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbarLayout);
         this.toolbar                 = view.findViewById(R.id.toolbar);
         this.imageContainer          = view.findViewById(R.id.image_container);
-        this.container               = view.findViewById(R.id.container);
+        this.progress                = view.findViewById(R.id.progress);
         this.avatar                  = view.findViewById(R.id.avatar);
         this.source                  = view.findViewById(R.id.source);
         this.publishDate             = view.findViewById(R.id.publish_date);
@@ -238,7 +236,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             if (Animations.isEnabled()) this.smallBang.likeAnimation(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(final Animator animation) {
-                    DetailsScreen.this.bookmarkAction.setClickable(true);
+                    DetailsView.this.bookmarkAction.setClickable(true);
                 }
             });
         } else {
@@ -300,17 +298,16 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
 
             this.videoContainer.addView(this.videoView);
         }
-
-        if (Animations.isEnabled() && !this.hasAnimated) {
-            this.hasAnimated = true;
-
-            Animations.animateViewGroup(this.container);
-        }
     }
 
     //endregion
 
     //region Methods
+
+    @Override
+    public void showProgress(final boolean show) {
+        this.progress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+    }
 
     @Override
     public void textToSpeech() {
@@ -438,8 +435,6 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
     @CallSuper
     @Override
     public void onAttachedToWindow() {
-        this.hasAnimated = false;
-
         if (this.isPanoramaEnabled) {
             this.gyroscopeObserver.register(this.getContext());
             this.panoramaImageView.setImageDrawable(null);
@@ -447,12 +442,12 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             this.toolbarImage.getSSIV().setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
         }
 
-        this.manageDisposable(RxView.clicks(this.avatar).subscribe(irrelevant -> this.avatarClicks.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.source).subscribe(irrelevant -> this.sourceClicks.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.textToSpeechAction).subscribe(irrelevant -> this.textToSpeechClicks.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.bookmarkAction).subscribe(irrelevant -> this.bookmarkClicks.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.viewOnWebAction).subscribe(irrelevant -> this.viewOnWebClicks.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.shareAction).subscribe(irrelevant -> this.shareClicks.onNext(Irrelevant.INSTANCE)));
+        this.avatar.setOnClickListener(view -> this.avatarClicks.onNext(Irrelevant.INSTANCE));
+        this.source.setOnClickListener(view -> this.sourceClicks.onNext(Irrelevant.INSTANCE));
+        this.textToSpeechAction.setOnClickListener(view -> this.textToSpeechClicks.onNext(Irrelevant.INSTANCE));
+        this.bookmarkAction.setOnClickListener(view -> this.bookmarkClicks.onNext(Irrelevant.INSTANCE));
+        this.viewOnWebAction.setOnClickListener(view -> this.viewOnWebClicks.onNext(Irrelevant.INSTANCE));
+        this.shareAction.setOnClickListener(view -> this.shareClicks.onNext(Irrelevant.INSTANCE));
 
         super.onAttachedToWindow();
 
@@ -488,7 +483,7 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
         imageView.showImage(Uri.parse(image.getUrl()));
 
         imageView.setOnClickListener(view -> this.imageClicks.onNext(image));
-        this.manageDisposable(RxView.clicks((View)imageView.getParent()).subscribe(irrelevant -> this.imageClicks.onNext(image)));
+        ((View)imageView.getParent()).setOnClickListener(view -> this.imageClicks.onNext(image));
     }
 
     private void subscribeImage(@NonNull final PanoramaImageView imageView, @NonNull final Image image) {
@@ -497,10 +492,10 @@ public final class DetailsScreen extends ItemView implements DetailsPresenter.Vi
             .subscribe(
                 imageView::setImageBitmap,
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                 }
             );
         imageView.setOnClickListener(view -> this.imageClicks.onNext(image));
-        this.manageDisposable(RxView.clicks((View)imageView.getParent()).subscribe(irrelevant -> this.imageClicks.onNext(image)));
+        ((View)imageView.getParent()).setOnClickListener(view -> this.imageClicks.onNext(image));
     }
 }

@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
@@ -23,9 +24,9 @@ import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
-import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -74,12 +75,12 @@ final class AppleDailyClient extends Client {
                         if (link != null) {
                             item.setTitle(StringUtils.substringBetween(section, AppleDailyClient.TAG_TITLE, AppleDailyClient.TAG_QUOTE));
                             item.setLink(link.substring(0, link.lastIndexOf(AppleDailyClient.SLASH))
-                                .replace("dv", "apple")
-                                .replace("actionnews/local", "news/art")
-                                .replace("actionnews/chinainternational", "international/art")
-                                .replace("actionnews/finance", "financeestate/art")
-                                .replace("actionnews/entertainment", "entertainment/art")
-                                .replace("actionnews/sports", "sports/art"));
+                                .replace("video", "news")
+                                .replace("actionnews/local", "local/daily/article")
+                                .replace("actionnews/international", "international/daily/article")
+                                .replace("actionnews/finance", "finance/daily/article")
+                                .replace("actionnews/entertainment", "entertainment/daily/article")
+                                .replace("actionnews/sports", "sports/daily/article"));
                             item.setSource(this.source.getName());
                             if (category != null) item.setCategory(category);
 
@@ -96,7 +97,7 @@ final class AppleDailyClient extends Client {
                     emitter.onSuccess(this.filter(items));
                 },
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, RxJava2Debug.getEnhancedStackTrace(error));
 
                     emitter.onSuccess(Collections.emptyList());
                 }
@@ -146,7 +147,7 @@ final class AppleDailyClient extends Client {
                         if (!emitter.isDisposed()) emitter.onSuccess(item);
                     },
                     error -> {
-                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), RxJava2Debug.getEnhancedStackTrace(error));
 
                         if (!emitter.isDisposed()) emitter.onError(error);
                     }
@@ -175,7 +176,7 @@ final class AppleDailyClient extends Client {
 
                     if (videoId.equals(item.getString("video_id"))) return new Video(item.getString("video"), item.getString("image_zoom"));
                 } catch (final JSONException e) {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
                 }
             }
         }

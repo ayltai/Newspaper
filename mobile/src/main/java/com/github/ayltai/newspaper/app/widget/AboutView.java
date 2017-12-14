@@ -15,16 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.view.AboutPresenter;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
-import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.BaseView;
 import com.instabug.library.Instabug;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
@@ -55,6 +55,8 @@ public final class AboutView extends BaseView implements AboutPresenter.View {
 
     public AboutView(@NonNull final Context context) {
         super(context);
+
+        this.init();
     }
 
     //region Properties
@@ -115,7 +117,7 @@ public final class AboutView extends BaseView implements AboutPresenter.View {
         try {
             Instabug.invoke();
         } catch (final IllegalStateException e) {
-            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
 
             this.openUrl(url);
         }
@@ -147,9 +149,9 @@ public final class AboutView extends BaseView implements AboutPresenter.View {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        this.manageDisposable(RxView.clicks(this.visitAction).subscribe(irrelevant -> this.visitActions.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.rateAction).subscribe(irrelevant -> this.rateActions.onNext(Irrelevant.INSTANCE)));
-        this.manageDisposable(RxView.clicks(this.reportAction).subscribe(irrelevant -> this.reportActions.onNext(Irrelevant.INSTANCE)));
+        this.visitAction.setOnClickListener(view -> this.visitActions.onNext(Irrelevant.INSTANCE));
+        this.rateAction.setOnClickListener(view -> this.rateActions.onNext(Irrelevant.INSTANCE));
+        this.reportAction.setOnClickListener(view -> this.reportActions.onNext(Irrelevant.INSTANCE));
     }
 
     @Override
@@ -174,7 +176,7 @@ public final class AboutView extends BaseView implements AboutPresenter.View {
                 .build()
                 .launchUrl(this.getContext(), Uri.parse(url));
         } catch (final ActivityNotFoundException e) {
-            if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), e.getMessage(), e);
+            if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
 
             final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             if (this.getContext().getPackageManager().resolveActivity(intent, 0) != null) this.getContext().startActivity(intent);

@@ -23,11 +23,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         // Clicks Bookmarks bottom tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_bookmark),
-            ViewMatchers.withParent(Matchers.allOf(
-                ViewMatchers.withId(R.id.bb_bottom_bar_item_container),
-                ViewMatchers.withParent(Matchers.allOf(
-                    ViewMatchers.withId(R.id.bb_bottom_bar_outer_container),
-                    ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomBar)))))),
+            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView))),
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
@@ -59,11 +55,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         // Clicks News bottom tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_news),
-            ViewMatchers.withParent(Matchers.allOf(
-                ViewMatchers.withId(R.id.bb_bottom_bar_item_container),
-                ViewMatchers.withParent(Matchers.allOf(
-                    ViewMatchers.withId(R.id.bb_bottom_bar_outer_container),
-                    ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomBar)))))),
+            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView))),
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
@@ -93,11 +85,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         // Clicks Bookmarks bottom tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_bookmark),
-            ViewMatchers.withParent(Matchers.allOf(
-                ViewMatchers.withId(R.id.bb_bottom_bar_item_container),
-                ViewMatchers.withParent(Matchers.allOf(
-                    ViewMatchers.withId(R.id.bb_bottom_bar_outer_container),
-                    ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomBar)))))),
+            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView))),
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 

@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Source;
@@ -15,8 +16,8 @@ import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.rss.RssFeed;
 import com.github.ayltai.newspaper.rss.RssItem;
-import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.RxUtils;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -48,7 +49,7 @@ public abstract class RssClient extends Client {
                     if (!emitter.isDisposed()) emitter.onSuccess(items);
                 },
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, RxJava2Debug.getEnhancedStackTrace(error));
 
                     if (!emitter.isDisposed()) emitter.onSuccess(Collections.emptyList());
                 }

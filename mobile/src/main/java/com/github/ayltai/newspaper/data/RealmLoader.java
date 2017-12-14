@@ -9,10 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.net.NetworkUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -78,7 +79,7 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
                         }
                     },
                     error -> {
-                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                     }), BackpressureStrategy.LATEST);
         }
 
@@ -108,7 +109,7 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
                     super.onForceLoad();
                 },
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                 });
     }
 
@@ -132,7 +133,7 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
                     if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "A Realm instance is closed");
                 },
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                 });
 
         return result;

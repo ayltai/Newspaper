@@ -15,13 +15,13 @@ String VERSION_HASH     = 'git rev-parse --short HEAD'.execute().text.trim()
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.2'
     defaultConfig {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
         targetSdkVersion 27
-        versionCode      26
-        versionName      '3.8.' + VERSION_REVISION + '-' + VERSION_HASH
+        versionCode      27
+        versionName      '3.9.' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments disableAnalytics : 'true'
@@ -106,11 +106,10 @@ ext {
     architectureVersion   = '1.0.0'
     firebaseSdkVersion    = '11.6.2'
     daggerVersion         = '2.13'
-    rxBindingVersion      = '2.0.0'
     okhttpVersion         = '3.9.1'
     retrofitVersion       = '2.3.0'
     frescoVersion         = '1.5.0'
-    bigImageViewerVersion = '1.4.4'
+    bigImageViewerVersion = '1.4.5'
     exoPlayerVersion      = '2.6.0'
     leakCanaryVersion     = '1.5.4'
     robolectricVersion    = '3.5.1'
@@ -141,6 +140,7 @@ dependencies {
     annotationProcessor ("android.arch.lifecycle:compiler:$architectureVersion") {
         exclude group : 'com.android.support'
     }
+    implementation "android.arch.lifecycle:common-java8:$architectureVersion"
 
     // Android Support libraries
     implementation "com.android.support:cardview-v7:$supportLibraryVersion"
@@ -155,9 +155,6 @@ dependencies {
     // Reactive programming
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxBindingVersion"
-    implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxBindingVersion"
-    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxBindingVersion"
 
     // Dependency injection
     implementation      "com.google.dagger:dagger:$daggerVersion"
@@ -188,19 +185,22 @@ dependencies {
     // Video processing
     implementation "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
     implementation "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:extension-okhttp:$exoPlayerVersion"
 
     // UI components
     implementation 'com.squareup.flow:flow:1.0.0-alpha3'
     implementation 'com.nex3z:flow-layout:1.1.0'
-    implementation 'com.roughike:bottom-bar:2.3.1'
 
     // Eye candies
     implementation 'jp.wasabeef:recyclerview-animators:2.2.7'
     implementation 'io.supercharge:shimmerlayout:1.0.2'
+    implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     implementation 'pub.hanks:smallbang:1.2.2'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.gjiazhe:PanoramaImageView:1.0'
     implementation 'io.github.inflationx:calligraphy3:3.0.0'
+
+    implementation 'net.sf.trove4j:trove4j:3.0.3'
 
     // Code generation tools
     compileOnly         "com.jakewharton.auto.value:auto-value-annotations:1.5"
@@ -214,15 +214,16 @@ dependencies {
     }
 
     // Instabug
-    implementation 'com.instabug.library:instabug:4.3.3'
+    implementation 'com.instabug.library:instabug:4.5.0'
 
     // Debugging
+    implementation        'com.akaita.java:rxjava2-debug:1.2.2'
     debugImplementation   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testImplementation 'org.mockito:mockito-core:2.12.2'
+    testImplementation 'org.mockito:mockito-core:2.13.0'
     testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"

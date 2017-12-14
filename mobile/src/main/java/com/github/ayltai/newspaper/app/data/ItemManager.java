@@ -60,9 +60,11 @@ public final class ItemManager extends DataManager {
             final RealmQuery<NewsItem> query = this.getRealm()
                 .where(NewsItem.class)
                 .in(NewsItem.FIELD_SOURCE, sources)
+                .and()
                 .in(NewsItem.FIELD_CATEGORY, categories);
 
-            if (!TextUtils.isEmpty(searchText)) query.beginGroup()
+            if (!TextUtils.isEmpty(searchText)) query.and()
+                .beginGroup()
                 .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
                 .or()
                 .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
@@ -84,9 +86,11 @@ public final class ItemManager extends DataManager {
                 .where(NewsItem.class)
                 .greaterThan(NewsItem.FIELD_LAST_ACCESSED_DATE, 0)
                 .in(NewsItem.FIELD_SOURCE, sources)
+                .and()
                 .in(NewsItem.FIELD_CATEGORY, categories);
 
-            if (!TextUtils.isEmpty(searchText)) query.beginGroup()
+            if (!TextUtils.isEmpty(searchText)) query.and()
+                .beginGroup()
                 .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
                 .or()
                 .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
@@ -108,9 +112,11 @@ public final class ItemManager extends DataManager {
                 .where(NewsItem.class)
                 .equalTo(NewsItem.FIELD_BOOKMARKED, true)
                 .in(NewsItem.FIELD_SOURCE, sources)
+                .and()
                 .in(NewsItem.FIELD_CATEGORY, categories);
 
-            if (!TextUtils.isEmpty(searchText)) query.beginGroup()
+            if (!TextUtils.isEmpty(searchText)) query.and()
+                .beginGroup()
                 .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
                 .or()
                 .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
@@ -215,6 +221,7 @@ public final class ItemManager extends DataManager {
         this.getRealm()
             .where(NewsItem.class)
             .lessThan(NewsItem.FIELD_PUBLISH_DATE, System.currentTimeMillis() - Constants.HOUSEKEEP_TIME)
+            .and()
             .beginGroup()
             .notEqualTo(NewsItem.FIELD_BOOKMARKED, true)
             .or()

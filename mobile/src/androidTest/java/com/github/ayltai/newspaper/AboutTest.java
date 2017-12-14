@@ -23,7 +23,10 @@ public final class AboutTest extends BaseTest {
     @Test
     public void visitWebsite() {
         // Clicks About bottom tab
-        Espresso.onView(ViewMatchers.withText("About"))
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_about),
+            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView))),
+            ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".visitWebsite", this.testRule.getActivity());
@@ -45,7 +48,10 @@ public final class AboutTest extends BaseTest {
     @Test
     public void rateApp() {
         // Clicks About bottom tab
-        Espresso.onView(ViewMatchers.withText("About"))
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_about),
+            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView))),
+            ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".rateApp", this.testRule.getActivity());

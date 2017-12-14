@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.SearchEvent;
@@ -85,14 +86,14 @@ public final class BookmarkedNewsView extends NewsView {
         view.attachments().subscribe(
             isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
             error -> {
-                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
             }
         );
 
         view.detachments().subscribe(
             irrelevant -> presenter.onViewDetached(),
             error -> {
-                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
             }
         );
 

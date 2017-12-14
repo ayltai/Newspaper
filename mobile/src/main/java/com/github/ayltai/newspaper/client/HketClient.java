@@ -11,6 +11,7 @@ import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Item;
@@ -19,9 +20,9 @@ import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
-import com.github.ayltai.newspaper.util.DevUtils;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -34,9 +35,8 @@ final class HketClient extends RssClient {
     private static final String PAPER_BASE_URI         = "http://paper.hket.com/";
     private static final String INTERNATIONAL_BASE_URI = "http://inews.hket.com/";
 
-    private static final String TAG_DATA_SRC  = "data-src=\"";
-    private static final String TAG_PARAGRAPH = "</p>";
-    private static final String TAG_QUOTE     = "\"";
+    private static final String TAG_DATA_SRC = "data-src=\"";
+    private static final String TAG_QUOTE    = "\"";
 
     //endregion
 
@@ -77,7 +77,7 @@ final class HketClient extends RssClient {
                         final String videoId = StringUtils.substringBetween(html, " src=\"//www.youtube.com/embed/", "?rel=0");
                         if (videoId != null) item.setVideo(new Video("https://www.youtube.com/watch?v=" + videoId, String.format("https://img.youtube.com/vi/%s/mqdefault.jpg", videoId)));
 
-                        final String[]      contents = StringUtils.substringsBetween(html, "<p>", HketClient.TAG_PARAGRAPH);
+                        final String[]      contents = StringUtils.substringsBetween(html, isPaperNews ? "<P>" : "<p>", isPaperNews ? "</P>" : "</p>");
                         final StringBuilder builder  = new StringBuilder();
 
                         for (final String content : contents) {
@@ -91,7 +91,7 @@ final class HketClient extends RssClient {
                     }
                 },
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), RxJava2Debug.getEnhancedStackTrace(error));
 
                     if (!emitter.isDisposed()) emitter.onError(error);
                 }

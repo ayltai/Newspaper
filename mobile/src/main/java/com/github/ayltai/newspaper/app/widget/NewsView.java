@@ -23,6 +23,8 @@ public abstract class NewsView extends BaseView implements BaseNewsView {
 
     protected NewsView(@NonNull final Context context) {
         super(context);
+
+        this.init();
     }
 
     //region Methods

@@ -15,7 +15,6 @@ import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.BaseView;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
@@ -141,7 +140,7 @@ public abstract class ItemView extends BaseView implements ItemPresenter.View {
     @CallSuper
     @Override
     public void onAttachedToWindow() {
-        if (this.container != null) this.manageDisposable(RxView.clicks(this.container).subscribe(irrelevant -> this.clicks.onNext(Irrelevant.INSTANCE)));
+        if (this.container != null) this.container.setOnClickListener(view -> this.clicks.onNext(Irrelevant.INSTANCE));
 
         super.onAttachedToWindow();
     }

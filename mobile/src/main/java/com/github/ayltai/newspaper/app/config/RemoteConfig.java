@@ -9,6 +9,7 @@ import android.util.Log;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.DevUtils;
@@ -31,7 +32,7 @@ public final class RemoteConfig {
             this.remoteConfig.fetch(this.remoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled() ? 0 : Constants.REMOTE_CONFIG_CACHE_EXPIRATION)
                 .addOnSuccessListener(activity, irrelevant -> remoteConfig.activateFetched())
                 .addOnFailureListener(activity, error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                 });
         }
     }

@@ -55,6 +55,7 @@ public abstract class DataTest extends UnitTest {
         PowerMockito.when(query.in(Mockito.anyString(), Mockito.any(String[].class))).thenReturn(query);
         PowerMockito.when(query.beginGroup()).thenReturn(query);
         PowerMockito.when(query.endGroup()).thenReturn(query);
+        PowerMockito.when(query.and()).thenReturn(query);
         PowerMockito.when(query.or()).thenReturn(query);
         PowerMockito.when(query.contains(Mockito.anyString(), Mockito.anyString(), Mockito.any(Case.class))).thenReturn(query);
         PowerMockito.when(query.greaterThan(Mockito.anyString(), Mockito.anyInt())).thenReturn(query);

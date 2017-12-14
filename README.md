@@ -1,7 +1,7 @@
 Newspaper
 =========
 
-[![Release](https://img.shields.io/github/release/ayltai/Newspaper.svg?label=release&maxAge=1800)](https://1244-77390316-gh.circle-artifacts.com/0/apk/release/mobile-release.apk) [![Build Status](https://circleci.com/gh/ayltai/Newspaper.svg?style=shield)](https://circleci.com/gh/ayltai/Newspaper) [![Code Quality](https://api.codacy.com/project/badge/Grade/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Grade) [![Code Coverage](https://api.codacy.com/project/badge/Coverage/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Coverage) [![Code Coverage](https://codecov.io/gh/ayltai/Newspaper/branch/master/graph/badge.svg)](https://codecov.io/gh/ayltai/Newspaper) [![Android API](https://img.shields.io/badge/API-16%2B-blue.svg?style=flat&label=API&maxAge=300)](https://www.android.com/history/) [![License](https://img.shields.io/badge/License-apache%202.0-blue.svg?label=license&maxAge=1800)](https://github.com/ayltai/Newspaper/blob/master/LICENSE)
+[![Release](https://img.shields.io/github/release/ayltai/Newspaper.svg?label=release&maxAge=1800)](https://1292-77390316-gh.circle-artifacts.com/0/apk/release/mobile-release.apk) [![Build Status](https://circleci.com/gh/ayltai/Newspaper.svg?style=shield)](https://circleci.com/gh/ayltai/Newspaper) [![Code Quality](https://api.codacy.com/project/badge/Grade/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Grade) [![Code Coverage](https://api.codacy.com/project/badge/Coverage/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Coverage) [![Code Coverage](https://codecov.io/gh/ayltai/Newspaper/branch/master/graph/badge.svg)](https://codecov.io/gh/ayltai/Newspaper) [![Android API](https://img.shields.io/badge/API-16%2B-blue.svg?style=flat&label=API&maxAge=300)](https://www.android.com/history/) [![License](https://img.shields.io/badge/License-apache%202.0-blue.svg?label=license&maxAge=1800)](https://github.com/ayltai/Newspaper/blob/master/LICENSE)
 
 An aggregated news app containing news from 10+ local news publishers in Hong Kong. Made with ❤
 
@@ -28,6 +28,10 @@ An aggregated news app containing news from 10+ local news publishers in Hong Ko
 * [Hong Kong Economic Journal (信報)](http://www.hkej.com)
 * [RTHK (香港電台)](http://news.rthk.hk)
 
+## Blog posts
+* [All you need to know about CircleCI 2.0 with Firebase Test Lab](https://medium.com/@ayltai/all-you-need-to-know-about-circleci-2-0-with-firebase-test-lab-2a66785ff3c2)
+* [You’re cropping images wrong](https://medium.com/@ayltai/youre-cropping-images-wrong-a79e8f67e6c9)
+
 ## Requirements
 This app supports Android 4.1 Jelly Bean (API 16) or later.
 
@@ -36,6 +40,10 @@ This app is made with the support of open source projects:
 
 * [Flow](https://github.com/square/flow)
 * [Realm](https://realm.io/news/realm-for-android)
+* [RxJava](https://github.com/ReactiveX/RxJava)
+* [RxAndroid](https://github.com/ReactiveX/RxAndroid)
+* [RxJava2Debug](https://github.com/akaita/RxJava2Debug)
+* [Dagger 2](https://google.github.io/dagger)
 * [Facebook Fresco](https://github.com/facebook/fresco)
 * [FrescoImageViewer](https://github.com/stfalcon-studio/FrescoImageViewer)
 * [Subsampling Scale Image View](https://github.com/davemorrissey/subsampling-scale-image-view)
@@ -44,17 +52,14 @@ This app is made with the support of open source projects:
 * [KenBurnsView](https://github.com/flavioarfaria/KenBurnsView)
 * [PanoramaImageView](https://github.com/gjiazhe/PanoramaImageView)
 * [ExoPlayer](https://github.com/google/ExoPlayer)
+* [ShimmerLayout](https://github.com/team-supercharge/ShimmerLayout)
 * [SmallBang](https://github.com/hanks-zyh/SmallBang)
 * [OkHttp](https://github.com/square/okhttp)
-* [BottomBar](https://github.com/roughike/BottomBar)
 * [FlowLayout](https://github.com/nex3z/FlowLayout)
-* [RxJava](https://github.com/ReactiveX/RxJava)
-* [RxAndroid](https://github.com/ReactiveX/RxAndroid)
-* [RxBinding](https://github.com/JakeWharton/RxBinding)
-* [Dagger 2](https://google.github.io/dagger)
 * [Calligraphy](https://github.com/InflationX/Calligraphy)
 * [AutoValue](https://github.com/google/auto/tree/master/value)
 * [Gson](https://github.com/google/gson)
+* [GNU Trove](https://bitbucket.org/trove4j/trove)
 * [Espresso](https://google.github.io/android-testing-support-library)
 * [JUnit 4](https://github.com/junit-team/junit4)
 * [Mockito](https://github.com/mockito/mockito)

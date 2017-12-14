@@ -19,6 +19,8 @@ import com.github.ayltai.newspaper.data.DataModule;
 import com.github.ayltai.newspaper.media.DaggerImageComponent;
 import com.github.ayltai.newspaper.media.ImageComponent;
 import com.github.ayltai.newspaper.media.ImageModule;
+import com.github.ayltai.newspaper.net.DaggerHttpComponent;
+import com.github.ayltai.newspaper.net.HttpComponent;
 
 import io.reactivex.disposables.Disposable;
 
@@ -60,6 +62,11 @@ public final class ComponentFactory implements Disposable, LifecycleObserver {
             .build();
 
         return this.configComponent;
+    }
+
+    public HttpComponent getHttpComponent() {
+        return DaggerHttpComponent.builder()
+            .build();
     }
 
     public DataComponent getDataComponent(@NonNull final Context context) {

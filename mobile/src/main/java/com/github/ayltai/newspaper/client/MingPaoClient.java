@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
@@ -21,8 +22,8 @@ import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
-import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.RxUtils;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -90,7 +91,7 @@ final class MingPaoClient extends RssClient {
                     if (!emitter.isDisposed()) emitter.onSuccess(item);
                 },
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), RxJava2Debug.getEnhancedStackTrace(error));
 
                     if (!emitter.isDisposed()) emitter.onError(error);
                 }
@@ -112,7 +113,7 @@ final class MingPaoClient extends RssClient {
                     if (img != null) fullImages.add(img);
                 }
             } catch (final JSONException e) {
-                if (DevUtils.isLoggable()) Log.e(MingPaoClient.class.getSimpleName(), e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(MingPaoClient.class.getSimpleName(), e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
             }
         }
 
@@ -138,7 +139,7 @@ final class MingPaoClient extends RssClient {
                     item.setVideo(new Video(videoUrl, videoUrl.replace("mp4", "jpg")));
                 }
             } catch (final JSONException e) {
-                if (DevUtils.isLoggable()) Log.e(MingPaoClient.class.getSimpleName(), e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(MingPaoClient.class.getSimpleName(), e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
             }
         }
 

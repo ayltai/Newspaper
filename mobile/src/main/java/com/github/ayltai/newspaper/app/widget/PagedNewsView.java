@@ -24,16 +24,17 @@ import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.view.BaseNewsView;
 import com.github.ayltai.newspaper.widget.BaseView;
-import com.github.ayltai.newspaper.widget.ListView;
-import com.jakewharton.rxbinding2.support.v4.view.RxViewPager;
+import com.github.ayltai.newspaper.widget.VerticalListView;
 
-public class PagedNewsView extends BaseView implements BaseNewsView {
+public class PagedNewsView extends BaseView implements BaseNewsView, ViewPager.OnPageChangeListener {
     private UserConfig       userConfig;
     private ViewPager        viewPager;
     private PagedNewsAdapter adapter;
 
     public PagedNewsView(@NonNull final Context context) {
         super(context);
+
+        this.init();
     }
 
     @CallSuper
@@ -48,15 +49,7 @@ public class PagedNewsView extends BaseView implements BaseNewsView {
             this.viewPager.setAdapter(this.adapter);
         }
 
-        this.manageDisposable(RxViewPager.pageSelections(this.viewPager).subscribe(index -> {
-            this.adapter.setCurrentPosition(index);
-
-            ComponentFactory.getInstance()
-                .getAnalyticsComponent(this.getContext())
-                .eventLogger()
-                .logEvent(new ClickEvent()
-                    .setElementName("Page Selection"));
-        }));
+        this.viewPager.addOnPageChangeListener(this);
 
         super.onAttachedToWindow();
     }
@@ -65,13 +58,13 @@ public class PagedNewsView extends BaseView implements BaseNewsView {
 
     @Override
     public void up() {
-        final ListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
+        final VerticalListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
         if (view != null) view.up();
     }
 
     @Override
     public void refresh() {
-        final ListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
+        final VerticalListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
         if (view != null) view.refresh();
     }
 
@@ -128,4 +121,23 @@ public class PagedNewsView extends BaseView implements BaseNewsView {
     }
 
     //endregion
+
+    @Override
+    public void onPageSelected(final int position) {
+        this.adapter.setCurrentPosition(position);
+
+        ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getContext())
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Page Selection"));
+    }
+
+    @Override
+    public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageScrollStateChanged(final int state) {
+    }
 }

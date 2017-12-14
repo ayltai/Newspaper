@@ -9,13 +9,13 @@ import android.content.Context;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.ArrayMap;
 import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.DevUtils;
@@ -26,11 +26,13 @@ import flow.KeyDispatcher;
 import flow.KeyParceler;
 import flow.State;
 import flow.TraversalCallback;
+import gnu.trove.map.TMap;
+import gnu.trove.map.hash.THashMap;
 import io.reactivex.disposables.Disposable;
 
 public abstract class RxFlow {
-    private final Map<Object, Pair<SoftReference<Presenter>, SoftReference<Presenter.View>>> cache       = Collections.synchronizedMap(new ArrayMap<>());
-    private final Map<Object, Disposable>                                                    disposables = Collections.synchronizedMap(new ArrayMap<>());
+    private final Map<Object, Pair<SoftReference<Presenter>, SoftReference<Presenter.View>>> cache       = Collections.synchronizedMap(new THashMap<>());
+    private final TMap<Object, Disposable>                                                   disposables = new THashMap<>();
 
     private final Activity activity;
 
@@ -101,8 +103,14 @@ public abstract class RxFlow {
     public void onDestroy() {
         this.cache.clear();
 
-        for (final Disposable disposable : this.disposables.values()) disposable.dispose();
-        this.disposables.clear();
+        synchronized (this.disposables) {
+            this.disposables.forEachValue(disposable -> {
+                disposable.dispose();
+                return true;
+            });
+
+            this.disposables.clear();
+        }
     }
 
     @NonNull
@@ -163,22 +171,24 @@ public abstract class RxFlow {
             if (view.attachments() != null) this.manageDisposable(view.attachments(), view.attachments().subscribe(
                 isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                 }
             ));
 
             if (view.detachments() != null) this.manageDisposable(view.detachments(), view.detachments().subscribe(
                 irrelevant -> presenter.onViewDetached(),
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                 }
             ));
         }
     }
 
     private void manageDisposable(@NonNull final Object key, @NonNull final Disposable disposable) {
-        if (this.disposables.containsKey(key)) this.disposables.get(key).dispose();
+        synchronized (this.disposables) {
+            if (this.disposables.containsKey(key)) this.disposables.get(key).dispose();
 
-        this.disposables.put(key, disposable);
+            this.disposables.put(key, disposable);
+        }
     }
 }
