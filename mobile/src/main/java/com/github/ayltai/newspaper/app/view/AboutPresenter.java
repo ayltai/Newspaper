@@ -39,7 +39,7 @@ public class AboutPresenter extends Presenter<AboutPresenter.View> {
 
         if (isFirstTimeAttachment) {
             view.setAppName(view.getContext().getText(R.string.app_name));
-            view.setAppIcon(R.mipmap.ic_launcher);
+            view.setAppIcon(R.drawable.logo);
             view.setAppVersion(BuildConfig.VERSION_NAME);
         }
 
