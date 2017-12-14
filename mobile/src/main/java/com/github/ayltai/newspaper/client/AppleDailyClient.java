@@ -75,12 +75,12 @@ final class AppleDailyClient extends Client {
                         if (link != null) {
                             item.setTitle(StringUtils.substringBetween(section, AppleDailyClient.TAG_TITLE, AppleDailyClient.TAG_QUOTE));
                             item.setLink(link.substring(0, link.lastIndexOf(AppleDailyClient.SLASH))
-                                .replace("dv", "apple")
-                                .replace("actionnews/local", "news/art")
-                                .replace("actionnews/chinainternational", "international/art")
-                                .replace("actionnews/finance", "financeestate/art")
-                                .replace("actionnews/entertainment", "entertainment/art")
-                                .replace("actionnews/sports", "sports/art"));
+                                .replace("video", "news")
+                                .replace("actionnews/local", "local/daily/article")
+                                .replace("actionnews/international", "international/daily/article")
+                                .replace("actionnews/finance", "finance/daily/article")
+                                .replace("actionnews/entertainment", "entertainment/daily/article")
+                                .replace("actionnews/sports", "sports/daily/article"));
                             item.setSource(this.source.getName());
                             if (category != null) item.setCategory(category);
 
