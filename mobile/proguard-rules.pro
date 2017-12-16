@@ -53,3 +53,8 @@
     @org.simpleframework.xml.* <fields>;
     public <init>();
 }
+
+## BottomNavigationView
+-keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
+    boolean mShiftingMode;
+}
