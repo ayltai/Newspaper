@@ -66,7 +66,7 @@ public final class FeaturedView extends ItemView {
                 .compose(RxUtils.applyMaybeBackgroundToMainSchedulers())
                 .subscribe(
                     bitmap -> {
-                        this.image.setImageBitmap(bitmap);
+                        if (!bitmap.isRecycled()) this.image.setImageBitmap(bitmap);
 
                         if (!Animations.isEnabled()) this.image.pause();
                     },
