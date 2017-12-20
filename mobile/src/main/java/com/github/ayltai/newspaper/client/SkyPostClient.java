@@ -43,8 +43,10 @@ final class SkyPostClient extends RssClient {
     @NonNull
     @Override
     public Single<NewsItem> updateItem(@NonNull final NewsItem item) {
+        final String link = item.getLink().replaceAll("%", "%25");
+
         return Single.create(emitter -> this.apiService
-            .getHtml(item.getLink())
+            .getHtml(link)
             .compose(RxUtils.applyObservableBackgroundSchedulers())
             .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
             .subscribe(
@@ -90,7 +92,7 @@ final class SkyPostClient extends RssClient {
                     if (!emitter.isDisposed()) emitter.onSuccess(item);
                 },
                 error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), RxJava2Debug.getEnhancedStackTrace(error));
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + link, RxJava2Debug.getEnhancedStackTrace(error));
 
                     if (!emitter.isDisposed()) emitter.onError(error);
                 }
