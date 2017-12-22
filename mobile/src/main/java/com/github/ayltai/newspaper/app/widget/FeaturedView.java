@@ -22,6 +22,8 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 
+import io.reactivex.disposables.Disposable;
+
 public final class FeaturedView extends ItemView {
     public static final int VIEW_TYPE = R.id.view_type_featured;
 
@@ -31,6 +33,8 @@ public final class FeaturedView extends ItemView {
     private final TextView     title;
 
     //endregion
+
+    private Disposable disposable;
 
     public FeaturedView(@NonNull final Context context) {
         super(context);
@@ -54,7 +58,6 @@ public final class FeaturedView extends ItemView {
         }
     }
 
-    @SuppressWarnings("IllegalCatch")
     @Override
     public void setImages(@NonNull final List<Image> images) {
         if (images.isEmpty()) {
@@ -62,7 +65,9 @@ public final class FeaturedView extends ItemView {
         } else {
             if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Featured image = " + images.get(0).getUrl());
 
-            FrescoImageLoader.loadImage(images.get(0).getUrl())
+            this.dispose();
+
+            this.disposable = FrescoImageLoader.loadImage(images.get(0).getUrl())
                 .compose(RxUtils.applyMaybeBackgroundToMainSchedulers())
                 .subscribe(
                     bitmap -> {
@@ -87,5 +92,20 @@ public final class FeaturedView extends ItemView {
         this.image.setOnClickListener(view -> this.clicks.onNext(Irrelevant.INSTANCE));
 
         super.onAttachedToWindow();
+    }
+
+    @CallSuper
+    @Override
+    public void onDetachedFromWindow() {
+        this.dispose();
+
+        super.onDetachedFromWindow();
+    }
+
+    private void dispose() {
+        if (this.disposable != null && !this.disposable.isDisposed()) {
+            this.disposable.dispose();
+            this.disposable = null;
+        }
     }
 }
