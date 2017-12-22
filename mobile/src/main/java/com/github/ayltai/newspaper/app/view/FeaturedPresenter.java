@@ -62,8 +62,6 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
                                 }
                             }
                         });
-
-                    this.bindModel(this.getModel());
                 }
             });
     }
