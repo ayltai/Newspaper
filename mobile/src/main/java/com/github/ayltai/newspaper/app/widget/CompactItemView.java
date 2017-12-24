@@ -26,7 +26,7 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
 
 public final class CompactItemView extends ItemView {
-    public static final int VIEW_TYPE = R.id.view_type_compact;
+    public static final int VIEW_TYPE = R.id.view_type_compact_item;
 
     //region Components
 

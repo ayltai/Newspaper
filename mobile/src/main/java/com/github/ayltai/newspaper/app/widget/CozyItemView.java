@@ -26,7 +26,7 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
 
 public final class CozyItemView extends ItemView {
-    public static final int VIEW_TYPE = R.id.view_type_cozy;
+    public static final int VIEW_TYPE = R.id.view_type_cozy_item;
 
     //region Components
 

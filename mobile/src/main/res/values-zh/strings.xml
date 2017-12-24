@@ -73,4 +73,7 @@
     <string name="instabug_email_hint">你的電子郵件</string>
     <string name="instabug_screenshot">附上屏幕截圖</string>
     <string name="instabug_gallery">附上圖庫圖像</string>
+
+    <!-- Ads -->
+    <string name="ad_sponsored">廣告</string>
 </resources>

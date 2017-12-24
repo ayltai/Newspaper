@@ -4,9 +4,12 @@
         name="view_type_featured"
         type="id" />
     <item
-        name="view_type_cozy"
+        name="view_type_cozy_item"
         type="id" />
     <item
-        name="view_type_compact"
+        name="view_type_compact_item"
+        type="id" />
+    <item
+        name="view_type_cozy_native_ad"
         type="id" />
 </resources>
