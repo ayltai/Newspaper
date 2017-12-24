@@ -65,7 +65,9 @@ public abstract class VerticalListView<M> extends ListView<M> implements Vertica
     @Override
     public void bind(@NonNull final List<M> models) {
         if (DevUtils.isLoggable()) {
-            for (final M model : models) Log.v(this.getClass().getSimpleName(), model.toString());
+            for (final M model : models) {
+                if (model != null) Log.v(this.getClass().getSimpleName(), model.toString());
+            }
         }
 
         if (this.adapter.getItemCount() == 0 && models.isEmpty()) {

@@ -8,7 +8,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
-import com.github.ayltai.newspaper.app.view.binding.CompactBinderFactory;
+import com.github.ayltai.newspaper.app.view.binding.CompactItemBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.FeaturedBinderFactory;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
@@ -28,7 +28,7 @@ public class CompactItemListView extends ItemListView {
     protected UniversalAdapter<Item, ?, ?> createAdapter() {
         final ItemListAdapter adapter = new ItemListAdapter.Builder(this.getContext())
             .addBinderFactory(new FeaturedBinderFactory())
-            .addBinderFactory(new CompactBinderFactory())
+            .addBinderFactory(new CompactItemBinderFactory())
             .build();
 
         adapter.setAnimationInterpolator(new AccelerateDecelerateInterpolator());

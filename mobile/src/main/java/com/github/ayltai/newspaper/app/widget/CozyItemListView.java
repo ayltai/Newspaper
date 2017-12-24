@@ -8,7 +8,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
-import com.github.ayltai.newspaper.app.view.binding.CozyBinderFactory;
+import com.github.ayltai.newspaper.app.view.binding.CozyItemBinderFactory;
+import com.github.ayltai.newspaper.app.view.binding.CozyNativeAdBinderFactory;
 import com.github.ayltai.newspaper.app.view.binding.FeaturedBinderFactory;
 import com.github.ayltai.newspaper.view.UniversalAdapter;
 
@@ -28,7 +29,8 @@ public class CozyItemListView extends ItemListView {
     protected UniversalAdapter<Item, ?, ?> createAdapter() {
         final ItemListAdapter adapter = new ItemListAdapter.Builder(this.getContext())
             .addBinderFactory(new FeaturedBinderFactory())
-            .addBinderFactory(new CozyBinderFactory())
+            .addBinderFactory(new CozyItemBinderFactory())
+            .addBinderFactory(new CozyNativeAdBinderFactory(this.getContext(), this.getResources().getString(R.string.mopub_native_ad_unit_id)))
             .build();
 
         adapter.setAnimationInterpolator(new AccelerateDecelerateInterpolator());

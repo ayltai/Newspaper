@@ -6,18 +6,18 @@ import android.support.annotation.Nullable;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
-import com.github.ayltai.newspaper.app.widget.CozyItemView;
+import com.github.ayltai.newspaper.app.widget.CompactItemView;
 import com.github.ayltai.newspaper.view.binding.BindingPresenterFactory;
 
-public final class CozyBinderFactory extends BindingPresenterFactory<Item, CozyItemView, ItemPresenter<CozyItemView>> {
+public final class CompactItemBinderFactory extends BindingPresenterFactory<Item, CompactItemView, ItemPresenter<CompactItemView>> {
     @Override
     public int getPartType() {
-        return CozyItemView.VIEW_TYPE;
+        return CompactItemView.VIEW_TYPE;
     }
 
     @NonNull
     @Override
-    protected ItemPresenter<CozyItemView> createPresenter() {
+    protected ItemPresenter<CompactItemView> createPresenter() {
         return new ItemPresenter<>();
     }
 

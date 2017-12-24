@@ -68,6 +68,19 @@ public class ItemListPresenter extends VerticalListPresenter<Item, VerticalListP
                 if (featuredItem != null) featuredItems.add(0, featuredItem);
 
                 return featuredItems;
+            })
+            .map(items -> {
+                if (ComponentFactory.getInstance().getConfigComponent(activity).remoteConfig().isNativeAdEnabled()) {
+                    final int interval = 5;
+                    final int count    = items.size() / interval;
+
+                    final List<Item> sponsoredItems = new ArrayList<>(items);
+                    for (int i = 1; i <= count; i++) sponsoredItems.add(i * interval, null);
+
+                    return sponsoredItems;
+                }
+
+                return items;
             });
     }
 
