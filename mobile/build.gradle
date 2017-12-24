@@ -51,6 +51,7 @@ android {
         }
 
         release {
+            multiDexEnabled true
             minifyEnabled   true
             shrinkResources true
             signingConfig   signingConfigs.release
@@ -127,7 +128,7 @@ dependencies {
     implementation fileTree(dir : 'libs', include : [ '*.jar' ])
 
     // Multi-dex support
-    debugImplementation       "com.android.support:multidex:$multidexVersion"
+    implementation            "com.android.support:multidex:$multidexVersion"
     androidTestImplementation "com.android.support:multidex-instrumentation:$multidexVersion"
 
     // Android Architecture libraries
@@ -201,6 +202,12 @@ dependencies {
     implementation 'io.github.inflationx:calligraphy3:3.0.0'
 
     implementation 'net.sf.trove4j:trove4j:3.0.3'
+
+    // Ads
+    compile ('com.mopub:mopub-sdk-native-static:4.19.0@aar') {
+        transitive = true
+        exclude module : 'moat-mobile-app-kit' // Excludes Moat because it does not work
+    }
 
     // Code generation tools
     compileOnly         "com.jakewharton.auto.value:auto-value-annotations:1.5"

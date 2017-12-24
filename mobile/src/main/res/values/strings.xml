@@ -106,4 +106,7 @@
     <string name="instabug_email_hint">Your email</string>
     <string name="instabug_screenshot">Attach a screenshot</string>
     <string name="instabug_gallery">Attach an image from gallery</string>
+
+    <!-- Ads -->
+    <string name="mopub_native_ad_unit_id" translatable="false">0328c0fcee194f4e9d123e0352090c2f</string>
 </resources>
