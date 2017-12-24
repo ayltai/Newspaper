@@ -50,4 +50,8 @@ public final class RemoteConfig {
     public boolean isPanoramaEnabled() {
         return this.remoteConfig == null ? Constants.PANORAMA_DEFAULT : this.remoteConfig.getBoolean("panorama");
     }
+
+    public boolean isNativeAdEnabled() {
+        return this.remoteConfig == null ? DevUtils.isLoggable() : this.remoteConfig.getBoolean("native_ad_enabled");
+    }
 }
