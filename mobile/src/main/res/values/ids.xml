@@ -12,4 +12,7 @@
     <item
         name="view_type_cozy_native_ad"
         type="id" />
+    <item
+        name="view_type_compact_native_ad"
+        type="id" />
 </resources>

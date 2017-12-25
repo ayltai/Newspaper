@@ -18,6 +18,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.akaita.java.rxjava2debug.RxJava2Debug;
+import com.github.ayltai.newspaper.app.ads.CompactNativeAdView;
 import com.github.ayltai.newspaper.app.ads.CozyNativeAdView;
 import com.github.ayltai.newspaper.app.data.ItemManager;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
@@ -185,6 +186,9 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
 
             case CozyNativeAdView.VIEW_TYPE:
                 return new SimpleViewHolder<>(new CozyNativeAdView(this.context));
+
+            case CompactNativeAdView.VIEW_TYPE:
+                return new SimpleViewHolder<>(new CompactNativeAdView(this.context));
 
             default:
                 throw new IllegalArgumentException("Unsupported view type: " + viewType);
