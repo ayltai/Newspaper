@@ -147,7 +147,7 @@ public abstract class NativeAdManager<T extends BaseNativeAd> implements Disposa
     }
 
     @UiThread
-    public abstract void renderAdView(@NonNull final View view);
+    public abstract void renderAdView(@NonNull View view);
 
     public void init() {
         if (this.isDisposed) this.isDisposed = false;

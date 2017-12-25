@@ -53,6 +53,8 @@ public final class Constants {
     public static final boolean AUTO_PLAY_DEFAULT = false;
     public static final boolean PANORAMA_DEFAULT  = false;
 
+    public static final String NATIVE_AD_POSITION_DEFAULT = "5";
+
     private Constants() {
     }
 }

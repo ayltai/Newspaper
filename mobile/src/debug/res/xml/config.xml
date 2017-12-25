@@ -16,4 +16,8 @@
         <key>native_ad_enabled</key>
         <value>true</value>
     </entry>
+    <entry>
+        <key>native_ad_positions</key>
+        <value>5,10;5</value>
+    </entry>
 </defaultsMap>

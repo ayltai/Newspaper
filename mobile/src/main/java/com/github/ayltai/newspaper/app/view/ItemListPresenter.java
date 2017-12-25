@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
+import com.github.ayltai.newspaper.app.ads.NativeAdPositions;
+import com.github.ayltai.newspaper.app.config.RemoteConfig;
 import com.github.ayltai.newspaper.app.data.ItemListLoader;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.data.model.Item;
@@ -70,12 +72,15 @@ public class ItemListPresenter extends VerticalListPresenter<Item, VerticalListP
                 return featuredItems;
             })
             .map(items -> {
-                if (ComponentFactory.getInstance().getConfigComponent(activity).remoteConfig().isNativeAdEnabled()) {
-                    final int interval = 5;
-                    final int count    = items.size() / interval;
+                final RemoteConfig config = ComponentFactory.getInstance()
+                    .getConfigComponent(activity)
+                    .remoteConfig();
 
-                    final List<Item> sponsoredItems = new ArrayList<>(items);
-                    for (int i = 1; i <= count; i++) sponsoredItems.add(i * interval, null);
+                if (config.isNativeAdEnabled()) {
+                    final NativeAdPositions positions      = config.getNativeAdPositions();
+                    final List<Item>        sponsoredItems = new ArrayList<>();
+
+                    for (int i = 0; i < items.size(); i++) sponsoredItems.add(positions.isValid(i) ? null : items.get(i));
 
                     return sponsoredItems;
                 }

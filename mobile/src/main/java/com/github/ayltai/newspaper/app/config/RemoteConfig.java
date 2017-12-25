@@ -12,6 +12,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.app.ads.NativeAdPositions;
 import com.github.ayltai.newspaper.util.DevUtils;
 
 @Singleton
@@ -53,5 +54,10 @@ public final class RemoteConfig {
 
     public boolean isNativeAdEnabled() {
         return this.remoteConfig == null ? DevUtils.isLoggable() : this.remoteConfig.getBoolean("native_ad_enabled");
+    }
+
+    @NonNull
+    public NativeAdPositions getNativeAdPositions() {
+        return new NativeAdPositions(this.remoteConfig == null ? DevUtils.isLoggable() ? Constants.NATIVE_AD_POSITION_DEFAULT : null : this.remoteConfig.getString("native_ad_positions"));
     }
 }
