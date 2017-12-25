@@ -1,8 +1,10 @@
 package com.github.ayltai.newspaper.ads;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,9 +31,10 @@ import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
 public abstract class NativeAdManager<T extends BaseNativeAd> implements Disposable, LifecycleObserver {
-    private final Queue<T>       ads       = new ArrayDeque<>();
-    private final Queue<Integer> sequences = new ArrayDeque<>();
-    private final AtomicInteger  sequence  = new AtomicInteger(0);
+    private final Queue<T>          ads          = new ArrayDeque<>();
+    private final Queue<Integer>    sequences    = new ArrayDeque<>();
+    private final AtomicInteger     sequence     = new AtomicInteger(0);
+    private final List<MoPubNative> moPubNatives = new ArrayList<>();
 
     private final FlowableProcessor<NativeErrorCode> errors = PublishProcessor.create();
 
@@ -127,6 +130,8 @@ public abstract class NativeAdManager<T extends BaseNativeAd> implements Disposa
                         .desiredAssets(this.getDesiredAssets())
                         .build());
                 }
+
+                this.moPubNatives.add(moPubNative);
             }
         }
     }
@@ -161,6 +166,12 @@ public abstract class NativeAdManager<T extends BaseNativeAd> implements Disposa
 
             synchronized (this.sequences) {
                 this.sequences.clear();
+            }
+
+            synchronized (this.moPubNatives) {
+                for (final MoPubNative moPubNative : this.moPubNatives) moPubNative.destroy();
+
+                this.moPubNatives.clear();
             }
         }
     }
