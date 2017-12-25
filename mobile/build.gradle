@@ -204,6 +204,10 @@ dependencies {
     implementation 'net.sf.trove4j:trove4j:3.0.3'
 
     // Ads
+    compile "com.google.android.gms:play-services-ads:$firebaseSdkVersion"
+    compile ('com.facebook.android:audience-network-sdk:4.27.0') {
+        exclude group : 'com.google.android.exoplayer'
+    }
     compile ('com.mopub:mopub-sdk-native-static:4.19.0@aar') {
         transitive = true
         exclude module : 'moat-mobile-app-kit' // Excludes Moat because it does not work

@@ -58,3 +58,7 @@
 -keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
     boolean mShiftingMode;
 }
+
+## Ads
+-keep class com.mopub.nativeads.FacebookNative { *; }
+-keep class com.mopub.nativeads.FacebookAdRenderer { *; }
