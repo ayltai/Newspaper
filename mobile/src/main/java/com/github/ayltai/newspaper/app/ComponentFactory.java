@@ -10,6 +10,9 @@ import android.support.annotation.NonNull;
 import com.github.ayltai.newspaper.analytics.AnalyticsComponent;
 import com.github.ayltai.newspaper.analytics.AnalyticsModule;
 import com.github.ayltai.newspaper.analytics.DaggerAnalyticsComponent;
+import com.github.ayltai.newspaper.app.ads.DaggerNativeAdComponent;
+import com.github.ayltai.newspaper.app.ads.NativeAdComponent;
+import com.github.ayltai.newspaper.app.ads.NativeAdModule;
 import com.github.ayltai.newspaper.app.config.ConfigComponent;
 import com.github.ayltai.newspaper.app.config.ConfigModule;
 import com.github.ayltai.newspaper.app.config.DaggerConfigComponent;
@@ -30,6 +33,7 @@ public final class ComponentFactory implements Disposable, LifecycleObserver {
     private ConfigComponent    configComponent;
     private ImageComponent     imageComponent;
     private AnalyticsComponent analyticsComponent;
+    private NativeAdComponent  nativeAdComponent;
 
     public static ComponentFactory getInstance() {
         if (ComponentFactory.instance == null) ComponentFactory.init();
@@ -52,10 +56,12 @@ public final class ComponentFactory implements Disposable, LifecycleObserver {
         this.configComponent    = null;
         this.imageComponent     = null;
         this.analyticsComponent = null;
+        this.nativeAdComponent  = null;
 
         ComponentFactory.init();
     }
 
+    @NonNull
     public ConfigComponent getConfigComponent(@NonNull final Activity activity) {
         if (this.configComponent == null) this.configComponent = DaggerConfigComponent.builder()
             .configModule(new ConfigModule(activity))
@@ -64,17 +70,20 @@ public final class ComponentFactory implements Disposable, LifecycleObserver {
         return this.configComponent;
     }
 
+    @NonNull
     public HttpComponent getHttpComponent() {
         return DaggerHttpComponent.builder()
             .build();
     }
 
+    @NonNull
     public DataComponent getDataComponent(@NonNull final Context context) {
         return DaggerDataComponent.builder()
             .dataModule(new DataModule(context.getApplicationContext()))
             .build();
     }
 
+    @NonNull
     public ImageComponent getImageComponent(@NonNull final Context context) {
         if (this.imageComponent == null) this.imageComponent = DaggerImageComponent.builder()
             .imageModule(new ImageModule(context.getApplicationContext()))
@@ -83,11 +92,21 @@ public final class ComponentFactory implements Disposable, LifecycleObserver {
         return this.imageComponent;
     }
 
+    @NonNull
     public AnalyticsComponent getAnalyticsComponent(@NonNull final Context context) {
         if (this.analyticsComponent == null) this.analyticsComponent = DaggerAnalyticsComponent.builder()
             .analyticsModule(new AnalyticsModule(context.getApplicationContext()))
             .build();
 
         return this.analyticsComponent;
+    }
+
+    @NonNull
+    public NativeAdComponent getNativeAdComponent(@NonNull final Context context) {
+        if (this.nativeAdComponent == null) this.nativeAdComponent = DaggerNativeAdComponent.builder()
+            .nativeAdModule(new NativeAdModule(context))
+            .build();
+
+        return this.nativeAdComponent;
     }
 }
