@@ -30,7 +30,7 @@ public class CozyItemListView extends ItemListView {
         final ItemListAdapter adapter = new ItemListAdapter.Builder(this.getContext())
             .addBinderFactory(new FeaturedBinderFactory())
             .addBinderFactory(new CozyItemBinderFactory())
-            .addBinderFactory(new CozyNativeAdBinderFactory(this.getContext(), this.getResources().getString(R.string.mopub_native_ad_unit_id)))
+            .addBinderFactory(new CozyNativeAdBinderFactory(this.getContext()))
             .build();
 
         adapter.setAnimationInterpolator(new AccelerateDecelerateInterpolator());

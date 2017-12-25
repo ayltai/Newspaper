@@ -6,20 +6,18 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.ads.NativeAdPresenter;
 import com.github.ayltai.newspaper.app.ads.CozyNativeAdView;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.view.binding.BindingPresenterFactory;
+import com.mopub.nativeads.StaticNativeAd;
 
-public final class CozyNativeAdBinderFactory extends BindingPresenterFactory<Item, CozyNativeAdView, NativeAdPresenter<Item, CozyNativeAdView>> {
+public final class CozyNativeAdBinderFactory extends BindingPresenterFactory<Item, CozyNativeAdView, NativeAdPresenter<StaticNativeAd, Item, CozyNativeAdView>> {
     private final Context context;
-    private final String  adUnitId;
 
-    public CozyNativeAdBinderFactory(@NonNull final Context context, @NonNull final String adUnitId) {
-        this.context  = context;
-        this.adUnitId = adUnitId;
+    public CozyNativeAdBinderFactory(@NonNull final Context context) {
+        this.context = context;
     }
 
     @Override
@@ -27,16 +25,10 @@ public final class CozyNativeAdBinderFactory extends BindingPresenterFactory<Ite
         return CozyNativeAdView.VIEW_TYPE;
     }
 
-    @SuppressWarnings("unchecked")
     @NonNull
     @Override
-    protected NativeAdPresenter<Item, CozyNativeAdView> createPresenter() {
-        final NativeAdPresenter<Item, CozyNativeAdView> presenter = new NativeAdPresenter.Builder<>(this.context, this.adUnitId)
-            .titleTextId(R.id.title)
-            .descriptionTextId(R.id.description)
-            .mainImageId(R.id.image)
-            .iconImageId(R.id.avatar)
-            .build();
+    protected NativeAdPresenter<StaticNativeAd, Item, CozyNativeAdView> createPresenter() {
+        final NativeAdPresenter<StaticNativeAd, Item, CozyNativeAdView> presenter = new NativeAdPresenter<>(this.context);
 
         if (this.context instanceof AppCompatActivity) ((AppCompatActivity)this.context).getLifecycle().addObserver(presenter);
 
@@ -44,8 +36,6 @@ public final class CozyNativeAdBinderFactory extends BindingPresenterFactory<Ite
             .subscribe(errorCode -> {
                 if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), errorCode.toString());
             });
-
-        presenter.prefetch();
 
         return presenter;
     }
