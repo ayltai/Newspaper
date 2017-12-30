@@ -3,7 +3,6 @@ package com.github.ayltai.newspaper.app.widget;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Item;
@@ -26,13 +25,9 @@ public class CompactItemListView extends ItemListView {
     @NonNull
     @Override
     protected UniversalAdapter<Item, ?, ?> createAdapter() {
-        final ItemListAdapter adapter = new ItemListAdapter.Builder(this.getContext())
+        return new ItemListAdapter.Builder(this.getContext())
             .addBinderFactory(new FeaturedBinderFactory())
             .addBinderFactory(new CompactBinderFactory())
             .build();
-
-        adapter.setAnimationInterpolator(new AccelerateDecelerateInterpolator());
-
-        return adapter;
     }
 }

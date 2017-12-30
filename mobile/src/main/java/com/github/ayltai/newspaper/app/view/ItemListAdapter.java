@@ -169,6 +169,11 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
         return Animations.isEnabled() ? Animations.createDefaultAnimators(view) : super.getItemAnimators(view);
     }
 
+    @Override
+    protected long getAnimationDuration() {
+        return 2 * this.context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
+    }
+
     @NonNull
     @Override
     public SimpleViewHolder<View> onCreateViewHolder(final ViewGroup parent, final int viewType) {
