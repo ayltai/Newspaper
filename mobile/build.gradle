@@ -214,7 +214,7 @@ dependencies {
     }
 
     // Instabug
-    implementation 'com.instabug.library:instabug:4.6.0'
+    implementation 'com.instabug.library:instabug:4.6.1'
 
     // Debugging
     implementation        'com.akaita.java:rxjava2-debug:1.2.2'
