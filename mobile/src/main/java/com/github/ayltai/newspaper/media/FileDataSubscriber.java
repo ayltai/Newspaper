@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
@@ -17,7 +16,7 @@ import com.facebook.datasource.BaseDataSubscriber;
 import com.facebook.datasource.DataSource;
 import com.github.ayltai.newspaper.util.IOUtils;
 
-abstract class FileDataSubscriber extends BaseDataSubscriber<CloseableReference<PooledByteBuffer>> implements LifecycleObserver {
+abstract class FileDataSubscriber extends BaseDataSubscriber<CloseableReference<PooledByteBuffer>> {
     private final Context context;
 
     private volatile boolean isFinished;

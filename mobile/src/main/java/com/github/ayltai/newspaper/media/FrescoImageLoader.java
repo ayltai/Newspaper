@@ -117,7 +117,7 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
     }
 
     @Override
-    public void loadImage(final int requestId, final Uri uri, final Callback callback) {
+    public void loadImage(final int requestId, final Uri uri, final ImageLoader.Callback callback) {
         final ImageRequest request = ImageRequest.fromUri(uri);
         final File         file    = FrescoImageLoader.getFileCache(request);
 
@@ -125,7 +125,10 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
         if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "File cache = " + file.getAbsolutePath());
 
         if (file.exists()) {
-            if (callback != null) callback.onCacheHit(file);
+            if (callback != null) {
+                callback.onCacheHit(file);
+                callback.onSuccess(file);
+            }
         } else {
             if (callback != null) {
                 callback.onStart();
