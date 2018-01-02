@@ -36,7 +36,9 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     protected void onResume() {
-        this.disposable = Observable.interval(Constants.FEATURED_IMAGE_ROTATION, TimeUnit.SECONDS)
+        this.onPause();
+
+        this.disposable = Observable.interval(0, Constants.FEATURED_IMAGE_ROTATION, TimeUnit.SECONDS)
             .compose(RxUtils.applyObservableBackgroundToMainSchedulers())
             .subscribe(time -> {
                 if (this.getModel() instanceof FeaturedItem && this.getView() != null) {
@@ -83,6 +85,8 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
 
         final Activity activity = Views.getActivity(view);
         if (activity instanceof AppCompatActivity) ((AppCompatActivity)activity).getLifecycle().addObserver(this);
+
+        this.onResume();
     }
 
     @Override

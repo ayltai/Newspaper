@@ -71,9 +71,13 @@ public final class FeaturedView extends ItemView {
                 .compose(RxUtils.applyMaybeBackgroundToMainSchedulers())
                 .subscribe(
                     bitmap -> {
-                        if (!bitmap.isRecycled()) this.image.setImageBitmap(bitmap);
+                        this.image.setImageBitmap(bitmap);
 
-                        if (!Animations.isEnabled()) this.image.pause();
+                        if (Animations.isEnabled()) {
+                            this.image.resume();
+                        } else {
+                            this.image.pause();
+                        }
                     },
                     error -> {
                         if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
@@ -89,6 +93,7 @@ public final class FeaturedView extends ItemView {
     @CallSuper
     @Override
     public void onAttachedToWindow() {
+        this.image.resume();
         this.image.setOnClickListener(view -> this.clicks.onNext(Irrelevant.INSTANCE));
 
         super.onAttachedToWindow();
@@ -97,6 +102,8 @@ public final class FeaturedView extends ItemView {
     @CallSuper
     @Override
     public void onDetachedFromWindow() {
+        this.image.pause();
+
         this.dispose();
 
         super.onDetachedFromWindow();
