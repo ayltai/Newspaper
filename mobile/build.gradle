@@ -214,7 +214,7 @@ dependencies {
     }
 
     // Instabug
-    implementation 'com.instabug.library:instabug:4.6.1'
+    implementation 'com.instabug.library:instabug:4.7.0'
 
     // Debugging
     implementation        'com.akaita.java:rxjava2-debug:1.2.2'
@@ -245,7 +245,7 @@ dependencies {
     }
 
     // Code coverage by Codacy
-    codacy 'com.github.codacy:codacy-coverage-reporter:2.0.1'
+    codacy 'com.github.codacy:codacy-coverage-reporter:2.0.2'
 }
 
 configurations.all {
