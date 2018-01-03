@@ -28,6 +28,9 @@
         name="cardBackground"
         format="color" />
     <attr
+        name="separator"
+        format="color" />
+    <attr
         name="indicatorColor"
         format="color" />
     <attr
@@ -41,6 +44,18 @@
         format="color" />
     <attr
         name="placeholderImage"
+        format="reference" />
+    <attr
+        name="shadowStart"
+        format="color" />
+    <attr
+        name="shadowEnd"
+        format="color" />
+    <attr
+        name="featuredNewsTitleColor"
+        format="color" />
+    <attr
+        name="featuredNewsBackground"
         format="reference" />
     <attr
         name="emptyBackground"

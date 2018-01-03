@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <gradient
+                android:startColor="@color/separatorBorderLight"
+                android:centerColor="@color/separatorBackgroundLight"
+                android:endColor="@color/separatorBackgroundLight"
+                android:angle="270" />
+        </shape>
+    </item>
+    <item
+        android:top="14dp"
+        android:bottom="@dimen/space16">
+        <shape>
+            <solid android:color="@color/separatorBorderLight" />
+        </shape>
+    </item>
+</layer-list>
