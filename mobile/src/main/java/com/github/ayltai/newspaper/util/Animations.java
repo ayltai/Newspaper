@@ -202,6 +202,16 @@ public final class Animations {
         }
     }
 
+    public static void stopShimmerAnimation(@NonNull final View view) {
+        if (view instanceof ViewGroup) {
+            final ViewGroup parent = (ViewGroup)view;
+
+            for (int i = 0; i < parent.getChildCount(); i++) Animations.stopShimmerAnimation(parent.getChildAt(i));
+
+            if (view instanceof ShimmerLayout) ((ShimmerLayout)view).stopShimmerAnimation();
+        }
+    }
+
     public static boolean isEnabled() {
         return !DevUtils.isRunningInstrumentedTest() && (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || ValueAnimator.areAnimatorsEnabled());
     }
