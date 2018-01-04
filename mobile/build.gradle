@@ -110,7 +110,7 @@ ext {
     retrofitVersion       = '2.3.0'
     frescoVersion         = '1.7.1'
     bigImageViewerVersion = '1.4.5'
-    exoPlayerVersion      = '2.6.0'
+    exoPlayerVersion      = '2.6.1'
     leakCanaryVersion     = '1.5.4'
     robolectricVersion    = '3.6.1'
     powerMockVersion      = '2.0.0-beta.5'
