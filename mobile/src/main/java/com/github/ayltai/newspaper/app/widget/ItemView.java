@@ -4,16 +4,21 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GestureDetectorCompat;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.Optional;
 import com.github.ayltai.newspaper.widget.BaseView;
 
 import io.reactivex.Flowable;
@@ -21,12 +26,26 @@ import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
 public abstract class ItemView extends BaseView implements ItemPresenter.View {
-    protected final FlowableProcessor<Irrelevant> clicks = PublishProcessor.create();
+    protected final FlowableProcessor<Optional<Point>> clicks = PublishProcessor.create();
+
+    private final GestureDetectorCompat detector;
 
     protected View container;
 
     protected ItemView(@NonNull final Context context) {
         super(context);
+
+        this.detector = new GestureDetectorCompat(context, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(@NonNull final MotionEvent event) {
+                final int[] location = new int[2];
+                ItemView.this.container.getLocationOnScreen(location);
+
+                ItemView.this.clicks.onNext(Optional.of(new Point((int)(location[0] + event.getX() + 0.5f), (int)(location[1] + event.getY() + 0.5f))));
+
+                return super.onSingleTapConfirmed(event);
+            }
+        });
     }
 
     //region Properties
@@ -77,7 +96,7 @@ public abstract class ItemView extends BaseView implements ItemPresenter.View {
 
     @NonNull
     @Override
-    public Flowable<Irrelevant> clicks() {
+    public Flowable<Optional<Point>> clicks() {
         return this.clicks;
     }
 
@@ -140,7 +159,13 @@ public abstract class ItemView extends BaseView implements ItemPresenter.View {
     @CallSuper
     @Override
     public void onAttachedToWindow() {
-        if (this.container != null) this.container.setOnClickListener(view -> this.clicks.onNext(Irrelevant.INSTANCE));
+        if (this.container != null) {
+            this.container.setOnTouchListener((view, event) -> {
+                this.detector.onTouchEvent(event);
+
+                return true;
+            });
+        }
 
         super.onAttachedToWindow();
     }

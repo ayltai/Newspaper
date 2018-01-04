@@ -9,6 +9,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -52,6 +53,7 @@ import com.github.ayltai.newspaper.util.DateUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.Locatable;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.SimpleTextToSpeech;
 import com.github.ayltai.newspaper.util.SnackbarUtils;
@@ -69,13 +71,17 @@ import xyz.hanks.library.bang.SmallBangView;
 
 public final class DetailsView extends ItemView implements DetailsPresenter.View {
     @AutoValue
-    public abstract static class Key extends ClassKey implements Parcelable {
+    public abstract static class Key extends ClassKey implements Locatable, Parcelable {
         @NonNull
         public abstract NewsItem getItem();
 
+        @Nullable
+        @Override
+        public abstract Point getLocation();
+
         @NonNull
-        public static DetailsView.Key create(@NonNull final NewsItem item) {
-            return new AutoValue_DetailsView_Key(item);
+        public static DetailsView.Key create(@NonNull final NewsItem item, @Nullable final Point location) {
+            return new AutoValue_DetailsView_Key(item, location);
         }
     }
 

@@ -3,12 +3,16 @@ package com.github.ayltai.newspaper.app.widget;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GestureDetectorCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,13 +23,15 @@ import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.media.FrescoImageLoader;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.DevUtils;
-import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.Optional;
 import com.github.ayltai.newspaper.util.RxUtils;
 
 import io.reactivex.disposables.Disposable;
 
 public final class FeaturedView extends ItemView {
     public static final int VIEW_TYPE = R.id.view_type_featured;
+
+    private final GestureDetectorCompat detector;
 
     //region Components
 
@@ -44,6 +50,18 @@ public final class FeaturedView extends ItemView {
         this.container = view.findViewById(R.id.container);
         this.image     = view.findViewById(R.id.featured_image);
         this.title     = view.findViewById(R.id.title);
+
+        this.detector = new GestureDetectorCompat(context, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(@NonNull final MotionEvent event) {
+                final int[] location = new int[2];
+                FeaturedView.this.image.getLocationOnScreen(location);
+
+                FeaturedView.this.clicks.onNext(Optional.of(new Point((int)(location[0] + event.getX() + 0.5f), (int)(location[1] + event.getY() + 0.5f))));
+
+                return super.onSingleTapConfirmed(event);
+            }
+        });
     }
 
     //region Properties
@@ -94,7 +112,12 @@ public final class FeaturedView extends ItemView {
     @Override
     public void onAttachedToWindow() {
         this.image.resume();
-        this.image.setOnClickListener(view -> this.clicks.onNext(Irrelevant.INSTANCE));
+
+        this.image.setOnTouchListener((view, event) -> {
+            this.detector.onTouchEvent(event);
+
+            return true;
+        });
 
         super.onAttachedToWindow();
     }
