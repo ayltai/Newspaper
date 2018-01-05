@@ -12,6 +12,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,19 @@ import com.github.ayltai.newspaper.widget.VerticalListView;
 import io.reactivex.disposables.Disposable;
 
 public abstract class ItemListView extends VerticalListView<Item> implements Disposable, LifecycleObserver {
+    private static final class OnScrollListener extends RecyclerView.OnScrollListener {
+        private final View view;
+
+        OnScrollListener(@NonNull final View view) {
+            this.view = view;
+        }
+
+        @Override
+        public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
+            view.setTranslationY(view.getTranslationY() - dy);
+        }
+    }
+
     //region Supports initial searching
 
     private List<String> categories;
@@ -36,6 +50,8 @@ public abstract class ItemListView extends VerticalListView<Item> implements Dis
     private CharSequence searchText;
 
     //endregion
+
+    private OnScrollListener onScrollListener;
 
     protected ItemListView(@NonNull final Context context) {
         super(context);
@@ -135,12 +151,19 @@ public abstract class ItemListView extends VerticalListView<Item> implements Dis
     public void showLoadingView() {
         super.showLoadingView();
 
-        if (this.loadingView != null && Animations.isEnabled()) Animations.startShimmerAnimation(this.loadingView);
+        if (this.loadingView != null) {
+            this.findViewById(R.id.scrolling_background).setVisibility(View.GONE);
+
+            if (Animations.isEnabled()) Animations.startShimmerAnimation(this.loadingView);
+        }
     }
 
     @Override
     public void hideLoadingView() {
         super.hideLoadingView();
+
+        final View view = this.findViewById(R.id.scrolling_background);
+        if (view != null) view.setVisibility(View.VISIBLE);
 
         if (this.loadingView != null && Animations.isEnabled()) Animations.stopShimmerAnimation(this.loadingView);
     }
@@ -152,6 +175,28 @@ public abstract class ItemListView extends VerticalListView<Item> implements Dis
             final Disposable disposable = (Disposable)this.adapter;
             if (!disposable.isDisposed()) disposable.dispose();
         }
+    }
+
+    //endregion
+
+    //region Lifecycle
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        final View view = this.findViewById(R.id.scrolling_background);
+        if (view != null) {
+            if (this.onScrollListener == null) this.onScrollListener = new OnScrollListener(view);
+            this.recyclerView.addOnScrollListener(this.onScrollListener);
+        }
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        if (this.onScrollListener != null) this.recyclerView.removeOnScrollListener(this.onScrollListener);
+
+        super.onDetachedFromWindow();
     }
 
     //endregion

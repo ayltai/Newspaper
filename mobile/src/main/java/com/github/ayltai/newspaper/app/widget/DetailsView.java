@@ -269,7 +269,12 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
 
             this.appBarLayout.setExpanded(true, true);
 
-            if (!TextUtils.isEmpty(images.get(0).getDescription())) this.toolbarTitle.setText(Html.fromHtml(images.get(0).getDescription()));
+            if (TextUtils.isEmpty(images.get(0).getDescription())) {
+                this.toolbarBackground.setVisibility(View.GONE);
+            } else {
+                this.toolbarTitle.setText(Html.fromHtml(images.get(0).getDescription()));
+                this.toolbarBackground.setVisibility(View.VISIBLE);
+            }
 
             this.imageContainer.addView(this.toolbarView);
 

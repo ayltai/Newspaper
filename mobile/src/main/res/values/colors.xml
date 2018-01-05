@@ -16,10 +16,6 @@
     <color name="windowBackgroundDark">#1f242c</color>
     <color name="cardBackgroundLight">#fafafa</color>
     <color name="cardBackgroundDark">#3f4b5c</color>
-    <color name="separatorBorderLight">#44000000</color>
-    <color name="separatorBorderDark">#99000000</color>
-    <color name="separatorBackgroundLight">#11000000</color>
-    <color name="separatorBackgroundDark">#33000000</color>
     <color name="indicatorColorLight">#ffffff</color>
     <color name="indicatorColorDark">#ffffff</color>
     <color name="tabActiveColorLight">#e04a19</color>
@@ -34,10 +30,8 @@
     <color name="emptyBackgroundTopDark">#bababa</color>
     <color name="emptyBackgroundBottomLight">#8c8c8c</color>
     <color name="emptyBackgroundBottomDark">#686868</color>
-    <color name="shadowStartLight">#00fafafa</color>
-    <color name="shadowStartDark">#003f4b5c</color>
-    <color name="shadowEndLight">#fffafafa</color>
-    <color name="shadowEndDark">#ff3f4b5c</color>
+    <color name="shadowStart">#001f242c</color>
+    <color name="shadowEnd">#ff1f242c</color>
     <color name="refreshColor1">#d50000</color>
     <color name="refreshColor2">#ffab00</color>
     <color name="refreshColor3">#64dd17</color>
