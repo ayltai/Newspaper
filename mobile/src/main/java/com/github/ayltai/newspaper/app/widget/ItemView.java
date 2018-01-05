@@ -3,8 +3,10 @@ package com.github.ayltai.newspaper.app.widget;
 import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Build;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -156,12 +158,19 @@ public abstract class ItemView extends BaseView implements ItemPresenter.View {
 
     //endregion
 
+    @SuppressLint("NewApi")
     @CallSuper
     @Override
     public void onAttachedToWindow() {
         if (this.container != null) {
             this.container.setOnTouchListener((view, event) -> {
                 this.detector.onTouchEvent(event);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) this.container
+                    .getForeground()
+                    .setHotspot(event.getX(), event.getY());
+
+                this.container.setPressed(event.getActionMasked() == MotionEvent.ACTION_DOWN || event.getActionMasked() == MotionEvent.ACTION_MOVE);
 
                 return true;
             });
