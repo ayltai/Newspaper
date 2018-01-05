@@ -2,6 +2,7 @@ package com.github.ayltai.newspaper.app.view;
 
 import java.util.Date;
 
+import android.graphics.Point;
 import android.support.annotation.NonNull;
 
 import org.junit.Test;
@@ -13,6 +14,7 @@ import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.Optional;
 import com.github.ayltai.newspaper.view.PresenterTest;
 
 import io.reactivex.processors.FlowableProcessor;
@@ -20,16 +22,16 @@ import io.reactivex.processors.PublishProcessor;
 import io.realm.RealmList;
 
 public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPresenter<ItemPresenter.View>, ItemPresenter.View> {
-    private final FlowableProcessor<Irrelevant> clicks            = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> avatarClicks      = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> sourceClicks      = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> publishDateClicks = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> titleClicks       = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> descriptionClicks = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> linkClicks        = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> bookmarkClicks    = PublishProcessor.create();
-    private final FlowableProcessor<Image>      imageClicks       = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> videoClicks       = PublishProcessor.create();
+    private final FlowableProcessor<Optional<Point>> clicks            = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant>      avatarClicks      = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant>      sourceClicks      = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant>      publishDateClicks = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant>      titleClicks       = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant>      descriptionClicks = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant>      linkClicks        = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant>      bookmarkClicks    = PublishProcessor.create();
+    private final FlowableProcessor<Image>           imageClicks       = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant>      videoClicks       = PublishProcessor.create();
 
     @NonNull
     @Override
@@ -87,7 +89,7 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
         this.attachments.onNext(true);
 
         // When
-        this.clicks.onNext(Irrelevant.INSTANCE);
+        this.clicks.onNext(Optional.of(new Point(0, 0)));
 
         // Then
         Mockito.verify(this.getView(), Mockito.times(1)).clicks();
