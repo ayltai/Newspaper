@@ -26,6 +26,7 @@ import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Category;
+import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.view.ItemListAdapter;
 import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.util.DevUtils;
@@ -42,7 +43,7 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
             PagedNewsAdapter.this.searchText = searchText;
 
             for (int i = 0; i < PagedNewsAdapter.this.getCount(); i++) {
-                final VerticalListView listView = PagedNewsAdapter.this.getItem(i);
+                final VerticalListView<Item> listView = PagedNewsAdapter.this.getItem(i);
 
                 if (listView instanceof ItemListView && listView.getAdapter() instanceof Filterable && ((Filterable)listView.getAdapter()).getFilter() instanceof ItemListAdapter.ItemListFilter) {
                     ((ItemListView)listView).setSearchText(searchText);
@@ -63,7 +64,7 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
         @Override
         protected void publishResults(@Nullable final CharSequence searchText, @Nullable final FilterResults filterResults) {
             for (int i = 0; i < PagedNewsAdapter.this.getCount(); i++) {
-                final VerticalListView listView = PagedNewsAdapter.this.getItem(i);
+                final VerticalListView<Item> listView = PagedNewsAdapter.this.getItem(i);
 
                 if (listView != null && listView.getAdapter() instanceof Filterable && ((Filterable)listView.getAdapter()).getFilter() instanceof ItemListAdapter.ItemListFilter) {
                     final FilterResults                  results = (FilterResults)PagedNewsAdapter.this.filterResults.get(i);
@@ -130,12 +131,13 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
         return this.categories.get(position);
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
-    public VerticalListView getItem(final int position) {
+    public VerticalListView<Item> getItem(final int position) {
         final SoftReference<View> view = this.views.get(position);
 
         if (view == null) return null;
-        return (VerticalListView)view.get();
+        return (VerticalListView<Item>)view.get();
     }
 
     public void setCurrentPosition(final int position) {
@@ -145,10 +147,11 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
     @NonNull
     @Override
     public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
-        final String            category   = this.categories.get(position);
-        final List<String>      categories = new ArrayList<>(Category.fromDisplayName(category));
-        final ItemListPresenter presenter  = new ItemListPresenter(categories);
-        final ItemListView      view       = this.userConfig == null || this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY ? new CozyItemListView(container.getContext()) : new CompactItemListView(container.getContext());
+        final String                 category   = this.categories.get(position);
+        final List<String>           categories = new ArrayList<>(Category.fromDisplayName(category));
+        final ItemListPresenter      presenter  = new ItemListPresenter(categories);
+        final VerticalListView<Item> listView   = this.getItem(position);
+        final ItemListView           view       = listView == null ? this.userConfig == null || this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY ? new CozyItemListView(container.getContext()) : new CompactItemListView(container.getContext()) : (ItemListView)listView;
 
         if (this.disposables == null) this.disposables = new CompositeDisposable();
 
