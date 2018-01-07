@@ -34,6 +34,7 @@ final class SingPaoClient extends Client {
     private static final String BASE_URI = "https://www.singpao.com.hk/";
     private static final String TAG      = "'";
     private static final String FONT     = "</font>";
+    private static final String CLOSE    = "</p>";
 
     //endregion
 
@@ -122,9 +123,10 @@ final class SingPaoClient extends Client {
                             item.getImages().addAll(images);
                         }
 
-                        final String[]      contents = StringUtils.substringsBetween(html, "<p>", "</p>");
-                        final StringBuilder builder  = new StringBuilder();
+                        String[] contents = StringUtils.substringsBetween(html, "<p class=\"內文\">", SingPaoClient.CLOSE);
+                        if (contents.length == 0) contents = StringUtils.substringsBetween(html, "<p>", SingPaoClient.CLOSE);
 
+                        final StringBuilder builder = new StringBuilder();
                         for (final String content : contents) builder.append(content).append("<br><br>");
 
                         item.setDescription(builder.toString());
