@@ -137,7 +137,7 @@ final class SingPaoClient extends Client {
                     error -> {
                         if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), RxJava2Debug.getEnhancedStackTrace(error));
 
-                        if (!emitter.isDisposed()) emitter.onError(error);
+                        if (!emitter.isDisposed()) emitter.onSuccess(item);
                     }
                 );
         });

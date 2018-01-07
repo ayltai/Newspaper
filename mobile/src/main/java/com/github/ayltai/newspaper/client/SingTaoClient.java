@@ -137,7 +137,7 @@ final class SingTaoClient extends Client {
                     error -> {
                         if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
 
-                        if (!emitter.isDisposed()) emitter.onError(error);
+                        if (!emitter.isDisposed()) emitter.onSuccess(item);
                     }
                 );
         });

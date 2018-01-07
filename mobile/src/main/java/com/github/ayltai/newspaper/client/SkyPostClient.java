@@ -94,7 +94,7 @@ final class SkyPostClient extends RssClient {
                 error -> {
                     if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + link, RxJava2Debug.getEnhancedStackTrace(error));
 
-                    if (!emitter.isDisposed()) emitter.onError(error);
+                    if (!emitter.isDisposed()) emitter.onSuccess(item);
                 }
             ));
     }
