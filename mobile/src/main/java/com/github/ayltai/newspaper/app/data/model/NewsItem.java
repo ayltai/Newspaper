@@ -194,7 +194,12 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
 
         if (this.publishDate != 0 && item.getPublishDate() != null) return (int)(item.getPublishDate().getTime() - this.publishDate);
 
-        return item.getTitle() == null ? 1 : this.title.compareTo(item.getTitle());
+        if (this.title == null && item.getTitle() == null) return 0;
+
+        if (this.title == null) return 1;
+        if (item.getTitle() == null) return -1;
+
+        return this.title.compareTo(item.getTitle());
     }
 
     @Override
