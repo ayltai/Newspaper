@@ -75,12 +75,14 @@ public final class OrientalDailyClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect item full description", "繼青年新政游蕙禎和梁頌恆宣誓引發辱華風波後，昨日再爆出中文大學學生辱華事件。中大日前出現「香港獨立」橫額及海報後，惹來反對港獨團體前日到中大文化廣場示威，並與支持港獨的學生爆發衝突。其後網上流傳數段影", item.getDescription().substring(0, 100));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void Given_orientalDailyDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
         final NewsItem newsItem = new NewsItem();
         newsItem.setLink(OrientalDailyClientTest.ERROR_DETAILS_URL);
 
-        this.client.updateItem(newsItem).blockingGet();
+        final NewsItem item = this.client.updateItem(newsItem).blockingGet();
+
+        Assert.assertEquals("Item is updated", newsItem, item);
     }
 
     @NonNull

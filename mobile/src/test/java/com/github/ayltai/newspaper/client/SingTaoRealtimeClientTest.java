@@ -73,12 +73,14 @@ public final class SingTaoRealtimeClientTest extends NetworkTest {
             "事發在早上8時許，保安途經逸", item.getDescription().substring(0, 100));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void Given_singTaoRealtimeDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
         final NewsItem newsItem = new NewsItem();
         newsItem.setLink(SingTaoRealtimeClientTest.ERROR_DETAILS_URL);
 
-        this.client.updateItem(newsItem).blockingGet();
+        final NewsItem item = this.client.updateItem(newsItem).blockingGet();
+
+        Assert.assertEquals("Item is updated", newsItem, item);
     }
 
     @NonNull

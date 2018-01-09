@@ -56,6 +56,8 @@ final class MingPaoClient extends RssClient {
     @NonNull
     @Override
     public Single<NewsItem> updateItem(@NonNull final NewsItem item) {
+        if (item.getLink().length() <= MingPaoClient.BASE_URI.length() || !item.getLink().contains(MingPaoClient.SLASH)) return Single.just(item);
+
         final String[] tokens    = item.getLink().substring(MingPaoClient.BASE_URI.length()).split(MingPaoClient.SLASH);
         final boolean  isInstant = item.getLink().contains("/ins/");
 

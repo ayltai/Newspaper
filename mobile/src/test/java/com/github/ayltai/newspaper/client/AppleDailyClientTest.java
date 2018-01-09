@@ -79,12 +79,14 @@ public final class AppleDailyClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect item full description", "<p class=\"ArticleIntro\">\n                                \t【本報訊】教育局副局長蔡若蓮長子周四跳樓身亡，教育大學學生會民主牆出現冒犯性標語，行", item.getDescription().substring(0, 100));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void Given_applieDailyDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
         final NewsItem newsItem = new NewsItem();
         newsItem.setLink(AppleDailyClientTest.ERROR_DETAILS_URL);
 
-        this.client.updateItem(newsItem).blockingGet();
+        final NewsItem item = this.client.updateItem(newsItem).blockingGet();
+
+        Assert.assertEquals("Item is updated", newsItem, item);
     }
 
     @NonNull

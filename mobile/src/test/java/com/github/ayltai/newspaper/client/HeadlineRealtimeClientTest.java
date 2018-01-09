@@ -70,12 +70,14 @@ public final class HeadlineRealtimeClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect item full description", "<p>將軍澳新都城第一期停車場冷氣機房發生爆炸，2名男工人受", item.getDescription().substring(0, 30));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void Given_headlineRealtimeDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
         final NewsItem newsItem = new NewsItem();
         newsItem.setLink(HeadlineRealtimeClientTest.ERROR_DETAILS_URL);
 
-        this.client.updateItem(newsItem).blockingGet();
+        final NewsItem item = this.client.updateItem(newsItem).blockingGet();
+
+        Assert.assertEquals("Item is updated", newsItem, item);
     }
 
     @NonNull

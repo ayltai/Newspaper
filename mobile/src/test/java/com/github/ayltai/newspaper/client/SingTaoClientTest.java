@@ -72,12 +72,14 @@ public final class SingTaoClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect item full description", "　　(星島日報報道)教育大學民主牆日前出現「恭喜」教育局副局長蔡若蓮長子自殺標語後，各界高調譴責。風", item.getDescription().substring(0, 50));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void Given_singTaoDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
         final NewsItem newsItem = new NewsItem();
         newsItem.setLink(SingTaoClientTest.ERROR_DETAILS_URL);
 
-        this.client.updateItem(newsItem).blockingGet();
+        final NewsItem item = this.client.updateItem(newsItem).blockingGet();
+
+        Assert.assertEquals("Item is updated", newsItem, item);
     }
 
     @NonNull
