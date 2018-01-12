@@ -164,7 +164,12 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
             this.toolbar.getMenu().findItem(R.id.action_search).setVisible(true);
 
             if (!isCached) {
-                this.newsView = item.getItemId() == R.id.action_news ? new PagedNewsView(this.getContext()) : item.getItemId() == R.id.action_history ? new HistoricalNewsView(this.getContext()) : new BookmarkedNewsView(this.getContext());
+                this.newsView = item.getItemId() == R.id.action_news
+                    ? new PagedNewsView(this.getContext())
+                    : item.getItemId() == R.id.action_history
+                        ? new HistoricalNewsView(this.getContext())
+                        : new BookmarkedNewsView(this.getContext());
+
                 this.content.addView((View)this.newsView);
 
                 this.cachedViews.put(item.getItemId(), new SoftReference<>((View)this.newsView));
