@@ -28,6 +28,7 @@ import io.realm.internal.RealmCore;
     RealmResults.class
 })
 public abstract class DataTest extends UnitTest {
+    @SuppressWarnings("unchecked")
     @CallSuper
     @Override
     public void setUp() throws Exception {
@@ -67,8 +68,8 @@ public abstract class DataTest extends UnitTest {
         PowerMockito.when(query.notEqualTo(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(query);
 
         final RealmResults<NewsItem> results = PowerMockito.mock(RealmResults.class);
+        PowerMockito.when(query.sort(Mockito.anyString(), Mockito.any(Sort.class))).thenReturn(query);
         PowerMockito.when(query.findAll()).thenReturn(results);
-        PowerMockito.when(query.findAllSorted(Mockito.anyString(), Mockito.any(Sort.class))).thenReturn(results);
         PowerMockito.when(results.iterator()).thenReturn(Collections.emptyList().iterator());
         PowerMockito.when(results.deleteAllFromRealm()).thenReturn(true);
 
