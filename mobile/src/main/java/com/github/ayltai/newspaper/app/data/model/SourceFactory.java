@@ -25,7 +25,7 @@ public final class SourceFactory {
 
     private static SourceFactory instance;
 
-    private final Map<String, Source> sources = new THashMap<>(12);
+    private final Map<String, Source> sources = new THashMap<>(13);
 
     @NonNull
     public static SourceFactory getInstance(@NonNull final Context context) {
@@ -51,7 +51,8 @@ public final class SourceFactory {
         this.sources.put(sources[i++], SourceFactory.createHeadlineRealtimeSource(sources, categories));
         this.sources.put(sources[i++], SourceFactory.createSkyPostSource(sources, categories));
         this.sources.put(sources[i++], SourceFactory.createEconomicJournalSource(sources, categories));
-        this.sources.put(sources[i],   SourceFactory.createRadioTelevisionSource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createRadioTelevisionSource(sources, categories));
+        this.sources.put(sources[i],   SourceFactory.createSouthChinaMorningPostSource(sources, categories));
     }
 
     @NonNull
@@ -214,5 +215,20 @@ public final class SourceFactory {
             new Category("http://rthk.hk/rthk/news/rss/c_expressnews_greaterchina.xml", categories[11]),
             new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cfinance.xml", categories[12]),
             new Category("http://rthk.hk/rthk/news/rss/c_expressnews_csport.xml", categories[15])), R.drawable.avatar_rthk);
+    }
+
+    @SuppressWarnings("checkstyle:magicnumber")
+    @NonNull
+    private static Source createSouthChinaMorningPostSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+        return new Source(sources[12], new RealmList<>(
+            new Category("http://www.scmp.com/rss/2/feed", categories[9]),
+            new Category("http://www.scmp.com/rss/5/feed", categories[10]),
+            new Category("http://www.scmp.com/rss/4/feed", categories[11]),
+            new Category("http://www.scmp.com/rss/92/feed", categories[12]),
+            new Category("http://www.scmp.com/rss/96/feed", categories[13]),
+            new Category("http://www.scmp.com/rss/95/feed", categories[15]),
+            new Category("http://www.scmp.com/rss/94/feed", categories[16])
+
+        ), R.drawable.avatar_scmp);
     }
 }

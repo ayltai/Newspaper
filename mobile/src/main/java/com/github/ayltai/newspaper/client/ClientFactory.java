@@ -46,7 +46,8 @@ public final class ClientFactory {
         this.clients.put(sources[i], new HeadlineRealtimeClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
         this.clients.put(sources[i], new SkyPostClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
         this.clients.put(sources[i], new HkejClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
-        this.clients.put(sources[i], new RthkClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i])));
+        this.clients.put(sources[i], new RthkClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
+        this.clients.put(sources[i], new ScmpClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i])));
     }
 
     @Nullable
