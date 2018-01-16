@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import android.support.annotation.NonNull;
 
+import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.util.DevUtils;
 
 import dagger.Module;
@@ -32,7 +33,11 @@ final class HttpModule {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
             .connectTimeout(HttpModule.TIMEOUT_CONNECT, TimeUnit.SECONDS)
             .readTimeout(HttpModule.TIMEOUT_READ, TimeUnit.SECONDS)
-            .writeTimeout(HttpModule.TIMEOUT_WRITE, TimeUnit.SECONDS);
+            .writeTimeout(HttpModule.TIMEOUT_WRITE, TimeUnit.SECONDS)
+            .addInterceptor(chain -> chain.proceed(chain.request()
+                .newBuilder()
+                .header("User-Agent", BuildConfig.APPLICATION_ID + " " + BuildConfig.VERSION_NAME)
+                .build()));
 
         if (DevUtils.isLoggable()) builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS));
 
