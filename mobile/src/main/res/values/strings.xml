@@ -69,6 +69,7 @@
         <item>信報</item>
         <item>香港電台</item>
         <item>南華早報</item>
+        <item>英文虎報</item>
     </string-array>
     <string-array name="categories">
         <item>港聞</item><!-- 0 -->

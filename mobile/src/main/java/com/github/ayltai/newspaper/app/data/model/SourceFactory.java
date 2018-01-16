@@ -52,7 +52,8 @@ public final class SourceFactory {
         this.sources.put(sources[i++], SourceFactory.createSkyPostSource(sources, categories));
         this.sources.put(sources[i++], SourceFactory.createEconomicJournalSource(sources, categories));
         this.sources.put(sources[i++], SourceFactory.createRadioTelevisionSource(sources, categories));
-        this.sources.put(sources[i],   SourceFactory.createSouthChinaMorningPostSource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createSouthChinaMorningPostSource(sources, categories));
+        this.sources.put(sources[i],   SourceFactory.createTheStandardSource(sources, categories));
     }
 
     @NonNull
@@ -230,5 +231,17 @@ public final class SourceFactory {
             new Category("http://www.scmp.com/rss/94/feed", categories[16])
 
         ), R.drawable.avatar_scmp);
+    }
+
+    @SuppressWarnings("checkstyle:magicnumber")
+    @NonNull
+    private static Source createTheStandardSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+        return new Source(sources[13], new RealmList<>(
+            new Category("http://www.thestandard.com.hk/ajax_sections_list.php?sid=4", categories[9]),
+            new Category("http://www.thestandard.com.hk/ajax_sections_list.php?sid=6", categories[10]),
+            new Category("http://www.thestandard.com.hk/ajax_sections_list.php?sid=3", categories[11]),
+            new Category("http://www.thestandard.com.hk/ajax_sections_list.php?sid=2", categories[12]),
+            new Category("http://www.thestandard.com.hk/ajax_sections_list.php?sid=8", categories[15])
+        ), R.drawable.avatar_the_standard);
     }
 }

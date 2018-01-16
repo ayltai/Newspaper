@@ -94,12 +94,12 @@ final class AppleDailyClient extends Client {
                         }
                     }
 
-                    emitter.onSuccess(this.filter(items));
+                    if (!emitter.isDisposed()) emitter.onSuccess(this.filter(items));
                 },
                 error -> {
                     if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, RxJava2Debug.getEnhancedStackTrace(error));
 
-                    emitter.onSuccess(Collections.emptyList());
+                    if (!emitter.isDisposed()) emitter.onSuccess(Collections.emptyList());
                 }
             ));
     }
