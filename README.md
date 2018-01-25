@@ -29,6 +29,7 @@ An aggregated news app containing news from 10+ local news publishers in Hong Ko
 * [RTHK (香港電台)](http://news.rthk.hk)
 * [South China Morning Post (南華早報)](http://www.scmp.com/frontpage/hk)
 * [The Standard (英文虎報)](http://www.thestandard.com.hk)
+* [Wen Wei Po (文匯報)](http://news.wenweipo.com)
 
 ## Blog posts
 * [All you need to know about CircleCI 2.0 with Firebase Test Lab](https://medium.com/@ayltai/all-you-need-to-know-about-circleci-2-0-with-firebase-test-lab-2a66785ff3c2)

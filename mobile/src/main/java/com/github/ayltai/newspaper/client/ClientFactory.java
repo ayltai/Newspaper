@@ -18,7 +18,7 @@ import okhttp3.OkHttpClient;
 public final class ClientFactory {
     private static ClientFactory instance;
 
-    private final Map<String, Client> clients = new THashMap<>(14);
+    private final Map<String, Client> clients = new THashMap<>(15);
 
     @NonNull
     public static ClientFactory getInstance(@NonNull final Context context) {
@@ -48,7 +48,8 @@ public final class ClientFactory {
         this.clients.put(sources[i], new HkejClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
         this.clients.put(sources[i], new RthkClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
         this.clients.put(sources[i], new ScmpClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
-        this.clients.put(sources[i], new TheStandardClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i])));
+        this.clients.put(sources[i], new TheStandardClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
+        this.clients.put(sources[i], new WenWeiPoClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i])));
     }
 
     @Nullable

@@ -12,6 +12,8 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -37,7 +39,22 @@ final class HttpModule {
             .addInterceptor(chain -> chain.proceed(chain.request()
                 .newBuilder()
                 .header("User-Agent", BuildConfig.APPLICATION_ID + " " + BuildConfig.VERSION_NAME)
-                .build()));
+                .build()))
+            .addInterceptor(chain -> {
+                final Response response = chain.proceed(chain.request());
+
+                if (chain.request().url().host().contains("news.wenweipo.com")) {
+                    final ResponseBody body = response.body();
+
+                    if (body == null) return response;
+
+                    return response.newBuilder()
+                        .body(ResponseBody.create(body.contentType(), new String(body.bytes(), "Big5")))
+                        .build();
+                }
+
+                return response;
+            });
 
         if (DevUtils.isLoggable()) builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS));
 

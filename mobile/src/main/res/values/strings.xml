@@ -70,6 +70,7 @@
         <item>香港電台</item>
         <item>南華早報</item>
         <item>英文虎報</item>
+        <item>文匯報</item>
     </string-array>
     <string-array name="categories">
         <item>港聞</item><!-- 0 -->

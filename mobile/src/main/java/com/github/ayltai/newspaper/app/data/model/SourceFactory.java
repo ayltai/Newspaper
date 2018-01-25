@@ -25,7 +25,7 @@ public final class SourceFactory {
 
     private static SourceFactory instance;
 
-    private final Map<String, Source> sources = new THashMap<>(13);
+    private final Map<String, Source> sources = new THashMap<>(15);
 
     @NonNull
     public static SourceFactory getInstance(@NonNull final Context context) {
@@ -53,7 +53,8 @@ public final class SourceFactory {
         this.sources.put(sources[i++], SourceFactory.createEconomicJournalSource(sources, categories));
         this.sources.put(sources[i++], SourceFactory.createRadioTelevisionSource(sources, categories));
         this.sources.put(sources[i++], SourceFactory.createSouthChinaMorningPostSource(sources, categories));
-        this.sources.put(sources[i],   SourceFactory.createTheStandardSource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createTheStandardSource(sources, categories));
+        this.sources.put(sources[i],   SourceFactory.createWenWeiPoSource(sources, categories));
     }
 
     @NonNull
@@ -243,5 +244,15 @@ public final class SourceFactory {
             new Category("http://www.thestandard.com.hk/ajax_sections_list.php?sid=2", categories[12]),
             new Category("http://www.thestandard.com.hk/ajax_sections_list.php?sid=8", categories[15])
         ), R.drawable.avatar_the_standard);
+    }
+
+    @SuppressWarnings("checkstyle:magicnumber")
+    @NonNull
+    private static Source createWenWeiPoSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+        return new Source(sources[14], new RealmList<>(
+            new Category("http://news.wenweipo.com/list_news.php?cat=000IN&instantCat=hk", categories[9]),
+            new Category("http://news.wenweipo.com/list_news.php?cat=000IN&instantCat=china", categories[10]),
+            new Category("http://news.wenweipo.com/list_news.php?cat=000IN&instantCat=world", categories[11])
+        ), R.drawable.avatar_wen_wei_po);
     }
 }
