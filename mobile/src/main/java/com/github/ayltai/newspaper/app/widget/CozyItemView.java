@@ -18,13 +18,14 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.util.DateUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.Optional;
 import com.github.piasy.biv.view.BigImageView;
@@ -36,19 +37,19 @@ public final class CozyItemView extends ItemView {
 
     //region Components
 
-    private final SimpleDraweeView avatar;
-    private final TextView         source;
-    private final TextView         publishDate;
-    private final BigImageView     image;
-    private final TextView         title;
-    private final TextView         description;
+    private final ImageView     avatar;
+    private final TextView      source;
+    private final TextView      publishDate;
+    private final BigImageView  image;
+    private final TextView      title;
+    private final TextView      description;
 
     //endregion
 
     public CozyItemView(@NonNull final Context context) {
         super(context);
 
-        final View view = LayoutInflater.from(context).inflate(R.layout.view_news_cozy, this, true);
+        final View view = LayoutInflater.from(context).inflate(DevUtils.isRunningUnitTest() ? R.layout.view_news_cozy_test : R.layout.view_news_cozy, this, true);
 
         this.container   = view.findViewById(R.id.container);
         this.avatar      = view.findViewById(R.id.avatar);
@@ -120,7 +121,7 @@ public final class CozyItemView extends ItemView {
             ImageUtils.translateToFacesCenter(this.image);
 
             this.image.setVisibility(View.VISIBLE);
-            this.image.showImage(Uri.parse(images.get(0).getUrl()));
+            if (!DevUtils.isRunningUnitTest()) this.image.showImage(Uri.parse(images.get(0).getUrl()));
         }
     }
 
