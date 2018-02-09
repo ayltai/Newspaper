@@ -71,7 +71,8 @@
                 android:layout_below="@+id/avatar"
                 android:layout_alignWithParentIfMissing="true"
                 android:background="?attr/placeholderImage"
-                app:initScaleType="centerCrop" />
+                app:initScaleType="centerCrop"
+                app:tapToRetry="true" />
             <TextView
                 android:id="@+id/title"
                 android:layout_below="@+id/image"

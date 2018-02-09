@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.Image;
@@ -117,6 +118,8 @@ public final class CompactItemView extends ItemView {
         if (images.isEmpty()) {
             this.image.setVisibility(View.GONE);
         } else {
+            this.image.getSSIV().setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
+
             ImageUtils.translateToFacesCenter(this.image);
 
             this.image.setVisibility(View.VISIBLE);
