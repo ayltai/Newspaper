@@ -23,6 +23,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -108,6 +109,7 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
     private final TextView                toolbarTitle;
     private final View                    toolbarBackground;
     private final ViewGroup               imageContainer;
+    private final NestedScrollView        scrollView;
     private final View                    progress;
     private final SimpleDraweeView        avatar;
     private final TextView                source;
@@ -140,6 +142,7 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
         this.collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbarLayout);
         this.toolbar                 = view.findViewById(R.id.toolbar);
         this.imageContainer          = view.findViewById(R.id.image_container);
+        this.scrollView              = view.findViewById(R.id.scrollView);
         this.progress                = view.findViewById(R.id.progress);
         this.avatar                  = view.findViewById(R.id.avatar);
         this.source                  = view.findViewById(R.id.source);
@@ -267,8 +270,6 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
                 ImageUtils.translateToFacesCenter(this.toolbarImage);
             }
 
-            this.appBarLayout.setExpanded(true, true);
-
             if (TextUtils.isEmpty(images.get(0).getDescription())) {
                 this.toolbarBackground.setVisibility(View.GONE);
             } else {
@@ -277,6 +278,8 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
             }
 
             this.imageContainer.addView(this.toolbarView);
+
+            this.appBarLayout.setExpanded(true, false);
 
             if (images.size() > 1) {
                 for (final Image image : images.subList(1, images.size() - 1)) {
@@ -304,6 +307,8 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
 
             this.videoContainer.addView(this.videoView);
         }
+
+        this.scrollView.scrollTo(0, 0);
     }
 
     //endregion
@@ -501,6 +506,7 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
                     if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                 }
             );
+
         imageView.setOnClickListener(view -> this.imageClicks.onNext(image));
         ((View)imageView.getParent()).setOnClickListener(view -> this.imageClicks.onNext(image));
     }
