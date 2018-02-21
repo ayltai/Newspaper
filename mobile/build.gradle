@@ -15,6 +15,7 @@ String VERSION_HASH     = 'git rev-parse --short HEAD'.execute().text.trim()
 
 android {
     compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
