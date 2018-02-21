@@ -142,7 +142,11 @@ public abstract class RxFlow {
                 if (fromView != null) {
                     if (Animations.isEnabled()) {
                         final Animator animator = this.getAnimator(toView, Direction.FORWARD, incomingState.getKey() instanceof Locatable ? ((Locatable)incomingState.getKey()).getLocation() : null, null, () -> container.removeView(fromView));
-                        if (animator != null) animator.start();
+                        if (animator == null) {
+                            container.removeView(fromView);
+                        } else {
+                            animator.start();
+                        }
                     } else {
                         container.removeView(fromView);
                     }
@@ -153,7 +157,11 @@ public abstract class RxFlow {
                 if (fromView != null) {
                     if (Animations.isEnabled()) {
                         final Animator animator = this.getAnimator(fromView, Direction.BACKWARD, outgoingState != null && outgoingState.getKey() instanceof Locatable ? ((Locatable)outgoingState.getKey()).getLocation() : null, null, () -> container.removeView(fromView));
-                        if (animator != null) animator.start();
+                        if (animator == null) {
+                            container.removeView(fromView);
+                        } else {
+                            animator.start();
+                        }
                     } else {
                         container.removeView(fromView);
                     }
