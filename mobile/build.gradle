@@ -103,11 +103,11 @@ ext {
     architectureVersion   = '1.1.0'
     firebaseSdkVersion    = '11.8.0'
     daggerVersion         = '2.14.1'
-    okhttpVersion         = '3.9.1'
+    okhttpVersion         = '3.10.0'
     retrofitVersion       = '2.3.0'
     frescoVersion         = '1.8.1'
     bigImageViewerVersion = '1.4.6'
-    exoPlayerVersion      = '2.6.1'
+    exoPlayerVersion      = '2.7.0'
     leakCanaryVersion     = '1.5.4'
     robolectricVersion    = '3.7.1'
     powerMockVersion      = '2.0.0-beta.5'
@@ -147,7 +147,7 @@ dependencies {
     implementation "com.google.firebase:firebase-perf:$firebaseSdkVersion"
 
     // Reactive programming
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
     // Dependency injection
