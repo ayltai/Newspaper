@@ -61,6 +61,6 @@ public final class SourcesPresenterTest extends PresenterTest<MainActivity, Sour
             .getConfigComponent(this.getView().getActivity())
             .userConfig().getSources();
 
-        Assert.assertEquals(13, sources.size());
+        Assert.assertEquals(14, sources.size());
     }
 }

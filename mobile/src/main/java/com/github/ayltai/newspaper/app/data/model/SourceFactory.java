@@ -3,12 +3,12 @@ package com.github.ayltai.newspaper.app.data.model;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.client.HeadlineClient;
@@ -25,7 +25,7 @@ public final class SourceFactory {
 
     private static SourceFactory instance;
 
-    private final Map<String, Source> sources = new HashMap<>(15);
+    private final Map<String, Source> sources = new ArrayMap<>(15);
 
     @NonNull
     public static SourceFactory getInstance(@NonNull final Context context) {

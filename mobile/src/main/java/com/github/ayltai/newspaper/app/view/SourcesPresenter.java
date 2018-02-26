@@ -2,7 +2,6 @@ package com.github.ayltai.newspaper.app.view;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,7 +35,7 @@ public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.
 
         return Single.create(emitter -> {
             final List<String> sources      = new ArrayList<>(ComponentFactory.getInstance().getConfigComponent(activity).userConfig().getDefaultSources());
-            final Set<String>  displayNames = new HashSet<>();
+            final Set<String>  displayNames = new ArraySet<>();
 
             for (final String source : sources) displayNames.add(Source.toDisplayName(source));
 

@@ -1,10 +1,10 @@
 package com.github.ayltai.newspaper.view;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 import android.view.View;
 
 import com.github.ayltai.newspaper.view.binding.Binder;
@@ -14,7 +14,7 @@ import com.github.ayltai.newspaper.widget.SimpleViewHolder;
 import io.reactivex.disposables.Disposable;
 
 public abstract class SimpleUniversalAdapter<M, V extends View, T extends SimpleViewHolder<V>> extends UniversalAdapter<M, V, T> implements Disposable {
-    private final Map<T, Binder<V>> bindings = new HashMap<>();
+    private final Map<T, Binder<V>> bindings = new ArrayMap<>();
 
     protected SimpleUniversalAdapter(@NonNull final List<FullBinderFactory<M>> fullBinderFactories) {
         super(fullBinderFactories);

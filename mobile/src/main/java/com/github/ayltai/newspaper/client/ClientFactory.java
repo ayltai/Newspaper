@@ -1,11 +1,11 @@
 package com.github.ayltai.newspaper.client;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.ArrayMap;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
@@ -18,7 +18,7 @@ import okhttp3.OkHttpClient;
 public final class ClientFactory {
     private static ClientFactory instance;
 
-    private final Map<String, Client> clients = new HashMap<>(15);
+    private final Map<String, Client> clients = new ArrayMap<>(15);
 
     @NonNull
     public static ClientFactory getInstance(@NonNull final Context context) {

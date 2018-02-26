@@ -56,21 +56,21 @@
     <string name="pref_sources">Sources</string>
     <string name="pref_categories">Categories</string>
     <string-array name="sources">
-        <item>蘋果日報</item>
-        <item>東方日報</item>
-        <item>星島日報</item>
-        <item>星島即時</item>
-        <item>經濟日報</item>
-        <item>成報</item>
-        <item>明報</item>
-        <item>頭條日報</item>
-        <item>頭條即時</item>
-        <item>晴報</item>
-        <item>信報</item>
-        <item>香港電台</item>
-        <item>南華早報</item>
-        <item>英文虎報</item>
-        <item>文匯報</item>
+        <item>蘋果日報</item><!-- 0 -->
+        <item>東方日報</item><!-- 1 -->
+        <item>星島日報</item><!-- 2 -->
+        <item>星島即時</item><!-- 3 -->
+        <item>經濟日報</item><!-- 4 -->
+        <item>成報</item><!-- 5 -->
+        <item>明報</item><!-- 6 -->
+        <item>頭條日報</item><!-- 7 -->
+        <item>頭條即時</item><!-- 8 -->
+        <item>晴報</item><!-- 9 -->
+        <item>信報</item><!-- 10 -->
+        <item>香港電台</item><!-- 11 -->
+        <item>南華早報</item><!-- 12 -->
+        <item>英文虎報</item><!-- 13 -->
+        <item>文匯報</item><!-- 14 -->
     </string-array>
     <string-array name="categories">
         <item>港聞</item><!-- 0 -->

@@ -2,7 +2,6 @@ package com.github.ayltai.newspaper.app.widget;
 
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
@@ -15,6 +14,7 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -62,7 +62,7 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
 
     //endregion
 
-    private final Map<Integer, SoftReference<View>> cachedViews = new HashMap<>();
+    private final Map<Integer, SoftReference<View>> cachedViews = new ArrayMap<>();
 
     //region Components
 

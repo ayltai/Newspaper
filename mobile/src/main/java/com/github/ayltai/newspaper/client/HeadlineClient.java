@@ -1,7 +1,6 @@
 package com.github.ayltai.newspaper.client;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +8,7 @@ import javax.inject.Inject;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import com.akaita.java.rxjava2debug.RxJava2Debug;
@@ -46,7 +46,7 @@ public final class HeadlineClient extends RssClient {
 
     //endregion
 
-    private static final Map<String, String> KEYWORDS = new HashMap<>(8);
+    private static final Map<String, String> KEYWORDS = new ArrayMap<>(8);
 
     static {
         HeadlineClient.KEYWORDS.put(HeadlineClient.CATEGORY_HONG_KONG, " (港聞) ");

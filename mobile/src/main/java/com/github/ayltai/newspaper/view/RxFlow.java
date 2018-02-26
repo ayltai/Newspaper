@@ -2,7 +2,6 @@ package com.github.ayltai.newspaper.view;
 
 import java.lang.ref.SoftReference;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import android.animation.Animator;
@@ -12,6 +11,7 @@ import android.graphics.Point;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.View;
@@ -32,8 +32,8 @@ import flow.TraversalCallback;
 import io.reactivex.disposables.Disposable;
 
 public abstract class RxFlow {
-    private final Map<Object, Pair<SoftReference<Presenter>, SoftReference<Presenter.View>>> cache       = Collections.synchronizedMap(new HashMap<>());
-    private final Map<Object, Disposable>                                                    disposables = new HashMap<>();
+    private final Map<Object, Pair<SoftReference<Presenter>, SoftReference<Presenter.View>>> cache       = Collections.synchronizedMap(new ArrayMap<>());
+    private final Map<Object, Disposable>                                                    disposables = new ArrayMap<>();
 
     private final Activity activity;
 
