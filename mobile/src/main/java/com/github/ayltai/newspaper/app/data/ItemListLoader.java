@@ -17,6 +17,7 @@ import android.util.Log;
 import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.Category;
+import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.client.Client;
@@ -24,6 +25,7 @@ import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.RealmLoader;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.Lists;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
@@ -33,7 +35,7 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.RealmObject;
 
-public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
+public final class ItemListLoader extends RealmLoader<Item> {
     //region Constants
 
     public static final int ID = ItemListLoader.class.hashCode();
@@ -88,20 +90,20 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
 
             return Flowable.create(emitter -> this.activity
                 .getSupportLoaderManager()
-                .restartLoader(ItemListLoader.ID + (categories == null ? 0 : categories.toString().hashCode()), this.args, new LoaderManager.LoaderCallbacks<List<NewsItem>>() {
+                .restartLoader(ItemListLoader.ID + (categories == null ? 0 : categories.toString().hashCode()), this.args, new LoaderManager.LoaderCallbacks<List<Item>>() {
                     @NonNull
                     @Override
-                    public Loader<List<NewsItem>> onCreateLoader(final int id, final Bundle args) {
+                    public Loader<List<Item>> onCreateLoader(final int id, final Bundle args) {
                         return new ItemListLoader(ItemListLoader.Builder.this.activity, args);
                     }
 
                     @Override
-                    public void onLoadFinished(final Loader<List<NewsItem>> loader, final List<NewsItem> items) {
-                        emitter.onNext(items);
+                    public void onLoadFinished(final Loader<List<Item>> loader, final List<Item> items) {
+                        emitter.onNext(Lists.transform(items, item -> (NewsItem)item));
                     }
 
                     @Override
-                    public void onLoaderReset(final Loader<List<NewsItem>> loader) {
+                    public void onLoaderReset(final Loader<List<Item>> loader) {
                     }
                 }), BackpressureStrategy.LATEST);
         }
@@ -113,15 +115,15 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
 
     @NonNull
     @Override
-    protected Flowable<List<NewsItem>> loadFromLocalSource(@NonNull final Context context, @Nullable final Bundle args) {
-        if (!this.isValid()) return Flowable.error(new IllegalStateException("Realm instance is null"));
+    protected Flowable<List<Item>> loadFromLocalSource(@NonNull final Context context, @Nullable final Bundle args) {
+        if (!this.isValid()) return Flowable.just(Collections.emptyList());
 
         return Flowable.create(emitter -> ItemManager.create(this.getRealm()).getItems(ItemListLoader.getSources(args).toArray(StringUtils.EMPTY_ARRAY), ItemListLoader.getCategories(args).toArray(StringUtils.EMPTY_ARRAY))
             .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
             .map(items -> items.isEmpty() ? items : RealmObject.isManaged(items.get(0)) ? this.getRealm().copyFromRealm(items) : items)
             .map(items -> {
                 Collections.sort(items);
-                return items;
+                return Lists.transform(items, item -> (Item)item);
             })
             .subscribe(emitter::onNext), BackpressureStrategy.LATEST);
     }
@@ -129,7 +131,7 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
     @SuppressWarnings("unchecked")
     @NonNull
     @Override
-    protected Flowable<List<NewsItem>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
+    protected Flowable<List<Item>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
         if (NetworkUtils.isOnline(context)) {
             final List<Single<List<NewsItem>>> singles = this.createSingles(context, args);
             if (singles.isEmpty()) Flowable.just(Collections.emptyList());
@@ -140,32 +142,24 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
                     final List<NewsItem> combinedList = new ArrayList<>();
                     for (final Object list : lists) combinedList.addAll((List<NewsItem>)list);
 
-                    Collections.sort(combinedList);
-
                     return combinedList;
                 })
                 .map(items -> {
-                    Collections.sort(items);
-                    return items;
-                })
-                .flatMap(items -> {
                     if (this.isValid()) {
-                        return Single.create(e -> ItemManager.create(this.getRealm())
+                        final List<NewsItem> newsItems = ItemManager.create(this.getRealm())
                             .putItems(items)
                             .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
-                            .subscribe(
-                                e::onSuccess,
-                                error -> {
-                                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
+                            .blockingGet();
 
-                                    if (!e.isDisposed()) e.onError(error);
-                                }));
+                        Collections.sort(newsItems);
+
+                        return newsItems;
                     } else {
-                        return Single.just(items);
+                        return items;
                     }
                 })
                 .subscribe(
-                    emitter::onNext,
+                    items -> emitter.onNext(Lists.transform(items, item -> (Item)item)),
                     error -> {
                         if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                     }

@@ -1,5 +1,7 @@
 package com.github.ayltai.newspaper.data;
 
+import java.util.List;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -15,7 +17,7 @@ import com.github.ayltai.newspaper.util.RxUtils;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 
-public abstract class RxLoader<D> extends Loader<D> {
+public abstract class RxLoader<D> extends Loader<List<D>> {
     private final Bundle args;
 
     private CompositeDisposable disposables;
@@ -74,7 +76,7 @@ public abstract class RxLoader<D> extends Loader<D> {
     }
 
     @NonNull
-    protected abstract Flowable<D> load(@NonNull Context context, @Nullable Bundle args);
+    protected abstract Flowable<List<D>> load(@NonNull Context context, @Nullable Bundle args);
 
     private void prepareDisposables() {
         if (this.disposables == null) this.disposables = new CompositeDisposable();
