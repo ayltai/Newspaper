@@ -6,12 +6,13 @@ import javax.inject.Singleton;
 
 import android.support.annotation.NonNull;
 
-import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.BuildConfig;
 
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
@@ -32,9 +33,26 @@ final class HttpModule {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
             .connectTimeout(HttpModule.TIMEOUT_CONNECT, TimeUnit.SECONDS)
             .readTimeout(HttpModule.TIMEOUT_READ, TimeUnit.SECONDS)
-            .writeTimeout(HttpModule.TIMEOUT_WRITE, TimeUnit.SECONDS);
+            .writeTimeout(HttpModule.TIMEOUT_WRITE, TimeUnit.SECONDS)
+            .addInterceptor(chain -> chain.proceed(chain.request()
+                .newBuilder()
+                .header("User-Agent", BuildConfig.APPLICATION_ID + " " + BuildConfig.VERSION_NAME)
+                .build()))
+            .addInterceptor(chain -> {
+                final Response response = chain.proceed(chain.request());
 
-        if (DevUtils.isLoggable()) builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS));
+                if (chain.request().url().host().contains("news.wenweipo.com")) {
+                    final ResponseBody body = response.body();
+
+                    if (body == null) return response;
+
+                    return response.newBuilder()
+                        .body(ResponseBody.create(body.contentType(), new String(body.bytes(), "Big5")))
+                        .build();
+                }
+
+                return response;
+            });
 
         return builder.build();
     }

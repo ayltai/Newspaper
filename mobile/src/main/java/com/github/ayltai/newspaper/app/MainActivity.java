@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
@@ -14,6 +15,8 @@ import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.perf.metrics.Trace;
@@ -73,6 +76,12 @@ public final class MainActivity extends AppCompatActivity {
             .inject(this);
 
         this.setTheme(this.userConfig.getTheme() == Constants.THEME_LIGHT ? R.style.AppTheme_Light : R.style.AppTheme_Dark);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextUtils.getColor(this, R.attr.primaryColorDark));
+        }
 
         if (!DevUtils.isRunningUnitTest()) this.initInstabug();
 

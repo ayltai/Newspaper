@@ -73,12 +73,14 @@ public final class SkyPostClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect item full description", "<h3>港人首置上車盤 或市價一半</h3><br><h4>轉售擬設限 只可賣予政府</h4><br>特首林鄭月娥下月發表的施政報告，將公布港人首置上車盤計劃，土地供應專責小組主席黃遠輝透露，定價會按", item.getDescription().substring(0, 100));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void Given_skyPostDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
         final NewsItem newsItem = new NewsItem();
         newsItem.setLink(SkyPostClientTest.ERROR_DETAILS_URL);
 
-        this.client.updateItem(newsItem).blockingGet();
+        final NewsItem item = this.client.updateItem(newsItem).blockingGet();
+
+        Assert.assertEquals("Item is updated", newsItem, item);
     }
 
     @NonNull

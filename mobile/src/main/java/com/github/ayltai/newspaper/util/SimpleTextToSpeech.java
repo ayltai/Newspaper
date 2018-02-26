@@ -12,11 +12,11 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import com.google.auto.value.AutoValue;
 
-import gnu.trove.map.hash.THashMap;
 import io.reactivex.Single;
 import rx.functions.Action1;
 
@@ -59,7 +59,7 @@ public abstract class SimpleTextToSpeech {
         }
     }
 
-    private final Map<Locale, Integer> availabilities = new THashMap<>();
+    private final Map<Locale, Integer> availabilities = new ArrayMap<>();
     private final AtomicInteger        utteranceId    = new AtomicInteger(0);
 
     private Activity     activity;

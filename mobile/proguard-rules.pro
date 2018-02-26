@@ -5,10 +5,8 @@
 -keepnames class * implements android.os.Parcelable {
     public static final ** CREATOR;
 }
-
-## Retrolambda
 -dontwarn java.lang.invoke.*
--dontwarn **$$Lambda$*
+-dontwarn javax.**
 
 ## Facebook Fresco
 
@@ -34,14 +32,10 @@
 -dontwarn com.facebook.infer.**
 
 ## Realm
--dontwarn javax.**
 -dontwarn io.realm.**
 
 ## Retrofit
 -dontwarn retrofit2.**
-
-## BottomBar
--dontwarn com.roughike.bottombar.**
 
 ## SearchView
 -keep class android.support.v7.widget.SearchView { *; }
@@ -53,3 +47,11 @@
     @org.simpleframework.xml.* <fields>;
     public <init>();
 }
+
+## BottomNavigationView
+-keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
+    boolean mShiftingMode;
+}
+
+## Instabug
+-dontwarn com.instabug.**

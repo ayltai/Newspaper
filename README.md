@@ -27,6 +27,9 @@ An aggregated news app containing news from 10+ local news publishers in Hong Ko
 * [Sky Post (晴報)](skypost.ulifestyle.com.hk)
 * [Hong Kong Economic Journal (信報)](http://www.hkej.com)
 * [RTHK (香港電台)](http://news.rthk.hk)
+* [South China Morning Post (南華早報)](http://www.scmp.com/frontpage/hk)
+* [The Standard (英文虎報)](http://www.thestandard.com.hk)
+* [Wen Wei Po (文匯報)](http://news.wenweipo.com)
 
 ## Blog posts
 * [All you need to know about CircleCI 2.0 with Firebase Test Lab](https://medium.com/@ayltai/all-you-need-to-know-about-circleci-2-0-with-firebase-test-lab-2a66785ff3c2)
@@ -59,7 +62,6 @@ This app is made with the support of open source projects:
 * [Calligraphy](https://github.com/InflationX/Calligraphy)
 * [AutoValue](https://github.com/google/auto/tree/master/value)
 * [Gson](https://github.com/google/gson)
-* [GNU Trove](https://bitbucket.org/trove4j/trove)
 * [Espresso](https://google.github.io/android-testing-support-library)
 * [JUnit 4](https://github.com/junit-team/junit4)
 * [Mockito](https://github.com/mockito/mockito)

@@ -18,6 +18,7 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 
 import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
 import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -63,14 +64,7 @@ public final class ItemManager extends DataManager {
                 .and()
                 .in(NewsItem.FIELD_CATEGORY, categories);
 
-            if (!TextUtils.isEmpty(searchText)) query.and()
-                .beginGroup()
-                .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
-                .or()
-                .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
-                .endGroup();
-
-            if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.findAll()));
+            this.emit(emitter, query, searchText, sources, categories);
         });
     }
 
@@ -84,19 +78,9 @@ public final class ItemManager extends DataManager {
         return Single.create(emitter -> {
             final RealmQuery<NewsItem> query = this.getRealm()
                 .where(NewsItem.class)
-                .greaterThan(NewsItem.FIELD_LAST_ACCESSED_DATE, 0)
-                .in(NewsItem.FIELD_SOURCE, sources)
-                .and()
-                .in(NewsItem.FIELD_CATEGORY, categories);
+                .greaterThan(NewsItem.FIELD_LAST_ACCESSED_DATE, 0);
 
-            if (!TextUtils.isEmpty(searchText)) query.and()
-                .beginGroup()
-                .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
-                .or()
-                .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
-                .endGroup();
-
-            if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
+            this.emit(emitter, query, searchText, sources, categories);
         });
     }
 
@@ -110,19 +94,9 @@ public final class ItemManager extends DataManager {
         return Single.create(emitter -> {
             final RealmQuery<NewsItem> query = this.getRealm()
                 .where(NewsItem.class)
-                .equalTo(NewsItem.FIELD_BOOKMARKED, true)
-                .in(NewsItem.FIELD_SOURCE, sources)
-                .and()
-                .in(NewsItem.FIELD_CATEGORY, categories);
+                .equalTo(NewsItem.FIELD_BOOKMARKED, true);
 
-            if (!TextUtils.isEmpty(searchText)) query.and()
-                .beginGroup()
-                .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
-                .or()
-                .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
-                .endGroup();
-
-            if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
+            this.emit(emitter, query, searchText, sources, categories);
         });
     }
 
@@ -229,5 +203,21 @@ public final class ItemManager extends DataManager {
             .endGroup()
             .findAll()
             .deleteAllFromRealm();
+    }
+
+    private void emit(@NonNull final SingleEmitter<List<NewsItem>> emitter, @NonNull final RealmQuery<NewsItem> query, @Nullable final CharSequence searchText, @NonNull final String[] sources, @NonNull final String[] categories) {
+        query.and()
+            .in(NewsItem.FIELD_SOURCE, sources)
+            .and()
+            .in(NewsItem.FIELD_CATEGORY, categories);
+
+        if (!TextUtils.isEmpty(searchText)) query.and()
+            .beginGroup()
+            .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
+            .or()
+            .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
+            .endGroup();
+
+        if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.sort(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING).findAll()));
     }
 }

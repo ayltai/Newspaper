@@ -74,12 +74,14 @@ public final class SingPaoClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect item full description", "【我城‧我故事】<br><br>紙上不只是談兵，還可以細看香港歷史的變遷。吳貴龍上世紀80年代修讀印刷，之後順理成章到印刷廠工作，自此與紙品結下不解緣。不過，令人意想不到的是，他也慢慢喜愛上收藏紙品，", item.getDescription().substring(0, 100));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void Given_singPaoDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
         final NewsItem newsItem = new NewsItem();
         newsItem.setLink(SingPaoClientTest.ERROR_DETAILS_URL);
 
-        this.client.updateItem(newsItem).blockingGet();
+        final NewsItem item = this.client.updateItem(newsItem).blockingGet();
+
+        Assert.assertEquals("Item is updated", newsItem, item);
     }
 
     @NonNull

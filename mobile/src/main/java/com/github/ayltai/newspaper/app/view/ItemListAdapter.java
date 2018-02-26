@@ -107,10 +107,10 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
                     .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
                     .flatMap(manager -> {
                         if (this.isHistorical) return manager.getHistoricalItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
-                                .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
+                            .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
 
                         if (this.isBookmarked) return manager.getBookmarkedItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
-                                .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
+                            .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
 
                         return manager.getItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
                             .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
@@ -167,6 +167,11 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
     @Override
     protected Iterable<Animator> getItemAnimators(@NonNull final View view) {
         return Animations.isEnabled() ? Animations.createDefaultAnimators(view) : super.getItemAnimators(view);
+    }
+
+    @Override
+    protected long getAnimationDuration() {
+        return 2 * this.context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
     }
 
     @NonNull

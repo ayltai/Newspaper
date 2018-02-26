@@ -22,6 +22,7 @@ import com.github.ayltai.newspaper.analytics.SearchEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.config.UserConfig;
+import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.view.BaseNewsView;
 import com.github.ayltai.newspaper.widget.BaseView;
 import com.github.ayltai.newspaper.widget.VerticalListView;
@@ -58,13 +59,13 @@ public class PagedNewsView extends BaseView implements BaseNewsView, ViewPager.O
 
     @Override
     public void up() {
-        final VerticalListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
+        final VerticalListView<Item> view = this.adapter.getItem(this.viewPager.getCurrentItem());
         if (view != null) view.up();
     }
 
     @Override
     public void refresh() {
-        final VerticalListView view = this.adapter.getItem(this.viewPager.getCurrentItem());
+        final VerticalListView<Item> view = this.adapter.getItem(this.viewPager.getCurrentItem());
         if (view != null) view.refresh();
     }
 

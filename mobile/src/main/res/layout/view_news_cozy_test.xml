@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <android.support.v7.widget.CardView
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/space8"
@@ -14,6 +15,8 @@
         android:layout_marginEnd="@dimen/space8"
         android:layout_marginTop="@dimen/space4"
         android:layout_marginBottom="@dimen/space4"
+        android:foreground="?attr/selectableItemBackground"
+        android:stateListAnimator="@animator/lift_on_pressed"
         app:cardBackgroundColor="?attr/cardBackground"
         app:cardCornerRadius="@dimen/cozy_card_radius"
         app:cardElevation="@dimen/card_elevation"
@@ -33,8 +36,7 @@
                 android:layout_marginEnd="@dimen/space16"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:background="?attr/placeholderImage" />
+                android:layout_alignParentTop="true" />
             <TextView
                 android:id="@+id/source"
                 android:layout_marginRight="@dimen/space16"
@@ -45,8 +47,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/avatar"
                 android:layout_alignWithParentIfMissing="true"
-                android:text="██████████████"
-                android:textColor="?attr/placeholderTextColor"
+                tools:text="Proin rutrum ipsum"
                 style="@style/Source.Normal" />
             <TextView
                 android:id="@+id/publish_date"
@@ -58,17 +59,17 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignBottom="@+id/avatar"
                 android:layout_alignWithParentIfMissing="true"
-                android:text="████████████████████"
-                android:textColor="?attr/placeholderTextColor"
+                tools:text="Phasellus at aliquam dolor"
                 style="@style/Subhead.Normal" />
-            <ImageView
+            <com.github.piasy.biv.view.BigImageView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/cozy_item_image_height"
                 android:layout_marginTop="@dimen/space16"
                 android:layout_below="@+id/avatar"
                 android:layout_alignWithParentIfMissing="true"
-                android:background="?attr/placeholderImage" />
+                android:background="?attr/placeholderImage"
+                app:initScaleType="centerCrop" />
             <TextView
                 android:id="@+id/title"
                 android:layout_below="@+id/image"
@@ -77,8 +78,7 @@
                 android:paddingRight="@dimen/space16"
                 android:paddingEnd="@dimen/space16"
                 android:paddingTop="@dimen/space16"
-                android:text="████████████████████████████████████████████████████████████"
-                android:textColor="?attr/placeholderTextColor"
+                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
                 style="@style/Title.Cozy" />
             <TextView
                 android:id="@+id/description"
@@ -88,8 +88,7 @@
                 android:paddingRight="@dimen/space16"
                 android:paddingEnd="@dimen/space16"
                 android:paddingTop="@dimen/space16"
-                android:text="████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████"
-                android:textColor="?attr/placeholderTextColor"
+                tools:text="Sed eu rhoncus enim, sit amet iaculis ante. Sed at finibus lectus, at consequat lacus. Etiam ipsum erat, facilisis vel sagittis sed, scelerisque ut eros. Praesent at mauris laoreet, imperdiet urna imperdiet, sollicitudin erat. Etiam iaculis mauris eu libero dignissim mattis mollis vitae enim. Quisque nec semper arcu. Ut lobortis, justo vitae finibus tempus, mauris elit fermentum mi, at cursus leo nisi et dui. Phasellus turpis diam, mollis at elementum aliquet, ullamcorper in metus. In lobortis scelerisque ante in mollis. Curabitur eget efficitur massa."
                 style="@style/Description.Cozy" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>

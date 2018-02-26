@@ -202,7 +202,7 @@ jobs:
           command: gcloud auth activate-service-account firebase-adminsdk-p9qvk@newspaper-84169.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
       - run:
           name: Run instrumented test on Firebase Test Lab
-          command: gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/debug/mobile-debug.apk --test mobile/build/outputs/apk/androidTest/debug/mobile-debug-androidTest.apk --device model=Nexus5X,version=26,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
+          command: gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/debug/mobile-debug.apk --test mobile/build/outputs/apk/androidTest/debug/mobile-debug-androidTest.apk --device model=sailfish,version=26,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
       - run:
           name: Create directory to store test results
           command: mkdir firebase
@@ -228,7 +228,7 @@ jobs:
       - *attach_firebase_workspace
       - run:
           name: Move Firebase coverage report
-          command: mkdir -p mobile/build/outputs/code-coverage/connected && cp firebase/Nexus5X-26-en_US-portrait/artifacts/coverage.ec mobile/build/outputs/code-coverage/connected/coverage.ec
+          command: mkdir -p mobile/build/outputs/code-coverage/connected && cp firebase/sailfish-26-en_US-portrait/artifacts/coverage.ec mobile/build/outputs/code-coverage/connected/coverage.ec
       - *export_gservices_key
       - *decode_gservices_key
       - run:

@@ -6,9 +6,11 @@ import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.AnimRes;
@@ -16,6 +18,7 @@ import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,10 +26,14 @@ import android.view.animation.AnimationUtils;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 
+import flow.Direction;
 import io.reactivex.Flowable;
 import io.supercharge.shimmerlayout.ShimmerLayout;
 
 public final class Animations {
+    private static final String SCALE_Y = "scaleY";
+    private static final String ALPHA   = "alpha";
+
     public static final class Builder {
         //region Variables
 
@@ -143,43 +150,72 @@ public final class Animations {
     @NonNull
     public static Animation getAnimation(@NonNull final Context context, @AnimRes final int animationId, @IntegerRes final int durationId) {
         final Animation animation = AnimationUtils.loadAnimation(context, animationId);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            animation.setDuration((int)(context.getResources().getInteger(durationId) * Settings.Global.getFloat(context.getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1f)));
-        } else {
-            animation.setDuration(context.getResources().getInteger(durationId));
-        }
-
+        animation.setDuration(Animations.getAnimationDuration(context, durationId));
         return animation;
     }
 
     @NonNull
-    public static Animation getAnimation(@NonNull final Context context, @AnimRes final int animationId, @IntegerRes final int durationId, @Nullable final Runnable onStart, @Nullable final Runnable onEnd) {
-        final Animation animation = Animations.getAnimation(context, animationId, durationId);
+    public static Animator createDefaultAnimator(@NonNull final View view, @NonNull final Direction direction, @Nullable final Point location, @Nullable final Runnable onStart, @Nullable final Runnable onEnd) {
+        final Animator animator;
+        final Point    screenSize   = DeviceUtils.getScreenSize(view.getContext());
+        final int      widthRadius  = screenSize.x / 2;
+        final int      heightRadius = screenSize.y / 2;
+        final int      centerX      = location == null ? widthRadius  : location.x;
+        final int      centerY      = location == null ? heightRadius : location.y;
+        final int      radiusX      = centerX < widthRadius  ? screenSize.x - centerX : centerX;
+        final int      radiusY      = centerX < heightRadius ? screenSize.y - centerX : centerX;
 
-        animation.setAnimationListener(new Animation.AnimationListener() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final float radius = (float)Math.hypot(radiusX, radiusY);
+            animator = ViewAnimationUtils.createCircularReveal(view, centerX, centerY, direction == Direction.FORWARD ? 0 : radius, direction == Direction.FORWARD ? radius : 0);
+        } else {
+            final AnimatorSet animators = new AnimatorSet();
+
+            if (direction == Direction.FORWARD) {
+                view.setScaleY(0);
+                view.setAlpha(0);
+
+                animators.play(ObjectAnimator.ofFloat(view, Animations.SCALE_Y, 1))
+                    .with(ObjectAnimator.ofFloat(view, Animations.ALPHA, 1));
+            } else {
+                animators.play(ObjectAnimator.ofFloat(view, Animations.SCALE_Y, 0))
+                    .with(ObjectAnimator.ofFloat(view, Animations.ALPHA, 0));
+            }
+
+            animator = animators;
+        }
+
+        animator.setDuration(Animations.getAnimationDuration(view.getContext(), android.R.integer.config_mediumAnimTime));
+        animator.setInterpolator(AnimationUtils.loadInterpolator(view.getContext(), direction == Direction.FORWARD ? android.R.interpolator.decelerate_cubic : android.R.interpolator.accelerate_quint));
+
+        animator.addListener(new Animator.AnimatorListener() {
             @Override
-            public void onAnimationStart(@NonNull final Animation animation) {
+            public void onAnimationStart(final Animator animator) {
                 if (onStart != null) onStart.run();
             }
 
             @Override
-            public void onAnimationEnd(@NonNull final Animation animation) {
+            public void onAnimationEnd(final Animator animator) {
                 if (onEnd != null) onEnd.run();
             }
 
             @Override
-            public void onAnimationRepeat(@NonNull final Animation animation) {
+            public void onAnimationCancel(final Animator animator) {
+                if (onEnd != null) onEnd.run();
+            }
+
+            @Override
+            public void onAnimationRepeat(final Animator animator) {
             }
         });
 
-        return animation;
+        return animator;
     }
 
     @NonNull
     public static Iterable<Animator> createDefaultAnimators(@NonNull final View view) {
         return Arrays.asList(
-            ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
+            ObjectAnimator.ofFloat(view, Animations.ALPHA, 0f, 1f),
             ObjectAnimator.ofFloat(view, "translationX", -view.getMeasuredWidth(), 0f)
         );
     }
@@ -202,7 +238,23 @@ public final class Animations {
         }
     }
 
+    public static void stopShimmerAnimation(@NonNull final View view) {
+        if (view instanceof ViewGroup) {
+            final ViewGroup parent = (ViewGroup)view;
+
+            for (int i = 0; i < parent.getChildCount(); i++) Animations.stopShimmerAnimation(parent.getChildAt(i));
+
+            if (view instanceof ShimmerLayout) ((ShimmerLayout)view).stopShimmerAnimation();
+        }
+    }
+
     public static boolean isEnabled() {
         return !DevUtils.isRunningInstrumentedTest() && (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || ValueAnimator.areAnimatorsEnabled());
+    }
+
+    private static int getAnimationDuration(@NonNull final Context context, @IntegerRes final int durationId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) return (int)(context.getResources().getInteger(durationId) * Settings.Global.getFloat(context.getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1f));
+
+        return context.getResources().getInteger(durationId);
     }
 }

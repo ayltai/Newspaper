@@ -20,6 +20,7 @@ import android.os.Looper;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +52,6 @@ import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 
-import gnu.trove.map.hash.THashMap;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -59,7 +59,7 @@ import io.reactivex.Single;
 public final class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObserver {
     private static final Handler                  HANDLER             = new Handler(Looper.getMainLooper());
     private static final List<DataSource>         SOURCES             = Collections.synchronizedList(new ArrayList<>());
-    private static final Map<Integer, DataSource> CANCELLABLE_SOURCES = Collections.synchronizedMap(new THashMap<>());
+    private static final Map<Integer, DataSource> CANCELLABLE_SOURCES = Collections.synchronizedMap(new ArrayMap<>());
 
     protected static FrescoImageLoader instance;
 
@@ -117,7 +117,7 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
     }
 
     @Override
-    public void loadImage(final int requestId, final Uri uri, final Callback callback) {
+    public void loadImage(final int requestId, final Uri uri, final ImageLoader.Callback callback) {
         final ImageRequest request = ImageRequest.fromUri(uri);
         final File         file    = FrescoImageLoader.getFileCache(request);
 
@@ -125,7 +125,10 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
         if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "File cache = " + file.getAbsolutePath());
 
         if (file.exists()) {
-            if (callback != null) callback.onCacheHit(file);
+            if (callback != null) {
+                callback.onCacheHit(file);
+                callback.onSuccess(file);
+            }
         } else {
             if (callback != null) {
                 callback.onStart();

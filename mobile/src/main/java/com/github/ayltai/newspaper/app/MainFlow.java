@@ -2,13 +2,14 @@ package com.github.ayltai.newspaper.app;
 
 import java.lang.ref.SoftReference;
 
+import android.animation.Animator;
 import android.app.Activity;
+import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
-import android.view.animation.Animation;
+import android.view.View;
 
-import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.ViewEvent;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.view.DetailsPresenter;
@@ -23,6 +24,8 @@ import com.github.ayltai.newspaper.view.RxFlow;
 import flow.Direction;
 
 final class MainFlow extends RxFlow {
+
+
     MainFlow(@NonNull final Activity activity) {
         super(activity);
     }
@@ -35,11 +38,10 @@ final class MainFlow extends RxFlow {
 
     @Nullable
     @Override
-    protected Animation getAnimation(@NonNull final Direction direction, @Nullable final Runnable onStart, @Nullable final Runnable onEnd) {
-        if (direction == Direction.FORWARD) return Animations.getAnimation(this.getContext(), R.anim.reveal_enter, android.R.integer.config_mediumAnimTime, onStart, onEnd);
-        if (direction == Direction.BACKWARD) return Animations.getAnimation(this.getContext(), R.anim.reveal_exit, android.R.integer.config_mediumAnimTime, onStart, onEnd);
+    protected Animator getAnimator(@NonNull final View view, @NonNull final Direction direction, @Nullable final Point location, @Nullable final Runnable onStart, @Nullable final Runnable onEnd) {
+        if (direction == Direction.FORWARD || direction == Direction.BACKWARD) return Animations.createDefaultAnimator(view, direction, location, onStart, onEnd);
 
-        return super.getAnimation(direction, onStart, onEnd);
+        return super.getAnimator(view, direction, location, onStart, onEnd);
     }
 
     @SuppressWarnings({ "unchecked", "CyclomaticComplexity" })

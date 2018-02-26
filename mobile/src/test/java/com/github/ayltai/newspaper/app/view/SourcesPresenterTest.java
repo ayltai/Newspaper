@@ -47,7 +47,7 @@ public final class SourcesPresenterTest extends PresenterTest<MainActivity, Sour
         this.attachments.onNext(true);
 
         // Then
-        Mockito.verify(this.getView(), Mockito.times(10)).addOption(Mockito.anyString(), Mockito.anyBoolean());
+        Mockito.verify(this.getView(), Mockito.times(13)).addOption(Mockito.anyString(), Mockito.anyBoolean());
     }
 
     @Test
@@ -61,6 +61,6 @@ public final class SourcesPresenterTest extends PresenterTest<MainActivity, Sour
             .getConfigComponent(this.getView().getActivity())
             .userConfig().getSources();
 
-        Assert.assertEquals(11, sources.size());
+        Assert.assertEquals(14, sources.size());
     }
 }

@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
+import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.widget.FeaturedView;
 import com.github.ayltai.newspaper.media.BaseImageLoaderCallback;
 import com.github.ayltai.newspaper.media.DaggerImageComponent;
@@ -35,11 +36,13 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     protected void onResume() {
-        this.disposable = Observable.interval(Constants.FEATURED_IMAGE_ROTATION, TimeUnit.SECONDS)
+        this.onPause();
+
+        this.disposable = Observable.interval(0, Constants.FEATURED_IMAGE_ROTATION, TimeUnit.SECONDS)
             .compose(RxUtils.applyObservableBackgroundToMainSchedulers())
             .subscribe(time -> {
                 if (this.getModel() instanceof FeaturedItem && this.getView() != null) {
-                    ((FeaturedItem)this.getModel()).next();
+                    final Item item = ((FeaturedItem)this.getModel()).getNextItem();
 
                     final Integer requestId = this.requestId.incrementAndGet();
                     this.requestIds.add(requestId);
@@ -48,7 +51,7 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
                         .imageModule(new ImageModule(this.getView().getContext()))
                         .build()
                         .imageLoader()
-                        .loadImage(requestId, Uri.parse(this.getModel().getImages().get(0).getUrl()), new BaseImageLoaderCallback() {
+                        .loadImage(requestId, Uri.parse(item.getImages().get(0).getUrl()), new BaseImageLoaderCallback() {
                             @Override
                             public void onFinish() {
                                 FeaturedPresenter.this.requestIds.remove(requestId);
@@ -57,13 +60,13 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
                             @Override
                             public void onSuccess(final File image) {
                                 if (FeaturedPresenter.this.getView() != null) {
-                                    FeaturedPresenter.this.getView().setImages(FeaturedPresenter.this.getModel().getImages());
-                                    FeaturedPresenter.this.getView().setTitle(FeaturedPresenter.this.getModel().getTitle());
+                                    FeaturedPresenter.this.getView().setImages(item.getImages());
+                                    FeaturedPresenter.this.getView().setTitle(item.getTitle());
+
+                                    ((FeaturedItem)FeaturedPresenter.this.getModel()).next();
                                 }
                             }
                         });
-
-                    this.bindModel(this.getModel());
                 }
             });
     }
@@ -82,6 +85,8 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
 
         final Activity activity = Views.getActivity(view);
         if (activity instanceof AppCompatActivity) ((AppCompatActivity)activity).getLifecycle().addObserver(this);
+
+        this.onResume();
     }
 
     @Override

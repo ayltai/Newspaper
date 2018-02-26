@@ -36,6 +36,7 @@ import com.github.ayltai.newspaper.app.config.ConfigComponent;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.view.ItemPresenter;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.DeviceUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
@@ -112,7 +113,7 @@ public class VideoView extends ItemView implements ItemPresenter.View {
     //region Methods
 
     public void setUpThumbnail() {
-        if (!TextUtils.isEmpty(this.video.getThumbnailUrl())) this.thumbnail.showImage(Uri.parse(this.video.getThumbnailUrl()));
+        if (!DevUtils.isRunningUnitTest() && !TextUtils.isEmpty(this.video.getThumbnailUrl())) this.thumbnail.showImage(Uri.parse(this.video.getThumbnailUrl()));
     }
 
     public void setUpPlayer() {

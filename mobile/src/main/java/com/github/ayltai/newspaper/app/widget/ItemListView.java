@@ -164,6 +164,8 @@ public abstract class ItemListView extends VerticalListView<Item> implements Dis
 
         final View view = this.findViewById(R.id.scrolling_background);
         if (view != null) view.setVisibility(View.VISIBLE);
+
+        if (this.loadingView != null && Animations.isEnabled()) Animations.stopShimmerAnimation(this.loadingView);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)

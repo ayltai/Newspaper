@@ -2,15 +2,14 @@ buildscript {
     repositories {
         jcenter()
         google()
-        mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'io.realm:realm-gradle-plugin:4.3.1'
-        classpath 'com.google.gms:google-services:3.1.2'
-        classpath 'com.google.firebase:firebase-plugins:1.1.4'
+        classpath 'io.realm:realm-gradle-plugin:4.3.4'
+        classpath 'com.google.gms:google-services:3.2.0'
+        classpath 'com.google.firebase:firebase-plugins:1.1.5'
         classpath 'io.fabric.tools:gradle:1.25.1'
         classpath 'org.jacoco:org.jacoco.core:0.7.9'
     }
@@ -20,7 +19,6 @@ allprojects {
     repositories {
         jcenter()
         google()
-        mavenCentral()
         maven { url 'https://jitpack.io' }
         maven { url 'https://maven.fabric.io/public' }
         maven { url 'http://dl.bintray.com/piasy/maven' }
@@ -28,6 +26,6 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
+task clean(type : Delete) {
     delete rootProject.buildDir
 }

@@ -1,16 +1,19 @@
 package com.github.ayltai.newspaper.data;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.ArraySet;
 import android.util.Log;
 
 import com.akaita.java.rxjava2debug.RxJava2Debug;
-import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
@@ -22,7 +25,7 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
-public abstract class RealmLoader<D> extends RxLoader<D> {
+public abstract class RealmLoader<D extends Comparable<D>> extends RxLoader<D> {
     protected static final String KEY_REFRESH = "refresh";
 
     private Realm realm;
@@ -53,44 +56,32 @@ public abstract class RealmLoader<D> extends RxLoader<D> {
 
     @NonNull
     @Override
-    protected Flowable<D> load(@NonNull final Context context, @Nullable final Bundle args) {
-        final boolean isOnline = NetworkUtils.isOnline(context);
+    protected Flowable<List<D>> load(@NonNull final Context context, @Nullable final Bundle args) {
+        return Flowable.create(emitter -> {
+            this.loadFromLocalSource(context, args)
+                .zipWith(this.loadFromRemoteSource(context, args), (localItems, remoteItems) -> {
+                    final Set<D> results = new ArraySet<>();
+                    results.addAll(localItems);
+                    results.addAll(remoteItems);
 
-        if (isOnline && RealmLoader.isForceRefresh(args)) return this.loadFromRemoteSource(context, args);
-
-        if (this.isValid()) {
-            return Flowable.create(emitter -> this.loadFromLocalSource(context, args)
-                .compose(RxUtils.applyFlowableSchedulers(this.getScheduler()))
+                    return new ArrayList<>(results);
+                })
                 .subscribe(
-                    data -> {
-                        if (data instanceof Collection && !((Collection)data).isEmpty()) emitter.onNext(data);
+                    results -> {
+                        Collections.sort(results);
 
-                        if (isOnline) {
-                            this.loadFromRemoteSource(context, args)
-                                .subscribe(items -> {
-                                    if (items instanceof Collection && !((Collection)items).isEmpty()) {
-                                        emitter.onNext(items);
-                                    } else {
-                                        emitter.onNext(data);
-                                    }
-                                });
-                        } else {
-                            emitter.onNext(data);
-                        }
+                        emitter.onNext(results);
                     },
-                    error -> {
-                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
-                    }), BackpressureStrategy.LATEST);
-        }
-
-        return this.loadFromRemoteSource(context, args);
+                    emitter::onError
+                );
+        }, BackpressureStrategy.LATEST);
     }
 
     @NonNull
-    protected abstract Flowable<D> loadFromLocalSource(@NonNull Context context, @Nullable Bundle args);
+    protected abstract Flowable<List<D>> loadFromLocalSource(@NonNull Context context, @Nullable Bundle args);
 
     @NonNull
-    protected abstract Flowable<D> loadFromRemoteSource(@NonNull Context context, @Nullable Bundle args);
+    protected abstract Flowable<List<D>> loadFromRemoteSource(@NonNull Context context, @Nullable Bundle args);
 
     @CallSuper
     @Override

@@ -74,12 +74,14 @@ public final class HketClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect item full description", "頸痛是常見健康問題，主因工作姿勢不良血液循環欠佳或缺乏運動等，導致肌肉長期繃緊及疼痛。中大與博愛醫院一項中醫針灸研究顯示，透過腹部取穴的「腹針治療」，可有效改善頸痛患者的痛楚及活動功能，有患者接受首次", item.getDescription().substring(0, 100));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void Given_hketDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
         final NewsItem newsItem = new NewsItem();
         newsItem.setLink(HketClientTest.ERROR_DETAILS_URL);
 
-        this.client.updateItem(newsItem).blockingGet();
+        final NewsItem item = this.client.updateItem(newsItem).blockingGet();
+
+        Assert.assertEquals("Item is updated", newsItem, item);
     }
 
     @NonNull

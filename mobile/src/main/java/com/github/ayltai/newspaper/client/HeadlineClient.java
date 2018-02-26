@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import com.akaita.java.rxjava2debug.RxJava2Debug;
@@ -23,7 +24,6 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
-import gnu.trove.map.hash.THashMap;
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 
@@ -46,7 +46,7 @@ public final class HeadlineClient extends RssClient {
 
     //endregion
 
-    private static final Map<String, String> KEYWORDS = new THashMap<>(8);
+    private static final Map<String, String> KEYWORDS = new ArrayMap<>(8);
 
     static {
         HeadlineClient.KEYWORDS.put(HeadlineClient.CATEGORY_HONG_KONG, " (港聞) ");
@@ -125,7 +125,7 @@ public final class HeadlineClient extends RssClient {
                 error -> {
                     if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), RxJava2Debug.getEnhancedStackTrace(error));
 
-                    if (!emitter.isDisposed()) emitter.onError(error);
+                    if (!emitter.isDisposed()) emitter.onSuccess(item);
                 }
             ));
     }

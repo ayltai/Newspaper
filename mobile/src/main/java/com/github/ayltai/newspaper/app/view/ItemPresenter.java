@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.graphics.Point;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.widget.DetailsView;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
+import com.github.ayltai.newspaper.util.Optional;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.binding.Binder;
 import com.github.ayltai.newspaper.view.binding.BindingPresenter;
@@ -63,7 +65,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
         void setIsRead(boolean isRead);
 
         @Nullable
-        Flowable<Irrelevant> clicks();
+        Flowable<Optional<Point>> clicks();
 
         @Nullable
         Flowable<Irrelevant> avatarClicks();
@@ -114,7 +116,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
         }
     }
 
-    private void onClick() {
+    private void onClick(@NonNull final Optional<Point> location) {
         this.initAppConfig();
 
         if (this.getView() != null) {
@@ -131,7 +133,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
                 .logEvent(new ClickEvent()
                     .setElementName(item instanceof FeaturedItem ? "Featured" : "Non-featured"));
 
-            if (!DevUtils.isRunningUnitTest()) Flow.get(this.getView().getContext()).set(DetailsView.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem()));
+            if (!DevUtils.isRunningUnitTest()) Flow.get(this.getView().getContext()).set(DetailsView.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem(), location.isPresent() ? location.get() : null));
         }
     }
 
@@ -216,8 +218,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
     public void onViewAttached(@NonNull final V view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
-        final Flowable<Irrelevant> clicks = view.clicks();
-        if (clicks != null) this.manageDisposable(clicks.subscribe(irrelevant -> this.onClick()));
+        final Flowable<Optional<Point>> clicks = view.clicks();
+        if (clicks != null) this.manageDisposable(clicks.subscribe(location -> this.onClick(location)));
 
         final Flowable<Irrelevant> avatarClicks = view.avatarClicks();
         if (avatarClicks != null) this.manageDisposable(avatarClicks.subscribe(irrelevant -> this.onAvatarClick()));

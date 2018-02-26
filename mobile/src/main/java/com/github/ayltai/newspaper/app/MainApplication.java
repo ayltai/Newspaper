@@ -103,7 +103,7 @@ public final class MainApplication extends BaseApplication {
         ImagePipelineConfig.getDefaultImageRequestConfig()
             .setProgressiveRenderingEnabled(true);
 
-        Fresco.initialize(this, OkHttpImagePipelineConfigFactory.newBuilder(this, DaggerHttpComponent.builder()
+        if (!DevUtils.isRunningUnitTest()) Fresco.initialize(this, OkHttpImagePipelineConfigFactory.newBuilder(this, DaggerHttpComponent.builder()
             .build()
             .httpClient())
             .setDownsampleEnabled(true)

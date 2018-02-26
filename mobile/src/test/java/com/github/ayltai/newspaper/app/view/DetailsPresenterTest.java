@@ -1,4 +1,4 @@
-package com.github.ayltai.newspaper.app.screen;
+package com.github.ayltai.newspaper.app.view;
 
 import java.util.Date;
 
@@ -12,7 +12,6 @@ import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.Video;
-import com.github.ayltai.newspaper.app.view.DetailsPresenter;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.PresenterTest;
 

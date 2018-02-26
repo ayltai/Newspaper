@@ -51,7 +51,7 @@ final class OrientalDailyClient extends RssClient {
             .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
             .subscribe(
                 html -> {
-                    html = StringUtils.substringBetween(html, "<div id=\"contentCTN-top\"", "<p><!--AD-->");
+                    html = StringUtils.substringBetween(html, "<div id=\"contentCTN-top\"", "<div id=\"articleNav\">");
 
                     final String[]    imageContainers = StringUtils.substringsBetween(html, "<div class=\"photo", OrientalDailyClient.DIV_CLOSE);
                     final List<Image> images          = new ArrayList<>();
@@ -84,7 +84,7 @@ final class OrientalDailyClient extends RssClient {
                 error -> {
                     if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), RxJava2Debug.getEnhancedStackTrace(error));
 
-                    if (!emitter.isDisposed()) emitter.onError(error);
+                    if (!emitter.isDisposed()) emitter.onSuccess(item);
                 }
             ));
     }
