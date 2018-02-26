@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -16,7 +17,6 @@ import android.util.Log;
 
 import com.google.auto.value.AutoValue;
 
-import gnu.trove.map.hash.THashMap;
 import io.reactivex.Single;
 import rx.functions.Action1;
 
@@ -59,7 +59,7 @@ public abstract class SimpleTextToSpeech {
         }
     }
 
-    private final Map<Locale, Integer> availabilities = new THashMap<>();
+    private final Map<Locale, Integer> availabilities = new HashMap<>();
     private final AtomicInteger        utteranceId    = new AtomicInteger(0);
 
     private Activity     activity;

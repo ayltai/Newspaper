@@ -103,7 +103,6 @@ ext {
     architectureVersion   = '1.1.0'
     firebaseSdkVersion    = '11.8.0'
     daggerVersion         = '2.14.1'
-    okhttpVersion         = '3.10.0'
     retrofitVersion       = '2.3.0'
     frescoVersion         = '1.8.1'
     bigImageViewerVersion = '1.4.6'
@@ -155,8 +154,7 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
     // Networking
-    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
@@ -193,8 +191,6 @@ dependencies {
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.gjiazhe:PanoramaImageView:1.0'
     implementation 'io.github.inflationx:calligraphy3:3.0.0'
-
-    implementation 'net.sf.trove4j:trove4j:3.0.3'
 
     // Code generation tools
     compileOnly         "com.jakewharton.auto.value:auto-value-annotations:1.5"

@@ -2,6 +2,7 @@ package com.github.ayltai.newspaper.app.widget;
 
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
@@ -37,7 +38,6 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.BaseView;
 
 import flow.ClassKey;
-import gnu.trove.map.hash.THashMap;
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
@@ -62,7 +62,7 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
 
     //endregion
 
-    private final Map<Integer, SoftReference<View>> cachedViews = new THashMap<>();
+    private final Map<Integer, SoftReference<View>> cachedViews = new HashMap<>();
 
     //region Components
 

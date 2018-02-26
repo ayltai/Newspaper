@@ -7,14 +7,12 @@ import javax.inject.Singleton;
 import android.support.annotation.NonNull;
 
 import com.github.ayltai.newspaper.BuildConfig;
-import com.github.ayltai.newspaper.util.DevUtils;
 
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
@@ -55,8 +53,6 @@ final class HttpModule {
 
                 return response;
             });
-
-        if (DevUtils.isLoggable()) builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS));
 
         return builder.build();
     }

@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper.view;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,11 +11,10 @@ import com.github.ayltai.newspaper.view.binding.Binder;
 import com.github.ayltai.newspaper.view.binding.FullBinderFactory;
 import com.github.ayltai.newspaper.widget.SimpleViewHolder;
 
-import gnu.trove.map.hash.THashMap;
 import io.reactivex.disposables.Disposable;
 
 public abstract class SimpleUniversalAdapter<M, V extends View, T extends SimpleViewHolder<V>> extends UniversalAdapter<M, V, T> implements Disposable {
-    private final Map<T, Binder<V>> bindings = new THashMap<>();
+    private final Map<T, Binder<V>> bindings = new HashMap<>();
 
     protected SimpleUniversalAdapter(@NonNull final List<FullBinderFactory<M>> fullBinderFactories) {
         super(fullBinderFactories);

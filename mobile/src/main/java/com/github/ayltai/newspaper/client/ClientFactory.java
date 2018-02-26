@@ -1,5 +1,6 @@
 package com.github.ayltai.newspaper.client;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
@@ -12,13 +13,12 @@ import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.DaggerHttpComponent;
 import com.github.ayltai.newspaper.net.HttpComponent;
 
-import gnu.trove.map.hash.THashMap;
 import okhttp3.OkHttpClient;
 
 public final class ClientFactory {
     private static ClientFactory instance;
 
-    private final Map<String, Client> clients = new THashMap<>(15);
+    private final Map<String, Client> clients = new HashMap<>(15);
 
     @NonNull
     public static ClientFactory getInstance(@NonNull final Context context) {

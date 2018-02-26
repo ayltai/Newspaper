@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +52,6 @@ import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 
-import gnu.trove.map.hash.THashMap;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -59,7 +59,7 @@ import io.reactivex.Single;
 public final class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObserver {
     private static final Handler                  HANDLER             = new Handler(Looper.getMainLooper());
     private static final List<DataSource>         SOURCES             = Collections.synchronizedList(new ArrayList<>());
-    private static final Map<Integer, DataSource> CANCELLABLE_SOURCES = Collections.synchronizedMap(new THashMap<>());
+    private static final Map<Integer, DataSource> CANCELLABLE_SOURCES = Collections.synchronizedMap(new HashMap<>());
 
     protected static FrescoImageLoader instance;
 

@@ -2,6 +2,7 @@ package com.github.ayltai.newspaper.view;
 
 import java.lang.ref.SoftReference;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import android.animation.Animator;
@@ -28,13 +29,11 @@ import flow.KeyDispatcher;
 import flow.KeyParceler;
 import flow.State;
 import flow.TraversalCallback;
-import gnu.trove.map.TMap;
-import gnu.trove.map.hash.THashMap;
 import io.reactivex.disposables.Disposable;
 
 public abstract class RxFlow {
-    private final Map<Object, Pair<SoftReference<Presenter>, SoftReference<Presenter.View>>> cache       = Collections.synchronizedMap(new THashMap<>());
-    private final TMap<Object, Disposable>                                                   disposables = new THashMap<>();
+    private final Map<Object, Pair<SoftReference<Presenter>, SoftReference<Presenter.View>>> cache       = Collections.synchronizedMap(new HashMap<>());
+    private final Map<Object, Disposable>                                                    disposables = new HashMap<>();
 
     private final Activity activity;
 
@@ -106,10 +105,7 @@ public abstract class RxFlow {
         this.cache.clear();
 
         synchronized (this.disposables) {
-            this.disposables.forEachValue(disposable -> {
-                disposable.dispose();
-                return true;
-            });
+            for (final Disposable disposable : this.disposables.values()) disposable.dispose();
 
             this.disposables.clear();
         }

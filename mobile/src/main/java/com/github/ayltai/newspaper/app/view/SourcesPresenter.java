@@ -2,6 +2,7 @@ package com.github.ayltai.newspaper.app.view;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +19,6 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.view.OptionsPresenter;
 
-import gnu.trove.set.hash.THashSet;
 import io.reactivex.Single;
 
 public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.View> {
@@ -36,7 +36,7 @@ public class SourcesPresenter extends OptionsPresenter<String, OptionsPresenter.
 
         return Single.create(emitter -> {
             final List<String> sources      = new ArrayList<>(ComponentFactory.getInstance().getConfigComponent(activity).userConfig().getDefaultSources());
-            final Set<String>  displayNames = new THashSet<>();
+            final Set<String>  displayNames = new HashSet<>();
 
             for (final String source : sources) displayNames.add(Source.toDisplayName(source));
 
