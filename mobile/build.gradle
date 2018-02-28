@@ -98,8 +98,8 @@ configurations {
 }
 
 ext {
-    multidexVersion       = '1.0.2'
-    supportLibraryVersion = '27.0.2'
+    multidexVersion       = '1.0.3'
+    supportLibraryVersion = '27.1.0'
     architectureVersion   = '1.1.0'
     firebaseSdkVersion    = '11.8.0'
     daggerVersion         = '2.14.1'
@@ -204,7 +204,7 @@ dependencies {
     }
 
     // Instabug
-    implementation 'com.instabug.library:instabug:4.10.2'
+    implementation 'com.instabug.library:instabug:4.11.1'
 
     // Debugging
     implementation        'com.akaita.java:rxjava2-debug:1.2.2'

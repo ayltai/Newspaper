@@ -16,6 +16,7 @@ import com.github.ayltai.newspaper.util.RxUtils;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.View<M>> extends ListPresenter<M, V> {
     public interface View<M> extends ListPresenter.View<M> {
@@ -73,7 +74,7 @@ public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.V
             view.showLoadingView();
 
             this.manageDisposable(this.load()
-                .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
+                .compose(RxUtils.applyFlowableSchedulers(AndroidSchedulers.mainThread()))
                 .subscribe(
                     this::bindModel,
                     error -> {
@@ -124,7 +125,7 @@ public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.V
                 final AtomicBoolean hasCleared = new AtomicBoolean(false);
 
                 this.manageDisposable(this.load()
-                    .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
+                    .compose(RxUtils.applyFlowableSchedulers(AndroidSchedulers.mainThread()))
                     .subscribe(
                         models -> {
                             if (!hasCleared.get()) {
