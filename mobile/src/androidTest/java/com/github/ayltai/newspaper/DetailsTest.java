@@ -64,6 +64,7 @@ public final class DetailsTest extends BaseTest {
 
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.description),
+            ViewMatchers.withParent(ViewMatchers.withClassName(Matchers.is("android.widget.LinearLayout"))),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
