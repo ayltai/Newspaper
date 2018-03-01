@@ -28,7 +28,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,21 +36,17 @@ import android.widget.TextView;
 
 import com.google.auto.value.AutoValue;
 
-import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
-import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.app.view.DetailsPresenter;
-import com.github.ayltai.newspaper.media.FrescoImageLoader;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DateUtils;
-import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.ImageUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.Locatable;
@@ -60,8 +55,6 @@ import com.github.ayltai.newspaper.util.SimpleTextToSpeech;
 import com.github.ayltai.newspaper.util.SnackbarUtils;
 import com.github.ayltai.newspaper.util.Views;
 import com.github.piasy.biv.view.BigImageView;
-import com.gjiazhe.panoramaimageview.GyroscopeObserver;
-import com.gjiazhe.panoramaimageview.PanoramaImageView;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import flow.ClassKey;
@@ -105,7 +98,6 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
     private final Toolbar                 toolbar;
     private final View                    toolbarView;
     private final BigImageView            toolbarImage;
-    private final PanoramaImageView       panoramaImageView;
     private final TextView                toolbarTitle;
     private final View                    toolbarBackground;
     private final ViewGroup               imageContainer;
@@ -127,9 +119,7 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
 
     //endregion
 
-    private GyroscopeObserver  gyroscopeObserver;
     private SmallBangView      smallBang;
-    private boolean            isPanoramaEnabled;
     private boolean            isTtsActive;
     private SimpleTextToSpeech tts;
 
@@ -157,26 +147,10 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
         this.imagesContainer         = view.findViewById(R.id.images_container);
         this.videoContainer          = view.findViewById(R.id.video_container);
 
-        final Activity activity = this.getActivity();
-        this.isPanoramaEnabled = activity == null
-            ? Constants.PANORAMA_DEFAULT
-            : ComponentFactory.getInstance()
-                .getConfigComponent(activity)
-                .userConfig()
-                .isPanoramaEnabled();
-
-        this.toolbarView       = LayoutInflater.from(this.getContext()).inflate(this.isPanoramaEnabled ? R.layout.widget_toolbar_panorama : R.layout.widget_toolbar, this.imageContainer, false);
-        this.toolbarImage      = this.isPanoramaEnabled ? null : this.toolbarView.findViewById(R.id.image);
-        this.panoramaImageView = this.isPanoramaEnabled ? this.toolbarView.findViewById(R.id.image) : null;
+        this.toolbarView       = LayoutInflater.from(this.getContext()).inflate(R.layout.widget_toolbar, this.imageContainer, false);
+        this.toolbarImage      = this.toolbarView.findViewById(R.id.image);
         this.toolbarTitle      = this.toolbarView.findViewById(R.id.title);
         this.toolbarBackground = this.toolbarView.findViewById(R.id.title_background);
-
-        if (this.isPanoramaEnabled) {
-            this.gyroscopeObserver = new GyroscopeObserver();
-            this.panoramaImageView.setGyroscopeObserver(this.gyroscopeObserver);
-
-            if (!Animations.isEnabled()) this.panoramaImageView.setEnablePanoramaMode(false);
-        }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) ((CollapsingToolbarLayout)view.findViewById(R.id.collapsingToolbarLayout)).setExpandedTitleTextAppearance(R.style.TransparentText);
 
@@ -262,13 +236,8 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
         this.imagesContainer.removeAllViews();
 
         if (!images.isEmpty()) {
-            if (this.isPanoramaEnabled) {
-                this.subscribeImage(this.panoramaImageView, images.get(0));
-            } else {
-                this.subscribeImage(this.toolbarImage, images.get(0));
-
-                ImageUtils.translateToFacesCenter(this.toolbarImage);
-            }
+            this.subscribeImage(this.toolbarImage, images.get(0));
+            ImageUtils.translateToFacesCenter(this.toolbarImage);
 
             if (TextUtils.isEmpty(images.get(0).getDescription())) {
                 this.toolbarBackground.setVisibility(View.GONE);
@@ -446,12 +415,7 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
     @CallSuper
     @Override
     public void onAttachedToWindow() {
-        if (this.isPanoramaEnabled) {
-            this.gyroscopeObserver.register(this.getContext());
-            this.panoramaImageView.setImageDrawable(null);
-        } else {
-            this.toolbarImage.getSSIV().setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
-        }
+        this.toolbarImage.getSSIV().setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
 
         this.avatar.setOnClickListener(view -> this.avatarClicks.onNext(Irrelevant.INSTANCE));
         this.source.setOnClickListener(view -> this.sourceClicks.onNext(Irrelevant.INSTANCE));
@@ -477,8 +441,6 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
     public void onDetachedFromWindow() {
         if (this.videoView != null) this.removeView(this.videoView);
 
-        if (this.isPanoramaEnabled) this.gyroscopeObserver.unregister();
-
         if (this.isTtsActive) this.textToSpeech();
 
         super.onDetachedFromWindow();
@@ -492,20 +454,6 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
         imageView.getSSIV().setZoomEnabled(false);
 
         imageView.showImage(Uri.parse(image.getUrl()));
-
-        imageView.setOnClickListener(view -> this.imageClicks.onNext(image));
-        ((View)imageView.getParent()).setOnClickListener(view -> this.imageClicks.onNext(image));
-    }
-
-    private void subscribeImage(@NonNull final PanoramaImageView imageView, @NonNull final Image image) {
-        FrescoImageLoader.loadImage(image.getUrl())
-            .compose(RxUtils.applyMaybeBackgroundToMainSchedulers())
-            .subscribe(
-                imageView::setImageBitmap,
-                error -> {
-                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
-                }
-            );
 
         imageView.setOnClickListener(view -> this.imageClicks.onNext(image));
         ((View)imageView.getParent()).setOnClickListener(view -> this.imageClicks.onNext(image));

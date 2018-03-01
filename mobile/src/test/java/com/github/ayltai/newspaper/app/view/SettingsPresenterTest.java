@@ -20,9 +20,7 @@ public final class SettingsPresenterTest extends PresenterTest<MainActivity, Set
     @NonNull
     @Override
     protected SettingsPresenter createPresenter() {
-        final SettingsPresenter presenter = Mockito.spy(new SettingsPresenter());
-
-        return presenter;
+        return Mockito.spy(new SettingsPresenter());
     }
 
     @NonNull
@@ -47,7 +45,7 @@ public final class SettingsPresenterTest extends PresenterTest<MainActivity, Set
         this.attachments.onNext(true);
 
         // Then
-        Mockito.verify(this.getView(), Mockito.times(4)).addOption(Mockito.anyString(), Mockito.anyBoolean());
+        Mockito.verify(this.getView(), Mockito.times(3)).addOption(Mockito.anyString(), Mockito.anyBoolean());
     }
 
     @Test
@@ -64,8 +62,5 @@ public final class SettingsPresenterTest extends PresenterTest<MainActivity, Set
 
         this.optionsChanges.onNext(2);
         Mockito.verify(this.getPresenter(), Mockito.times(1)).updateAutoPlay(Mockito.anyList(), Mockito.any(UserConfig.class), Mockito.any(EventLogger.class));
-
-        this.optionsChanges.onNext(3);
-        Mockito.verify(this.getPresenter(), Mockito.times(1)).updatePanorama(Mockito.anyList(), Mockito.any(UserConfig.class), Mockito.any(EventLogger.class));
     }
 }

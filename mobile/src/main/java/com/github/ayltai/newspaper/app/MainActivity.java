@@ -99,8 +99,7 @@ public final class MainActivity extends AppCompatActivity {
             .logEvent(new AppOpenEvent()
                 .addAttribute(new Attribute("Settings - Cozy Layout", String.valueOf(this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY)))
                 .addAttribute(new Attribute("Settings - Dark Theme", String.valueOf(this.userConfig.getTheme() == Constants.THEME_DARK)))
-                .addAttribute(new Attribute("Settings - Auto Play", String.valueOf(this.userConfig.isAutoPlayEnabled())))
-                .addAttribute(new Attribute("Settings - Panorama", String.valueOf(this.userConfig.isPanoramaEnabled()))));
+                .addAttribute(new Attribute("Settings - Auto Play", String.valueOf(this.userConfig.isAutoPlayEnabled()))));
     }
 
     @Override

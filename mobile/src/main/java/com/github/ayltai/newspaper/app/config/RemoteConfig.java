@@ -46,8 +46,4 @@ public final class RemoteConfig {
     public int getTheme() {
         return this.remoteConfig == null ? Constants.THEME_DEFAULT : this.remoteConfig.getLong("theme") == Constants.THEME_DARK ? Constants.THEME_DARK : Constants.THEME_LIGHT;
     }
-
-    public boolean isPanoramaEnabled() {
-        return this.remoteConfig == null ? Constants.PANORAMA_DEFAULT : this.remoteConfig.getBoolean("panorama");
-    }
 }

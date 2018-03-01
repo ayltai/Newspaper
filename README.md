@@ -11,7 +11,6 @@ An aggregated news app containing news from 10+ local news publishers in Hong Ko
 * Fast. Just fast.
 * Support video news
 * Auto face centering image cropping
-* Optional panoramic images
 * Read news from 10 local news publishers
 * Bookmarks and reading history
 * No ads. We hate ads as much as you do
@@ -53,7 +52,6 @@ This app is made with the support of open source projects:
 * [BigImageViewer](https://github.com/Piasy/BigImageViewer)
 * [RecyclerView Animators](https://github.com/wasabeef/recyclerview-animators)
 * [KenBurnsView](https://github.com/flavioarfaria/KenBurnsView)
-* [PanoramaImageView](https://github.com/gjiazhe/PanoramaImageView)
 * [ExoPlayer](https://github.com/google/ExoPlayer)
 * [ShimmerLayout](https://github.com/team-supercharge/ShimmerLayout)
 * [SmallBang](https://github.com/hanks-zyh/SmallBang)
