@@ -192,7 +192,7 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
     public final int compareTo(@NonNull final Item item) {
         if (this.link.equals(item.getLink())) return 0;
 
-        if (this.publishDate != 0 && item.getPublishDate() != null) return (int)(item.getPublishDate().getTime() - this.publishDate);
+        if (this.publishDate != 0 && item.getPublishDate() != null) return item.getPublishDate().compareTo(this.getPublishDate());
 
         if (this.title == null && item.getTitle() == null) return 0;
 
@@ -209,7 +209,7 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
         if (obj instanceof Item) {
             final Item item = (Item)obj;
 
-            return this.link.equals(item.getLink());
+            return this.compareTo(item) == 0;
         }
 
         return false;

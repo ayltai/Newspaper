@@ -105,7 +105,7 @@ public final class FeaturedItem implements Item {
 
     @Override
     public int compareTo(@NonNull final Item item) {
-        return -1;
+        return this.getItem().compareTo(item);
     }
 
     @Nullable

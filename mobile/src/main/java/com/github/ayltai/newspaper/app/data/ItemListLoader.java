@@ -98,12 +98,12 @@ public final class ItemListLoader extends RealmLoader<Item> {
                     }
 
                     @Override
-                    public void onLoadFinished(final Loader<List<Item>> loader, final List<Item> items) {
+                    public void onLoadFinished(@NonNull final Loader<List<Item>> loader, final List<Item> items) {
                         emitter.onNext(Lists.transform(items, item -> (NewsItem)item));
                     }
 
                     @Override
-                    public void onLoaderReset(final Loader<List<Item>> loader) {
+                    public void onLoaderReset(@NonNull final Loader<List<Item>> loader) {
                     }
                 }), BackpressureStrategy.LATEST);
         }
@@ -123,6 +123,7 @@ public final class ItemListLoader extends RealmLoader<Item> {
             .map(items -> items.isEmpty() ? items : RealmObject.isManaged(items.get(0)) ? this.getRealm().copyFromRealm(items) : items)
             .map(items -> {
                 Collections.sort(items);
+
                 return Lists.transform(items, item -> (Item)item);
             })
             .subscribe(emitter::onNext), BackpressureStrategy.LATEST);
@@ -134,7 +135,7 @@ public final class ItemListLoader extends RealmLoader<Item> {
     protected Flowable<List<Item>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
         if (NetworkUtils.isOnline(context)) {
             final List<Single<List<NewsItem>>> singles = this.createSingles(context, args);
-            if (singles.isEmpty()) Flowable.just(Collections.emptyList());
+            if (singles.isEmpty()) Flowable.just(new ArrayList<>());
 
             return Flowable.create(emitter -> Single.zip(
                 singles,
@@ -155,6 +156,8 @@ public final class ItemListLoader extends RealmLoader<Item> {
 
                         return newsItems;
                     } else {
+                        Collections.sort(items);
+
                         return items;
                     }
                 })
@@ -166,7 +169,7 @@ public final class ItemListLoader extends RealmLoader<Item> {
                 ), BackpressureStrategy.LATEST);
         }
 
-        return Flowable.just(Collections.emptyList());
+        return Flowable.just(new ArrayList<>());
     }
 
     private List<Single<List<NewsItem>>> createSingles(@NonNull final Context context, @Nullable final Bundle args) {
@@ -185,12 +188,10 @@ public final class ItemListLoader extends RealmLoader<Item> {
                         .onErrorResumeNext(error -> {
                             if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
 
-                            return Single.just(Collections.emptyList());
+                            return Single.just(new ArrayList<>());
                         })
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(Schedulers.io()));
-
-                    break;
                 }
             }
         }

@@ -57,24 +57,22 @@ public abstract class RealmLoader<D extends Comparable<D>> extends RxLoader<D> {
     @NonNull
     @Override
     protected Flowable<List<D>> load(@NonNull final Context context, @Nullable final Bundle args) {
-        return Flowable.create(emitter -> {
-            this.loadFromLocalSource(context, args)
-                .zipWith(this.loadFromRemoteSource(context, args), (localItems, remoteItems) -> {
-                    final Set<D> results = new ArraySet<>();
-                    results.addAll(localItems);
-                    results.addAll(remoteItems);
+        return Flowable.create(emitter -> this.loadFromLocalSource(context, args)
+            .zipWith(this.loadFromRemoteSource(context, args), (localItems, remoteItems) -> {
+                final Set<D> results = new ArraySet<>();
+                results.addAll(localItems);
+                results.addAll(remoteItems);
 
-                    return new ArrayList<>(results);
-                })
-                .subscribe(
-                    results -> {
-                        Collections.sort(results);
+                return new ArrayList<>(results);
+            })
+            .subscribe(
+                results -> {
+                    Collections.sort(results);
 
-                        emitter.onNext(results);
-                    },
-                    emitter::onError
-                );
-        }, BackpressureStrategy.LATEST);
+                    emitter.onNext(results);
+                },
+                emitter::onError
+            ), BackpressureStrategy.LATEST);
     }
 
     @NonNull
