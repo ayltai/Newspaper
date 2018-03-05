@@ -203,7 +203,7 @@ dependencies {
     }
 
     // Instabug
-    implementation 'com.instabug.library:instabug:4.11.1'
+    implementation 'com.instabug.library:instabug:4.11.2'
 
     // Debugging
     implementation        'com.akaita.java:rxjava2-debug:1.2.2'
@@ -212,7 +212,7 @@ dependencies {
     testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testImplementation 'org.mockito:mockito-core:2.15.3'
+    testImplementation 'org.mockito:mockito-core:2.15.5'
     testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
