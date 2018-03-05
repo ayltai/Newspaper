@@ -55,14 +55,21 @@ public final class ItemManager extends DataManager {
     public Single<List<NewsItem>> getItems(@Nullable final CharSequence searchText, @NonNull final String[] sources, @NonNull final String[] categories) {
         return Single.create(emitter -> {
             if (!this.getRealm().isInTransaction()) this.getRealm().beginTransaction();
+
             this.clearObsoleteItems();
+            this.clearInvalidItems();
+
             this.getRealm().commitTransaction();
 
             final RealmQuery<NewsItem> query = this.getRealm()
                 .where(NewsItem.class)
                 .in(NewsItem.FIELD_SOURCE, sources)
                 .and()
-                .in(NewsItem.FIELD_CATEGORY, categories);
+                .in(NewsItem.FIELD_CATEGORY, categories)
+                .and()
+                .greaterThan(NewsItem.FIELD_PUBLISH_DATE, 0)
+                .and()
+                .lessThanOrEqualTo(NewsItem.FIELD_PUBLISH_DATE, System.currentTimeMillis());
 
             this.emit(emitter, query, searchText, sources, categories);
         });
@@ -78,7 +85,11 @@ public final class ItemManager extends DataManager {
         return Single.create(emitter -> {
             final RealmQuery<NewsItem> query = this.getRealm()
                 .where(NewsItem.class)
-                .greaterThan(NewsItem.FIELD_LAST_ACCESSED_DATE, 0);
+                .greaterThan(NewsItem.FIELD_LAST_ACCESSED_DATE, 0)
+                .and()
+                .greaterThan(NewsItem.FIELD_PUBLISH_DATE, 0)
+                .and()
+                .lessThanOrEqualTo(NewsItem.FIELD_PUBLISH_DATE, System.currentTimeMillis());
 
             this.emit(emitter, query, searchText, sources, categories);
         });
@@ -94,7 +105,11 @@ public final class ItemManager extends DataManager {
         return Single.create(emitter -> {
             final RealmQuery<NewsItem> query = this.getRealm()
                 .where(NewsItem.class)
-                .equalTo(NewsItem.FIELD_BOOKMARKED, true);
+                .equalTo(NewsItem.FIELD_BOOKMARKED, true)
+                .and()
+                .greaterThan(NewsItem.FIELD_PUBLISH_DATE, 0)
+                .and()
+                .lessThanOrEqualTo(NewsItem.FIELD_PUBLISH_DATE, System.currentTimeMillis());
 
             this.emit(emitter, query, searchText, sources, categories);
         });
@@ -162,6 +177,7 @@ public final class ItemManager extends DataManager {
             this.getRealm().insertOrUpdate(items);
 
             this.clearObsoleteItems();
+            this.clearInvalidItems();
 
             if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
 
@@ -184,6 +200,7 @@ public final class ItemManager extends DataManager {
             this.getRealm().insertOrUpdate(items);
 
             this.clearObsoleteItems();
+            this.clearInvalidItems();
 
             if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
 
@@ -201,6 +218,16 @@ public final class ItemManager extends DataManager {
             .or()
             .equalTo(NewsItem.FIELD_LAST_ACCESSED_DATE, 0)
             .endGroup()
+            .findAll()
+            .deleteAllFromRealm();
+    }
+
+    private void clearInvalidItems() {
+        this.getRealm()
+            .where(NewsItem.class)
+            .lessThanOrEqualTo(NewsItem.FIELD_PUBLISH_DATE, 0)
+            .or()
+            .greaterThan(NewsItem.FIELD_PUBLISH_DATE, System.currentTimeMillis())
             .findAll()
             .deleteAllFromRealm();
     }

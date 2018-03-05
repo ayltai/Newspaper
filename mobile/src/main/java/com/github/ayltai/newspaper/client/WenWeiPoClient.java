@@ -78,9 +78,9 @@ final class WenWeiPoClient extends Client {
                                 calendar.set(Calendar.MINUTE, Integer.parseInt(times[1]));
 
                                 item.setPublishDate(calendar.getTime());
-                            }
 
-                            items.add(item);
+                                items.add(item);
+                            }
                         }
                     }
 
