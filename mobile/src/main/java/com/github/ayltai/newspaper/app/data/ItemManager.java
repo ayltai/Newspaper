@@ -225,7 +225,7 @@ public final class ItemManager extends DataManager {
     private void clearInvalidItems() {
         this.getRealm()
             .where(NewsItem.class)
-            .lessThanOrEqualTo(NewsItem.FIELD_PUBLISH_DATE, 0)
+            .lessThanOrEqualTo(NewsItem.FIELD_PUBLISH_DATE, 0L)
             .or()
             .greaterThan(NewsItem.FIELD_PUBLISH_DATE, System.currentTimeMillis())
             .findAll()
