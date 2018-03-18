@@ -118,17 +118,17 @@ public final class Animations {
                 }
             }
 
-            Flowable.interval(this.offset, TimeUnit.MILLISECONDS)
-                .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
-                .take(queue.size())
-                .subscribe(time -> {
-                    if (!queue.isEmpty()) {
+            if (!queue.isEmpty()) {
+                Flowable.interval(this.offset, TimeUnit.MILLISECONDS)
+                    .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
+                    .take(queue.size())
+                    .subscribe(time -> {
                         final View view = queue.poll();
 
                         view.setVisibility(View.VISIBLE);
                         view.startAnimation(this.animation);
-                    }
-                });
+                    });
+            }
         }
 
         private void hide(final View container) {
