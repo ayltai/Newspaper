@@ -8,20 +8,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FrameMetricsAggregator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
-import android.util.SparseIntArray;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.google.firebase.perf.FirebasePerformance;
-import com.google.firebase.perf.metrics.Trace;
-
-import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.AppOpenEvent;
@@ -53,13 +46,6 @@ public final class MainActivity extends AppCompatActivity {
 
     private RxFlow flow;
     private Realm  realm;
-
-    //region Performance monitoring
-
-    private Trace                  trace;
-    private FrameMetricsAggregator aggregator;
-
-    //endregion
 
     @CallSuper
     @Override
@@ -100,38 +86,6 @@ public final class MainActivity extends AppCompatActivity {
                 .addAttribute(new Attribute("Settings - Cozy Layout", String.valueOf(this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY)))
                 .addAttribute(new Attribute("Settings - Dark Theme", String.valueOf(this.userConfig.getTheme() == Constants.THEME_DARK)))
                 .addAttribute(new Attribute("Settings - Auto Play", String.valueOf(this.userConfig.isAutoPlayEnabled()))));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (DevUtils.isLoggable()) {
-            this.trace      = FirebasePerformance.getInstance().newTrace(this.getClass().getSimpleName());
-            this.aggregator = new FrameMetricsAggregator(FrameMetricsAggregator.TOTAL_DURATION);
-            this.aggregator.add(this);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (DevUtils.isLoggable()) {
-            try {
-                final SparseIntArray totalDurations = this.aggregator.getMetrics()[FrameMetricsAggregator.TOTAL_INDEX];
-
-                for (int i = 0; i < totalDurations.size(); i++) {
-                    this.trace.incrementCounter("frames");
-                    if (totalDurations.get(i) > Constants.DURATION_SLOW_FRAME) this.trace.incrementCounter("slow_frames");
-                    if (totalDurations.get(i) > Constants.DURATION_FROZEN_FRAME) this.trace.incrementCounter("frozen_frames");
-                }
-            } catch (final NullPointerException e) {
-                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
-            }
-
-            this.trace.stop();
-        }
     }
 
     @Override
@@ -190,7 +144,7 @@ public final class MainActivity extends AppCompatActivity {
     private void initInstabug() {
         Instabug.setTheme(this.userConfig.getTheme() == Constants.THEME_LIGHT ? InstabugColorTheme.InstabugColorThemeLight : InstabugColorTheme.InstabugColorThemeDark);
         Instabug.setPrimaryColor(ContextUtils.getColor(this, R.attr.primaryColor));
-        Instabug.setAttachmentTypesEnabled(false, true, true, false, false);
+        Instabug.setAttachmentTypesEnabled(false, true, true, false);
         Instabug.setChatNotificationEnabled(false);
         Instabug.setCommentFieldRequired(true);
         Instabug.setEnableInAppNotificationSound(false);

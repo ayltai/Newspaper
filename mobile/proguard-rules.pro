@@ -55,3 +55,6 @@
 
 ## Instabug
 -dontwarn com.instabug.**
+
+## Fabric
+-dontwarn com.google.firebase.perf.**

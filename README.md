@@ -72,7 +72,6 @@ This app is made with the support of open source projects:
 * [Google Mobile Vision](https://developers.google.com/vision/face-detection-concepts)
 * [Firebase Analytics](https://firebase.google.com/docs/analytics)
 * [Firebase Remote Config](https://firebase.google.com/docs/remote-config)
-* [Firebase Performance Monitoring](https://firebase.google.com/docs/perf-mon)
 * [Firebase Test Lab](https://firebase.google.com/docs/test-lab)
 * [CircleCI](https://circleci.com)
 * [Fabric Answers](https://answers.io)

@@ -120,7 +120,7 @@ repositories {
 }
 
 dependencies {
-    implementation fileTree(dir : 'libs', include : [ '*.jar' ])
+    androidTestImplementation fileTree(dir : 'libs', include : [ '*.jar' ])
 
     // Multi-dex support
     debugImplementation       "com.android.support:multidex:$multidexVersion"
@@ -143,7 +143,6 @@ dependencies {
     // Firebase
     implementation "com.google.firebase:firebase-core:$firebaseSdkVersion"
     implementation "com.google.firebase:firebase-config:$firebaseSdkVersion"
-    implementation "com.google.firebase:firebase-perf:$firebaseSdkVersion"
 
     // Reactive programming
     implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
