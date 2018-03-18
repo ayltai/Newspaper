@@ -106,9 +106,9 @@ ext {
     retrofitVersion       = '2.3.0'
     frescoVersion         = '1.8.1'
     bigImageViewerVersion = '1.4.6'
-    exoPlayerVersion      = '2.7.0'
+    exoPlayerVersion      = '2.7.1'
     leakCanaryVersion     = '1.5.4'
-    robolectricVersion    = '3.7.1'
+    robolectricVersion    = '3.8'
     powerMockVersion      = '2.0.0-beta.5'
     espressoVersion       = '3.0.1'
 }
@@ -147,7 +147,7 @@ dependencies {
 
     // Reactive programming
     implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 
     // Dependency injection
     implementation      "com.google.dagger:dagger:$daggerVersion"
@@ -181,19 +181,19 @@ dependencies {
 
     // UI components
     implementation 'com.squareup.flow:flow:1.0.0-alpha3'
-    implementation 'com.nex3z:flow-layout:1.1.0'
+    implementation 'com.nex3z:flow-layout:1.2.2'
 
     // Eye candies
     implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
-    implementation 'io.supercharge:shimmerlayout:2.0.0'
+    implementation 'io.supercharge:shimmerlayout:2.1.0'
     implementation 'com.github.castorflex.smoothprogressbar:library:1.3.0'
     implementation 'pub.hanks:smallbang:1.2.2'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'io.github.inflationx:calligraphy3:3.0.0'
 
     // Code generation tools
-    compileOnly         "com.jakewharton.auto.value:auto-value-annotations:1.5"
-    annotationProcessor "com.google.auto.value:auto-value:1.5.3"
+    compileOnly         'com.jakewharton.auto.value:auto-value-annotations:1.5'
+    annotationProcessor 'com.google.auto.value:auto-value:1.5.4'
     annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
     implementation      'com.google.code.gson:gson:2.8.2'
 
@@ -203,7 +203,7 @@ dependencies {
     }
 
     // Instabug
-    implementation 'com.instabug.library:instabug:4.11.2'
+    implementation 'com.instabug.library:instabug:4.12.1'
 
     // Debugging
     implementation        'com.akaita.java:rxjava2-debug:1.2.2'
@@ -212,7 +212,7 @@ dependencies {
     testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testImplementation 'org.mockito:mockito-core:2.15.5'
+    testImplementation 'org.mockito:mockito-core:2.16.0'
     testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
