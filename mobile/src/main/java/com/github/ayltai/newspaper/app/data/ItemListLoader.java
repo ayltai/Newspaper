@@ -118,15 +118,22 @@ public final class ItemListLoader extends RealmLoader<Item> {
     protected Flowable<List<Item>> loadFromLocalSource(@NonNull final Context context, @Nullable final Bundle args) {
         if (!this.isValid()) return Flowable.just(Collections.emptyList());
 
-        return Flowable.create(emitter -> ItemManager.create(this.getRealm()).getItems(ItemListLoader.getSources(args).toArray(StringUtils.EMPTY_ARRAY), ItemListLoader.getCategories(args).toArray(StringUtils.EMPTY_ARRAY))
-            .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
-            .map(items -> items.isEmpty() ? items : RealmObject.isManaged(items.get(0)) ? this.getRealm().copyFromRealm(items) : items)
-            .map(items -> {
-                Collections.sort(items);
+        return Flowable.create(emitter -> {
+            if (this.isValid()) {
+                ItemManager.create(this.getRealm())
+                    .getItems(ItemListLoader.getSources(args).toArray(StringUtils.EMPTY_ARRAY), ItemListLoader.getCategories(args).toArray(StringUtils.EMPTY_ARRAY))
+                    .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
+                    .map(items -> items.isEmpty() ? items : RealmObject.isManaged(items.get(0)) ? this.getRealm().copyFromRealm(items) : items)
+                    .map(items -> {
+                        Collections.sort(items);
 
-                return Lists.transform(items, item -> (Item)item);
-            })
-            .subscribe(emitter::onNext), BackpressureStrategy.LATEST);
+                        return Lists.transform(items, item -> (Item)item);
+                    })
+                    .subscribe(emitter::onNext);
+            } else {
+                emitter.onNext(Collections.emptyList());
+            }
+        }, BackpressureStrategy.LATEST);
     }
 
     @SuppressWarnings("unchecked")
