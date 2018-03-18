@@ -302,7 +302,7 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
                 SimpleTextToSpeech.builder()
                     .addLocale(new Locale("yue", "HK"))
                     .addLocale(new Locale("zh", "HK"))
-                    .setOnNotSupported(irrelevant -> {
+                    .setOnNotSupported(() -> {
                         this.updateTextToSpeechUi(false);
 
                         SnackbarUtils.show(this, R.string.error_tts_not_supported, Snackbar.LENGTH_LONG);
@@ -311,8 +311,10 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
                         this.updateTextToSpeechUi(false);
 
                         SnackbarUtils.show(this, R.string.error_tts_not_initialized, Snackbar.LENGTH_LONG);
+
+                        return Irrelevant.INSTANCE;
                     })
-                    .setOnUtteranceCompleted(irrelevant -> {
+                    .setOnUtteranceCompleted(() -> {
                         if (this.isTtsActive) this.textToSpeech();
                     })
                     .build(activity)

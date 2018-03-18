@@ -18,7 +18,8 @@ import android.util.Log;
 import com.google.auto.value.AutoValue;
 
 import io.reactivex.Single;
-import rx.functions.Action1;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Function;
 
 @AutoValue
 public abstract class SimpleTextToSpeech {
@@ -34,16 +35,16 @@ public abstract class SimpleTextToSpeech {
         }
 
         @NonNull
-        public abstract SimpleTextToSpeech.Builder setOnInitError(@Nullable Action1<Integer> action);
+        public abstract SimpleTextToSpeech.Builder setOnInitError(@Nullable Function<Integer, Irrelevant> action);
 
         @NonNull
-        public abstract SimpleTextToSpeech.Builder setOnNotSupported(@Nullable Action1<Irrelevant> action);
+        public abstract SimpleTextToSpeech.Builder setOnNotSupported(@Nullable Action action);
 
         @NonNull
-        public abstract SimpleTextToSpeech.Builder setOnMissingData(@Nullable Action1<Irrelevant> action);
+        public abstract SimpleTextToSpeech.Builder setOnMissingData(@Nullable Action action);
 
         @NonNull
-        public abstract SimpleTextToSpeech.Builder setOnUtteranceCompleted(@Nullable Action1<Irrelevant> action);
+        public abstract SimpleTextToSpeech.Builder setOnUtteranceCompleted(@Nullable Action action);
 
         @NonNull
         abstract SimpleTextToSpeech internalBuild();
@@ -73,16 +74,16 @@ public abstract class SimpleTextToSpeech {
     //region Properties
 
     @Nullable
-    protected abstract Action1<Integer> getOnInitError();
+    protected abstract Function<Integer, Irrelevant> getOnInitError();
 
     @Nullable
-    protected abstract Action1<Irrelevant> getOnNotSupported();
+    protected abstract Action getOnNotSupported();
 
     @Nullable
-    protected abstract Action1<Irrelevant> getOnMissingData();
+    protected abstract Action getOnMissingData();
 
     @Nullable
-    protected abstract Action1<Irrelevant> getOnUtteranceCompleted();
+    protected abstract Action getOnUtteranceCompleted();
 
     private void setActivity(@NonNull final Activity activity) {
         this.activity = activity;
@@ -108,18 +109,31 @@ public abstract class SimpleTextToSpeech {
         if (this.tts != null) this.tts.shutdown();
     }
 
+    @SuppressWarnings("CyclomaticComplexity")
     private Single<Irrelevant> init() {
         return Single.create(emitter -> this.tts = new TextToSpeech(this.activity, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 if (!this.initIfLocaleIsAvailable() && !this.initIfLocaleIsMissing()) {
                     if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS locale not supported");
 
-                    if (this.getOnNotSupported() != null) this.getOnNotSupported().call(Irrelevant.INSTANCE);
+                    if (this.getOnNotSupported() != null) {
+                        try {
+                            this.getOnNotSupported().run();
+                        } catch (final Exception e) {
+                            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                        }
+                    }
                 }
             } else {
                 if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), "TTS initialization error " + status);
 
-                if (this.getOnInitError() != null) this.getOnInitError().call(status);
+                if (this.getOnInitError() != null) {
+                    try {
+                        this.getOnInitError().apply(status);
+                    } catch (final Exception e) {
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                    }
+                }
             }
 
             if (!emitter.isDisposed()) emitter.onSuccess(Irrelevant.INSTANCE);
@@ -141,7 +155,13 @@ public abstract class SimpleTextToSpeech {
 
                     @Override
                     public void onDone(final String utteranceId) {
-                        if (SimpleTextToSpeech.this.getOnUtteranceCompleted() != null && Integer.parseInt(utteranceId) == SimpleTextToSpeech.this.utteranceId.get()) SimpleTextToSpeech.this.getOnUtteranceCompleted().call(Irrelevant.INSTANCE);
+                        if (SimpleTextToSpeech.this.getOnUtteranceCompleted() != null && Integer.parseInt(utteranceId) == SimpleTextToSpeech.this.utteranceId.get()) {
+                            try {
+                                SimpleTextToSpeech.this.getOnUtteranceCompleted().run();
+                            } catch (final Exception e) {
+                                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                            }
+                        }
                     }
 
                     @Override
@@ -178,7 +198,15 @@ public abstract class SimpleTextToSpeech {
 
                 this.activity.startActivity(new Intent().setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA));
 
-                if (this.getOnMissingData() != null) this.getOnMissingData().call(Irrelevant.INSTANCE);
+                if (this.getOnMissingData() != null) {
+                    try {
+                        this.getOnMissingData().run();
+                    } catch (final Exception e) {
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+
+                        return false;
+                    }
+                }
 
                 return true;
             }

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 apply plugin: 'checkstyle'
