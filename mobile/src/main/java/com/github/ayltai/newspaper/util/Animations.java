@@ -125,8 +125,10 @@ public final class Animations {
                     .subscribe(time -> {
                         final View view = queue.poll();
 
-                        view.setVisibility(View.VISIBLE);
-                        view.startAnimation(this.animation);
+                        if (view != null) {
+                            view.setVisibility(View.VISIBLE);
+                            view.startAnimation(this.animation);
+                        }
                     });
             }
         }
