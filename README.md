@@ -76,4 +76,3 @@ This app is made with the support of open source projects:
 * [CircleCI](https://circleci.com)
 * [Fabric Answers](https://answers.io)
 * [Fabric Crashlytics](https://fabric.io/kits/android/crashlytics)
-* [Instabug](https://instabug.com)

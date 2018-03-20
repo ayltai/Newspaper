@@ -29,9 +29,6 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.ThreadPolicyFactory;
 import com.github.ayltai.newspaper.util.VmPolicyFactory;
 import com.github.piasy.biv.BigImageViewer;
-import com.instabug.library.Feature;
-import com.instabug.library.Instabug;
-import com.instabug.library.invocation.InstabugInvocationEvent;
 import com.squareup.leakcanary.LeakCanary;
 
 import io.fabric.sdk.android.Fabric;
@@ -51,7 +48,6 @@ public final class MainApplication extends BaseApplication {
         RxJava2Debug.enableRxJava2AssemblyTracking(new String[] { BuildConfig.APPLICATION_ID });
 
         this.initFirebase();
-        this.initInstabug();
         this.initFresco();
         this.initBigImageViewer();
         this.initCalligraphy();
@@ -83,18 +79,6 @@ public final class MainApplication extends BaseApplication {
         } catch (final RuntimeException e) {
             if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
         }
-    }
-
-    private void initInstabug() {
-        new Instabug.Builder(this, "1c5817a3503c2a8ece8624b8c0f5a052")
-            .setInvocationEvent(InstabugInvocationEvent.NONE)
-            .setCrashReportingState(Feature.State.DISABLED)
-            .setInAppMessagingState(Feature.State.DISABLED)
-            .setPushNotificationState(Feature.State.DISABLED)
-            .setSurveysState(Feature.State.DISABLED)
-            .build();
-
-        if (DevUtils.isRunningUnitTest()) Instabug.disable();
     }
 
     private void initFresco() {

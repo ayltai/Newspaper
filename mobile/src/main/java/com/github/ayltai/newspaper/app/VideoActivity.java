@@ -32,7 +32,6 @@ import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.config.AppConfig;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.instabug.library.InstabugTrackingDelegate;
 
 import io.reactivex.disposables.Disposable;
 
@@ -112,13 +111,6 @@ public final class VideoActivity extends AppCompatActivity {
         this.notifyCurrentPlaybackState();
 
         super.onBackPressed();
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(final MotionEvent event) {
-        InstabugTrackingDelegate.notifyActivityGotTouchEvent(event, this);
-
-        return super.dispatchTouchEvent(event);
     }
 
     private void notifyCurrentPlaybackState() {

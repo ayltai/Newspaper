@@ -28,10 +28,6 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.view.RxFlow;
 import com.github.piasy.biv.loader.ImageLoader;
-import com.instabug.library.Instabug;
-import com.instabug.library.InstabugColorTheme;
-import com.instabug.library.InstabugCustomTextPlaceHolder;
-import com.instabug.library.InstabugTrackingDelegate;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import io.reactivex.Single;
@@ -68,8 +64,6 @@ public final class MainActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(ContextUtils.getColor(this, R.attr.primaryColorDark));
         }
-
-        if (!DevUtils.isRunningUnitTest()) this.initInstabug();
 
         Single.<Realm>create(emitter -> emitter.onSuccess(ComponentFactory.getInstance()
             .getDataComponent(this)
@@ -132,41 +126,6 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (!this.flow.onBackPressed()) super.onBackPressed();
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(final MotionEvent event) {
-        InstabugTrackingDelegate.notifyActivityGotTouchEvent(event, this);
-
-        return super.dispatchTouchEvent(event);
-    }
-
-    private void initInstabug() {
-        Instabug.setTheme(this.userConfig.getTheme() == Constants.THEME_LIGHT ? InstabugColorTheme.InstabugColorThemeLight : InstabugColorTheme.InstabugColorThemeDark);
-        Instabug.setPrimaryColor(ContextUtils.getColor(this, R.attr.primaryColor));
-        Instabug.setAttachmentTypesEnabled(false, true, true, false);
-        Instabug.setChatNotificationEnabled(false);
-        Instabug.setCommentFieldRequired(true);
-        Instabug.setEnableInAppNotificationSound(false);
-        Instabug.setEnableSystemNotificationSound(false);
-        Instabug.setIntroMessageEnabled(false);
-        Instabug.setPromptOptionsEnabled(false, true, true);
-        Instabug.setShouldAudioRecordingOptionAppear(false);
-        Instabug.setShouldPlayConversationSounds(false);
-        Instabug.setWillSkipScreenshotAnnotation(true);
-
-        final InstabugCustomTextPlaceHolder placeHolder = new InstabugCustomTextPlaceHolder();
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.INVOCATION_HEADER, this.getString(R.string.instabug_report_header));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.BUG_REPORT_HEADER, this.getString(R.string.instabug_bug_report_header));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.REPORT_BUG, this.getString(R.string.instabug_report_bug));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.COMMENT_FIELD_HINT_FOR_BUG_REPORT, this.getString(R.string.instabug_bug_report_hint));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.FEEDBACK_REPORT_HEADER, this.getString(R.string.instabug_feedback_report_header));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.REPORT_FEEDBACK, this.getString(R.string.instabug_report_feedback));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.COMMENT_FIELD_HINT_FOR_FEEDBACK, this.getString(R.string.instabug_feedback_report_hint));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.EMAIL_FIELD_HINT, this.getString(R.string.instabug_email_hint));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.ADD_EXTRA_SCREENSHOT, this.getString(R.string.instabug_screenshot));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.ADD_IMAGE_FROM_GALLERY, this.getString(R.string.instabug_gallery));
-        Instabug.setCustomTextPlaceHolders(placeHolder);
     }
 
     private void initImageModule() {

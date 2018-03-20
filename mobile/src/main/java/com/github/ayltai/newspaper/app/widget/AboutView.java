@@ -24,7 +24,6 @@ import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.BaseView;
-import com.instabug.library.Instabug;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
@@ -114,13 +113,7 @@ public final class AboutView extends BaseView implements AboutPresenter.View {
 
     @Override
     public void report(@NonNull final String url) {
-        try {
-            Instabug.invoke();
-        } catch (final IllegalStateException e) {
-            if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
-
-            this.openUrl(url);
-        }
+        this.openUrl(url);
     }
 
     //endregion
