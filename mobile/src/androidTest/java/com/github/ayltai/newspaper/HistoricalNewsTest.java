@@ -68,7 +68,7 @@ public final class HistoricalNewsTest extends BaseTest {
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
-        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
 
         // Goes back the News list
         Espresso.pressBack();

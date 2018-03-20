@@ -68,7 +68,7 @@ public final class BookmarkedNewsTest extends BaseTest {
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
-        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
 
         // Clicks Bookmark button
         Espresso.onView(Matchers.allOf(

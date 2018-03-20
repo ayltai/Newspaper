@@ -29,7 +29,7 @@ public final class DetailsTest extends BaseTest {
             ViewMatchers.withId(R.id.recyclerView))))
             .perform(RecyclerViewActions.actionOnItemAtPosition(2, ViewActions.click()));
 
-        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
 
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.avatar),
