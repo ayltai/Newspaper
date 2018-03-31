@@ -98,7 +98,7 @@ ext {
     multidexVersion       = '1.0.3'
     supportLibraryVersion = '27.1.0'
     architectureVersion   = '1.1.1'
-    firebaseSdkVersion    = '12.0.1'
+    firebaseSdkVersion    = '11.8.0'
     daggerVersion         = '2.15'
     retrofitVersion       = '2.4.0'
     frescoVersion         = '1.8.1'
