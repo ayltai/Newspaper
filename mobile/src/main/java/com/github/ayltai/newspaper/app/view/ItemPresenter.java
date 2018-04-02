@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
+import com.github.ayltai.newspaper.analytics.Attribute;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.AppConfig;
@@ -62,6 +63,9 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
         void setVideo(@Nullable Video video);
 
         @UiThread
+        void addEntity(@NonNull String name, @NonNull String wikiLink);
+
+        @UiThread
         void setIsRead(boolean isRead);
 
         @Nullable
@@ -93,6 +97,9 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
 
         @Nullable
         Flowable<Irrelevant> videoClicks();
+
+        @Nullable
+        Flowable<String> entityClicks();
     }
 
     private AppConfig appConfig;
@@ -212,6 +219,16 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
                 .setElementName("Video"));
     }
 
+    @CallSuper
+    protected void onEntityClick(@NonNull final String wikiLink) {
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Entity")
+                .addAttribute(new Attribute("URL", wikiLink)));
+    }
+
     @SuppressWarnings("CyclomaticComplexity")
     @CallSuper
     @Override
@@ -219,7 +236,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
         super.onViewAttached(view, isFirstTimeAttachment);
 
         final Flowable<Optional<Point>> clicks = view.clicks();
-        if (clicks != null) this.manageDisposable(clicks.subscribe(location -> this.onClick(location)));
+        if (clicks != null) this.manageDisposable(clicks.subscribe(this::onClick));
 
         final Flowable<Irrelevant> avatarClicks = view.avatarClicks();
         if (avatarClicks != null) this.manageDisposable(avatarClicks.subscribe(irrelevant -> this.onAvatarClick()));
@@ -245,8 +262,11 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
         final Flowable<Image> imageClicks = view.imageClicks();
         if (imageClicks != null) this.manageDisposable(imageClicks.subscribe(this::onImageClick));
 
-        final Flowable<Irrelevant> videoClick = view.videoClicks();
-        if (videoClick != null) this.manageDisposable(videoClick.subscribe(irrelevant -> this.onVideoClick()));
+        final Flowable<Irrelevant> videoClicks = view.videoClicks();
+        if (videoClicks != null) this.manageDisposable(videoClicks.subscribe(irrelevant -> this.onVideoClick()));
+
+        final Flowable<String> entityClicks = view.entityClicks();
+        if (entityClicks != null) this.manageDisposable(entityClicks.subscribe(this::onEntityClick));
 
         this.bindModel(this.getModel());
     }

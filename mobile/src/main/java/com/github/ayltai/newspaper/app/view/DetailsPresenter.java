@@ -1,17 +1,21 @@
 package com.github.ayltai.newspaper.app.view;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.v4.util.ArraySet;
 import android.util.Log;
 
 import com.akaita.java.rxjava2debug.RxJava2Debug;
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.analytics.ShareEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
@@ -22,10 +26,13 @@ import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.DataManager;
+import com.github.ayltai.newspaper.language.LanguageService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
+import com.textrazor.annotations.Entity;
+import com.textrazor.annotations.Topic;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -57,6 +64,8 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
     public void bindModel(final Item model) {
         if (this.getView() == null) {
             super.bindModel(model);
+
+            this.analyze(model);
         } else {
             if (model instanceof NewsItem) {
                 super.bindModel(model);
@@ -64,7 +73,9 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                 final NewsItem newsItem = (NewsItem)model;
                 this.updateItem(newsItem);
 
-                if (!newsItem.isFullDescription()) {
+                if (newsItem.isFullDescription()) {
+                    this.analyze(model);
+                } else {
                     this.getView().showProgress(true);
 
                     super.bindModel(model);
@@ -93,6 +104,8 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                             .subscribe(
                                 items -> {
                                     super.bindModel(items.get(0));
+
+                                    this.analyze(model);
 
                                     this.getView().showProgress(false);
                                 },
@@ -178,6 +191,14 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
 
     @CallSuper
     @Override
+    protected void onEntityClick(@NonNull final String wikiLink) {
+        if (this.getView() != null) this.getView().viewOnWeb(wikiLink);
+
+        super.onEntityClick(wikiLink);
+    }
+
+    @CallSuper
+    @Override
     public void onViewAttached(@NonNull final DetailsPresenter.View view, final boolean isFirstTimeAttachment) {
         final Flowable<Irrelevant> textToSpeechClicks = view.textToSpeechClicks();
         if (textToSpeechClicks != null) this.manageDisposable(textToSpeechClicks.subscribe(irrelevant -> this.onTextToSpeechClick()));
@@ -208,5 +229,48 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
             .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
             .flatMap(manager -> manager.putItems(Collections.singletonList(item))
                 .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER)));
+    }
+
+    private void analyze(@NonNull final Item model) {
+        if (this.getView() != null && model.getDescription() != null) Single.defer(() -> Single.just(ComponentFactory.getInstance()
+            .getLanguageComponent()
+            .languageService()
+            .analyze(model.getDescription())))
+            .compose(RxUtils.applySingleBackgroundToMainSchedulers())
+            .subscribe(
+                response -> {
+                    if (this.getView() != null) {
+                        final List<Topic> topics = new ArrayList<>(response.getTopics());
+                        Collections.sort(topics, LanguageService.TOPIC_COMPARATOR);
+
+                        int count = 0;
+
+                        for (final Topic topic : topics) {
+                            if ((int)(topic.getScore() * Constants.PERCENT) == Constants.PERCENT || LanguageService.MAX_TOPICS > count++) {
+                                Log.d(this.getClass().getSimpleName(), "Topic { label = " + topic.getLabel() + ", score = " + topic.getScore() + ", wikiLink = " + topic.getWikiLink() + " }");
+                            }
+                        }
+
+                        final Set<String>  uniqueEntities = new ArraySet<>();
+                        final List<Entity> entities       = new ArrayList<>(response.getEntities());
+
+                        Collections.sort(entities, LanguageService.ENTITY_COMPARATOR);
+
+                        for (final Entity entity : entities) {
+                            if (entity.getConfidenceScore() >= 1 && entity.getWikiLink() != null) {
+                                if (!uniqueEntities.contains(entity.getWikiLink())) {
+                                    uniqueEntities.add(entity.getWikiLink());
+
+                                    Log.d(this.getClass().getSimpleName(), "Entity { entityId = " + entity.getEntityId() + ", confidenceScore = " + entity.getConfidenceScore() + ", matchedText = " + entity.getMatchedText() + ", wikiLink = " + entity.getWikiLink() + " }");
+
+                                    this.getView().addEntity(entity.getMatchedText(), entity.getWikiLink());
+                                }
+                            }
+                        }
+                    }
+                },
+                error -> {
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                });
     }
 }

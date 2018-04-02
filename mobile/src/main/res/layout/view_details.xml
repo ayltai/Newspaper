@@ -143,6 +143,28 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical" />
+                <LinearLayout
+                    android:id="@+id/entities_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="@dimen/space16"
+                    android:layout_marginStart="@dimen/space16"
+                    android:layout_marginRight="@dimen/space16"
+                    android:layout_marginEnd="@dimen/space16"
+                    android:visibility="gone">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space16"
+                        android:text="@string/learn_more" />
+                    <com.nex3z.flowlayout.FlowLayout
+                        android:id="@+id/entities"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:flChildSpacing="@dimen/space16"
+                        app:flRowSpacing="@dimen/space16" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

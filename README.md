@@ -11,6 +11,7 @@ An aggregated news app containing news from 10+ local news publishers in Hong Ko
 * Fast. Just fast.
 * Support video news
 * Auto face centering image cropping
+* Analyze news contents using [Natural Language Processing](https://en.wikipedia.org/wiki/Natural-language_processing)
 * Read news from 10 local news publishers
 * Bookmarks and reading history
 * No ads. We hate ads as much as you do
@@ -76,3 +77,4 @@ This app is made with the support of open source projects:
 * [CircleCI](https://circleci.com)
 * [Fabric Answers](https://answers.io)
 * [Fabric Crashlytics](https://fabric.io/kits/android/crashlytics)
+* [TextRazor](https://www.textrazor.com)

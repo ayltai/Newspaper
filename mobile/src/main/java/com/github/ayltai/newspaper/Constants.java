@@ -6,6 +6,8 @@ public final class Constants {
     public static final String ENCODING_UTF8 = "UTF-8";
     public static final String LINE_BREAK    = "\n";
 
+    public static final int PERCENT = 100;
+
     public static final int INITIAL_RETRY_DELAY            = 2;
     public static final int MAX_RETRIES                    = 5;
     public static final int CONNECTION_TIMEOUT             = 5;
@@ -51,7 +53,6 @@ public final class Constants {
     }
 
     public static final boolean AUTO_PLAY_DEFAULT = false;
-    public static final boolean PANORAMA_DEFAULT  = false;
 
     private Constants() {
     }
