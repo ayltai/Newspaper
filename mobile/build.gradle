@@ -6,7 +6,7 @@ apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion '0.7.9'
+    toolVersion '0.8.1'
 }
 
 String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
@@ -104,6 +104,7 @@ ext {
     frescoVersion         = '1.8.1'
     bigImageViewerVersion = '1.4.6'
     exoPlayerVersion      = '2.7.2'
+    autoValueVersion      = '1.6'
     leakCanaryVersion     = '1.5.4'
     robolectricVersion    = '3.8'
     powerMockVersion      = '2.0.0-beta.5'
@@ -188,8 +189,8 @@ dependencies {
     implementation 'io.github.inflationx:calligraphy3:3.0.0'
 
     // Code generation tools
-    compileOnly         'com.jakewharton.auto.value:auto-value-annotations:1.5'
-    annotationProcessor 'com.google.auto.value:auto-value:1.5.4'
+    compileOnly         "com.google.auto.value:auto-value-annotations:$autoValueVersion"
+    annotationProcessor "com.google.auto.value:auto-value:$autoValueVersion"
     annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
     implementation      'com.google.code.gson:gson:2.8.2'
 
@@ -205,7 +206,7 @@ dependencies {
     testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testImplementation 'org.mockito:mockito-core:2.17.3'
+    testImplementation 'org.mockito:mockito-core:2.17.6'
     testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
@@ -228,7 +229,7 @@ dependencies {
     androidTestUtil 'com.android.support.test:orchestrator:1.0.1'
 
     // Code coverage by Codacy
-    codacy 'com.github.codacy:codacy-coverage-reporter:2.0.2'
+    codacy 'com.github.codacy:codacy-coverage-reporter:4.0.0'
 }
 
 configurations.all {
