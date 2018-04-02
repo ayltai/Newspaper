@@ -5,7 +5,7 @@ Newspaper
 
 An aggregated news app containing news from 10+ local news publishers in Hong Kong. Made with ❤
 
-![Screenshot (Compact)](design/screenshot_cozy_framed.png "Screenshot (Cozy)")  ![Screenshot (Dark)](design/screenshot_dark_framed.png "Screenshot (Dark)")
+![Screenshot (Compact)](design/screenshot_cozy_framed.png "Screenshot (Cozy)") ![Screenshot (Dark)](design/screenshot_dark_framed.png "Screenshot (Dark)") ![Screenshot (Details)](design/screenshot_details_framed.png "Screenshot (Details)")
 
 ## Features
 * Fast. Just fast.
