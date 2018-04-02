@@ -6,5 +6,8 @@
     <item
         android:state_selected="true"
         android:color="@color/textColorInverseLight" />
+    <item
+        android:state_pressed="true"
+        android:color="@color/textColorInverseLight" />
     <item android:color="@color/textColorLight" />
 </selector>

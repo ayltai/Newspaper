@@ -41,9 +41,6 @@
 ## Retrofit
 -dontwarn retrofit2.**
 
-## SearchView
--keep class android.support.v7.widget.SearchView { *; }
-
 ## SimpleXML
 -dontwarn org.simpleframework.xml.stream.**
 -keep class org.simpleframework.xml.** { *; }
@@ -51,6 +48,19 @@
     @org.simpleframework.xml.* <fields>;
     public <init>();
 }
+
+## TextRazor
+-keep class com.textrazor.** { *; }
+-keepnames class com.fasterxml.jackson.** { *; }
+-keepnames interface com.fasterxml.jackson.** { *; }
+-dontwarn com.fasterxml.jackson.databind.**
+-keep class org.codehaus.** { *; }
+-keepclassmembernames public final enum org.codehaus.jackson.annotate.JsonAutoDetect$Visibility {
+    public static final org.codehaus.jackson.annotate.JsonAutoDetect$Visibility *;
+}
+
+## SearchView
+-keep class android.support.v7.widget.SearchView { *; }
 
 ## BottomNavigationView
 -keepclassmembers class android.support.design.internal.BottomNavigationMenuView {

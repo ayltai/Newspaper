@@ -9,6 +9,8 @@ jacoco {
     toolVersion '0.8.1'
 }
 
+String NLP_API_TOKEN = System.getenv('NLP_API_TOKEN')
+
 String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
 String VERSION_HASH     = 'git rev-parse --short HEAD'.execute().text.trim()
 
@@ -45,6 +47,8 @@ android {
             testCoverageEnabled true
 
             ext.enableCrashlytics = false
+
+            buildConfigField 'String', 'NLP_API_TOKEN', '\"' + NLP_API_TOKEN + '\"'
         }
 
         release {
@@ -52,6 +56,8 @@ android {
             shrinkResources true
             signingConfig   signingConfigs.release
             proguardFiles   getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField 'String', 'NLP_API_TOKEN', '\"' + NLP_API_TOKEN + '\"'
         }
     }
 
@@ -175,6 +181,9 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
     implementation "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
     implementation "com.google.android.exoplayer:extension-okhttp:$exoPlayerVersion"
+
+    // Natural language processing
+    implementation 'com.textrazor:textrazor:1.0.11'
 
     // UI components
     implementation 'com.squareup.flow:flow:1.0.0-alpha3'

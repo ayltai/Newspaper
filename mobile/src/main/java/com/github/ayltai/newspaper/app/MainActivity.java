@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -23,7 +22,6 @@ import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.media.FaceCenterFinder;
 import com.github.ayltai.newspaper.util.ContextUtils;
-import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.view.RxFlow;

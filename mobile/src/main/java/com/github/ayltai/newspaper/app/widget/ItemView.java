@@ -92,6 +92,10 @@ public abstract class ItemView extends BaseView implements ItemPresenter.View {
     public void setIsRead(final boolean isRead) {
     }
 
+    @Override
+    public void addEntity(@NonNull final String name, @NonNull final String wikiLink) {
+    }
+
     //endregion
 
     //region Events
@@ -153,6 +157,12 @@ public abstract class ItemView extends BaseView implements ItemPresenter.View {
     @Nullable
     @Override
     public Flowable<Irrelevant> videoClicks() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Flowable<String> entityClicks() {
         return null;
     }
 

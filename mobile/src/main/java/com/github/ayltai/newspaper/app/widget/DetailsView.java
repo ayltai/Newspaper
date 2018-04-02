@@ -88,6 +88,7 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
     private final FlowableProcessor<Irrelevant> viewOnWebClicks    = PublishProcessor.create();
     private final FlowableProcessor<Irrelevant> shareClicks        = PublishProcessor.create();
     private final FlowableProcessor<Image>      imageClicks        = PublishProcessor.create();
+    private final FlowableProcessor<String>     entityClicks       = PublishProcessor.create();
 
     //endregion
 
@@ -114,6 +115,8 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
     private final ImageView               shareAction;
     private final ViewGroup               imagesContainer;
     private final ViewGroup               videoContainer;
+    private final View                    entitiesContainer;
+    private final ViewGroup               entities;
 
     private VideoView videoView;
 
@@ -146,6 +149,8 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
         this.shareAction             = view.findViewById(R.id.action_share);
         this.imagesContainer         = view.findViewById(R.id.images_container);
         this.videoContainer          = view.findViewById(R.id.video_container);
+        this.entitiesContainer       = view.findViewById(R.id.entities_container);
+        this.entities                = view.findViewById(R.id.entities);
 
         this.toolbarView       = LayoutInflater.from(this.getContext()).inflate(R.layout.widget_toolbar, this.imageContainer, false);
         this.toolbarImage      = this.toolbarView.findViewById(R.id.image);
@@ -276,8 +281,17 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
 
             this.videoContainer.addView(this.videoView);
         }
+    }
 
-        this.scrollView.scrollTo(0, 0);
+    @Override
+    public void addEntity(@NonNull final String name, @NonNull final String wikiLink) {
+        this.entitiesContainer.setVisibility(View.VISIBLE);
+
+        final TextView entity = (TextView)LayoutInflater.from(this.getContext()).inflate(R.layout.view_text_option, this.entities, false);
+        entity.setText(name);
+        entity.setOnClickListener(view -> this.entityClicks.onNext(wikiLink));
+
+        this.entities.addView(entity);
     }
 
     //endregion
@@ -410,6 +424,12 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
         return this.videoView == null ? null : this.videoView.videoClicks();
     }
 
+    @Nullable
+    @Override
+    public Flowable<String> entityClicks() {
+        return this.entityClicks;
+    }
+
     //endregion
 
     //region Lifecycle
@@ -426,7 +446,12 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
         this.viewOnWebAction.setOnClickListener(view -> this.viewOnWebClicks.onNext(Irrelevant.INSTANCE));
         this.shareAction.setOnClickListener(view -> this.shareClicks.onNext(Irrelevant.INSTANCE));
 
+        this.entitiesContainer.setVisibility(View.GONE);
+        this.entities.removeAllViews();
+
         super.onAttachedToWindow();
+
+        this.scrollView.scrollTo(0, 0);
 
         final Activity activity = this.getActivity();
 

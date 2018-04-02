@@ -1,0 +1,10 @@
+{
+    "name"         : "functions",
+    "dependencies" : {
+        "firebase-admin"     : "^5.4.2",
+        "firebase-functions" : "^0.7.1",
+        "googleapis"         : "^22.2.0",
+        "http-parser-js"     : "^0.4.9"
+    },
+    "private"      : true
+}
