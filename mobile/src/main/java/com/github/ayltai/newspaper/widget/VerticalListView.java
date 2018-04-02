@@ -172,8 +172,8 @@ public abstract class VerticalListView<M> extends ListView<M> implements Vertica
         this.swipeRefreshLayout.setColorSchemeResources(R.color.refreshColor1, R.color.refreshColor2, R.color.refreshColor3, R.color.refreshColor4);
         this.swipeRefreshLayout.setOnRefreshListener(() -> this.pullToRefreshes.onNext(Irrelevant.INSTANCE));
 
-        if (this.getLoadingViewId() > 0) this.loadingView = this.findViewById(this.getLoadingViewId());
-        if (this.getEmptyViewId() > 0) this.emptyView = this.findViewById(this.getEmptyViewId());
+        if (this.getLoadingViewId() != 0) this.loadingView = this.findViewById(this.getLoadingViewId());
+        if (this.getEmptyViewId() != 0) this.emptyView = this.findViewById(this.getEmptyViewId());
 
         this.emptyView.setVisibility(View.GONE);
     }
