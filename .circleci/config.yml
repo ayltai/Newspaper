@@ -34,7 +34,7 @@ references:
         - mobile/build/outputs/apk
         - mobile/build/outputs/code-coverage
         - mobile/build/test-results
-  persist_to_release_workspace: &persist_to_release_workspace
+  persist_release_workspace: &persist_release_workspace
     persist_to_workspace:
       root: *workspace
       paths:
@@ -53,11 +53,11 @@ references:
   android_config: &android_config
     working_directory: *workspace
     docker:
-      - image: circleci/android:api-26-alpha
+      - image: circleci/android:api-27-alpha
     environment:
       TERM: dumb
-      _JAVA_OPTIONS: "-Xmx1536m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
-      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1536m"'
+      _JAVA_OPTIONS: "-Xmx2048m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m"'
   gcloud_config: &gcloud_config
     working_directory: *workspace
     docker:
@@ -154,7 +154,7 @@ jobs:
       - run:
           name: Gradle build (release)
           command: ./gradlew -PciBuild=true :mobile:assembleRelease
-      - *persist_to_release_workspace
+      - *persist_release_workspace
       - store_artifacts:
           path: mobile/build/outputs/apk/
           destination: /apk/
@@ -202,7 +202,7 @@ jobs:
           command: gcloud auth activate-service-account firebase-adminsdk-p9qvk@newspaper-84169.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
       - run:
           name: Run instrumented test on Firebase Test Lab
-          command: gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/mobile-debug.apk --test mobile/build/outputs/apk/mobile-debug-androidTest.apk --device model=Nexus5X,version=26,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 10m
+          command: gcloud firebase test android run --type instrumentation --app mobile/build/outputs/apk/debug/mobile-debug.apk --test mobile/build/outputs/apk/androidTest/debug/mobile-debug-androidTest.apk --device model=sailfish,version=26,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
       - run:
           name: Create directory to store test results
           command: mkdir firebase
@@ -228,7 +228,7 @@ jobs:
       - *attach_firebase_workspace
       - run:
           name: Move Firebase coverage report
-          command: mkdir -p mobile/build/outputs/code-coverage/connected && cp firebase/Nexus5X-26-en_US-portrait/artifacts/coverage.ec mobile/build/outputs/code-coverage/connected/coverage.ec
+          command: mkdir -p mobile/build/outputs/code-coverage/connected && cp firebase/sailfish-26-en_US-portrait/artifacts/coverage.ec mobile/build/outputs/code-coverage/connected/coverage.ec
       - *export_gservices_key
       - *decode_gservices_key
       - run:

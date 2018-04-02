@@ -3,6 +3,7 @@ package com.github.ayltai.newspaper.debug;
 import org.junit.Test;
 
 import com.github.ayltai.newspaper.UnitTest;
+import com.github.ayltai.newspaper.util.VmPolicyFactory;
 
 import junit.framework.Assert;
 

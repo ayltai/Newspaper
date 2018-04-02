@@ -4,36 +4,28 @@ import javax.inject.Inject;
 
 import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FrameMetricsAggregator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
-import android.util.SparseIntArray;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-
-import com.google.firebase.perf.FirebasePerformance;
-import com.google.firebase.perf.metrics.Trace;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.AppOpenEvent;
 import com.github.ayltai.newspaper.analytics.Attribute;
-import com.github.ayltai.newspaper.app.config.RemoteConfig;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.media.FaceCenterFinder;
 import com.github.ayltai.newspaper.util.ContextUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.view.RxFlow;
 import com.github.piasy.biv.loader.ImageLoader;
-import com.instabug.library.Instabug;
-import com.instabug.library.InstabugColorTheme;
-import com.instabug.library.InstabugCustomTextPlaceHolder;
-import com.instabug.library.InstabugTrackingDelegate;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import io.reactivex.Single;
@@ -44,25 +36,16 @@ public final class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    //region Configurations
+    @Inject UserConfig userConfig;
 
-    @Inject RemoteConfig remoteConfig;
-    @Inject UserConfig   userConfig;
+    private RxFlow flow;
+    private Realm  realm;
 
-    //endregion
-
-    private FlowController controller;
-    private Realm          realm;
-
-    //region Performance monitoring
-
-    private Trace                  trace;
-    private FrameMetricsAggregator aggregator;
-
-    //endregion
-
+    @CallSuper
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
+        this.setContentView(R.layout.activity_main);
+
         ComponentFactory.init();
         this.getLifecycle().addObserver(ComponentFactory.getInstance());
 
@@ -74,7 +57,11 @@ public final class MainActivity extends AppCompatActivity {
 
         this.setTheme(this.userConfig.getTheme() == Constants.THEME_LIGHT ? R.style.AppTheme_Light : R.style.AppTheme_Dark);
 
-        if (!TestUtils.isRunningUnitTest()) this.initInstabug();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextUtils.getColor(this, R.attr.primaryColorDark));
+        }
 
         Single.<Realm>create(emitter -> emitter.onSuccess(ComponentFactory.getInstance()
             .getDataComponent(this)
@@ -90,48 +77,15 @@ public final class MainActivity extends AppCompatActivity {
             .logEvent(new AppOpenEvent()
                 .addAttribute(new Attribute("Settings - Cozy Layout", String.valueOf(this.userConfig.getViewStyle() == Constants.VIEW_STYLE_COZY)))
                 .addAttribute(new Attribute("Settings - Dark Theme", String.valueOf(this.userConfig.getTheme() == Constants.THEME_DARK)))
-                .addAttribute(new Attribute("Settings - Auto Play", String.valueOf(this.userConfig.isAutoPlayEnabled())))
-                .addAttribute(new Attribute("Settings - Panorama", String.valueOf(this.userConfig.isPanoramaEnabled()))));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (TestUtils.isLoggable()) {
-            this.trace      = FirebasePerformance.getInstance().newTrace(this.getClass().getSimpleName());
-            this.aggregator = new FrameMetricsAggregator(FrameMetricsAggregator.TOTAL_DURATION);
-            this.aggregator.add(this);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (TestUtils.isLoggable()) {
-            try {
-                final SparseIntArray totalDurations = this.aggregator.getMetrics()[FrameMetricsAggregator.TOTAL_INDEX];
-
-                for (int i = 0; i < totalDurations.size(); i++) {
-                    this.trace.incrementCounter("frames");
-                    if (totalDurations.get(i) > Constants.DURATION_SLOW_FRAME) this.trace.incrementCounter("slow_frames");
-                    if (totalDurations.get(i) > Constants.DURATION_FROZEN_FRAME) this.trace.incrementCounter("frozen_frames");
-                }
-            } catch (final NullPointerException e) {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
-            }
-
-            this.trace.stop();
-        }
+                .addAttribute(new Attribute("Settings - Auto Play", String.valueOf(this.userConfig.isAutoPlayEnabled()))));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        this.controller.onDestroy();
-        this.controller = null;
+        this.flow.onDestroy();
+        this.flow = null;
 
         if (this.isFinishing()) {
             if (this.realm != null) Single.<Irrelevant>create(
@@ -151,9 +105,9 @@ public final class MainActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(final Context newBase) {
-        if (this.controller == null) this.controller = new FlowController(this);
+        if (this.flow == null) this.flow = new MainFlow(this);
 
-        super.attachBaseContext(this.controller.attachNewBase(ViewPumpContextWrapper.wrap(newBase)));
+        super.attachBaseContext(this.flow.attachNewBase(ViewPumpContextWrapper.wrap(newBase)));
     }
 
     @Override
@@ -169,42 +123,7 @@ public final class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!this.controller.onBackPressed()) super.onBackPressed();
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(final MotionEvent event) {
-        InstabugTrackingDelegate.notifyActivityGotTouchEvent(event, this);
-
-        return super.dispatchTouchEvent(event);
-    }
-
-    private void initInstabug() {
-        Instabug.setTheme(this.userConfig.getTheme() == Constants.THEME_LIGHT ? InstabugColorTheme.InstabugColorThemeLight : InstabugColorTheme.InstabugColorThemeDark);
-        Instabug.setPrimaryColor(ContextUtils.getColor(this, R.attr.primaryColor));
-        Instabug.setAttachmentTypesEnabled(false, true, true, false, false);
-        Instabug.setChatNotificationEnabled(false);
-        Instabug.setCommentFieldRequired(true);
-        Instabug.setEnableInAppNotificationSound(false);
-        Instabug.setEnableSystemNotificationSound(false);
-        Instabug.setIntroMessageEnabled(false);
-        Instabug.setPromptOptionsEnabled(false, true, true);
-        Instabug.setShouldAudioRecordingOptionAppear(false);
-        Instabug.setShouldPlayConversationSounds(false);
-        Instabug.setWillSkipScreenshotAnnotation(true);
-
-        final InstabugCustomTextPlaceHolder placeHolder = new InstabugCustomTextPlaceHolder();
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.INVOCATION_HEADER, this.getString(R.string.instabug_report_header));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.BUG_REPORT_HEADER, this.getString(R.string.instabug_bug_report_header));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.REPORT_BUG, this.getString(R.string.instabug_report_bug));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.COMMENT_FIELD_HINT_FOR_BUG_REPORT, this.getString(R.string.instabug_bug_report_hint));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.FEEDBACK_REPORT_HEADER, this.getString(R.string.instabug_feedback_report_header));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.REPORT_FEEDBACK, this.getString(R.string.instabug_report_feedback));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.COMMENT_FIELD_HINT_FOR_FEEDBACK, this.getString(R.string.instabug_feedback_report_hint));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.EMAIL_FIELD_HINT, this.getString(R.string.instabug_email_hint));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.ADD_EXTRA_SCREENSHOT, this.getString(R.string.instabug_screenshot));
-        placeHolder.set(InstabugCustomTextPlaceHolder.Key.ADD_IMAGE_FROM_GALLERY, this.getString(R.string.instabug_gallery));
-        Instabug.setCustomTextPlaceHolders(placeHolder);
+        if (!this.flow.onBackPressed()) super.onBackPressed();
     }
 
     private void initImageModule() {

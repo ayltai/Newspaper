@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.data.DaggerDataComponent;
 import com.github.ayltai.newspaper.data.DataManager;
@@ -17,6 +18,7 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 
 import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
 import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -52,18 +54,24 @@ public final class ItemManager extends DataManager {
     @NonNull
     public Single<List<NewsItem>> getItems(@Nullable final CharSequence searchText, @NonNull final String[] sources, @NonNull final String[] categories) {
         return Single.create(emitter -> {
+            if (!this.getRealm().isInTransaction()) this.getRealm().beginTransaction();
+
+            this.clearObsoleteItems();
+            this.clearInvalidItems();
+
+            this.getRealm().commitTransaction();
+
             final RealmQuery<NewsItem> query = this.getRealm()
                 .where(NewsItem.class)
                 .in(NewsItem.FIELD_SOURCE, sources)
-                .in(NewsItem.FIELD_CATEGORY, categories);
+                .and()
+                .in(NewsItem.FIELD_CATEGORY, categories)
+                .and()
+                .greaterThan(NewsItem.FIELD_PUBLISH_DATE, 0)
+                .and()
+                .lessThanOrEqualTo(NewsItem.FIELD_PUBLISH_DATE, System.currentTimeMillis());
 
-            if (!TextUtils.isEmpty(searchText)) query.beginGroup()
-                .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
-                .or()
-                .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
-                .endGroup();
-
-            if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.findAll()));
+            this.emit(emitter, query, searchText, sources, categories);
         });
     }
 
@@ -78,16 +86,12 @@ public final class ItemManager extends DataManager {
             final RealmQuery<NewsItem> query = this.getRealm()
                 .where(NewsItem.class)
                 .greaterThan(NewsItem.FIELD_LAST_ACCESSED_DATE, 0)
-                .in(NewsItem.FIELD_SOURCE, sources)
-                .in(NewsItem.FIELD_CATEGORY, categories);
+                .and()
+                .greaterThan(NewsItem.FIELD_PUBLISH_DATE, 0)
+                .and()
+                .lessThanOrEqualTo(NewsItem.FIELD_PUBLISH_DATE, System.currentTimeMillis());
 
-            if (!TextUtils.isEmpty(searchText)) query.beginGroup()
-                .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
-                .or()
-                .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
-                .endGroup();
-
-            if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
+            this.emit(emitter, query, searchText, sources, categories);
         });
     }
 
@@ -102,16 +106,12 @@ public final class ItemManager extends DataManager {
             final RealmQuery<NewsItem> query = this.getRealm()
                 .where(NewsItem.class)
                 .equalTo(NewsItem.FIELD_BOOKMARKED, true)
-                .in(NewsItem.FIELD_SOURCE, sources)
-                .in(NewsItem.FIELD_CATEGORY, categories);
+                .and()
+                .greaterThan(NewsItem.FIELD_PUBLISH_DATE, 0)
+                .and()
+                .lessThanOrEqualTo(NewsItem.FIELD_PUBLISH_DATE, System.currentTimeMillis());
 
-            if (!TextUtils.isEmpty(searchText)) query.beginGroup()
-                .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
-                .or()
-                .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
-                .endGroup();
-
-            if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.findAllSorted(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING)));
+            this.emit(emitter, query, searchText, sources, categories);
         });
     }
 
@@ -176,6 +176,9 @@ public final class ItemManager extends DataManager {
 
             this.getRealm().insertOrUpdate(items);
 
+            this.clearObsoleteItems();
+            this.clearInvalidItems();
+
             if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
 
             if (!emitter.isDisposed()) emitter.onSuccess(Irrelevant.INSTANCE);
@@ -196,9 +199,52 @@ public final class ItemManager extends DataManager {
 
             this.getRealm().insertOrUpdate(items);
 
+            this.clearObsoleteItems();
+            this.clearInvalidItems();
+
             if (this.getRealm().isInTransaction()) this.getRealm().commitTransaction();
 
             if (!emitter.isDisposed()) emitter.onSuccess(Irrelevant.INSTANCE);
         });
+    }
+
+    private void clearObsoleteItems() {
+        this.getRealm()
+            .where(NewsItem.class)
+            .lessThan(NewsItem.FIELD_PUBLISH_DATE, System.currentTimeMillis() - Constants.HOUSEKEEP_TIME)
+            .and()
+            .beginGroup()
+            .notEqualTo(NewsItem.FIELD_BOOKMARKED, true)
+            .or()
+            .equalTo(NewsItem.FIELD_LAST_ACCESSED_DATE, 0)
+            .endGroup()
+            .findAll()
+            .deleteAllFromRealm();
+    }
+
+    private void clearInvalidItems() {
+        this.getRealm()
+            .where(NewsItem.class)
+            .lessThanOrEqualTo(NewsItem.FIELD_PUBLISH_DATE, 0L)
+            .or()
+            .greaterThan(NewsItem.FIELD_PUBLISH_DATE, System.currentTimeMillis())
+            .findAll()
+            .deleteAllFromRealm();
+    }
+
+    private void emit(@NonNull final SingleEmitter<List<NewsItem>> emitter, @NonNull final RealmQuery<NewsItem> query, @Nullable final CharSequence searchText, @NonNull final String[] sources, @NonNull final String[] categories) {
+        query.and()
+            .in(NewsItem.FIELD_SOURCE, sources)
+            .and()
+            .in(NewsItem.FIELD_CATEGORY, categories);
+
+        if (!TextUtils.isEmpty(searchText)) query.and()
+            .beginGroup()
+            .contains(NewsItem.FIELD_TITLE, searchText.toString(), Case.INSENSITIVE)
+            .or()
+            .contains(NewsItem.FIELD_DESCRIPTION, searchText.toString(), Case.INSENSITIVE)
+            .endGroup();
+
+        if (!emitter.isDisposed()) emitter.onSuccess(this.getRealm().copyFromRealm(query.sort(NewsItem.FIELD_LAST_ACCESSED_DATE, Sort.DESCENDING).findAll()));
     }
 }

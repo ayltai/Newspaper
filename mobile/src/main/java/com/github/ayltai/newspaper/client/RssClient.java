@@ -8,21 +8,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Source;
-import com.github.ayltai.newspaper.net.NewsApiService;
+import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.rss.RssFeed;
 import com.github.ayltai.newspaper.rss.RssItem;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 
 public abstract class RssClient extends Client {
-    protected RssClient(@NonNull final OkHttpClient client, @NonNull final NewsApiService apiService, @NonNull final Source source) {
+    protected RssClient(@NonNull final OkHttpClient client, @NonNull final ApiService apiService, @NonNull final Source source) {
         super(client, apiService, source);
     }
 
@@ -48,7 +49,7 @@ public abstract class RssClient extends Client {
                     if (!emitter.isDisposed()) emitter.onSuccess(items);
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, RxJava2Debug.getEnhancedStackTrace(error));
 
                     if (!emitter.isDisposed()) emitter.onSuccess(Collections.emptyList());
                 }
@@ -61,7 +62,14 @@ public abstract class RssClient extends Client {
         final List<NewsItem> items    = new ArrayList<>();
 
         if (feed.getItems() != null) {
-            for (final RssItem item : feed.getItems()) items.add(new NewsItem(item, this.source.getName(), category));
+            for (final RssItem item : feed.getItems()) {
+                final NewsItem newsItem = new NewsItem(item, this.source.getName(), category);
+
+                final String title = newsItem.getTitle();
+                if (title != null) newsItem.setTitle(title.replaceAll("<br>", "\n"));
+
+                items.add(newsItem);
+            }
         }
 
         return items;

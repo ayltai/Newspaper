@@ -4,17 +4,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.robolectric.RuntimeEnvironment;
 
-import com.github.ayltai.newspaper.net.NetworkTest;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
+import com.github.ayltai.newspaper.net.NetworkTest;
 import com.github.ayltai.newspaper.util.IOUtils;
 
 import io.reactivex.Observable;
@@ -27,6 +29,8 @@ public final class SingTaoRealtimeClientTest extends NetworkTest {
 
     private SingTaoRealtimeClient client;
 
+    @CallSuper
+    @Before
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -69,12 +73,14 @@ public final class SingTaoRealtimeClientTest extends NetworkTest {
             "事發在早上8時許，保安途經逸", item.getDescription().substring(0, 100));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void Given_singTaoRealtimeDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
         final NewsItem newsItem = new NewsItem();
         newsItem.setLink(SingTaoRealtimeClientTest.ERROR_DETAILS_URL);
 
-        this.client.updateItem(newsItem).blockingGet();
+        final NewsItem item = this.client.updateItem(newsItem).blockingGet();
+
+        Assert.assertEquals("Item is updated", newsItem, item);
     }
 
     @NonNull

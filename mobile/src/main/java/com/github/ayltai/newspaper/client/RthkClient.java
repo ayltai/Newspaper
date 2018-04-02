@@ -6,16 +6,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.Video;
-import com.github.ayltai.newspaper.net.NewsApiService;
+import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -30,7 +31,7 @@ final class RthkClient extends RssClient {
     //endregion
 
     @Inject
-    RthkClient(@NonNull final OkHttpClient client, @NonNull final NewsApiService apiService, @NonNull final Source source) {
+    RthkClient(@NonNull final OkHttpClient client, @NonNull final ApiService apiService, @NonNull final Source source) {
         super(client, apiService, source);
     }
 
@@ -67,9 +68,9 @@ final class RthkClient extends RssClient {
                     if (!emitter.isDisposed()) emitter.onSuccess(item);
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), RxJava2Debug.getEnhancedStackTrace(error));
 
-                    if (!emitter.isDisposed()) emitter.onError(error);
+                    if (!emitter.isDisposed()) emitter.onSuccess(item);
                 }
             ));
     }

@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 
 public final class IOUtils {
@@ -48,7 +49,7 @@ public final class IOUtils {
             try {
                 closeable.close();
             } catch (IOException e) {
-                if (TestUtils.isLoggable()) Log.e(IOUtils.TAG, e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(IOUtils.TAG, e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
             }
         }
     }

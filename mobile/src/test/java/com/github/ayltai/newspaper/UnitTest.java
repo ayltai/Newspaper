@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(
-    sdk       = Build.VERSION_CODES.O,
+    sdk       = Build.VERSION_CODES.O_MR1,
     constants = BuildConfig.class,
     shadows   = {
         ShadowMultiDex.class

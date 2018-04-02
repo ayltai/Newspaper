@@ -7,9 +7,9 @@ import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.view.FeaturedPresenter;
 import com.github.ayltai.newspaper.app.widget.FeaturedView;
 import com.github.ayltai.newspaper.app.data.model.Item;
-import com.github.ayltai.newspaper.view.binding.PresentationBinderFactory;
+import com.github.ayltai.newspaper.view.binding.BindingPresenterFactory;
 
-public class FeaturedBinderFactory extends PresentationBinderFactory<Item, FeaturedView, FeaturedPresenter> {
+public class FeaturedBinderFactory extends BindingPresenterFactory<Item, FeaturedView, FeaturedPresenter> {
     @Override
     public int getPartType() {
         return FeaturedView.VIEW_TYPE;

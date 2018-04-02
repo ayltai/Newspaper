@@ -9,19 +9,19 @@ import android.widget.TextView;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.view.OptionsPresenter;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public final class TextOptionsView extends ObservableView implements OptionsPresenter.View {
+public final class TextOptionsView extends BaseView implements OptionsPresenter.View {
     private final FlowableProcessor<Integer> optionChanges = PublishProcessor.create();
 
     private ViewGroup container;
 
     public TextOptionsView(@NonNull final Context context) {
         super(context);
+
         this.init();
     }
 
@@ -43,22 +43,25 @@ public final class TextOptionsView extends ObservableView implements OptionsPres
     }
 
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         for (int i = 0; i < this.container.getChildCount(); i++) this.subscribeToView(this.container.getChildAt(i));
 
         super.onAttachedToWindow();
     }
 
-    private void init() {
+    @Override
+    protected void init() {
+        super.init();
+
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.widget_flow_layout, this, true);
         this.container = view.findViewById(R.id.flowLayout);
     }
 
     private void subscribeToView(@NonNull final View view) {
-        this.manageDisposable(RxView.clicks(view).subscribe(irrelevant -> {
-            view.setSelected(!view.isSelected());
+        view.setOnClickListener(v -> {
+            v.setSelected(!v.isSelected());
 
-            this.optionChanges.onNext(this.container.indexOfChild(view));
-        }));
+            this.optionChanges.onNext(this.container.indexOfChild(v));
+        });
     }
 }

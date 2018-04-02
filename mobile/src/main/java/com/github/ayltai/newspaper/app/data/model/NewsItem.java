@@ -12,10 +12,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.rss.Enclosure;
 import com.github.ayltai.newspaper.rss.RssItem;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RealmLists;
-import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -29,6 +30,7 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
     public static final String FIELD_DESCRIPTION        = "description";
     public static final String FIELD_SOURCE             = "source";
     public static final String FIELD_CATEGORY           = "category";
+    public static final String FIELD_PUBLISH_DATE       = "publishDate";
     public static final String FIELD_LINK               = "link";
     public static final String FIELD_BOOKMARKED         = "bookmarked";
     public static final String FIELD_LAST_ACCESSED_DATE = "lastAccessedDate";
@@ -76,7 +78,7 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
             try {
                 this.publishDate = NewsItem.DATE_FORMAT.get().parse(rss.getPubDate().trim().replaceAll("EDT", "+0800")).getTime();
             } catch (final ParseException e) {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
             }
         }
 
@@ -190,9 +192,14 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
     public final int compareTo(@NonNull final Item item) {
         if (this.link.equals(item.getLink())) return 0;
 
-        if (this.publishDate != 0 && item.getPublishDate() != null) return (int)(item.getPublishDate().getTime() - this.publishDate);
+        if (this.publishDate != 0 && item.getPublishDate() != null) return item.getPublishDate().compareTo(this.getPublishDate());
 
-        return item.getTitle() == null ? 1 : this.title.compareTo(item.getTitle());
+        if (this.title == null && item.getTitle() == null) return 0;
+
+        if (this.title == null) return 1;
+        if (item.getTitle() == null) return -1;
+
+        return this.title.compareTo(item.getTitle());
     }
 
     @Override
@@ -202,7 +209,7 @@ public class NewsItem extends RealmObject implements Item, Parcelable {
         if (obj instanceof Item) {
             final Item item = (Item)obj;
 
-            return this.link.equals(item.getLink());
+            return this.compareTo(item) == 0;
         }
 
         return false;

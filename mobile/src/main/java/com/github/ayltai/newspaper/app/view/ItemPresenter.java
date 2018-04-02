@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.graphics.Point;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -20,17 +21,18 @@ import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.app.data.model.Video;
-import com.github.ayltai.newspaper.app.screen.DetailsScreen;
+import com.github.ayltai.newspaper.app.widget.DetailsView;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.util.Optional;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.binding.Binder;
-import com.github.ayltai.newspaper.view.binding.PresentationBinder;
+import com.github.ayltai.newspaper.view.binding.BindingPresenter;
 
 import flow.Flow;
 import io.reactivex.Flowable;
 
-public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBinder<Item, V> implements Binder<V> {
+public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresenter<Item, V> implements Binder<V> {
     public interface View extends Presenter.View {
         @UiThread
         void setAvatar(@DrawableRes int avatar);
@@ -59,8 +61,11 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         @UiThread
         void setVideo(@Nullable Video video);
 
+        @UiThread
+        void setIsRead(boolean isRead);
+
         @Nullable
-        Flowable<Irrelevant> clicks();
+        Flowable<Optional<Point>> clicks();
 
         @Nullable
         Flowable<Irrelevant> avatarClicks();
@@ -98,6 +103,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         super.bindModel(model);
 
         if (this.getView() != null && model != null) {
+            this.getView().setIsRead(model.isFullDescription());
             this.getView().setAvatar(SourceFactory.getInstance(this.getView().getContext()).getSource(model.getSource()).getAvatar());
             this.getView().setSource(Source.toDisplayName(model.getSource()));
             this.getView().setPublishDate(model.getPublishDate());
@@ -110,27 +116,29 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
         }
     }
 
-    protected void onClick() {
+    private void onClick(@NonNull final Optional<Point> location) {
         this.initAppConfig();
 
         if (this.getView() != null) {
+            this.getView().setIsRead(true);
+
             final Item item = this.getModel();
 
             this.appConfig.setVideoPlaying(false);
             this.appConfig.setVideoSeekPosition(0);
 
-            if (item instanceof FeaturedItem) ComponentFactory.getInstance()
+            ComponentFactory.getInstance()
                 .getAnalyticsComponent(this.getView().getContext())
                 .eventLogger()
                 .logEvent(new ClickEvent()
-                    .setElementName("Featured"));
+                    .setElementName(item instanceof FeaturedItem ? "Featured" : "Non-featured"));
 
-            if (!TestUtils.isRunningUnitTest()) Flow.get(this.getView().getContext()).set(DetailsScreen.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem()));
+            if (!DevUtils.isRunningUnitTest()) Flow.get(this.getView().getContext()).set(DetailsView.Key.create(item instanceof NewsItem ? (NewsItem)item : (NewsItem)((FeaturedItem)item).getItem(), location.isPresent() ? location.get() : null));
         }
     }
 
     @CallSuper
-    protected void onAvatarClick() {
+    private void onAvatarClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -139,7 +147,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     }
 
     @CallSuper
-    protected void onSourceClick() {
+    private void onSourceClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -148,7 +156,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     }
 
     @CallSuper
-    protected void onPublishDateClick() {
+    private void onPublishDateClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -157,7 +165,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     }
 
     @CallSuper
-    protected void onTitleClick() {
+    private void onTitleClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -166,7 +174,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     }
 
     @CallSuper
-    protected void onDescriptionClick() {
+    private void onDescriptionClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -174,7 +182,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
                 .setElementName("Description"));
     }
 
-    protected void onLinkClick() {
+    private void onLinkClick() {
     }
 
     @CallSuper
@@ -196,7 +204,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     }
 
     @CallSuper
-    protected void onVideoClick() {
+    private void onVideoClick() {
         if (this.getView() != null) ComponentFactory.getInstance()
             .getAnalyticsComponent(this.getView().getContext())
             .eventLogger()
@@ -210,8 +218,8 @@ public class ItemPresenter<V extends ItemPresenter.View> extends PresentationBin
     public void onViewAttached(@NonNull final V view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
-        final Flowable<Irrelevant> clicks = view.clicks();
-        if (clicks != null) this.manageDisposable(clicks.subscribe(irrelevant -> this.onClick()));
+        final Flowable<Optional<Point>> clicks = view.clicks();
+        if (clicks != null) this.manageDisposable(clicks.subscribe(location -> this.onClick(location)));
 
         final Flowable<Irrelevant> avatarClicks = view.avatarClicks();
         if (avatarClicks != null) this.manageDisposable(avatarClicks.subscribe(irrelevant -> this.onAvatarClick()));

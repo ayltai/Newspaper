@@ -25,6 +25,18 @@ public abstract class SimpleUniversalAdapter<M, V extends View, T extends Simple
         return false;
     }
 
+    @Override
+    public void dispose() {
+        for (final Binder<V> binder : this.bindings.values()) this.dispose(binder);
+    }
+
+    private void dispose(final Binder<V> binder) {
+        if (binder instanceof Disposable) {
+            final Disposable disposable = (Disposable)binder;
+            if (!disposable.isDisposed()) disposable.dispose();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void onBindViewHolder(final T holder, final int position) {
@@ -36,17 +48,5 @@ public abstract class SimpleUniversalAdapter<M, V extends View, T extends Simple
         this.bindings.put(holder, binder);
 
         super.onBindViewHolder(holder, position);
-    }
-
-    @Override
-    public void dispose() {
-        for (final Binder<V> binder : this.bindings.values()) this.dispose(binder);
-    }
-
-    private void dispose(final Binder<V> binder) {
-        if (binder instanceof Disposable) {
-            final Disposable disposable = (Disposable)binder;
-            if (!disposable.isDisposed()) disposable.dispose();
-        }
     }
 }

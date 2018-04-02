@@ -19,5 +19,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/space8"
         android:layout_gravity="center_horizontal"
+        android:textIsSelectable="true"
+        android:autoLink="all"
         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit" />
 </LinearLayout>

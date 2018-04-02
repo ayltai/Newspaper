@@ -20,7 +20,7 @@ public final class AppConfig {
     //region Global app states
 
     private static final AtomicBoolean VIDEO_IS_PLAYING    = new AtomicBoolean(false);
-    private static final AtomicLong VIDEO_SEEK_POSITION = new AtomicLong(0);
+    private static final AtomicLong    VIDEO_SEEK_POSITION = new AtomicLong(0);
 
     //endregion
 

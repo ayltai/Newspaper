@@ -4,17 +4,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.robolectric.RuntimeEnvironment;
 
-import com.github.ayltai.newspaper.net.NetworkTest;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
+import com.github.ayltai.newspaper.net.NetworkTest;
 import com.github.ayltai.newspaper.util.IOUtils;
 
 import io.reactivex.Observable;
@@ -27,6 +29,8 @@ public final class SingPaoClientTest extends NetworkTest {
 
     private SingPaoClient client;
 
+    @CallSuper
+    @Before
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -70,12 +74,14 @@ public final class SingPaoClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect item full description", "【我城‧我故事】<br><br>紙上不只是談兵，還可以細看香港歷史的變遷。吳貴龍上世紀80年代修讀印刷，之後順理成章到印刷廠工作，自此與紙品結下不解緣。不過，令人意想不到的是，他也慢慢喜愛上收藏紙品，", item.getDescription().substring(0, 100));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void Given_singPaoDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
         final NewsItem newsItem = new NewsItem();
         newsItem.setLink(SingPaoClientTest.ERROR_DETAILS_URL);
 
-        this.client.updateItem(newsItem).blockingGet();
+        final NewsItem item = this.client.updateItem(newsItem).blockingGet();
+
+        Assert.assertEquals("Item is updated", newsItem, item);
     }
 
     @NonNull

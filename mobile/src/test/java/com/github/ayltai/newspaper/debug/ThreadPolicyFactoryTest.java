@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.github.ayltai.newspaper.UnitTest;
+import com.github.ayltai.newspaper.util.ThreadPolicyFactory;
 
 public final class ThreadPolicyFactoryTest extends UnitTest {
     @Test

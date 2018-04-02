@@ -17,7 +17,7 @@ import android.view.animation.Interpolator;
 import com.github.ayltai.newspaper.view.binding.Binder;
 import com.github.ayltai.newspaper.view.binding.FullBinderFactory;
 import com.github.ayltai.newspaper.view.binding.PartBinderFactory;
-import com.github.ayltai.newspaper.view.binding.ViewBinderUtils;
+import com.github.ayltai.newspaper.view.binding.Binders;
 
 import io.reactivex.disposables.Disposable;
 
@@ -28,16 +28,10 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
     private final List<FullBinderFactory<M>>                     factories;
     private final List<Pair<PartBinderFactory<M, V>, Binder<V>>> binders = new ArrayList<>();
 
-    private int          lastItemPosition;
-    private int          animationDuration     = UniversalAdapter.DEFAULT_ANIMATION_DURATION;
-    private Interpolator animationInterpolator = UniversalAdapter.DEFAULT_ANIMATION_INTERPOLATOR;
+    private int lastItemPosition;
 
     protected UniversalAdapter(@NonNull final List<FullBinderFactory<M>> factories) {
         this.factories = factories;
-    }
-
-    public void setAnimationInterpolator(@Nullable final Interpolator animationInterpolator) {
-        this.animationInterpolator = animationInterpolator;
     }
 
     @Override
@@ -60,6 +54,15 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
         return Collections.emptyList();
     }
 
+    protected long getAnimationDuration() {
+        return UniversalAdapter.DEFAULT_ANIMATION_DURATION;
+    }
+
+    @Nullable
+    protected Interpolator getAnimationInterpolator() {
+        return UniversalAdapter.DEFAULT_ANIMATION_INTERPOLATOR;
+    }
+
     public void clear() {
         for (final Pair<PartBinderFactory<M, V>, Binder<V>> binder : this.binders) {
             if (binder.second instanceof Disposable) {
@@ -78,9 +81,12 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
         final int adapterPosition = holder.getAdapterPosition();
 
         if (adapterPosition > this.lastItemPosition) {
+            final Interpolator interpolator = this.getAnimationInterpolator();
+            final long         duration     = this.getAnimationDuration();
+
             for (final Animator animator : this.getItemAnimators(holder.itemView)) {
-                animator.setInterpolator(this.animationInterpolator);
-                animator.setDuration(this.animationDuration).start();
+                animator.setInterpolator(interpolator);
+                animator.setDuration(duration).start();
             }
 
             this.lastItemPosition = adapterPosition;
@@ -104,7 +110,7 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
      * @param items The items changed.
      */
     public void onDataSetChanged(@NonNull final Iterable<M> items) {
-        this.binders.addAll(ViewBinderUtils.createViewBinders(items, this.factories));
+        this.binders.addAll(Binders.createBinders(items, this.factories));
 
         this.notifyDataSetChanged();
     }
@@ -115,7 +121,7 @@ public abstract class UniversalAdapter<M, V, T extends RecyclerView.ViewHolder> 
      * @param positionStart Position of the first item that was inserted.
      */
     public void onItemRangeInserted(@NonNull final Collection<M> items, final int positionStart) {
-        this.binders.addAll(positionStart, ViewBinderUtils.createViewBinders(items, this.factories));
+        this.binders.addAll(positionStart, Binders.createBinders(items, this.factories));
 
         this.notifyItemRangeInserted(positionStart, items.size());
     }

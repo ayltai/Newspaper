@@ -6,9 +6,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-class SmartLayoutManager extends LinearLayoutManager {
-    SmartLayoutManager(final Context context) {
+public final class SmartLayoutManager extends LinearLayoutManager {
+    public SmartLayoutManager(final Context context) {
         super(context);
+    }
+
+    public SmartLayoutManager(final Context context, final int orientation) {
+        super(context, orientation, false);
     }
 
     int findBestVisibleItemPosition() {

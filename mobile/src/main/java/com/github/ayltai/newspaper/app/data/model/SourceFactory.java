@@ -3,12 +3,12 @@ package com.github.ayltai.newspaper.app.data.model;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.client.HeadlineClient;
@@ -25,7 +25,7 @@ public final class SourceFactory {
 
     private static SourceFactory instance;
 
-    private final Map<String, Source> sources = new HashMap<>(12);
+    private final Map<String, Source> sources = new ArrayMap<>(15);
 
     @NonNull
     public static SourceFactory getInstance(@NonNull final Context context) {
@@ -51,7 +51,10 @@ public final class SourceFactory {
         this.sources.put(sources[i++], SourceFactory.createHeadlineRealtimeSource(sources, categories));
         this.sources.put(sources[i++], SourceFactory.createSkyPostSource(sources, categories));
         this.sources.put(sources[i++], SourceFactory.createEconomicJournalSource(sources, categories));
-        this.sources.put(sources[i],   SourceFactory.createRadioTelevisionSource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createRadioTelevisionSource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createSouthChinaMorningPostSource(sources, categories));
+        this.sources.put(sources[i++], SourceFactory.createTheStandardSource(sources, categories));
+        this.sources.put(sources[i],   SourceFactory.createWenWeiPoSource(sources, categories));
     }
 
     @NonNull
@@ -69,11 +72,11 @@ public final class SourceFactory {
         final String date = SourceFactory.DATE_FORMAT.get().format(new Date());
 
         return new Source(sources[0], new RealmList<>(
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/local/home/0", date), categories[9]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/chinainternational/home/0", date), categories[10]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/finance/home/0", date), categories[12]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/entertainment/home/0", date), categories[14]),
-            new Category(String.format("http://hk.apple.nextmedia.com/video/videolist/%s/sports/home/0", date), categories[15])), R.drawable.avatar_apple_daily);
+            new Category(String.format("https://hk.appledaily.com/video/videolist/%s/local/home/0", date), categories[9]),
+            new Category(String.format("https://hk.appledaily.com/video/videolist/%s/international/home/0", date), categories[10]),
+            new Category(String.format("https://hk.appledaily.com/video/videolist/%s/finance/home/0", date), categories[12]),
+            new Category(String.format("https://hk.appledaily.com/video/videolist/%s/entertainment/home/0", date), categories[14]),
+            new Category(String.format("https://hk.appledaily.com/video/videolist/%s/sports/home/0", date), categories[15])), R.drawable.avatar_apple_daily);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -118,8 +121,12 @@ public final class SourceFactory {
     @NonNull
     private static Source createEconomicTimesSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[4], new RealmList<>(
-            new Category("https://topick.hket.com/srat006/%E6%96%B0%E8%81%9E", categories[0]),
-            new Category("https://topick.hket.com/srat055/%E4%BC%91%E9%96%92", categories[7])), R.drawable.avatar_hket);
+            new Category("http://www.hket.com/rss/hongkong", categories[0]),
+            new Category("http://www.hket.com/rss/world", categories[1]),
+            new Category("http://www.hket.com/rss/china", categories[2]),
+            new Category("http://www.hket.com/rss/finance", categories[3]),
+            new Category("http://www.hket.com/rss/lifestyle", categories[7]),
+            new Category("http://www.hket.com/rss/technology", categories[16])), R.drawable.avatar_hket);
     }
 
     @SuppressWarnings("checkstyle:magicnumber")
@@ -210,5 +217,42 @@ public final class SourceFactory {
             new Category("http://rthk.hk/rthk/news/rss/c_expressnews_greaterchina.xml", categories[11]),
             new Category("http://rthk.hk/rthk/news/rss/c_expressnews_cfinance.xml", categories[12]),
             new Category("http://rthk.hk/rthk/news/rss/c_expressnews_csport.xml", categories[15])), R.drawable.avatar_rthk);
+    }
+
+    @SuppressWarnings("checkstyle:magicnumber")
+    @NonNull
+    private static Source createSouthChinaMorningPostSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+        return new Source(sources[12], new RealmList<>(
+            new Category("http://www.scmp.com/rss/2/feed", categories[9]),
+            new Category("http://www.scmp.com/rss/5/feed", categories[10]),
+            new Category("http://www.scmp.com/rss/4/feed", categories[11]),
+            new Category("http://www.scmp.com/rss/92/feed", categories[12]),
+            new Category("http://www.scmp.com/rss/96/feed", categories[13]),
+            new Category("http://www.scmp.com/rss/95/feed", categories[15]),
+            new Category("http://www.scmp.com/rss/94/feed", categories[16])
+
+        ), R.drawable.avatar_scmp);
+    }
+
+    @SuppressWarnings("checkstyle:magicnumber")
+    @NonNull
+    private static Source createTheStandardSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+        return new Source(sources[13], new RealmList<>(
+            new Category("http://www.thestandard.com.hk/ajax_sections_list.php?sid=4", categories[9]),
+            new Category("http://www.thestandard.com.hk/ajax_sections_list.php?sid=6", categories[10]),
+            new Category("http://www.thestandard.com.hk/ajax_sections_list.php?sid=3", categories[11]),
+            new Category("http://www.thestandard.com.hk/ajax_sections_list.php?sid=2", categories[12]),
+            new Category("http://www.thestandard.com.hk/ajax_sections_list.php?sid=8", categories[15])
+        ), R.drawable.avatar_the_standard);
+    }
+
+    @SuppressWarnings("checkstyle:magicnumber")
+    @NonNull
+    private static Source createWenWeiPoSource(@NonNull final String[] sources, @NonNull final String[] categories) {
+        return new Source(sources[14], new RealmList<>(
+            new Category("http://news.wenweipo.com/list_news.php?cat=000IN&instantCat=hk", categories[9]),
+            new Category("http://news.wenweipo.com/list_news.php?cat=000IN&instantCat=china", categories[10]),
+            new Category("http://news.wenweipo.com/list_news.php?cat=000IN&instantCat=world", categories[11])
+        ), R.drawable.avatar_wen_wei_po);
     }
 }

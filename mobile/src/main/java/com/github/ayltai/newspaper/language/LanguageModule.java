@@ -4,23 +4,18 @@ import javax.inject.Singleton;
 
 import android.support.annotation.NonNull;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.github.ayltai.newspaper.BuildConfig;
+import com.textrazor.TextRazor;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module
-public final class LanguageModule {
-    private final GoogleCredential credential;
-
-    public LanguageModule(@NonNull final GoogleCredential credential) {
-        this.credential = credential;
-    }
-
+final class LanguageModule {
     @NonNull
     @Singleton
     @Provides
-    public LanguageService provideLanguageService() {
-        return new LanguageService(this.credential);
+    static LanguageService provideLanguageService() {
+        return new LanguageService(new TextRazor(BuildConfig.NLP_API_TOKEN));
     }
 }

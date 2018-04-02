@@ -14,15 +14,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Source;
-import com.github.ayltai.newspaper.net.NewsApiService;
+import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -33,6 +34,7 @@ final class SingPaoClient extends Client {
     private static final String BASE_URI = "https://www.singpao.com.hk/";
     private static final String TAG      = "'";
     private static final String FONT     = "</font>";
+    private static final String CLOSE    = "</p>";
 
     //endregion
 
@@ -44,7 +46,7 @@ final class SingPaoClient extends Client {
     };
 
     @Inject
-    SingPaoClient(@NonNull final OkHttpClient client, @NonNull final NewsApiService apiService, @NonNull final Source source) {
+    SingPaoClient(@NonNull final OkHttpClient client, @NonNull final ApiService apiService, @NonNull final Source source) {
         super(client, apiService, source);
     }
 
@@ -77,14 +79,14 @@ final class SingPaoClient extends Client {
 
                             items.add(item);
                         } catch (final ParseException e) {
-                            if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), e.getMessage(), e);
+                            if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
                         }
                     }
 
                     if (!emitter.isDisposed()) emitter.onSuccess(this.filter(items));
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + url, RxJava2Debug.getEnhancedStackTrace(error));
 
                     if (!emitter.isDisposed()) emitter.onSuccess(Collections.emptyList());
                 }
@@ -96,7 +98,7 @@ final class SingPaoClient extends Client {
     @Override
     public Single<NewsItem> updateItem(@NonNull final NewsItem item) {
         return Single.create(emitter -> {
-            if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), item.getLink());
+            if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), item.getLink());
 
             this.apiService
                 .getHtml(item.getLink())
@@ -121,9 +123,10 @@ final class SingPaoClient extends Client {
                             item.getImages().addAll(images);
                         }
 
-                        final String[]      contents = StringUtils.substringsBetween(html, "<p>", "</p>");
-                        final StringBuilder builder  = new StringBuilder();
+                        String[] contents = StringUtils.substringsBetween(html, "<p class=\"內文\">", SingPaoClient.CLOSE);
+                        if (contents.length == 0) contents = StringUtils.substringsBetween(html, "<p>", SingPaoClient.CLOSE);
 
+                        final StringBuilder builder = new StringBuilder();
                         for (final String content : contents) builder.append(content).append("<br><br>");
 
                         item.setDescription(builder.toString());
@@ -132,9 +135,9 @@ final class SingPaoClient extends Client {
                         if (!emitter.isDisposed()) emitter.onSuccess(item);
                     },
                     error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), RxJava2Debug.getEnhancedStackTrace(error));
 
-                        if (!emitter.isDisposed()) emitter.onError(error);
+                        if (!emitter.isDisposed()) emitter.onSuccess(item);
                     }
                 );
         });

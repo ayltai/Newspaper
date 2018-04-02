@@ -10,16 +10,18 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.Source;
 import com.github.ayltai.newspaper.app.data.model.Video;
-import com.github.ayltai.newspaper.net.NewsApiService;
+import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
+import com.github.ayltai.newspaper.rss.RssFeed;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -30,11 +32,12 @@ final class OrientalDailyClient extends RssClient {
     private static final String BASE_URI  = "http://orientaldaily.on.cc";
     private static final String TAG_CLOSE = "\"";
     private static final String SLASH     = "/";
+    private static final String DIV_CLOSE = "</div>";
 
     //endregion
 
     @Inject
-    OrientalDailyClient(@NonNull final OkHttpClient client, @NonNull final NewsApiService apiService, @NonNull final Source source) {
+    OrientalDailyClient(@NonNull final OkHttpClient client, @NonNull final ApiService apiService, @NonNull final Source source) {
         super(client, apiService, source);
     }
 
@@ -48,9 +51,9 @@ final class OrientalDailyClient extends RssClient {
             .retryWhen(RxUtils.exponentialBackoff(Constants.INITIAL_RETRY_DELAY, Constants.MAX_RETRIES, NetworkUtils::shouldRetry))
             .subscribe(
                 html -> {
-                    html = StringUtils.substringBetween(html, "<div id=\"contentCTN-top\"", "<p><!--AD-->");
+                    html = StringUtils.substringBetween(html, "<div id=\"contentCTN-top\"", "<div id=\"articleNav\">");
 
-                    final String[]    imageContainers = StringUtils.substringsBetween(html, "<div class=\"photo", "</div>");
+                    final String[]    imageContainers = StringUtils.substringsBetween(html, "<div class=\"photo", OrientalDailyClient.DIV_CLOSE);
                     final List<Image> images          = new ArrayList<>();
 
                     for (final String imageContainer : imageContainers) {
@@ -79,11 +82,21 @@ final class OrientalDailyClient extends RssClient {
                     if (!emitter.isDisposed()) emitter.onSuccess(item);
                 },
                 error -> {
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), "Error URL = " + item.getLink(), RxJava2Debug.getEnhancedStackTrace(error));
 
-                    if (!emitter.isDisposed()) emitter.onError(error);
+                    if (!emitter.isDisposed()) emitter.onSuccess(item);
                 }
             ));
+    }
+
+    @NonNull
+    @Override
+    protected List<NewsItem> filter(@NonNull final String url, @NonNull final RssFeed feed) {
+        final List<NewsItem> items = super.filter(url, feed);
+
+        for (final NewsItem item : items) item.setDescription(StringUtils.substringBetween(item.getDescription(), "<div style=\"float:left;\">", OrientalDailyClient.DIV_CLOSE));
+
+        return items;
     }
 
     @SuppressWarnings("checkstyle:magicnumber")

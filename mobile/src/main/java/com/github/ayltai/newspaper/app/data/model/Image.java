@@ -5,6 +5,8 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.ayltai.newspaper.Constants;
+
 import io.realm.RealmObject;
 
 public class Image extends RealmObject implements Parcelable {
@@ -27,6 +29,8 @@ public class Image extends RealmObject implements Parcelable {
     public Image(@NonNull final String url, @Nullable final String description) {
         this.url         = url;
         this.description = description;
+
+        if (this.description != null) this.description = this.description.replaceAll("&lt;br&gt;", Constants.LINE_BREAK).replaceAll("<br>", Constants.LINE_BREAK);
     }
 
     //endregion

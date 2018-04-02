@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
@@ -34,17 +35,17 @@ import com.github.ayltai.newspaper.app.config.AppConfig;
 import com.github.ayltai.newspaper.app.config.ConfigComponent;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.data.model.Video;
-import com.github.ayltai.newspaper.app.view.VideoPresenterView;
+import com.github.ayltai.newspaper.app.view.ItemPresenter;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.DeviceUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public class VideoView extends ItemView implements VideoPresenterView {
+public class VideoView extends ItemView implements ItemPresenter.View {
     private final FlowableProcessor<Irrelevant> videoClicks = PublishProcessor.create();
 
     //region Components
@@ -111,12 +112,10 @@ public class VideoView extends ItemView implements VideoPresenterView {
 
     //region Methods
 
-    @Override
     public void setUpThumbnail() {
-        if (!TextUtils.isEmpty(this.video.getThumbnailUrl())) this.thumbnail.showImage(Uri.parse(this.video.getThumbnailUrl()));
+        if (!DevUtils.isRunningUnitTest() && !TextUtils.isEmpty(this.video.getThumbnailUrl())) this.thumbnail.showImage(Uri.parse(this.video.getThumbnailUrl()));
     }
 
-    @Override
     public void setUpPlayer() {
         if (!VideoView.isYouTubeUrl(this.video.getVideoUrl())) {
             this.playerView = (SimpleExoPlayerView)LayoutInflater.from(this.getContext()).inflate(R.layout.widget_video_player, this, false);
@@ -130,7 +129,7 @@ public class VideoView extends ItemView implements VideoPresenterView {
             final View fullScreenExitAction = this.playerView.findViewById(R.id.exo_fullscreen_exit);
             fullScreenExitAction.setVisibility(View.GONE);
 
-            this.player.prepare(new ExtractorMediaSource(Uri.parse(this.video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
+            this.player.prepare(new ExtractorMediaSource(Uri.parse(this.video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), null, new OkHttpDataSourceFactory(ComponentFactory.getInstance().getHttpComponent().httpClient(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null)), new DefaultExtractorsFactory(), null, null));
 
             final Point                  size   = DeviceUtils.getScreenSize(this.getContext());
             final ViewGroup.LayoutParams params = this.playerView.getLayoutParams();
@@ -145,7 +144,6 @@ public class VideoView extends ItemView implements VideoPresenterView {
         }
     }
 
-    @Override
     public void startPlayer() {
         if (VideoView.isYouTubeUrl(this.video.getVideoUrl())) {
             this.getContext().startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(this.video.getVideoUrl())), this.getContext().getText(R.string.view_via)));
@@ -173,7 +171,6 @@ public class VideoView extends ItemView implements VideoPresenterView {
         }
     }
 
-    @Override
     public void releasePlayer() {
         if (this.player != null) this.player.release();
         if (this.playerView != null) this.removeView(this.playerView);
@@ -188,14 +185,14 @@ public class VideoView extends ItemView implements VideoPresenterView {
 
     @CallSuper
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         if (!this.isFirstTimeAttachment && this.video != null) this.setUpPlayer();
 
-        this.manageDisposable(RxView.clicks(this.playAction).subscribe(irrelevant -> {
+        this.playAction.setOnClickListener(view -> {
             this.startPlayer();
 
             this.videoClicks.onNext(Irrelevant.INSTANCE);
-        }));
+        });
 
         this.thumbnail.setOnClickListener(irrelevant -> {
             this.startPlayer();
@@ -203,21 +200,22 @@ public class VideoView extends ItemView implements VideoPresenterView {
             this.videoClicks.onNext(Irrelevant.INSTANCE);
         });
 
-        if (this.player != null) this.manageDisposable(RxView.clicks(this.fullScreenAction).subscribe(irrelevant -> {
+
+        if (this.fullScreenAction != null) this.fullScreenAction.setOnClickListener(view -> {
             final boolean isPlaying    = this.player.getPlaybackState() == Player.STATE_READY && this.player.getPlayWhenReady();
             final long    seekPosition = this.player.getCurrentPosition();
 
             this.player.setPlayWhenReady(false);
 
             this.getContext().startActivity(VideoActivity.createIntent(this.getContext(), this.video.getVideoUrl(), isPlaying, seekPosition));
-        }));
+        });
 
         super.onAttachedToWindow();
     }
 
     @CallSuper
     @Override
-    protected void onDetachedFromWindow() {
+    public void onDetachedFromWindow() {
         this.thumbnail.setOnClickListener(null);
 
         this.releasePlayer();

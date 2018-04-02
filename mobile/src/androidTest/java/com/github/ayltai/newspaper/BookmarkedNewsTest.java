@@ -6,10 +6,8 @@ import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 
 import org.hamcrest.Matchers;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,11 +23,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         // Clicks Bookmarks bottom tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_bookmark),
-            ViewMatchers.withParent(Matchers.allOf(
-                ViewMatchers.withId(R.id.bb_bottom_bar_item_container),
-                ViewMatchers.withParent(Matchers.allOf(
-                    ViewMatchers.withId(R.id.bb_bottom_bar_outer_container),
-                    ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomBar)))))),
+            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView))),
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
@@ -54,18 +48,14 @@ public final class BookmarkedNewsTest extends BaseTest {
         // Checks that the empty placeholder is displayed
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.empty_title),
-            ViewMatchers.withText("Nothing here"),
+            ViewMatchers.withText("You don't have any favorite news yet"),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         // Clicks News bottom tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_news),
-            ViewMatchers.withParent(Matchers.allOf(
-                ViewMatchers.withId(R.id.bb_bottom_bar_item_container),
-                ViewMatchers.withParent(Matchers.allOf(
-                    ViewMatchers.withId(R.id.bb_bottom_bar_outer_container),
-                    ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomBar)))))),
+            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView))),
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
@@ -78,7 +68,7 @@ public final class BookmarkedNewsTest extends BaseTest {
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
-        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
 
         // Clicks Bookmark button
         Espresso.onView(Matchers.allOf(
@@ -95,11 +85,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         // Clicks Bookmarks bottom tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_bookmark),
-            ViewMatchers.withParent(Matchers.allOf(
-                ViewMatchers.withId(R.id.bb_bottom_bar_item_container),
-                ViewMatchers.withParent(Matchers.allOf(
-                    ViewMatchers.withId(R.id.bb_bottom_bar_outer_container),
-                    ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomBar)))))),
+            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView))),
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
@@ -110,11 +96,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         // Checks that there is a bookmarked news item
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            MoreTestUtils.childAtPosition(Matchers.allOf(
-                ViewMatchers.withId(R.id.image),
-                MoreTestUtils.childAtPosition(Matchers.allOf(
-                    ViewMatchers.withId(R.id.container),
-                    MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0), 0)), 0)), 0),
+            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
@@ -144,11 +126,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         // Checks that no search results returned
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            MoreTestUtils.childAtPosition(Matchers.allOf(
-                ViewMatchers.withId(R.id.image),
-                MoreTestUtils.childAtPosition(Matchers.allOf(
-                    ViewMatchers.withId(R.id.container),
-                    MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0), 0)), 0)), 0),
+            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.doesNotExist());
 
@@ -176,11 +154,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         // Checks that there is a bookmarked news item
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            MoreTestUtils.childAtPosition(Matchers.allOf(
-                ViewMatchers.withId(R.id.image),
-                MoreTestUtils.childAtPosition(Matchers.allOf(
-                    ViewMatchers.withId(R.id.container),
-                    MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0), 0)), 0)), 0),
+            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
     }

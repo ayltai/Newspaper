@@ -1,15 +1,15 @@
 package com.github.ayltai.newspaper.client;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.ArrayMap;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
-import com.github.ayltai.newspaper.net.NewsApiService;
+import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.DaggerHttpComponent;
 import com.github.ayltai.newspaper.net.HttpComponent;
 
@@ -18,7 +18,7 @@ import okhttp3.OkHttpClient;
 public final class ClientFactory {
     private static ClientFactory instance;
 
-    private final Map<String, Client> clients = new HashMap<>(12);
+    private final Map<String, Client> clients = new ArrayMap<>(15);
 
     @NonNull
     public static ClientFactory getInstance(@NonNull final Context context) {
@@ -28,10 +28,10 @@ public final class ClientFactory {
     }
 
     private ClientFactory(@NonNull final Context context) {
-        final HttpComponent  httpComponent = DaggerHttpComponent.builder().build();
-        final OkHttpClient   client        = httpComponent.httpClient();
-        final NewsApiService apiService    = httpComponent.newsApiService();
-        final String[]       sources       = context.getResources().getStringArray(R.array.sources);
+        final HttpComponent httpComponent = DaggerHttpComponent.builder().build();
+        final OkHttpClient  client        = httpComponent.httpClient();
+        final ApiService    apiService    = httpComponent.apiService();
+        final String[]      sources       = context.getResources().getStringArray(R.array.sources);
 
         int i = 0;
 
@@ -46,7 +46,10 @@ public final class ClientFactory {
         this.clients.put(sources[i], new HeadlineRealtimeClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
         this.clients.put(sources[i], new SkyPostClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
         this.clients.put(sources[i], new HkejClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
-        this.clients.put(sources[i], new RthkClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i])));
+        this.clients.put(sources[i], new RthkClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
+        this.clients.put(sources[i], new ScmpClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
+        this.clients.put(sources[i], new TheStandardClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i++])));
+        this.clients.put(sources[i], new WenWeiPoClient(client, apiService, SourceFactory.getInstance(context).getSource(sources[i])));
     }
 
     @Nullable

@@ -32,42 +32,42 @@ public final class RxUtils {
     }
 
     public static <T> ObservableTransformer<T, T> applyObservableBackgroundSchedulers() {
-        if (TestUtils.isRunningUnitTest()) return RxUtils.applyObservableTrampolineSchedulers();
+        if (DevUtils.isRunningUnitTest()) return RxUtils.applyObservableTrampolineSchedulers();
 
         return observable -> observable.observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io());
     }
 
     public static <T> SingleTransformer<T, T> applySingleBackgroundSchedulers() {
-        if (TestUtils.isRunningUnitTest()) return RxUtils.applySingleTrampolineSchedulers();
+        if (DevUtils.isRunningUnitTest()) return RxUtils.applySingleTrampolineSchedulers();
 
         return single -> single.observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io());
     }
 
     public static <T> ObservableTransformer<T, T> applyObservableBackgroundToMainSchedulers() {
-        if (TestUtils.isRunningUnitTest()) return RxUtils.applyObservableTrampolineSchedulers();
+        if (DevUtils.isRunningUnitTest()) return RxUtils.applyObservableTrampolineSchedulers();
 
         return observable -> observable.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io());
     }
 
     public static <T> FlowableTransformer<T, T> applyFlowableBackgroundToMainSchedulers() {
-        if (TestUtils.isRunningUnitTest()) return RxUtils.applyFlowableTrampolineSchedulers();
+        if (DevUtils.isRunningUnitTest()) return RxUtils.applyFlowableTrampolineSchedulers();
 
         return flowable -> flowable.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io());
     }
 
     public static <T> SingleTransformer<T, T> applySingleBackgroundToMainSchedulers() {
-        if (TestUtils.isRunningUnitTest()) return RxUtils.applySingleTrampolineSchedulers();
+        if (DevUtils.isRunningUnitTest()) return RxUtils.applySingleTrampolineSchedulers();
 
         return single -> single.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io());
     }
 
     public static <T> MaybeTransformer<T, T> applyMaybeBackgroundToMainSchedulers() {
-        if (TestUtils.isRunningUnitTest()) return RxUtils.applyMaybeTrampolineSchedulers();
+        if (DevUtils.isRunningUnitTest()) return RxUtils.applyMaybeTrampolineSchedulers();
 
         return maybe -> maybe.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io());

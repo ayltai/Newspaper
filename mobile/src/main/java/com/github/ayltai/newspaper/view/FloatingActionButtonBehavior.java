@@ -1,6 +1,7 @@
 package com.github.ayltai.newspaper.view;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
@@ -15,7 +16,7 @@ public final class FloatingActionButtonBehavior extends CoordinatorLayout.Behavi
     private final float fabHeight;
     private final float bottomMargin;
 
-    public FloatingActionButtonBehavior(final Context context, final AttributeSet attrs) {
+    public FloatingActionButtonBehavior(@NonNull final Context context, final AttributeSet attrs) {
         super(context, attrs);
 
         this.toolbarHeight = ContextUtils.getDimensionPixelSize(context, R.attr.actionBarSize);
@@ -24,20 +25,26 @@ public final class FloatingActionButtonBehavior extends CoordinatorLayout.Behavi
     }
 
     @Override
-    public boolean layoutDependsOn(final CoordinatorLayout parent, final View child, final View dependency) {
+    public boolean layoutDependsOn(@NonNull final CoordinatorLayout parent, @NonNull final View child, @NonNull final View dependency) {
         return dependency instanceof AppBarLayout;
     }
 
     @Override
-    public boolean onDependentViewChanged(final CoordinatorLayout parent, final View child, final View dependency) {
+    public boolean onDependentViewChanged(@NonNull final CoordinatorLayout parent, @NonNull final View child, @NonNull final View dependency) {
         if (this.layoutDependsOn(parent, child, dependency)) {
             child.setTranslationY((this.fabHeight + this.bottomMargin) * (dependency.getY() / -this.toolbarHeight));
 
-            if (child instanceof ViewGroup) {
-                final ViewGroup container = (ViewGroup)child;
-                final float     alpha     = 1f - dependency.getY() / -this.toolbarHeight;
+            final float alpha = 1f - dependency.getY() / -this.toolbarHeight;
 
-                for (int i = 0; i < container.getChildCount(); i++) container.getChildAt(i).setAlpha(alpha);
+            if (alpha == 0) {
+                child.setVisibility(View.GONE);
+            } else {
+                child.setVisibility(View.VISIBLE);
+
+                if (child instanceof ViewGroup) {
+                    final ViewGroup container = (ViewGroup)child;
+                    for (int i = 0; i < container.getChildCount(); i++) container.getChildAt(i).setAlpha(alpha);
+                }
             }
 
             return true;

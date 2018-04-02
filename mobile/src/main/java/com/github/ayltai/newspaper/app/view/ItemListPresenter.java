@@ -15,15 +15,15 @@ import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.Lists;
-import com.github.ayltai.newspaper.view.ListPresenter;
+import com.github.ayltai.newspaper.view.VerticalListPresenter;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
-public class ItemListPresenter extends ListPresenter<Item, ListPresenter.View<Item>> {
+public class ItemListPresenter extends VerticalListPresenter<Item, VerticalListPresenter.View<Item>> {
     protected final List<String> categories;
 
-    private boolean forceRefresh = false;
+    private boolean forceRefresh;
 
     public ItemListPresenter(@NonNull final List<String> categories) {
         this.categories = categories;

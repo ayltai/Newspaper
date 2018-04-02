@@ -4,18 +4,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.robolectric.RuntimeEnvironment;
 import org.simpleframework.xml.core.Persister;
 
-import com.github.ayltai.newspaper.net.NetworkTest;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
+import com.github.ayltai.newspaper.net.NetworkTest;
 import com.github.ayltai.newspaper.rss.RssFeed;
 import com.github.ayltai.newspaper.util.IOUtils;
 
@@ -29,6 +31,8 @@ public final class HkejClientTest extends NetworkTest {
 
     private HkejClient client;
 
+    @CallSuper
+    @Before
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -71,12 +75,14 @@ public final class HkejClientTest extends NetworkTest {
             "<br>總體來看，未來央企重組的大方向、路線圖都是明確的，且煤電行業、重型製造裝備行業、鋼鐵行業等依舊會是推進重組的重點領域。不過，具體什麼時間會進行重組、某一時期會重組多少家，這還需根據央企的具體發展情況、外在客觀條件等因素來定，「成熟一戶、推進一戶」依舊會是未來央企重組堅持的原則，所謂的央企重組時間表是沒有且沒有必要的。<br>", item.getDescription());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void Given_hkejDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
         final NewsItem newsItem = new NewsItem();
         newsItem.setLink(HkejClientTest.ERROR_DETAILS_URL);
 
-        this.client.updateItem(newsItem).blockingGet();
+        final NewsItem item = this.client.updateItem(newsItem).blockingGet();
+
+        Assert.assertEquals("Item is updated", newsItem, item);
     }
 
     @NonNull

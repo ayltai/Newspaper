@@ -6,18 +6,22 @@ import javax.inject.Singleton;
 
 import android.support.annotation.NonNull;
 
-import com.github.ayltai.newspaper.util.TestUtils;
+import com.github.ayltai.newspaper.BuildConfig;
 
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 @Module
-public final class HttpModule {
-    public static final int TIMEOUT_CONNECT = 10;
-    public static final int TIMEOUT_READ    = 30;
-    public static final int TIMEOUT_WRITE   = 30;
+final class HttpModule {
+    private static final int TIMEOUT_CONNECT = 10;
+    private static final int TIMEOUT_READ    = 30;
+    private static final int TIMEOUT_WRITE   = 30;
 
     private HttpModule() {
     }
@@ -30,11 +34,25 @@ public final class HttpModule {
             .connectTimeout(HttpModule.TIMEOUT_CONNECT, TimeUnit.SECONDS)
             .readTimeout(HttpModule.TIMEOUT_READ, TimeUnit.SECONDS)
             .writeTimeout(HttpModule.TIMEOUT_WRITE, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
-            .followRedirects(true)
-            .followSslRedirects(true);
+            .addInterceptor(chain -> chain.proceed(chain.request()
+                .newBuilder()
+                .header("User-Agent", BuildConfig.APPLICATION_ID + " " + BuildConfig.VERSION_NAME)
+                .build()))
+            .addInterceptor(chain -> {
+                final Response response = chain.proceed(chain.request());
 
-        if (TestUtils.isLoggable()) builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS));
+                if (chain.request().url().host().contains("news.wenweipo.com")) {
+                    final ResponseBody body = response.body();
+
+                    if (body == null) return response;
+
+                    return response.newBuilder()
+                        .body(ResponseBody.create(body.contentType(), new String(body.bytes(), "Big5")))
+                        .build();
+                }
+
+                return response;
+            });
 
         return builder.build();
     }
@@ -42,14 +60,20 @@ public final class HttpModule {
     @Singleton
     @NonNull
     @Provides
-    static NewsApiService provideNewsApiService() {
-        return new NewsApiService.Factory().create(NewsApiService.class);
+    static Retrofit provideRetrofit(@NonNull final OkHttpClient httpClient) {
+        return new Retrofit.Builder()
+            .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(SimpleXmlConverterFactory.create())
+            .baseUrl("http://dummy.base.url")
+            .client(httpClient)
+            .build();
     }
 
     @Singleton
     @NonNull
     @Provides
-    static GoogleApiService provideGoogleApiService() {
-        return new GoogleApiService.Factory().create(GoogleApiService.class);
+    static ApiService provideApiService(@NonNull final Retrofit retrofit) {
+        return retrofit.create(ApiService.class);
     }
 }

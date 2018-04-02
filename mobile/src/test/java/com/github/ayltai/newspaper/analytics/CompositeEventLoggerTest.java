@@ -13,7 +13,6 @@ public final class CompositeEventLoggerTest extends UnitTest {
 
         new CompositeEventLogger.Builder()
             .add(new FabricEventLogger())
-            .add(new MixpanelEventLogger(RuntimeEnvironment.application))
             .add(new FirebaseEventLogger(RuntimeEnvironment.application))
             .build()
             .logEvent(event);
@@ -27,7 +26,6 @@ public final class CompositeEventLoggerTest extends UnitTest {
 
         new CompositeEventLogger.Builder()
             .add(new FabricEventLogger())
-            .add(new MixpanelEventLogger(RuntimeEnvironment.application))
             .add(new FirebaseEventLogger(RuntimeEnvironment.application))
             .build()
             .logEvent(event);
@@ -45,7 +43,6 @@ public final class CompositeEventLoggerTest extends UnitTest {
 
         new CompositeEventLogger.Builder()
             .add(new FabricEventLogger())
-            .add(new MixpanelEventLogger(RuntimeEnvironment.application))
             .add(new FirebaseEventLogger(RuntimeEnvironment.application))
             .build().logEvent(event);
 
@@ -63,7 +60,6 @@ public final class CompositeEventLoggerTest extends UnitTest {
 
         new CompositeEventLogger.Builder()
             .add(new FabricEventLogger())
-            .add(new MixpanelEventLogger(RuntimeEnvironment.application))
             .add(new FirebaseEventLogger(RuntimeEnvironment.application))
             .build().logEvent(event);
 
@@ -82,7 +78,6 @@ public final class CompositeEventLoggerTest extends UnitTest {
 
         new CompositeEventLogger.Builder()
             .add(new FabricEventLogger())
-            .add(new MixpanelEventLogger(RuntimeEnvironment.application))
             .add(new FirebaseEventLogger(RuntimeEnvironment.application))
             .build().logEvent(event);
 
@@ -99,7 +94,6 @@ public final class CompositeEventLoggerTest extends UnitTest {
 
         new CompositeEventLogger.Builder()
             .add(new FabricEventLogger())
-            .add(new MixpanelEventLogger(RuntimeEnvironment.application))
             .add(new FirebaseEventLogger(RuntimeEnvironment.application))
             .build().logEvent(event);
 

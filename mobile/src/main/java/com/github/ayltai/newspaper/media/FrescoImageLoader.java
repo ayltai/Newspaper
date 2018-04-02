@@ -3,7 +3,9 @@ package com.github.ayltai.newspaper.media;
 import java.io.Closeable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Singleton;
 
@@ -17,12 +19,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheKey;
@@ -43,9 +46,9 @@ import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.github.ayltai.newspaper.R;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Optional;
 import com.github.ayltai.newspaper.util.RxUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 
@@ -54,8 +57,9 @@ import io.reactivex.Single;
 
 @Singleton
 public final class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObserver {
-    private static final Handler          HANDLER = new Handler(Looper.getMainLooper());
-    private static final List<DataSource> SOURCES = new ArrayList<>();
+    private static final Handler                  HANDLER             = new Handler(Looper.getMainLooper());
+    private static final List<DataSource>         SOURCES             = Collections.synchronizedList(new ArrayList<>());
+    private static final Map<Integer, DataSource> CANCELLABLE_SOURCES = Collections.synchronizedMap(new ArrayMap<>());
 
     protected static FrescoImageLoader instance;
 
@@ -113,15 +117,18 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
     }
 
     @Override
-    public void loadImage(@NonNull final Uri uri, @Nullable final Callback callback) {
+    public void loadImage(final int requestId, final Uri uri, final ImageLoader.Callback callback) {
         final ImageRequest request = ImageRequest.fromUri(uri);
         final File         file    = FrescoImageLoader.getFileCache(request);
 
-        if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Load image = " + uri.toString());
-        if (TestUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "File cache = " + file.getAbsolutePath());
+        if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Load image = " + uri.toString());
+        if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "File cache = " + file.getAbsolutePath());
 
         if (file.exists()) {
-            if (callback != null) callback.onCacheHit(file);
+            if (callback != null) {
+                callback.onCacheHit(file);
+                callback.onSuccess(file);
+            }
         } else {
             if (callback != null) {
                 callback.onStart();
@@ -143,9 +150,7 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
                 @WorkerThread
                 @Override
                 protected void onSuccess(@NonNull final File image) {
-                    synchronized (FrescoImageLoader.SOURCES) {
-                        FrescoImageLoader.SOURCES.remove(source);
-                    }
+                    FrescoImageLoader.CANCELLABLE_SOURCES.remove(requestId);
 
                     FrescoImageLoader.HANDLER.post(() -> {
                         if (callback != null) {
@@ -159,11 +164,9 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
                 @WorkerThread
                 @Override
                 protected void onFailure(@NonNull final Throwable error) {
-                    synchronized (FrescoImageLoader.SOURCES) {
-                        FrescoImageLoader.SOURCES.remove(source);
-                    }
+                    FrescoImageLoader.CANCELLABLE_SOURCES.remove(requestId);
 
-                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                    if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
 
                     FrescoImageLoader.HANDLER.post(() -> {
                         if (callback != null) callback.onFail(new RuntimeException(error));
@@ -171,9 +174,7 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
                 }
             }, FrescoImageLoader.executorSupplier.forBackgroundTasks());
 
-            synchronized (FrescoImageLoader.SOURCES) {
-                FrescoImageLoader.SOURCES.add(source);
-            }
+            FrescoImageLoader.CANCELLABLE_SOURCES.put(requestId, source);
         }
     }
 
@@ -196,20 +197,23 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
 
     @Override
     public void prefetch(@NonNull final Uri uri) {
-        synchronized (FrescoImageLoader.SOURCES) {
-            FrescoImageLoader.SOURCES.add(Fresco.getImagePipeline().prefetchToDiskCache(ImageRequest.fromUri(uri), false));
-        }
+        FrescoImageLoader.SOURCES.add(Fresco.getImagePipeline().prefetchToDiskCache(ImageRequest.fromUri(uri), false));
+    }
+
+    @Override
+    public void cancel(final int requestId) {
+        if (FrescoImageLoader.CANCELLABLE_SOURCES.containsKey(requestId)) FrescoImageLoader.CANCELLABLE_SOURCES.remove(requestId).close();
     }
 
     @CallSuper
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     @Override
     public void close() {
-        synchronized (FrescoImageLoader.SOURCES) {
-            for (final DataSource source : FrescoImageLoader.SOURCES) source.close();
+        for (final DataSource source : FrescoImageLoader.SOURCES) source.close();
+        FrescoImageLoader.SOURCES.clear();
 
-            FrescoImageLoader.SOURCES.clear();
-        }
+        for (final DataSource source : FrescoImageLoader.CANCELLABLE_SOURCES.values()) source.close();
+        FrescoImageLoader.CANCELLABLE_SOURCES.clear();
     }
 
     @NonNull

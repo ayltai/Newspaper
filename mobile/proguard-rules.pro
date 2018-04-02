@@ -1,7 +1,16 @@
 -keepattributes *Annotation*,EnclosingMethod,Signature
 -keepclasseswithmembers class * {
-   public <init>(android.content.Context, android.util.AttributeSet, int);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
 }
+-keepclassmembernames enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+-keepnames class * implements android.os.Parcelable {
+    public static final ** CREATOR;
+}
+-dontwarn java.lang.invoke.*
+-dontwarn javax.**
 
 ## Facebook Fresco
 
@@ -27,37 +36,10 @@
 -dontwarn com.facebook.infer.**
 
 ## Realm
--dontwarn javax.**
 -dontwarn io.realm.**
 
 ## Retrofit
 -dontwarn retrofit2.**
-
-## BottomBar
--dontwarn com.roughike.bottombar.**
-
-## Google API Client
--keepclassmembers class * {
-  @com.google.api.client.util.Key <fields>;
-}
-
- ## Google Play Services library
--keep class * extends java.util.ListResourceBundle {
-   protected Object[][] getContents();
-}
-
--keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
-    public static final *** NULL;
-}
-
--keepnames @com.google.android.gms.common.annotation.KeepName class *
--keepclassmembernames class * {
-    @com.google.android.gms.common.annotation.KeepName *;
-}
-
--keepnames class * implements android.os.Parcelable {
-    public static final ** CREATOR;
-}
 
 ## SearchView
 -keep class android.support.v7.widget.SearchView { *; }
@@ -68,4 +50,9 @@
 -keepclassmembers,allowobfuscation class * {
     @org.simpleframework.xml.* <fields>;
     public <init>();
+}
+
+## BottomNavigationView
+-keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
+    boolean mShiftingMode;
 }

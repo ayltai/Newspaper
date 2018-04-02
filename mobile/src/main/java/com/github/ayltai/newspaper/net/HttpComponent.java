@@ -15,11 +15,7 @@ public interface HttpComponent {
     @NonNull
     OkHttpClient httpClient();
 
-    @NonNull
-    NewsApiService newsApiService();
-
-    @NonNull
-    GoogleApiService googleApiService();
+    ApiService apiService();
 
     void inject(Client client);
 }

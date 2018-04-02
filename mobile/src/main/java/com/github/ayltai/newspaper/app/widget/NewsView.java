@@ -12,17 +12,18 @@ import android.view.ViewGroup;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.UserConfig;
-import com.github.ayltai.newspaper.app.view.NewsPresenterView;
-import com.github.ayltai.newspaper.widget.ObservableView;
+import com.github.ayltai.newspaper.app.view.BaseNewsView;
+import com.github.ayltai.newspaper.widget.BaseView;
 
-public abstract class NewsView extends ObservableView implements NewsPresenterView {
+public abstract class NewsView extends BaseView implements BaseNewsView {
     protected ItemListView listView;
 
     protected List<String> categories;
     protected Set<String>  sources;
 
-    public NewsView(@NonNull final Context context) {
+    protected NewsView(@NonNull final Context context) {
         super(context);
+
         this.init();
     }
 
@@ -46,7 +47,10 @@ public abstract class NewsView extends ObservableView implements NewsPresenterVi
         this.listView.clearAll();
     }
 
-    private void init() {
+    @Override
+    protected void init() {
+        super.init();
+
         final ViewGroup view = (ViewGroup)LayoutInflater.from(this.getContext()).inflate(R.layout.view_news, this, true);
 
         this.listView = this.createItemListView();

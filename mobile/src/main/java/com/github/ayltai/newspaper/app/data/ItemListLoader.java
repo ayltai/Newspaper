@@ -14,17 +14,20 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.app.data.model.Category;
+import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.RealmLoader;
 import com.github.ayltai.newspaper.net.NetworkUtils;
+import com.github.ayltai.newspaper.util.DevUtils;
+import com.github.ayltai.newspaper.util.Lists;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -32,7 +35,7 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.RealmObject;
 
-public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
+public final class ItemListLoader extends RealmLoader<Item> {
     //region Constants
 
     public static final int ID = ItemListLoader.class.hashCode();
@@ -81,25 +84,26 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
 
         @NonNull
         public Flowable<List<NewsItem>> build() {
-            final ArrayList<String> categories = this.args.getStringArrayList(ItemListLoader.KEY_CATEGORIES);
+            if (DevUtils.isRunningUnitTest()) return Flowable.just(Collections.emptyList());
 
-            if (TestUtils.isRunningUnitTest()) return Flowable.just(Collections.emptyList());
+            final ArrayList<String> categories = this.args.getStringArrayList(ItemListLoader.KEY_CATEGORIES);
 
             return Flowable.create(emitter -> this.activity
                 .getSupportLoaderManager()
-                .restartLoader(ItemListLoader.ID + (categories == null ? 0 : categories.toString().hashCode()), this.args, new LoaderManager.LoaderCallbacks<List<NewsItem>>() {
+                .restartLoader(ItemListLoader.ID + (categories == null ? 0 : categories.toString().hashCode()), this.args, new LoaderManager.LoaderCallbacks<List<Item>>() {
+                    @NonNull
                     @Override
-                    public Loader<List<NewsItem>> onCreateLoader(final int id, final Bundle args) {
+                    public Loader<List<Item>> onCreateLoader(final int id, final Bundle args) {
                         return new ItemListLoader(ItemListLoader.Builder.this.activity, args);
                     }
 
                     @Override
-                    public void onLoadFinished(final Loader<List<NewsItem>> loader, final List<NewsItem> items) {
-                        emitter.onNext(items);
+                    public void onLoadFinished(@NonNull final Loader<List<Item>> loader, final List<Item> items) {
+                        emitter.onNext(Lists.transform(items, item -> (NewsItem)item));
                     }
 
                     @Override
-                    public void onLoaderReset(final Loader<List<NewsItem>> loader) {
+                    public void onLoaderReset(@NonNull final Loader<List<Item>> loader) {
                     }
                 }), BackpressureStrategy.LATEST);
         }
@@ -111,63 +115,68 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
 
     @NonNull
     @Override
-    protected Flowable<List<NewsItem>> loadFromLocalSource(@NonNull final Context context, @Nullable final Bundle args) {
-        if (!this.isValid()) return Flowable.error(new IllegalStateException("Realm instance is null"));
+    protected Flowable<List<Item>> loadFromLocalSource(@NonNull final Context context, @Nullable final Bundle args) {
+        if (!this.isValid()) return Flowable.just(Collections.emptyList());
 
-        return Flowable.create(emitter -> ItemManager.create(this.getRealm()).getItems(ItemListLoader.getSources(args).toArray(StringUtils.EMPTY_ARRAY), ItemListLoader.getCategories(args).toArray(StringUtils.EMPTY_ARRAY))
-            .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
-            .map(items -> items.isEmpty() ? items : RealmObject.isManaged(items.get(0)) ? this.getRealm().copyFromRealm(items) : items)
-            .map(items -> {
-                Collections.sort(items);
-                return items;
-            })
-            .subscribe(emitter::onNext), BackpressureStrategy.LATEST);
+        return Flowable.create(emitter -> {
+            if (this.isValid()) {
+                ItemManager.create(this.getRealm())
+                    .getItems(ItemListLoader.getSources(args).toArray(StringUtils.EMPTY_ARRAY), ItemListLoader.getCategories(args).toArray(StringUtils.EMPTY_ARRAY))
+                    .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
+                    .map(items -> items.isEmpty() ? items : RealmObject.isManaged(items.get(0)) ? this.getRealm().copyFromRealm(items) : items)
+                    .map(items -> {
+                        Collections.sort(items);
+
+                        return Lists.transform(items, item -> (Item)item);
+                    })
+                    .subscribe(emitter::onNext);
+            } else {
+                emitter.onNext(Collections.emptyList());
+            }
+        }, BackpressureStrategy.LATEST);
     }
 
     @SuppressWarnings("unchecked")
     @NonNull
     @Override
-    protected Flowable<List<NewsItem>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
+    protected Flowable<List<Item>> loadFromRemoteSource(@NonNull final Context context, @Nullable final Bundle args) {
         if (NetworkUtils.isOnline(context)) {
+            final List<Single<List<NewsItem>>> singles = this.createSingles(context, args);
+            if (singles.isEmpty()) Flowable.just(new ArrayList<>());
+
             return Flowable.create(emitter -> Single.zip(
-                this.createSingles(context, args),
+                singles,
                 lists -> {
                     final List<NewsItem> combinedList = new ArrayList<>();
                     for (final Object list : lists) combinedList.addAll((List<NewsItem>)list);
 
-                    Collections.sort(combinedList);
-
                     return combinedList;
                 })
                 .map(items -> {
-                    Collections.sort(items);
-                    return items;
-                })
-                .flatMap(items -> {
                     if (this.isValid()) {
-                        return Single.create(e -> ItemManager.create(this.getRealm())
+                        final List<NewsItem> newsItems = ItemManager.create(this.getRealm())
                             .putItems(items)
                             .compose(RxUtils.applySingleSchedulers(this.getScheduler()))
-                            .subscribe(
-                                e::onSuccess,
-                                error -> {
-                                    if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                            .blockingGet();
 
-                                    if (!e.isDisposed()) e.onError(error);
-                                }));
+                        Collections.sort(newsItems);
+
+                        return newsItems;
                     } else {
-                        return Single.just(items);
+                        Collections.sort(items);
+
+                        return items;
                     }
                 })
                 .subscribe(
-                    emitter::onNext,
+                    items -> emitter.onNext(Lists.transform(items, item -> (Item)item)),
                     error -> {
-                        if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), error);
+                        if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                     }
                 ), BackpressureStrategy.LATEST);
         }
 
-        return Flowable.just(Collections.emptyList());
+        return Flowable.just(new ArrayList<>());
     }
 
     private List<Single<List<NewsItem>>> createSingles(@NonNull final Context context, @Nullable final Bundle args) {
@@ -184,14 +193,12 @@ public final class ItemListLoader extends RealmLoader<List<NewsItem>> {
                         // TODO: If the previous refresh timestamp is very old, wait for a longer time to refresh
                         .timeout(forceRefresh ? Constants.REFRESH_TIMEOUT : Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
                         .onErrorResumeNext(error -> {
-                            if (TestUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), error);
+                            if (DevUtils.isLoggable()) Log.w(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
 
-                            return Single.just(Collections.emptyList());
+                            return Single.just(new ArrayList<>());
                         })
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(Schedulers.io()));
-
-                    break;
                 }
             }
         }

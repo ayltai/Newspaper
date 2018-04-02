@@ -23,13 +23,13 @@ public final class ImageModule {
 
     @Singleton
     @Provides
-    public ImageLoader provideImageLoader() {
+    ImageLoader provideImageLoader() {
         return FrescoImageLoader.getInstance(this.context);
     }
 
     @Singleton
     @Provides
-    public FaceCenterFinder provideFaceCenterFinder() {
+    FaceCenterFinder provideFaceCenterFinder() {
         return new FaceCenterFinder(new FaceDetector.Builder(this.context)
             .setMinFaceSize(Constants.FACE_DETECTION_RATIO_MIN)
             .setTrackingEnabled(false)

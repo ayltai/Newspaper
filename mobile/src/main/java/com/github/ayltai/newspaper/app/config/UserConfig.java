@@ -99,10 +99,6 @@ public final class UserConfig {
         PreferenceManager.getDefaultSharedPreferences(this.context).edit().putBoolean(UserConfig.KEY_AUTO_PLAY, enabled).apply();
     }
 
-    public boolean isPanoramaEnabled() {
-        return PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean(UserConfig.KEY_PANORAMA, this.remoteConfig.isPanoramaEnabled());
-    }
-
     public void setPanoramaEnabled(final boolean enabled) {
         PreferenceManager.getDefaultSharedPreferences(this.context).edit().putBoolean(UserConfig.KEY_PANORAMA, enabled).apply();
     }

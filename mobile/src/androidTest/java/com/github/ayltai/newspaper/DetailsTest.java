@@ -29,7 +29,7 @@ public final class DetailsTest extends BaseTest {
             ViewMatchers.withId(R.id.recyclerView))))
             .perform(RecyclerViewActions.actionOnItemAtPosition(2, ViewActions.click()));
 
-        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
 
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.avatar),
@@ -64,15 +64,16 @@ public final class DetailsTest extends BaseTest {
 
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.description),
+            ViewMatchers.withParent(ViewMatchers.withClassName(Matchers.is("android.widget.LinearLayout"))),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
-        final Matcher<Intent> intent = Matchers.allOf(
+        final Matcher<Intent> shareIntent = Matchers.allOf(
             IntentMatchers.hasAction(Intent.ACTION_CHOOSER),
             IntentMatchers.hasExtra(Matchers.is(Intent.EXTRA_INTENT), Matchers.allOf(IntentMatchers.hasAction(Intent.ACTION_SEND), IntentMatchers.hasExtraWithKey(Intent.EXTRA_TEXT), IntentMatchers.hasType("text/plain"))));
 
         Intents.init();
-        Intents.intending(intent).respondWith(new Instrumentation.ActivityResult(0, null));
+        Intents.intending(shareIntent).respondWith(new Instrumentation.ActivityResult(0, null));
 
         // Clicks Share button
         Espresso.onView(Matchers.allOf(
@@ -82,7 +83,7 @@ public final class DetailsTest extends BaseTest {
             .perform(ViewActions.click());
 
         // Checks that the fired Intent is correct
-        Intents.intended(intent);
+        Intents.intended(shareIntent);
         Intents.release();
 
         // Clicks Text-to-Speech button

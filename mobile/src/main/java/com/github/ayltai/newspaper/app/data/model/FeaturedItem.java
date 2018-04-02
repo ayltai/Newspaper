@@ -94,13 +94,18 @@ public final class FeaturedItem implements Item {
         return this.items.get(this.index);
     }
 
+    @NonNull
+    public Item getNextItem() {
+        return this.items.get(this.index == this.items.size() - 1 ? 0 : this.index + 1);
+    }
+
     public void next() {
         this.index = this.index == this.items.size() - 1 ? 0 : this.index + 1;
     }
 
     @Override
     public int compareTo(@NonNull final Item item) {
-        return -1;
+        return this.getItem().compareTo(item);
     }
 
     @Nullable

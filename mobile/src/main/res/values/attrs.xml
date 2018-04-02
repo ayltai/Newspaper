@@ -28,16 +28,10 @@
         name="cardBackground"
         format="color" />
     <attr
-        name="dividerColor"
-        format="color" />
-    <attr
         name="indicatorColor"
         format="color" />
     <attr
-        name="tabActiveColor"
-        format="color" />
-    <attr
-        name="tabInactiveColor"
+        name="tabItemColor"
         format="color" />
     <attr
         name="tabBarBackgroundColor"

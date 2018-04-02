@@ -4,17 +4,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.robolectric.RuntimeEnvironment;
 
-import com.github.ayltai.newspaper.net.NetworkTest;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.data.model.SourceFactory;
+import com.github.ayltai.newspaper.net.NetworkTest;
 import com.github.ayltai.newspaper.util.IOUtils;
 
 import io.reactivex.Observable;
@@ -27,6 +29,8 @@ public final class SingTaoClientTest extends NetworkTest {
 
     private SingTaoClient client;
 
+    @CallSuper
+    @Before
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -68,12 +72,14 @@ public final class SingTaoClientTest extends NetworkTest {
         Assert.assertEquals("Incorrect item full description", "　　(星島日報報道)教育大學民主牆日前出現「恭喜」教育局副局長蔡若蓮長子自殺標語後，各界高調譴責。風", item.getDescription().substring(0, 50));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void Given_singTaoDetailsErrorUrl_When_updateItemIsCalled_noItemIsUpdated() {
         final NewsItem newsItem = new NewsItem();
         newsItem.setLink(SingTaoClientTest.ERROR_DETAILS_URL);
 
-        this.client.updateItem(newsItem).blockingGet();
+        final NewsItem item = this.client.updateItem(newsItem).blockingGet();
+
+        Assert.assertEquals("Item is updated", newsItem, item);
     }
 
     @NonNull

@@ -1,7 +1,7 @@
 <script type="text/javascript">
 $(function(){
 	$(".vdoBox .DotPagerPrev").hide();
-	$(".vdoBox .DotPagerNext").hide();
+	$(".vdoBox .DotPagerNext").hide();	
   // assign the slider to a variable
   var vdoBox = $('#vdoSlider').bxSlider({
 		pager : true,
@@ -12,11 +12,11 @@ $(function(){
 	    var n = 0;
 	    for(var i = 1; i <= totalSlideQty ; i++)
 	    {
-
+	    	
 	    	if((i > (currentSlideNumber-2) || i > (totalSlideQty-6)) && n < 6){
 	    		n++;
-		    	$(".vdoBox .pager-"+i).show();
-		    }
+		    	$(".vdoBox .pager-"+i).show();	   
+		    } 
 	    }
 	  },
 	    onAfterSlide: function(currentSlideNumber, totalSlideQty, currentSlideHtmlObject){
@@ -26,19 +26,19 @@ $(function(){
 		    var n = 0;
 		    if(totalSlideQty > 1) {
 			    $(".vdoBox .DotPagerPrev").show();
-			    $(".vdoBox .DotPagerNext").show();
+			    $(".vdoBox .DotPagerNext").show();			    
 			    for(var i = 1; i <= totalSlideQty ; i++)
 			    {
-
+			    	
 			    	if((i > (currentSlideNumber-2) || i > (totalSlideQty-6)) && n < 6){
 			    		n++;
-				    	$(".vdoBox .pager-"+i).show();
-				    }
+				    	$(".vdoBox .pager-"+i).show();	   
+				    } 
 			    }
 		    }
-
+		    
 	    }
-	  }
+	  }		  			    
   });
 
 
@@ -46,53 +46,53 @@ $(function(){
 	$('.vdoBox .dotController a.pager-link').click(function(){
 		var paged = $(this).html();
 		alert(paged);
-			vdoBox.goToSlide(paged);
+			vdoBox.goToSlide(paged);  
 	});
 */
 
 	$('.vdoBox .DotPagerNext').click(function(){
 		vdoBox.goToNextSlide();
 	});
-
+	
    $('.vdoBox .DotPagerPrev').click(function(){
 		vdoBox.goToPreviousSlide();
     });
-
+    
     $('.vdoBox .SildeTo').click(function(){
     	var paged = $("#vdo_paged").val();
-	    vdoBox.goToSlide(paged);
-    });
-
+	    vdoBox.goToSlide(paged);  
+    }); 
+    
     $('.vdoBox .SildeToFirst').click(function(){
-	    vdoBox.goToSlide(0);
-    });
-
+	    vdoBox.goToSlide(0);  
+    });    
+    
    $('.LHS .item a').click(
 	  function() {
 		 $('.LHS .item a').removeClass('Hovered');
-		 $(this).addClass('Hovered');     // On hover add the class 'hovered' and apply the hovered styles
+		 $(this).addClass('Hovered');     // On hover add the class 'hovered' and apply the hovered styles 
 	  }
-   );
+   );    
 });
 
 
-</script>
+</script> 
 	<div class="LHSTitle page_video">
-	<a class="page_video_link" href="http://hk.dv.nextmedia.com/actionnews/index/"></a>
-
+	<a class="page_video_link" href="https://hk.video.appledaily.com/actionnews/index/20170909/"></a>
+ 
 
     <div class="LHSTitle_inner vdoBox">
     	<table cellpadding="0" cellspacing="0" style="margin:0 auto">
         	<tr>
             	<td>
                     <div class="DotPager">
-
-                        <a href="javascript:void(0);" style="display:none" class="SildeToFirst"></a>
-                        <a href="javascript:void(0);" style="display:none" class="SildeTo"></a>
-                        <a href="javascript:void(0);" class="DotPagerPrev"></a>
+            
+                        <a href="javascript:void(0);" style="display:none" class="SildeToFirst"></a>             
+                        <a href="javascript:void(0);" style="display:none" class="SildeTo"></a>   
+                        <a href="javascript:void(0);" class="DotPagerPrev"></a>                
                         <div class="dotController">
-
-                        </div>
+                        
+                        </div>            
                         <a href="javascript:void(0);" class="DotPagerNext"></a>
                     </div>
             	</td>
@@ -104,289 +104,214 @@ $(function(){
 				<ul id="vdoSlider">
 					<li class="vdo_layer" style="width:540px">
 				            <div class="item">
-					<a class="switchvdo_btn v_20162113" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147535/20162113">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900568_d1c2.jpg" title="教大民主牆令校長好痛心　閉路離奇流出咩居心？" alt="教大民主牆令校長好痛心　閉路離奇流出咩居心？" class="photo"/>
+					<a class="switchvdo_btn v_20162113" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147535/20162113">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900568_d1c2.jpg" title="教大民主牆令校長好痛心　閉路離奇流出咩居心？" alt="教大民主牆令校長好痛心　閉路離奇流出咩居心？" class="photo"/>
                         <span>教大民主牆令校長好痛心　閉路離奇流出咩居心？</span>
-                         <span class="small_view">76,484</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
+                         <span class="small_view">158,890</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162122" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147680/20162122">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900282_f806.jpg" title="民主牆自己管 教大學生會：點解仲要查CCTV？" alt="民主牆自己管 教大學生會：點解仲要查CCTV？" class="photo"/>
+					<a class="switchvdo_btn v_20162122" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147680/20162122">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900282_f806.jpg" title="民主牆自己管 教大學生會：點解仲要查CCTV？" alt="民主牆自己管 教大學生會：點解仲要查CCTV？" class="photo"/>
                         <span>民主牆自己管 教大學生會：點解仲要查CCTV？</span>
-                         <span class="small_view">40,580</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png"/>
+                         <span class="small_view">89,524</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162103" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147542/20162103">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900558_dcd7.jpg" title="【副局長喪子】女友《修煉愛情》寄意" alt="【副局長喪子】女友《修煉愛情》寄意" class="photo"/>
+					<a class="switchvdo_btn v_20162103" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147542/20162103">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900558_dcd7.jpg" title="【副局長喪子】女友《修煉愛情》寄意" alt="【副局長喪子】女友《修煉愛情》寄意" class="photo"/>
                         <span>【副局長喪子】女友《修煉愛情》寄意</span>
-                         <span class="small_view">61,002</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
+                         <span class="small_view">150,550</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162119" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147682/20162119">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900323_746f.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900323_746f.jpg>" title="因是副局個仔先問候？港大學生會前會長轟偽善" alt="因是副局個仔先問候？港大學生會前會長轟偽善" class="photo"/>
+					<a class="switchvdo_btn v_20162119" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147682/20162119">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900323_746f.jpg" title="因是副局個仔先問候？港大學生會前會長轟偽善" alt="因是副局個仔先問候？港大學生會前會長轟偽善" class="photo"/>
                         <span>因是副局個仔先問候？港大學生會前會長轟偽善</span>
-                         <span class="small_view">66,460</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">147,801</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162108" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147683/20162108
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147683/20162108>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900470_0ea0.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900470_0ea0.jpg>" title="【蘋果照相機】一面牆的威力" alt="【蘋果照相機】一面牆的威力" class="photo"/>
+					<a class="switchvdo_btn v_20162108" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147683/20162108">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900470_0ea0.jpg" title="【蘋果照相機】一面牆的威力" alt="【蘋果照相機】一面牆的威力" class="photo"/>
                         <span>【蘋果照相機】一面牆的威力</span>
-                         <span class="small_view">13,080</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">31,543</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162112" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147411/20162112
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147411/20162112>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900593_bf11.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900593_bf11.jpg>" title="【動畫】離婚母子遭斷家用　倒斃變腐屍" alt="【動畫】離婚母子遭斷家用　倒斃變腐屍" class="photo"/>
+					<a class="switchvdo_btn v_20162112" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147411/20162112">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900593_bf11.jpg" title="【動畫】離婚母子遭斷家用　倒斃變腐屍" alt="【動畫】離婚母子遭斷家用　倒斃變腐屍" class="photo"/>
                         <span>【動畫】離婚母子遭斷家用　倒斃變腐屍</span>
-                         <span class="small_view">75,748</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">198,167</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162125" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147420/20162125
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147420/20162125>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900839_b3e6.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900839_b3e6.jpg>" title="15歲仔活於隱蔽家庭　小二停學無人理" alt="15歲仔活於隱蔽家庭　小二停學無人理" class="photo"/>
+					<a class="switchvdo_btn v_20162125" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147420/20162125">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900839_b3e6.jpg" title="15歲仔活於隱蔽家庭　小二停學無人理" alt="15歲仔活於隱蔽家庭　小二停學無人理" class="photo"/>
                         <span>15歲仔活於隱蔽家庭　小二停學無人理</span>
-                         <span class="small_view">44,522</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">104,254</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162126" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147434/20162126
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147434/20162126>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900872_6915.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900872_6915.jpg>" title="【母子變腐屍】反叛長子趕大肚女友走" alt="【母子變腐屍】反叛長子趕大肚女友走" class="photo"/>
+					<a class="switchvdo_btn v_20162126" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147434/20162126">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900872_6915.jpg" title="【母子變腐屍】反叛長子趕大肚女友走" alt="【母子變腐屍】反叛長子趕大肚女友走" class="photo"/>
                         <span>【母子變腐屍】反叛長子趕大肚女友走</span>
-                         <span class="small_view">59,141</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">139,259</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162053" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147456/20162053
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147456/20162053>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504896726_8d56.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504896726_8d56.jpg>" title="【包括甄子丹愛駒】沙田馬場罕見意外　九駒行馬機一死八傷！" alt="【包括甄子丹愛駒】沙田馬場罕見意外　九駒行馬機一死八傷！" class="photo"/>
+					<a class="switchvdo_btn v_20162053" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147456/20162053">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504896726_8d56.jpg" title="【包括甄子丹愛駒】沙田馬場罕見意外　九駒行馬機一死八傷！" alt="【包括甄子丹愛駒】沙田馬場罕見意外　九駒行馬機一死八傷！" class="photo"/>
                         <span>【包括甄子丹愛駒】沙田馬場罕見意外　九駒行馬機一死八傷！</span>
-                         <span class="small_view">33,620</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">74,421</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
-
+	              	                        		                        		                        		                        		                                   
 			</li>
 						<li class="vdo_layer" style="width:540px">
 				            <div class="item">
-					<a class="switchvdo_btn v_20162110" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147363/20162110
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147363/20162110>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900435_a69c.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900435_a69c.jpg>" title="【動畫】2066年港女壽命93.1歲　男女失衡單身港女點算？" alt="【動畫】2066年港女壽命93.1歲　男女失衡單身港女點算？" class="photo"/>
+					<a class="switchvdo_btn v_20162110" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147363/20162110">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900435_a69c.jpg" title="【動畫】2066年港女壽命93.1歲　男女失衡單身港女點算？" alt="【動畫】2066年港女壽命93.1歲　男女失衡單身港女點算？" class="photo"/>
                         <span>【動畫】2066年港女壽命93.1歲　男女失衡單身港女點算？</span>
-                         <span class="small_view">16,029</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">41,085</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162052" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147400/20162052
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147400/20162052>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504896705_587b.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504896705_587b.jpg>" title="《WSJ》：新iPhone現生產問題　或需延遲出貨" alt="《WSJ》：新iPhone現生產問題　或需延遲出貨" class="photo"/>
+					<a class="switchvdo_btn v_20162052" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147400/20162052">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504896705_587b.jpg" title="《WSJ》：新iPhone現生產問題　或需延遲出貨" alt="《WSJ》：新iPhone現生產問題　或需延遲出貨" class="photo"/>
                         <span>《WSJ》：新iPhone現生產問題　或需延遲出貨</span>
-                         <span class="small_view">31,509</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">72,796</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162111" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147310/20162111
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147310/20162111>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900419_04d0.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900419_04d0.jpg>" title="長毛小麗提上訴　泛民ALL IN力撐" alt="長毛小麗提上訴　泛民ALL IN力撐" class="photo"/>
+					<a class="switchvdo_btn v_20162111" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147310/20162111">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900419_04d0.jpg" title="長毛小麗提上訴　泛民ALL IN力撐" alt="長毛小麗提上訴　泛民ALL IN力撐" class="photo"/>
                         <span>長毛小麗提上訴　泛民ALL IN力撐</span>
-                         <span class="small_view">12,233</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">33,924</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162121" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147681/20162121
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147681/20162121>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900293_1eba.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900293_1eba.jpg>" title="土地小組太「梁振英」？李永達︰成員立場咁似有咩好傾" alt="土地小組太「梁振英」？李永達︰成員立場咁似有咩好傾" class="photo"/>
+					<a class="switchvdo_btn v_20162121" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147681/20162121">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900293_1eba.jpg" title="土地小組太「梁振英」？李永達︰成員立場咁似有咩好傾" alt="土地小組太「梁振英」？李永達︰成員立場咁似有咩好傾" class="photo"/>
                         <span>土地小組太「梁振英」？李永達︰成員立場咁似有咩好傾</span>
-                         <span class="small_view">8,393</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">21,968</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162109" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147238/20162109
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147238/20162109>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900456_993d.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900456_993d.jpg>" title="「爆粗」叫陸生躝返中國　中大邊個玻璃心痛？" alt="「爆粗」叫陸生躝返中國　中大邊個玻璃心痛？" class="photo"/>
+					<a class="switchvdo_btn v_20162109" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147238/20162109">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900456_993d.jpg" title="「爆粗」叫陸生躝返中國　中大邊個玻璃心痛？" alt="「爆粗」叫陸生躝返中國　中大邊個玻璃心痛？" class="photo"/>
                         <span>「爆粗」叫陸生躝返中國　中大邊個玻璃心痛？</span>
-                         <span class="small_view">30,485</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">69,129</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162120" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147242/20162120
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147242/20162120>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900309_bdad.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900309_bdad.jpg>" title="官媒狂讚撕海報好正義　中大「海報姐」嗌驚驚咩事" alt="官媒狂讚撕海報好正義　中大「海報姐」嗌驚驚咩事" class="photo"/>
+					<a class="switchvdo_btn v_20162120" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147242/20162120">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900309_bdad.jpg" title="官媒狂讚撕海報好正義　中大「海報姐」嗌驚驚咩事" alt="官媒狂讚撕海報好正義　中大「海報姐」嗌驚驚咩事" class="photo"/>
                         <span>官媒狂讚撕海報好正義　中大「海報姐」嗌驚驚咩事</span>
-                         <span class="small_view">11,718</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">30,290</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162105" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147246/20162105
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147246/20162105>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900520_b947.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900520_b947.jpg>" title="眾志黃莉莉回應求仁得仁論「我知未來會發生喺我身上」" alt="眾志黃莉莉回應求仁得仁論「我知未來會發生喺我身上」" class="photo"/>
+					<a class="switchvdo_btn v_20162105" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147246/20162105">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900520_b947.jpg" title="眾志黃莉莉回應求仁得仁論「我知未來會發生喺我身上」" alt="眾志黃莉莉回應求仁得仁論「我知未來會發生喺我身上」" class="photo"/>
                         <span>眾志黃莉莉回應求仁得仁論「我知未來會發生喺我身上」</span>
-                         <span class="small_view">10,156</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">29,781</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162123" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147254/20162123
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147254/20162123>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900637_a53c.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900637_a53c.jpg>" title="【動畫】疑斷千斤頂　待修九巴車廠內瞓低" alt="【動畫】疑斷千斤頂　待修九巴車廠內瞓低" class="photo"/>
+					<a class="switchvdo_btn v_20162123" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147254/20162123">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900637_a53c.jpg" title="【動畫】疑斷千斤頂　待修九巴車廠內瞓低" alt="【動畫】疑斷千斤頂　待修九巴車廠內瞓低" class="photo"/>
                         <span>【動畫】疑斷千斤頂　待修九巴車廠內瞓低</span>
-                         <span class="small_view">13,176</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">35,407</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162104" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147207/20162104
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147207/20162104>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900537_a2ab.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900537_a2ab.jpg>" title="《爆相爆片》八月第五輪揭曉" alt="《爆相爆片》八月第五輪揭曉" class="photo"/>
+					<a class="switchvdo_btn v_20162104" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147207/20162104">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900537_a2ab.jpg" title="《爆相爆片》八月第五輪揭曉" alt="《爆相爆片》八月第五輪揭曉" class="photo"/>
                         <span>《爆相爆片》八月第五輪揭曉</span>
-                         <span class="small_view">2,857</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">8,405</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
-
+	              	                        		                        		                        		                        		                                   
 			</li>
 						<li class="vdo_layer" style="width:540px">
 				            <div class="item">
-					<a class="switchvdo_btn v_20162118" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147375/20162118
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147375/20162118>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900339_e493.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900339_e493.jpg>" title="【DR案】周向榮唔識CIK療程？　次被告薦台專家賣技術" alt="【DR案】周向榮唔識CIK療程？　次被告薦台專家賣技術" class="photo"/>
+					<a class="switchvdo_btn v_20162118" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147375/20162118">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900339_e493.jpg" title="【DR案】周向榮唔識CIK療程？　次被告薦台專家賣技術" alt="【DR案】周向榮唔識CIK療程？　次被告薦台專家賣技術" class="photo"/>
                         <span>【DR案】周向榮唔識CIK療程？　次被告薦台專家賣技術</span>
-                         <span class="small_view">5,102</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">14,383</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162107" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147423/20162107
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147423/20162107>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900486_e2e6.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900486_e2e6.jpg>" title="中電發電廠休息室被封　外判工捱37℃ 路邊開飯" alt="中電發電廠休息室被封　外判工捱37℃ 路邊開飯" class="photo"/>
+					<a class="switchvdo_btn v_20162107" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147423/20162107">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900486_e2e6.jpg" title="中電發電廠休息室被封　外判工捱37℃ 路邊開飯" alt="中電發電廠休息室被封　外判工捱37℃ 路邊開飯" class="photo"/>
                         <span>中電發電廠休息室被封　外判工捱37℃ 路邊開飯</span>
-                         <span class="small_view">7,353</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">21,642</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162114" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147472/20162114
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147472/20162114>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900403_afa7.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900403_afa7.jpg>" title="「篤頭扯衫」小妹妹爆喊　柏喬教育：我哋係嚴厲" alt="「篤頭扯衫」小妹妹爆喊　柏喬教育：我哋係嚴厲" class="photo"/>
+					<a class="switchvdo_btn v_20162114" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147472/20162114">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900403_afa7.jpg" title="「篤頭扯衫」小妹妹爆喊　柏喬教育：我哋係嚴厲" alt="「篤頭扯衫」小妹妹爆喊　柏喬教育：我哋係嚴厲" class="photo"/>
                         <span>「篤頭扯衫」小妹妹爆喊　柏喬教育：我哋係嚴厲</span>
-                         <span class="small_view">11,433</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">35,753</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162102" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147507/20162102
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147507/20162102>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900519_63f2.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900519_63f2.jpg>" title="【動畫】過路男捱的士撞　滿臉血昏迷重創" alt="【動畫】過路男捱的士撞　滿臉血昏迷重創" class="photo"/>
+					<a class="switchvdo_btn v_20162102" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147507/20162102">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900519_63f2.jpg" title="【動畫】過路男捱的士撞　滿臉血昏迷重創" alt="【動畫】過路男捱的士撞　滿臉血昏迷重創" class="photo"/>
                         <span>【動畫】過路男捱的士撞　滿臉血昏迷重創</span>
-                         <span class="small_view">6,178</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">19,358</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162124" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147514/20162124
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147514/20162124>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900803_bb60.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900803_bb60.jpg>" title="山東男偷渡來港　持槍打劫7-11被捕" alt="山東男偷渡來港　持槍打劫7-11被捕" class="photo"/>
+					<a class="switchvdo_btn v_20162124" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147514/20162124">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900803_bb60.jpg" title="山東男偷渡來港　持槍打劫7-11被捕" alt="山東男偷渡來港　持槍打劫7-11被捕" class="photo"/>
                         <span>山東男偷渡來港　持槍打劫7-11被捕</span>
-                         <span class="small_view">6,554</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">20,135</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162101" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147685/20162101
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147685/20162101>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900360_1dbb.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900360_1dbb.jpg>" title="父母間屋做毒窟武器庫　14K男斷正" alt="父母間屋做毒窟武器庫　14K男斷正" class="photo"/>
+					<a class="switchvdo_btn v_20162101" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147685/20162101">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900360_1dbb.jpg" title="父母間屋做毒窟武器庫　14K男斷正" alt="父母間屋做毒窟武器庫　14K男斷正" class="photo"/>
                         <span>父母間屋做毒窟武器庫　14K男斷正</span>
-                         <span class="small_view">7,391</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">21,011</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162106" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147684/20162106
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147684/20162106>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900507_00e2.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900507_00e2.jpg>" title="【2D睇】硬推國歌法　唔夠尊重隨時負上刑責" alt="【2D睇】硬推國歌法　唔夠尊重隨時負上刑責" class="photo"/>
+					<a class="switchvdo_btn v_20162106" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147684/20162106">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900507_00e2.jpg" title="【2D睇】硬推國歌法　唔夠尊重隨時負上刑責" alt="【2D睇】硬推國歌法　唔夠尊重隨時負上刑責" class="photo"/>
                         <span>【2D睇】硬推國歌法　唔夠尊重隨時負上刑責</span>
-                         <span class="small_view">3,676</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">11,543</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162115" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147270/20162115
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147270/20162115>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900356_0ad3.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900356_0ad3.jpg>" title="岳少真的封盤了！丹麥迎娶律師女友" alt="岳少真的封盤了！丹麥迎娶律師女友" class="photo"/>
+					<a class="switchvdo_btn v_20162115" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147270/20162115">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900356_0ad3.jpg" title="岳少真的封盤了！丹麥迎娶律師女友" alt="岳少真的封盤了！丹麥迎娶律師女友" class="photo"/>
                         <span>岳少真的封盤了！丹麥迎娶律師女友</span>
-                         <span class="small_view">17,526</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">46,218</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
 	            	            <div class="item">
-					<a class="switchvdo_btn v_20162117" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147212/20162117
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147212/20162117>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900374_3942.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900374_3942.jpg>" title="【蘋果基金】海事博物館　模擬學駕船" alt="【蘋果基金】海事博物館　模擬學駕船" class="photo"/>
+					<a class="switchvdo_btn v_20162117" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147212/20162117">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900374_3942.jpg" title="【蘋果基金】海事博物館　模擬學駕船" alt="【蘋果基金】海事博物館　模擬學駕船" class="photo"/>
                         <span>【蘋果基金】海事博物館　模擬學駕船</span>
-                         <span class="small_view">3,264</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">12,358</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
-
+	              	                        		                        		                        		                        		                                   
 			</li>
 						<li class="vdo_layer" style="width:540px">
 				            <div class="item">
-					<a class="switchvdo_btn v_20162116" href="http://hk.dv.nextmedia.com/actionnews/local/20170909/20147216/20162116
-<view-source:http://hk.dv.nextmedia.com/actionnews/local/20170909/20147216/20162116>">
-                        <img src="http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900407_4de1.jpg
-<view-source:http://static.apple.nextmedia.com/images/apple-photos/video/20170909/160pix/1504900407_4de1.jpg>" title="【蘋果基金】海事博物館免費門票　接受機構申請" alt="【蘋果基金】海事博物館免費門票　接受機構申請" class="photo"/>
+					<a class="switchvdo_btn v_20162116" href="https://hk.video.appledaily.com/actionnews/local/20170909/20147216/20162116">
+                        <img src="https://static.appledaily.hk/images/apple-photos/video/20170909/160pix/1504900407_4de1.jpg" title="【蘋果基金】海事博物館免費門票　接受機構申請" alt="【蘋果基金】海事博物館免費門票　接受機構申請" class="photo"/>
                         <span>【蘋果基金】海事博物館免費門票　接受機構申請</span>
-                         <span class="small_view">2,581</span>                        <img src="http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png
-<view-source:http://staticlayout.apple.nextmedia.com/web_images/layout/icons/overlay_play.png>" class="overlay_play"/>
+                         <span class="small_view">8,634</span>                        <img src="https://staticlayout.appledaily.hk/web_images/layout/icons/overlay_play.png" class="overlay_play"/>
                     </a>
 	            </div>
-
+	              	                        		                        		                        		                        		                                   
 			</li>
-
+			         			                			
 		</ul>
-
+				
     <div class="clear"></div>
 </div>
-

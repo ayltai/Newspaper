@@ -17,21 +17,19 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.app.data.ItemManager;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
-import com.github.ayltai.newspaper.app.widget.ContentView;
+import com.github.ayltai.newspaper.app.widget.CompactItemView;
+import com.github.ayltai.newspaper.app.widget.CozyItemView;
 import com.github.ayltai.newspaper.app.widget.FeaturedView;
-import com.github.ayltai.newspaper.app.widget.FooterView;
-import com.github.ayltai.newspaper.app.widget.HeaderView;
-import com.github.ayltai.newspaper.app.widget.ImageView;
-import com.github.ayltai.newspaper.app.widget.MetaView;
 import com.github.ayltai.newspaper.data.DataManager;
 import com.github.ayltai.newspaper.util.Animations;
+import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
-import com.github.ayltai.newspaper.util.TestUtils;
 import com.github.ayltai.newspaper.view.SimpleUniversalAdapter;
 import com.github.ayltai.newspaper.view.binding.BinderFactory;
 import com.github.ayltai.newspaper.view.binding.FullBinderFactory;
@@ -109,10 +107,10 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
                     .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER))
                     .flatMap(manager -> {
                         if (this.isHistorical) return manager.getHistoricalItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
-                                .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
+                            .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
 
                         if (this.isBookmarked) return manager.getBookmarkedItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
-                                .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
+                            .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
 
                         return manager.getItems(searchText, this.sources.toArray(StringUtils.EMPTY_ARRAY), this.categories.toArray(StringUtils.EMPTY_ARRAY))
                             .compose(RxUtils.applySingleSchedulers(DataManager.SCHEDULER));
@@ -122,7 +120,7 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
                 results.values = items;
                 results.count  = items.size();
             } catch (final Throwable e) {
-                if (TestUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+                if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), e.getMessage(), RxJava2Debug.getEnhancedStackTrace(e));
             }
 
             return results;
@@ -151,9 +149,13 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
         }
     }
 
+    //region Variables
+
     private final Context context;
 
     private Filter filter;
+
+    //endregion
 
     private ItemListAdapter(@NonNull final Context context, @NonNull final List<FullBinderFactory<Item>> factories) {
         super(factories);
@@ -168,25 +170,22 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
     }
 
     @Override
+    protected long getAnimationDuration() {
+        return 2 * this.context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
+    }
+
+    @NonNull
+    @Override
     public SimpleViewHolder<View> onCreateViewHolder(final ViewGroup parent, final int viewType) {
         switch (viewType) {
             case FeaturedView.VIEW_TYPE:
                 return new SimpleViewHolder<>(new FeaturedView(this.context));
 
-            case HeaderView.VIEW_TYPE:
-                return new SimpleViewHolder<>(new HeaderView(this.context));
+            case CozyItemView.VIEW_TYPE:
+                return new SimpleViewHolder<>(new CozyItemView(this.context));
 
-            case ImageView.VIEW_TYPE:
-                return new SimpleViewHolder<>(new ImageView(this.context));
-
-            case FooterView.VIEW_TYPE:
-                return new SimpleViewHolder<>(new FooterView(this.context));
-
-            case ContentView.VIEW_TYPE:
-                return new SimpleViewHolder<>(new ContentView(this.context));
-
-            case MetaView.VIEW_TYPE:
-                return new SimpleViewHolder<>(new MetaView(this.context));
+            case CompactItemView.VIEW_TYPE:
+                return new SimpleViewHolder<>(new CompactItemView(this.context));
 
             default:
                 throw new IllegalArgumentException("Unsupported view type: " + viewType);
