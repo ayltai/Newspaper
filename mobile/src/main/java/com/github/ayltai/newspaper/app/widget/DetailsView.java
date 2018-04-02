@@ -281,8 +281,6 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
 
             this.videoContainer.addView(this.videoView);
         }
-
-        this.scrollView.scrollTo(0, 0);
     }
 
     @Override
@@ -452,6 +450,8 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
         this.entities.removeAllViews();
 
         super.onAttachedToWindow();
+
+        this.scrollView.scrollTo(0, 0);
 
         final Activity activity = this.getActivity();
 
