@@ -102,12 +102,12 @@ configurations {
 
 ext {
     multidexVersion       = '1.0.3'
-    supportLibraryVersion = '27.1.0'
+    supportLibraryVersion = '27.1.1'
     architectureVersion   = '1.1.1'
-    firebaseSdkVersion    = '11.8.0'
+    firebaseSdkVersion    = '15.0.0'
     daggerVersion         = '2.15'
     retrofitVersion       = '2.4.0'
-    frescoVersion         = '1.8.1'
+    frescoVersion         = '1.9.0'
     bigImageViewerVersion = '1.4.6'
     exoPlayerVersion      = '2.7.2'
     autoValueVersion      = '1.6'
@@ -167,7 +167,7 @@ dependencies {
     }
 
     // Database
-    implementation 'io.realm:android-adapters:2.1.1'
+    implementation 'io.realm:android-adapters:3.0.0'
 
     // Image processing
     implementation "com.facebook.fresco:fresco:$frescoVersion"
@@ -215,7 +215,7 @@ dependencies {
     testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testImplementation 'org.mockito:mockito-core:2.17.6'
+    testImplementation 'org.mockito:mockito-core:2.18.2'
     testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
