@@ -9,6 +9,14 @@ jacoco {
     toolVersion '0.8.1'
 }
 
+checkstyle {
+    toolVersion '8.9'
+}
+
+findbugs {
+    toolVersion '3.0.1'
+}
+
 String NLP_API_TOKEN = System.getenv('NLP_API_TOKEN')
 
 String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
@@ -247,28 +255,52 @@ configurations.all {
     }
 }
 
-task customFindBugs(type : FindBugs) {
-    ignoreFailures = false
-    effort         = "max"
-    reportLevel    = "medium"
-    classes        = files("$project.buildDir/intermediates/classes")
+task customCheckstyle(type : Checkstyle) {
+    description    = 'Running Checkstyle'
+    group          = 'verification'
+    ignoreFailures = true
+    showViolations = true
+
+    configFile file("$rootProject.rootDir/checkstyle.xml")
+
+    source  'src/main/java', 'src/debug/java'
+    include '**/*.java'
+    exclude '**/*Test.java'
+    exclude '**/gen/**'
+    exclude '**/R.java'
+    exclude '**/BuildConfig.java'
+
+    reports {
+        xml.enabled      = false
+        html.enabled     = true
+        xml.destination  file("$project.buildDir/reports/checkstyle/checkstyle-output.xml")
+        html.destination file("$project.buildDir/reports/checkstyle/checkstyle-output.html")
+    }
+
+    classpath = files()
+}
+
+task customFindBugs(type : FindBugs, dependsOn : 'assembleDebug') {
+    description    = 'Runing FindBugs'
+    group          = 'verification'
+    effort         = 'max'
+    reportLevel    = 'medium'
+    source         = fileTree('src/main/java')
+    classes        = fileTree('build/intermediates/classes/debug')
+    classpath      = files()
+    ignoreFailures = true
 
     // Use this only if you want exclude some errors
     excludeFilter = file("$rootProject.rootDir/findbugs-android-exclude.xml")
-
-    source    = fileTree('src/main/java/')
-    classpath = files()
 
     reports {
         xml.enabled      = false
         xml.withMessages = true
         html.enabled     = true
-        xml.destination  file("$project.buildDir/outputs/findbugs/findbugs-output.xml")
-        html.destination file("$project.buildDir/outputs/findbugs/findbugs-output.html")
+        xml.destination  file("$project.buildDir/reports/findbugs/findbugs-output.xml")
+        html.destination file("$project.buildDir/reports/findbugs/findbugs-output.html")
     }
 }
-
-assemble.dependsOn customFindBugs
 
 def coverageSourceDirs = [
     'src/main/java',
@@ -280,8 +312,8 @@ tasks.withType(Test) {
 }
 
 task jacocoTestReport(type : JacocoReport, dependsOn : 'testDebugUnitTest') {
-    group       = 'Reporting'
     description = 'Generate JaCoCo coverage reports'
+    group       = 'Reporting'
 
     reports {
         xml.enabled  = true
