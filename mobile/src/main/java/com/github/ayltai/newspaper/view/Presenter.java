@@ -1,9 +1,5 @@
 package com.github.ayltai.newspaper.view;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.app.Activity;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
@@ -14,6 +10,10 @@ import android.support.annotation.UiThread;
 
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
@@ -38,6 +38,16 @@ public class Presenter<V extends Presenter.View> {
 
         @CallSuper
         void onDetachedFromWindow();
+    }
+
+    public interface Factory<P extends Presenter<V>, V extends Presenter.View> {
+        boolean isSupported(@NonNull Object key);
+
+        @NonNull
+        P createPresenter();
+
+        @NonNull
+        V createView(@NonNull Context context);
     }
 
     private final List<Disposable> disposables = Collections.synchronizedList(new ArrayList<>());

@@ -1,7 +1,5 @@
 package com.github.ayltai.newspaper.app;
 
-import java.lang.ref.SoftReference;
-
 import android.animation.Animator;
 import android.app.Activity;
 import android.graphics.Point;
@@ -21,11 +19,13 @@ import com.github.ayltai.newspaper.view.ModelPresenter;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.RxFlow;
 
+import java.lang.ref.SoftReference;
+import java.util.Arrays;
+import java.util.List;
+
 import flow.Direction;
 
 final class MainFlow extends RxFlow {
-
-
     MainFlow(@NonNull final Activity activity) {
         super(activity);
     }
@@ -34,6 +34,15 @@ final class MainFlow extends RxFlow {
     @Override
     protected Object getDefaultKey() {
         return MainView.KEY;
+    }
+
+    @NonNull
+    @Override
+    protected List<Presenter.Factory> getFactories() {
+        return Arrays.asList(
+            new MainPresenter.Factory(),
+            new DetailsPresenter.Factory()
+        );
     }
 
     @Nullable
@@ -70,13 +79,14 @@ final class MainFlow extends RxFlow {
             view      = pair.second.get();
         }
 
-        if (presenter == null || view == null) {
-            if (key instanceof MainView.Key) {
-                presenter = new MainPresenter();
-                view      = new MainView(this.getContext());
-            } else if (key instanceof DetailsView.Key) {
-                presenter = new DetailsPresenter();
-                view      = new DetailsView(this.getContext());
+        if (presenter == null || view == null && key != null) {
+            for (final Presenter.Factory factory : this.getFactories()) {
+                if (factory.isSupported(key)) {
+                    presenter = factory.createPresenter();
+                    view      = factory.createView(this.getContext());
+
+                    break;
+                }
             }
         }
 

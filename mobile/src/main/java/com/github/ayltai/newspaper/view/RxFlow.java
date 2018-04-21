@@ -1,9 +1,5 @@
 package com.github.ayltai.newspaper.view;
 
-import java.lang.ref.SoftReference;
-import java.util.Collections;
-import java.util.Map;
-
 import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
@@ -22,6 +18,11 @@ import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Locatable;
+
+import java.lang.ref.SoftReference;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import flow.Direction;
 import flow.Flow;
@@ -48,6 +49,9 @@ public abstract class RxFlow {
     protected Context getContext() {
         return this.activity;
     }
+
+    @NonNull
+    protected abstract List<Presenter.Factory> getFactories();
 
     @NonNull
     protected Map<Object, Pair<SoftReference<Presenter>, SoftReference<Presenter.View>>> getCache() {

@@ -1,11 +1,5 @@
 package com.github.ayltai.newspaper.app.view;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
@@ -23,6 +17,7 @@ import com.github.ayltai.newspaper.app.data.ItemManager;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
+import com.github.ayltai.newspaper.app.widget.DetailsView;
 import com.github.ayltai.newspaper.client.Client;
 import com.github.ayltai.newspaper.client.ClientFactory;
 import com.github.ayltai.newspaper.data.DataManager;
@@ -31,8 +26,15 @@ import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
+import com.github.ayltai.newspaper.view.Presenter;
 import com.textrazor.annotations.Entity;
 import com.textrazor.annotations.Topic;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -57,6 +59,25 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
         void share(@NonNull String url);
 
         void showImage(@NonNull String url);
+    }
+
+    public static final class Factory implements Presenter.Factory<DetailsPresenter, DetailsPresenter.View> {
+        @Override
+        public boolean isSupported(@NonNull final Object key) {
+            return key instanceof DetailsView.Key;
+        }
+
+        @NonNull
+        @Override
+        public DetailsPresenter createPresenter() {
+            return new DetailsPresenter();
+        }
+
+        @NonNull
+        @Override
+        public DetailsPresenter.View createView(@NonNull final Context context) {
+            return new DetailsView(context);
+        }
     }
 
     @UiThread
