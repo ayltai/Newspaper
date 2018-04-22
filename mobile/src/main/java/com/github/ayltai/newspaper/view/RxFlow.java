@@ -120,7 +120,6 @@ public abstract class RxFlow {
     @NonNull
     protected abstract Pair<Presenter, Presenter.View> onDispatch(@Nullable Object key);
 
-    @SuppressWarnings("CyclomaticComplexity")
     private void dispatch(@NonNull final View toView, @Nullable final State outgoingState, @NonNull final State incomingState, @NonNull final Direction direction, @NonNull final TraversalCallback callback) {
         incomingState.restore(toView);
 
@@ -138,46 +137,35 @@ public abstract class RxFlow {
                 view.onAttachedToWindow();
             }
         } else {
-            if (direction == Direction.FORWARD) {
-                container.addView(toView);
-
-                if (fromView != null) {
-                    if (Animations.isEnabled()) {
-                        final Animator animator = this.getAnimator(toView, Direction.FORWARD, incomingState.getKey() instanceof Locatable ? ((Locatable)incomingState.getKey()).getLocation() : null, null, () -> container.removeView(fromView));
-                        if (animator == null) {
-                            container.removeView(fromView);
-                        } else {
-                            animator.start();
-                        }
-                    } else {
-                        container.removeView(fromView);
-                    }
-                }
-            } else if (direction == Direction.BACKWARD) {
+            if (direction == Direction.BACKWARD) {
                 container.addView(toView, 0);
 
-                if (fromView != null) {
-                    if (Animations.isEnabled()) {
-                        final Animator animator = this.getAnimator(fromView, Direction.BACKWARD, outgoingState != null && outgoingState.getKey() instanceof Locatable ? ((Locatable)outgoingState.getKey()).getLocation() : null, null, () -> container.removeView(fromView));
-                        if (animator == null) {
-                            container.removeView(fromView);
-                        } else {
-                            animator.start();
-                        }
-                    } else {
-                        container.removeView(fromView);
-                    }
-                }
-            } else if (direction == Direction.REPLACE) {
+                this.dispatch(container, fromView, toView, direction, outgoingState != null && outgoingState.getKey() instanceof Locatable ? ((Locatable)outgoingState.getKey()).getLocation() : null);
+            } else {
                 container.addView(toView);
-                if (fromView != null) container.removeView(fromView);
+
+                this.dispatch(container, fromView, toView, direction, incomingState.getKey() instanceof Locatable ? ((Locatable)incomingState.getKey()).getLocation() : null);
             }
         }
 
         callback.onTraversalCompleted();
     }
 
-    @SuppressWarnings("unchecked")
+    private void dispatch(@NonNull final ViewGroup container, @Nullable final View fromView, @NonNull final View toView, final Direction direction, final Point location) {
+        if (fromView != null) {
+            if (Animations.isEnabled()) {
+                final Animator animator = this.getAnimator(direction == Direction.BACKWARD ? fromView : toView, direction, location, null, () -> container.removeView(fromView));
+                if (animator == null) {
+                    container.removeView(fromView);
+                } else {
+                    animator.start();
+                }
+            } else {
+                container.removeView(fromView);
+            }
+        }
+    }
+
     private void subscribe(@Nullable final Presenter presenter, @Nullable final Presenter.View view) {
         if (presenter != null && view != null) {
             if (view.attachments() != null) this.manageDisposable(view.attachments(), view.attachments().subscribe(

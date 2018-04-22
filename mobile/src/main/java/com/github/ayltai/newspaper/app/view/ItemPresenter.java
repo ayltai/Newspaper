@@ -1,8 +1,5 @@
 package com.github.ayltai.newspaper.app.view;
 
-import java.util.Date;
-import java.util.List;
-
 import android.app.Activity;
 import android.graphics.Point;
 import android.support.annotation.CallSuper;
@@ -29,6 +26,9 @@ import com.github.ayltai.newspaper.util.Optional;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.binding.Binder;
 import com.github.ayltai.newspaper.view.binding.BindingPresenter;
+
+import java.util.Date;
+import java.util.List;
 
 import flow.Flow;
 import io.reactivex.Flowable;
@@ -229,7 +229,6 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
                 .addAttribute(new Attribute("URL", wikiLink)));
     }
 
-    @SuppressWarnings("CyclomaticComplexity")
     @CallSuper
     @Override
     public void onViewAttached(@NonNull final V view, final boolean isFirstTimeAttachment) {

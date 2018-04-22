@@ -1,9 +1,5 @@
 package com.github.ayltai.newspaper.view;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -14,6 +10,11 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -46,7 +47,9 @@ public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.V
     @NonNull
     public abstract Single<Irrelevant> clearAll();
 
+    @SuppressFBWarnings("ACEM_ABSTRACT_CLASS_EMPTY_METHODS")
     protected void onPullToRefresh() {
+        // Ignored
     }
 
     protected void resetState() {

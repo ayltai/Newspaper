@@ -1,11 +1,5 @@
 package com.github.ayltai.newspaper.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.speech.tts.TextToSpeech;
@@ -16,6 +10,12 @@ import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import com.google.auto.value.AutoValue;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.Single;
 import io.reactivex.functions.Action;
@@ -109,7 +109,6 @@ public abstract class SimpleTextToSpeech {
         if (this.tts != null) this.tts.shutdown();
     }
 
-    @SuppressWarnings("CyclomaticComplexity")
     private Single<Irrelevant> init() {
         return Single.create(emitter -> this.tts = new TextToSpeech(this.activity, status -> {
             if (status == TextToSpeech.SUCCESS) {
@@ -140,6 +139,7 @@ public abstract class SimpleTextToSpeech {
         }));
     }
 
+    @SuppressWarnings("deprecated")
     private boolean initIfLocaleIsAvailable() {
         for (final Locale locale : this.locales) {
             final int availability = this.tts.isLanguageAvailable(locale);

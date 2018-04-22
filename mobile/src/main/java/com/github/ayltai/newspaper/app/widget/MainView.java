@@ -1,9 +1,5 @@
 package com.github.ayltai.newspaper.app.widget;
 
-import java.lang.ref.SoftReference;
-import java.lang.reflect.Field;
-import java.util.Map;
-
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -24,8 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 
-import com.google.auto.value.AutoValue;
-
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
@@ -36,6 +30,11 @@ import com.github.ayltai.newspaper.util.Animations;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.BaseView;
+import com.google.auto.value.AutoValue;
+
+import java.lang.ref.SoftReference;
+import java.lang.reflect.Field;
+import java.util.Map;
 
 import flow.ClassKey;
 import io.reactivex.Flowable;
@@ -115,7 +114,6 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
 
     //endregion
 
-    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         this.toolbar.getMenu().findItem(R.id.action_search).collapseActionView();
@@ -328,7 +326,6 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
         MainView.setShiftMode(this.bottomNavigationView, false, false);
     }
 
-    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private void showMoreActions() {
         this.isMoreActionsShown = true;
 
@@ -352,7 +349,6 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
         if (this.bottomNavigationView.getSelectedItemId() == R.id.action_history || this.bottomNavigationView.getSelectedItemId() == R.id.action_bookmark) this.clearAllAction.setClickable(true);
     }
 
-    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private void hideMoreActions() {
         this.isMoreActionsShown = false;
 

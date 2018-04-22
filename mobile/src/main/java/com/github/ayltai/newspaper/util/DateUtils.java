@@ -22,7 +22,7 @@ public final class DateUtils {
     }
 
     @SuppressFBWarnings("ICAST_INT_CAST_TO_FLOAT_PASSED_TO_ROUND")
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Nullable
     public static String toApproximateTime(@NonNull final Context context, final long time) {
         final long now = System.currentTimeMillis();

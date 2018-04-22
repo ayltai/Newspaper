@@ -14,18 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
-
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
@@ -40,6 +28,16 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.DeviceUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
@@ -57,9 +55,9 @@ public class VideoView extends ItemView implements ItemPresenter.View {
 
     private final View         thumbnailContainer;
 
-    private View                fullScreenAction;
-    private SimpleExoPlayerView playerView;
-    private SimpleExoPlayer     player;
+    private View            fullScreenAction;
+    private PlayerView      playerView;
+    private SimpleExoPlayer player;
 
     //endregion
 
@@ -118,7 +116,7 @@ public class VideoView extends ItemView implements ItemPresenter.View {
 
     public void setUpPlayer() {
         if (!VideoView.isYouTubeUrl(this.video.getVideoUrl())) {
-            this.playerView = (SimpleExoPlayerView)LayoutInflater.from(this.getContext()).inflate(R.layout.widget_video_player, this, false);
+            this.playerView = (PlayerView)LayoutInflater.from(this.getContext()).inflate(R.layout.widget_video_player, this, false);
             this.player     = ExoPlayerFactory.newSimpleInstance(this.getContext(), new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(null)));
 
             this.playerView.setPlayer(this.player);
@@ -129,7 +127,7 @@ public class VideoView extends ItemView implements ItemPresenter.View {
             final View fullScreenExitAction = this.playerView.findViewById(R.id.exo_fullscreen_exit);
             fullScreenExitAction.setVisibility(View.GONE);
 
-            this.player.prepare(new ExtractorMediaSource(Uri.parse(this.video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), null, new OkHttpDataSourceFactory(ComponentFactory.getInstance().getHttpComponent().httpClient(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null)), new DefaultExtractorsFactory(), null, null));
+            this.player.prepare(new ExtractorMediaSource.Factory(new DefaultDataSourceFactory(this.getContext(), null, new OkHttpDataSourceFactory(ComponentFactory.getInstance().getHttpComponent().httpClient(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null))).createMediaSource(Uri.parse(this.video.getVideoUrl())));
 
             final Point                  size   = DeviceUtils.getScreenSize(this.getContext());
             final ViewGroup.LayoutParams params = this.playerView.getLayoutParams();

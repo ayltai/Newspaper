@@ -1,11 +1,5 @@
 package com.github.ayltai.newspaper.client;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
@@ -23,6 +17,12 @@ import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -45,7 +45,6 @@ final class HketClient extends RssClient {
         super(client, apiService, source);
     }
 
-    @SuppressWarnings("CyclomaticComplexity")
     @WorkerThread
     @NonNull
     @Override

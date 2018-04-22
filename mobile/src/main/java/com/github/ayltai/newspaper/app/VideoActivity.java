@@ -1,9 +1,5 @@
 package com.github.ayltai.newspaper.app;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,21 +12,23 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
-
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.app.config.AppConfig;
 import com.github.ayltai.newspaper.util.RxUtils;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import io.reactivex.disposables.Disposable;
 
@@ -70,7 +68,7 @@ public final class VideoActivity extends AppCompatActivity {
 
         this.videoPlayer = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(null)));
 
-        final SimpleExoPlayerView videoPlayerView = this.findViewById(R.id.video);
+        final PlayerView videoPlayerView = this.findViewById(R.id.video);
         videoPlayerView.setPlayer(this.videoPlayer);
 
         final View videoFullScreen     = videoPlayerView.findViewById(R.id.exo_fullscreen);
@@ -88,7 +86,7 @@ public final class VideoActivity extends AppCompatActivity {
             this.finish();
         });
 
-        this.videoPlayer.prepare(new ExtractorMediaSource(Uri.parse(videoUrl), new DefaultDataSourceFactory(this, Util.getUserAgent(this, BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null), new DefaultExtractorsFactory(), null, null));
+        this.videoPlayer.prepare(new ExtractorMediaSource.Factory(new DefaultDataSourceFactory(this, Util.getUserAgent(this, BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null)).createMediaSource(Uri.parse(videoUrl)));
         this.videoPlayer.seekTo(seekPosition);
 
         this.findViewById(R.id.exo_playback_control_view).setVisibility(View.VISIBLE);

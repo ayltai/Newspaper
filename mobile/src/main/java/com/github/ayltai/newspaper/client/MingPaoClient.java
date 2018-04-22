@@ -1,18 +1,9 @@
 package com.github.ayltai.newspaper.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
@@ -24,6 +15,15 @@ import com.github.ayltai.newspaper.net.ApiService;
 import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -51,7 +51,7 @@ final class MingPaoClient extends RssClient {
         super(client, apiService, source);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @WorkerThread
     @NonNull
     @Override

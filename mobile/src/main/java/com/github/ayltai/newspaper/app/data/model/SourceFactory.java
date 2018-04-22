@@ -1,17 +1,17 @@
 package com.github.ayltai.newspaper.app.data.model;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.client.HeadlineClient;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
 
 import io.realm.RealmList;
 
@@ -66,7 +66,7 @@ public final class SourceFactory {
         return source;
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createAppleDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
         final String date = SourceFactory.DATE_FORMAT.get().format(new Date());
@@ -79,7 +79,7 @@ public final class SourceFactory {
             new Category(String.format("https://hk.appledaily.com/video/videolist/%s/sports/home/0", date), categories[15])), R.drawable.avatar_apple_daily);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createOrientalDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[1], new RealmList<>(
@@ -91,7 +91,7 @@ public final class SourceFactory {
             new Category("http://orientaldaily.on.cc/rss/sport.xml", categories[6])), R.drawable.avatar_oriental_daily);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createSingTaoDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[2], new RealmList<>(
@@ -104,7 +104,7 @@ public final class SourceFactory {
             new Category("http://std.stheadline.com/daily/section-list.php?cat=14", categories[6])), R.drawable.avatar_singtao);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createSingTaoRealtimeSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[3], new RealmList<>(
@@ -117,7 +117,7 @@ public final class SourceFactory {
             new Category("http://std.stheadline.com/instant/articles/listview/%E9%AB%94%E8%82%B2/", categories[15])), R.drawable.avatar_singtao);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createEconomicTimesSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[4], new RealmList<>(
@@ -129,7 +129,7 @@ public final class SourceFactory {
             new Category("http://www.hket.com/rss/technology", categories[16])), R.drawable.avatar_hket);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createSingPaoDailySource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[5], new RealmList<>(
@@ -141,7 +141,7 @@ public final class SourceFactory {
             new Category("https://www.singpao.com.hk/index.php?fi=news7", categories[7])), R.drawable.avatar_singpao);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createMingPaoSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[6], new RealmList<>(
@@ -162,7 +162,7 @@ public final class SourceFactory {
             new Category("https://news.mingpao.com/rss/ins/s00006.xml", categories[15])), R.drawable.avatar_mingpao);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createHeadlineSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[7], new RealmList<>(
@@ -176,7 +176,7 @@ public final class SourceFactory {
             new Category(HeadlineClient.URL + HeadlineClient.CATEGORY_SPORTS, categories[8])), R.drawable.avatar_headline);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createHeadlineRealtimeSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[8], new RealmList<>(
@@ -189,7 +189,7 @@ public final class SourceFactory {
             new Category("http://hd.stheadline.com/news/realtime/spt/", categories[15])), R.drawable.avatar_headline);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createSkyPostSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[9], new RealmList<>(
@@ -202,13 +202,13 @@ public final class SourceFactory {
             new Category("http://skypost.ulifestyle.com.hk/rss/sras007", categories[8])), R.drawable.avatar_skypost);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createEconomicJournalSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[10], new RealmList<>(new Category("http://www.hkej.com/rss/onlinenews.xml", categories[12])), R.drawable.avatar_hkej);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createRadioTelevisionSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[11], new RealmList<>(
@@ -219,7 +219,7 @@ public final class SourceFactory {
             new Category("http://rthk.hk/rthk/news/rss/c_expressnews_csport.xml", categories[15])), R.drawable.avatar_rthk);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createSouthChinaMorningPostSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[12], new RealmList<>(
@@ -234,7 +234,7 @@ public final class SourceFactory {
         ), R.drawable.avatar_scmp);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createTheStandardSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[13], new RealmList<>(
@@ -246,7 +246,7 @@ public final class SourceFactory {
         ), R.drawable.avatar_the_standard);
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private static Source createWenWeiPoSource(@NonNull final String[] sources, @NonNull final String[] categories) {
         return new Source(sources[14], new RealmList<>(

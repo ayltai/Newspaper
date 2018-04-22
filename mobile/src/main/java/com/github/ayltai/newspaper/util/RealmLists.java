@@ -15,7 +15,7 @@ public final class RealmLists {
 
         for (final T item : items) {
             if (builder.length() > 0) builder.append(", ");
-            builder.append(item.toString());
+            builder.append(item);
         }
 
         return builder.toString();

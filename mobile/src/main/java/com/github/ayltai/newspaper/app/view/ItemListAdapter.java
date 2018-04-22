@@ -1,11 +1,5 @@
 package com.github.ayltai.newspaper.app.view;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import android.animation.Animator;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -35,6 +29,12 @@ import com.github.ayltai.newspaper.view.binding.BinderFactory;
 import com.github.ayltai.newspaper.view.binding.FullBinderFactory;
 import com.github.ayltai.newspaper.widget.DelegatingFilter;
 import com.github.ayltai.newspaper.widget.SimpleViewHolder;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, SimpleViewHolder<View>> implements Filterable {
     public static final class Builder {
@@ -96,7 +96,6 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
             this.isFeatured = isFeatured;
         }
 
-        @SuppressWarnings("IllegalCatch")
         @NonNull
         @Override
         public FilterResults performFiltering(@Nullable final CharSequence searchText) {
@@ -126,7 +125,6 @@ public final class ItemListAdapter extends SimpleUniversalAdapter<Item, View, Si
             return results;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public void publishResults(@Nullable final CharSequence searchText, @Nullable final FilterResults results) {
             ItemListAdapter.this.clear();

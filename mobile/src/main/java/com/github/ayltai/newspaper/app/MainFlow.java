@@ -53,7 +53,6 @@ final class MainFlow extends RxFlow {
         return super.getAnimator(view, direction, location, onStart, onEnd);
     }
 
-    @SuppressWarnings({ "unchecked", "CyclomaticComplexity" })
     @NonNull
     @Override
     protected Pair<Presenter, Presenter.View> onDispatch(@Nullable final Object key) {

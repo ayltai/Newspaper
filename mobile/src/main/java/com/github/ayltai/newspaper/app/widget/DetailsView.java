@@ -1,9 +1,5 @@
 package com.github.ayltai.newspaper.app.widget;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
@@ -34,8 +30,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.auto.value.AutoValue;
-
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.ayltai.newspaper.Constants;
@@ -55,7 +49,12 @@ import com.github.ayltai.newspaper.util.SimpleTextToSpeech;
 import com.github.ayltai.newspaper.util.SnackbarUtils;
 import com.github.ayltai.newspaper.util.Views;
 import com.github.piasy.biv.view.BigImageView;
+import com.google.auto.value.AutoValue;
 import com.stfalcon.frescoimageviewer.ImageViewer;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import flow.ClassKey;
 import io.reactivex.Flowable;
@@ -63,6 +62,7 @@ import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 import xyz.hanks.library.bang.SmallBangView;
 
+@SuppressWarnings("checkstyle:MethodCount")
 public final class DetailsView extends ItemView implements DetailsPresenter.View {
     @AutoValue
     public abstract static class Key extends ClassKey implements Locatable, Parcelable {
@@ -313,7 +313,7 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
             if (activity == null) {
                 this.updateTextToSpeechUi(false);
             } else {
-                SimpleTextToSpeech.builder()
+                this.manageDisposable(SimpleTextToSpeech.builder()
                     .addLocale(new Locale("yue", "HK"))
                     .addLocale(new Locale("zh", "HK"))
                     .setOnNotSupported(() -> {
@@ -343,7 +343,7 @@ public final class DetailsView extends ItemView implements DetailsPresenter.View
                             this.updateTextToSpeechUi(false);
                             if (this.tts != null) this.tts.shutdown();
                         }
-                    });
+                    }));
             }
         } else {
             if (this.tts != null) this.tts.shutdown();

@@ -1,20 +1,9 @@
 package com.github.ayltai.newspaper.client;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.github.ayltai.newspaper.Constants;
@@ -27,6 +16,17 @@ import com.github.ayltai.newspaper.net.NetworkUtils;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -88,7 +88,7 @@ final class AppleDailyClient extends Client {
                             if (image != null) item.getImages().add(new Image(image));
 
                             final String time = StringUtils.substringBetween(section, "pix/", "_");
-                            if (time != null) item.setPublishDate(new Date(Long.valueOf(time) * AppleDailyClient.SECOND));
+                            if (time != null) item.setPublishDate(new Date(Long.parseLong(time) * AppleDailyClient.SECOND));
 
                             items.add(item);
                         }
@@ -155,7 +155,7 @@ final class AppleDailyClient extends Client {
         });
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Nullable
     private Video extractVideo(@NonNull final String url, @Nullable final String videoId) {
         if (videoId == null) return null;

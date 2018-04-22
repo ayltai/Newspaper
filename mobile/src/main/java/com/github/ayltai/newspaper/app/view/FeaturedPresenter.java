@@ -1,12 +1,5 @@
 package com.github.ayltai.newspaper.app.view;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
@@ -24,6 +17,13 @@ import com.github.ayltai.newspaper.media.DaggerImageComponent;
 import com.github.ayltai.newspaper.media.ImageModule;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.Views;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -106,10 +106,13 @@ public class FeaturedPresenter extends ItemPresenter<FeaturedView> implements Li
     private void cancelImageRequests() {
         if (this.getView() == null) return;
 
-        for (final Integer requestId : this.requestIds) DaggerImageComponent.builder()
-            .imageModule(new ImageModule(this.getView().getContext()))
-            .build()
-            .imageLoader()
-            .cancel(requestId);
+        synchronized (this) {
+            for (final Integer requestId : this.requestIds)
+                DaggerImageComponent.builder()
+                    .imageModule(new ImageModule(this.getView().getContext()))
+                    .build()
+                    .imageLoader()
+                    .cancel(requestId);
+        }
     }
 }

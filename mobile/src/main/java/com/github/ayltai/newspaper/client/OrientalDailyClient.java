@@ -1,10 +1,5 @@
 package com.github.ayltai.newspaper.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -22,6 +17,11 @@ import com.github.ayltai.newspaper.rss.RssFeed;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -99,7 +99,7 @@ final class OrientalDailyClient extends RssClient {
         return items;
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @WorkerThread
     @Nullable
     private Video extractVideo(@NonNull final String url) {

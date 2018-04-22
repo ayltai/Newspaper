@@ -83,6 +83,7 @@ android {
         abortOnError false
         disable     'RestrictedApi'
         disable     'MissingTranslation'
+        disable     'Unchecked'
     }
 
     aaptOptions {

@@ -1,9 +1,5 @@
 package com.github.ayltai.newspaper.app.widget;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -18,6 +14,10 @@ import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.view.OptionsPresenter;
 import com.github.ayltai.newspaper.widget.SwitchOptionsView;
 import com.github.ayltai.newspaper.widget.TextOptionsView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import io.reactivex.disposables.Disposable;
 
@@ -43,7 +43,7 @@ public final class OptionsAdapter extends PagerAdapter {
         return view == object;
     }
 
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Override
     public int getCount() {
         return 3;
@@ -66,7 +66,6 @@ public final class OptionsAdapter extends PagerAdapter {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @NonNull
     @Override
     public Object instantiateItem(@NonNull final ViewGroup parent, final int position) {

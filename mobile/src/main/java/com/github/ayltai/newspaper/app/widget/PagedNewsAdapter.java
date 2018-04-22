@@ -1,10 +1,5 @@
 package com.github.ayltai.newspaper.app.widget;
 
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
@@ -32,6 +27,11 @@ import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Views;
 import com.github.ayltai.newspaper.widget.VerticalListView;
+
+import java.lang.ref.SoftReference;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -131,7 +131,6 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
         return this.categories.get(position);
     }
 
-    @SuppressWarnings("unchecked")
     @Nullable
     public VerticalListView<Item> getItem(final int position) {
         final SoftReference<View> view = this.views.get(position);
