@@ -1,7 +1,5 @@
 package com.github.ayltai.newspaper;
 
-import java.io.File;
-
 import android.content.Intent;
 import android.support.annotation.CallSuper;
 import android.support.test.InstrumentationRegistry;
@@ -12,14 +10,16 @@ import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.github.ayltai.newspaper.app.VideoActivity;
+import com.github.ayltai.newspaper.util.MoreTestUtils;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.github.ayltai.newspaper.app.VideoActivity;
-import com.github.ayltai.newspaper.util.MoreTestUtils;
+import java.io.File;
 
 @SmallTest
 @RunWith(AndroidJUnit4.class)
@@ -44,7 +44,7 @@ public final class VideoActivityTest {
     @Test
     public void test() {
         Espresso.onView(Matchers.allOf(
-            ViewMatchers.withClassName(Matchers.is("com.google.android.exoplayer2.ui.SimpleExoPlayerView")),
+            ViewMatchers.withClassName(Matchers.is("com.google.android.exoplayer2.ui.PlayerView")),
             ViewMatchers.withId(R.id.video),
             ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
