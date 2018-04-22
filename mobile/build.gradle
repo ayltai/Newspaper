@@ -123,6 +123,7 @@ ext {
     robolectricVersion    = '3.8'
     powerMockVersion      = '2.0.0-beta.5'
     espressoVersion       = '3.0.1'
+    codacyVersion         = '4.0.0'
 }
 
 repositories {
@@ -246,7 +247,7 @@ dependencies {
     androidTestUtil 'com.android.support.test:orchestrator:1.0.1'
 
     // Code coverage by Codacy
-    codacy 'com.github.codacy:codacy-coverage-reporter:4.0.0'
+    codacy "com.github.codacy:codacy-coverage-reporter:$codacyVersion"
 }
 
 configurations.all {
@@ -357,10 +358,11 @@ task jacocoTestReport(type : JacocoReport, dependsOn : 'testDebugUnitTest') {
 }
 
 task uploadCoverageToCodacy(type : JavaExec, dependsOn : jacocoTestReport) {
-    main      = "com.codacy.CodacyCoverageReporter"
-    classpath = configurations.codacy
+    main = "-jar"
 
     args = [
+        "codacy-coverage-reporter-assembly-$codacyVersion",
+        "report",
         "-l",
         "Java",
         "-r",
