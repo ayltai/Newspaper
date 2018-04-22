@@ -87,7 +87,9 @@ public abstract class RxFlow {
                 final Presenter.View                  view      = pair.second;
 
                 if (presenter != null && view != null) {
-                    this.cache.put(incomingState.getKey(), Pair.create(new SoftReference<>(presenter), new SoftReference<>(view)));
+                    if (direction != Direction.BACKWARD && !DevUtils.isRunningInstrumentedTest()) {
+                        this.cache.put(incomingState.getKey(), Pair.create(new SoftReference<>(presenter), new SoftReference<>(view)));
+                    }
 
                     this.subscribe(presenter, view);
                     this.dispatch((View)view, outgoingState, incomingState, direction, callback);
