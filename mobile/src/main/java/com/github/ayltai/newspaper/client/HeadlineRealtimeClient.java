@@ -1,13 +1,5 @@
 package com.github.ayltai.newspaper.client;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
@@ -24,6 +16,14 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.StringUtils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 
@@ -34,7 +34,6 @@ final class HeadlineRealtimeClient extends Client {
     private static final String IMAGE_URI = "http://static.stheadline.com";
     private static final String TAG_LINK  = "</a>";
     private static final String TAG_QUOTE = "\"";
-    private static final String TAG_CLOSE = "\">";
     private static final String HTTP      = "http:";
 
     //endregion
@@ -66,10 +65,10 @@ final class HeadlineRealtimeClient extends Client {
 
                     for (final String section : sections) {
                         final NewsItem item  = new NewsItem();
-                        final String   title = StringUtils.substringBetween(section, "<h4>", "</h4>");
+                        final String   title = StringUtils.substringBetween(section, "<h", "</h");
 
-                        item.setTitle(StringUtils.substringBetween(title, HeadlineRealtimeClient.TAG_CLOSE, HeadlineRealtimeClient.TAG_LINK));
-                        item.setLink(HeadlineRealtimeClient.BASE_URI + StringUtils.substringBetween(title, "<a href=\"", HeadlineRealtimeClient.TAG_CLOSE));
+                        item.setTitle(StringUtils.substringBetween(title, "\">", HeadlineRealtimeClient.TAG_LINK));
+                        item.setLink(HeadlineRealtimeClient.BASE_URI + StringUtils.substringBetween(title, "<a href=\"", "\" "));
                         item.setDescription(StringUtils.substringBetween(section, "<p class=\"text\">", "</p>"));
                         item.setSource(this.source.getName());
                         if (category != null) item.setCategory(category);
