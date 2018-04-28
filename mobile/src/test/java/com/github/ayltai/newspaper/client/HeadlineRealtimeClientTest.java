@@ -1,17 +1,7 @@
 package com.github.ayltai.newspaper.client;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.List;
-
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.robolectric.RuntimeEnvironment;
 
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
@@ -19,11 +9,21 @@ import com.github.ayltai.newspaper.app.data.model.SourceFactory;
 import com.github.ayltai.newspaper.net.NetworkTest;
 import com.github.ayltai.newspaper.util.IOUtils;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.robolectric.RuntimeEnvironment;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
+
 import io.reactivex.Observable;
 
 public final class HeadlineRealtimeClientTest extends NetworkTest {
     private static final String HEADLINE_REALTIME_URL         = "http://hd.stheadline.com/news/realtime/hk/";
-    private static final String HEADLINE_REALTIME_DETAILS_URL = "http://hd.stheadline.com/news/realtime/hk/1008479/";
+    private static final String HEADLINE_REALTIME_DETAILS_URL = "http://hd.stheadline.com/news/realtime/hk/1202643/";
     private static final String ERROR_URL                     = "error 1";
     private static final String ERROR_DETAILS_URL             = "error 2";
 
@@ -48,9 +48,9 @@ public final class HeadlineRealtimeClientTest extends NetworkTest {
         final List<NewsItem> items = this.client.getItems(HeadlineRealtimeClientTest.HEADLINE_REALTIME_URL).blockingGet();
 
         Assert.assertEquals("Incorrect items.size()", 10, items.size());
-        Assert.assertEquals("Incorrect item title", "將軍澳冷氣機房爆炸 19歲工人6成皮膚燒傷", items.get(0).getTitle());
+        Assert.assertEquals("Incorrect item title", "【多圖有片】大埔爆水管噴出10層樓「噴泉」夜鷺BB遭水柱擊中墮地傷", items.get(0).getTitle());
         Assert.assertEquals("Incorrect item link", HeadlineRealtimeClientTest.HEADLINE_REALTIME_DETAILS_URL, items.get(0).getLink());
-        Assert.assertEquals("Incorrect item description", "將軍澳新都城第一期停車場冷氣機房發生爆炸，2名工人受傷，其中1人身體6成皮膚被燒傷，送院治理。消息指，有人疑在冷氣機房內點煙肇禍，消防正調查爆炸原因。事發在中午12時許，2名工人在冷氣機房清洗冷氣機，期間房內突然發生爆炸，2人走避不及，慘遭燒傷。消防接報趕至，迅速將火救熄。其中一名19歲工人6成皮膚被燒傷，由救護車送往...", items.get(0).getDescription());
+        Assert.assertEquals("Incorrect item description", "大埔廣福道爆水管！大量黃泥水由地底高壓噴出，足足有10層樓高。由於現場靠近鷺鳥林位置旁，有現場人士拍攝到照片顯示，有雀鳥懷疑受驚飛走。現場亦靠近民居及商舖，附近亦有老人院及投注站，距離不足十多米，大牆被噴濕，居民報警求助未知有否造成損失。事發於下午3時左右，在廣福道進入大埔墟方向，懷疑有地下水管爆裂，路面的路牌及指示牌...", items.get(0).getDescription());
     }
 
     @Test

@@ -32,7 +32,7 @@
 <meta name="bingbot" content="index,follow"/>
 <meta name="robots" content="index,follow,noarchive"/>
 <meta name="distribution" content="global"/>
-<meta name="copyright" content="Copyright &copy; 2017 hkheadline.com"/>
+<meta name="copyright" content="Copyright &copy; 2018 hkheadline.com"/>
 <meta name="apple-mobile-web-app-title" content="頭條日報 Headline Daily"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="#c7000a"/>
@@ -41,7 +41,7 @@
 <!--[if IEMobile]><meta http-equiv="cleartype" content="on"><![endif]-->
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#c7000a"/>
-<link rel="canonical" href="http://hd.stheadline.com/news/realtime/hk/">
+<link rel='amphtml' href='http://hd.stheadline.com/amp/news/realtime/hk/'><link rel="canonical" href="http://hd.stheadline.com/news/realtime/hk/">
 <link rel="shortcut icon" href="//static.stheadline.com/stheadline/images/favicon.ico" type="image/x-icon">
 <link rel="apple-touch-icon" href="//static.stheadline.com/stheadline/images/icon.png">
 <link rel="apple-touch-icon" sizes="72x72" href="//static.stheadline.com/stheadline/images/icon_72.png">
@@ -58,7 +58,7 @@
 <link rel="stylesheet" href="/css/styles.min.css">
 <link rel="stylesheet" href="/css/styles_ad.css">
 <link rel="stylesheet" href="/css/icover.css">
-<link rel="alternate" type="application/rss+xml" title="頭條日報 Headline Daily" href="http://hd.stheadline.com/rss/news/daily/">
+<link rel="alternate" type="application/rss+xml" hreflang="zh-Hant" title="頭條日報 Headline Daily" href="http://hd.stheadline.com/rss/news/daily/">
 <script async defer src="//static.stheadline.com/stheadline/js/comscore/comScoreUpper.min.js"></script>
 <script src="/js/_adv/btn_click_comscore.js"></script> 
 <script async src="/js/ga.js"></script>
@@ -69,8 +69,15 @@
 <script async defer src="https://code.hot-mob.com/api/javascript/sdk4/hotmobtag_min.js"></script>
 <script async defer src="/js/_adv/hotmob.min.js"></script>
 <div id="fb-root"></div>
-<script>window.fbAsyncInit=function(){FB.init({appId:"978368502211772",xfbml:!0,version:"v2.6"})}</script>
-<script async defer id="facebook-jssdk" src="https://connect.facebook.net/en_US/sdk.js"></script>
+<script>window.fbAsyncInit=function(){FB.init({appId:"978368502211772",xfbml:!0,version:"v2.12"})}</script>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+	js.async=true;
+    js.src = "//connect.facebook.net/zh_HK/all.js#xfbml=1";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
 <noscript><div class="no-js-message">For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.</div></noscript><!--[if lt IE 9 ]><div class="incompatibility-message">We noticed you are using an <strong>outdated version of Internet Explorer</strong>. Some features may not work correctly. For the full site experience, please <strong>update your Internet Explorer to version 9 or above</strong>.</div><![endif]-->
 <div class="body-wrapper offcanvas">
 <div class="sidebar-offcanvas sidebar-left" id="sidebar-left">
@@ -94,10 +101,10 @@
 <div class="cats">
 <h2>即時新聞</h2>
 <ul class="inews row btn-group">
-<li class="col-xs-3 cat-in-a active"><a href="/news/realtime/hk/">港聞</a></li> <li class="col-xs-3 cat-in-d"><a href="/news/realtime/fin/">財經</a></li> <li class="col-xs-3 cat-in-h"><a href="/news/realtime/pp/">地產</a></li> <li class="col-xs-3 cat-in-f"><a href="/news/realtime/ent/">娛樂</a></li> <li class="col-xs-3 cat-in-e"><a href="/news/realtime/chi/">中國</a></li> <li class="col-xs-3 cat-in-b"><a href="/news/realtime/wo/">國際</a></li> <li class="col-xs-3 cat-in-c"><a href="/news/realtime/spt/">體育</a></li> </ul>
+<li class="col-xs-3 cat-in-a active"><a href="/news/realtime/hk/">港聞</a></li> <li class="col-xs-3 cat-in-d"><a href="/news/realtime/fin/">財經</a></li> <li class="col-xs-3 cat-in-h"><a href="/news/realtime/pp/">地產</a></li> <li class="col-xs-3 cat-in-f"><a href="/life/ent/realtime/">娛樂</a></li> <li class="col-xs-3 cat-in-e"><a href="/news/realtime/chi/">中國</a></li> <li class="col-xs-3 cat-in-b"><a href="/news/realtime/wo/">國際</a></li> <li class="col-xs-3 cat-in-c"><a href="/news/realtime/spt/">體育</a></li> </ul>
 <h2>日報新聞</h2>
 <ul class="daily row btn-group">
-<li class="col-xs-4 cat-dn-1"><a href="/news/daily/hk/">港聞</a></li><li class="col-xs-4 cat-dn-2"><a href="/news/daily/chi/">中國</a></li><li class="col-xs-4 cat-dn-3"><a href="/news/daily/wo/">國際</a></li><li class="col-xs-4 cat-dn-4"><a href="/news/daily/pp/">地產</a></li><li class="col-xs-4 cat-dn-5"><a href="/news/daily/fin/">財經</a></li><li class="col-xs-4 cat-dn-6"><a href="/news/daily/spt/">體育</a></li><li class="col-xs-4 cat-dn-7"><a href="/news/daily/ls/">副刊</a></li><li class="col-xs-4 cat-dn-8"><a href="/news/daily/ent/">娛樂</a></li><li class="col-xs-4 cat-dn-9"><a href="/news/columns/">專欄</a></li><li class="col-xs-4 cat-dn-10"><a href="/news/daily/rac/">馬經</a></li> </ul>
+<li class="col-xs-4 cat-dn-1"><a href="/news/daily/hk/">港聞</a></li><li class="col-xs-4 cat-dn-2"><a href="/news/daily/chi/">中國</a></li><li class="col-xs-4 cat-dn-3"><a href="/news/daily/wo/">國際</a></li><li class="col-xs-4 cat-dn-4"><a href="/news/daily/pp/">地產</a></li><li class="col-xs-4 cat-dn-5"><a href="/news/daily/fin/">財經</a></li><li class="col-xs-4 cat-dn-6"><a href="/news/daily/spt/">體育</a></li><li class="col-xs-4 cat-dn-7"><a href="/news/daily/ls/">副刊</a></li><li class="col-xs-4 cat-dn-8"><a href="/life/ent/daily/">娛樂</a></li><li class="col-xs-4 cat-dn-9"><a href="/news/columns/">專欄</a></li><li class="col-xs-4 cat-dn-10"><a href="/news/daily/rac/">馬經</a></li> </ul>
 </div>
 <div class="footer">
 <div class="contact-tel clearfix">
@@ -112,7 +119,7 @@
 <p><a href="/privacy.php">私隱政策聲明</a> │ <a href="/terms.php">使用條款</a></p>
 <p><a href="/qrcode_terms.php">QR Code 使用條款及細則</a> │ <a href="/copyright.php">版權告示</a></p>
 <p>聯絡我們：<a href="mailto:web_info@hkheadline.com">web_info@hkheadline.com</a></p>
-<p>Copyright 2017 hkheadline.com.</p>
+<p>Copyright 2018 hkheadline.com.</p>
 <p>All rights reserved.</p>
 </div>
 </div>
@@ -124,12 +131,9 @@
 <div class="toolbar">
 <div class="container clearfix">
 <ul class="pull-left list-inline">
-<li><i class="fa fa-calendar"></i>2017年9月9日 星期六</li>
-<li class="warning">
-<i class="hi warning war-12" title="雷暴警告"></i>
-</li>
-<li><i class="hi weather wea-08" title="微雨"></i> 31&#186;</li>
-<li><i class="hi humidity" title="濕度"></i> 72%</li>
+<li><i class="fa fa-calendar"></i>2018年4月28日 星期六</li>
+<li><i class="hi weather wea-13" title="大致多雲"></i> 25&#186;</li>
+<li><i class="hi humidity" title="濕度"></i> 84%</li>
 </ul>
 <ul class="pull-right list-inline">
 <li>
@@ -210,7 +214,7 @@
 <li><a href="/news/daily/">日報新聞</a></li>
 <li><a href="/news/columns/">專欄</a></li>
 <li><a href="http://pop.stheadline.com/">Popnews</a></li>
-<li><a href="/ent/">娛樂影視</a></li>
+<li><a href="/life/ent/">娛樂影視</a></li>
 <li><a href="http://hdfin.stheadline.com/">財經網</a></li>
 <li><a href="/life/">生活消費</a></li>
 <li><a href="/racing/adult_warn.asp?back_to=/racing/">馬經網</a></li>
@@ -233,7 +237,7 @@
 <button type="submit" class="btn"><i class="fa fa-search"></i> 搜尋</button>
 </div>
 <div class="form-group keywords"><strong>熱門： </strong>
-<a href="/search?keyword=&#25945;&#22823;">教大</a><a href="/search?keyword=&#28207;&#29544;">港獨</a><a href="/search?keyword=&#34081;&#33509;&#34030;">蔡若蓮</a><a href="/search?keyword=&#28207;&#22992;">港姐</a><a href="/search?keyword=&#22696;&#35199;&#21733;">墨西哥</a> </div>
+<a href="/search?keyword=&#35377;&#26234;&#23791;">許智峯</a><a href="/search?keyword=&#37329;&#27491;&#24681;">金正恩</a><a href="/search?keyword=&#40635;&#30137;">麻疹</a><a href="/search?keyword=&#34255;&#23629;&#26696;">藏屍案</a><a href="/search?keyword=&#31881;&#23994;&#39640;&#29699;&#22580;">粉嶺高球場</a> </div>
 </form>
 </div>
 </div>
@@ -255,7 +259,7 @@
 <li class="active"><a href="/news/realtime/hk/">港聞</a></li>
 <li><a href="/news/realtime/fin/">財經</a></li>
 <li><a href="/news/realtime/pp/">地產</a></li>
-<li><a href="/news/realtime/ent/">娛樂</a></li>
+<li><a href="/life/ent/realtime/">娛樂</a></li>
 <li><a href="/news/realtime/chi/">中國</a></li>
 <li><a href="/news/realtime/wo/">國際</a></li>
 <li><a href="/news/realtime/spt/">體育</a></li>
@@ -265,131 +269,131 @@
 <div class="row" id="detailList">
 <div class="col-xs-12 instantnews-list-1">
 <div class="topic">
-<h4><a href="/news/realtime/hk/1008479/">將軍澳冷氣機房爆炸 19歲工人6成皮膚燒傷</a></h4>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09 15:34</span>
+<h1><a href="/news/realtime/hk/1202643/" title="【多圖有片】大埔爆水管噴出10層樓「噴泉」夜鷺BB遭水柱擊中墮地傷">【多圖有片】大埔爆水管噴出10層樓「噴泉」夜鷺BB遭水柱擊中墮地傷</a></h1>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28 18:06</span>
 </div>
 <div class="des">
-<a href="/news/realtime/hk/1008479/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090915215953935_popup.jpg"/></a>
-<p class="text">將軍澳新都城第一期停車場冷氣機房發生爆炸，2名工人受傷，其中1人身體6成皮膚被燒傷，送院治理。消息指，有人疑在冷氣機房內點煙肇禍，消防正調查爆炸原因。事發在中午12時許，2名工人在冷氣機房清洗冷氣機，期間房內突然發生爆炸，2人走避不及，慘遭燒傷。消防接報趕至，迅速將火救熄。其中一名19歲工人6成皮膚被燒傷，由救護車送往...</p>
+<a href="/news/realtime/hk/1202643/" class="img-link has-video"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042815124548729_popup.jpg"/></a>
+<p class="text">大埔廣福道爆水管！大量黃泥水由地底高壓噴出，足足有10層樓高。由於現場靠近鷺鳥林位置旁，有現場人士拍攝到照片顯示，有雀鳥懷疑受驚飛走。現場亦靠近民居及商舖，附近亦有老人院及投注站，距離不足十多米，大牆被噴濕，居民報警求助未知有否造成損失。事發於下午3時左右，在廣福道進入大埔墟方向，懷疑有地下水管爆裂，路面的路牌及指示牌...</p>
 <p class="text-left">
-<a class="btn btn-default" href="/news/realtime/hk/1008479/"><i class="fa fa-angle-right"></i> 詳細</a>
+<a class="btn btn-default" href="/news/realtime/hk/1202643/"><i class="fa fa-angle-right"></i> 詳細</a>
 </p>
 </div>
 </div>
 <div class="col-xs-12 instantnews-list-1">
 <div class="topic">
-<h4><a href="/news/realtime/hk/1008527/">學生會引述校方高層：有學校永不錄用教大畢業生</a></h4>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09 15:40</span>
+<h4><a href="/news/realtime/hk/1202898/" title="今日睇咗未？卓林臉上有5指印 網民質疑女友所為/ 兩巴士乘客「飛象過河」惹眾怒">今日睇咗未？卓林臉上有5指印 網民質疑女友所為/ 兩巴士乘客「飛象過河」惹眾怒</a></h4>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28 21:45</span>
 </div>
 <div class="des">
-<a href="/news/realtime/hk/1008527/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090915463166871_popup.jpg"/></a>
-<p class="text">教育大學民主牆凌晨有人張貼針對劉曉波夫婦的字句，標語早上被撕走。教大學生會不滿校方擅自拆除民主牆上的內容，認為是不尊重學生會。學生會並引述校方高層指，發生冒犯教育局副局長蔡若蓮事件後，有學校表明永不錄用教大的畢業生。教大學生會會長黎曉晴下午表示，民主牆出現針對劉曉波夫婦字句後，校方清晨透過短訊通知，但由於未能聯絡上，校...</p>
+<a href="/news/realtime/hk/1202898/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042821425912562_popup.jpg"/></a>
+<p class="text">今日睇咗未？●Kelly Online：「最憎同人面對面坐」 兩巴士乘客「飛象過河」惹眾怒(按這裏閱讀)●心痛卓林遭女友擺佈 吳綺莉斥「利用別人名字找飯吃」(按這裏閱讀)●【有片】四川不肖女當街掌摑母親 正義路人一腳踢倒(按這裏閱讀)●大埔爆水管噴出10層樓「噴泉」夜鷺BB遭水柱擊中墮地傷(按這裏閱讀)●市民自言五音不...</p>
 <p class="text-left">
-<a class="btn btn-default" href="/news/realtime/hk/1008527/"><i class="fa fa-angle-right"></i> 詳細</a>
+<a class="btn btn-default" href="/news/realtime/hk/1202898/"><i class="fa fa-angle-right"></i> 詳細</a>
 </p>
 </div>
 </div>
 <div class="col-xs-12 instantnews-list-1">
 <div class="topic">
-<h4><a href="/news/realtime/hk/1008362/">雷暴警告延長</a></h4>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09 15:35</span>
+<h4><a href="/news/realtime/hk/1202397/" title="熱褲女遭強搶環保袋 警員擒獨行賊">熱褲女遭強搶環保袋 警員擒獨行賊</a></h4>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28 21:39</span>
 </div>
 <div class="des">
-<a href="/news/realtime/hk/1008362/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090909324454198_popup.jpg"/></a>
-<p class="text">天文台在下午12時15分發出之雷暴警告，有效時間延長至下午5時15分，預料香港有局部地區狂風雷暴。之前，天文台在上午9時25分曾發出雷暴警告，有效時間至上午10時30分，當時預料香港有局部地區雷暴。建立時間：09:30更新時間：15:35</p>
+<a href="/news/realtime/hk/1202397/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042809132386177_popup.jpg"/></a>
+<p class="text">穿熱褲長髮夜歸女，凌晨途經旺角街頭，遭獨行賊從後推跌，女子手指受傷，內有衣物的環保袋被搶走；警方趕至在附近拘獲疑人，並在附近尋回被搶財物，女事主拒絕送院，在場助查時疑受驚過度，哭得梨花帶雨，須警員安慰。女事主姓陳，25歲。凌晨近5時，穿熱褲及蓄長髮的陳女，途經旺角花園街163號對開，突遭一名匪徒從後推跌，賊人趁她倒地時...</p>
 <p class="text-left">
-<a class="btn btn-default" href="/news/realtime/hk/1008362/"><i class="fa fa-angle-right"></i> 詳細</a>
+<a class="btn btn-default" href="/news/realtime/hk/1202397/"><i class="fa fa-angle-right"></i> 詳細</a>
 </p>
 </div>
 </div>
 <div class="col-xs-12 instantnews-list-1">
 <div class="topic">
-<h4><a href="/news/realtime/hk/1008512/">【多圖】高山劇場全新粵劇中心明開放 播24名伶獨家訪問片段</a></h4>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09 15:13</span>
+<h4><a href="/news/realtime/hk/1202391/" title="法拉利凌晨泊深水埗 疑遭黑衣男縱火">法拉利凌晨泊深水埗 疑遭黑衣男縱火</a></h4>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28 21:35</span>
 </div>
 <div class="des">
-<a href="/news/realtime/hk/1008512/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090915172751580_popup.jpg"/></a>
-<p class="text">高山劇場新翼新建成的粵劇教育及資訊中心將於明日開放，中心內設6個區域，結合科技介紹清末民初至90年代現今的粵劇文化及特色，中心內亦集合80位粵劇名伶的資訊，及獨家播放24位名伶的訪問片段。6個區域分別為「歷史尋跡區」、「名伶區」、「劇本、唱腔及音樂區」、「虛擬舞台區」、「粵劇化妝區」及「閱聽區」。「歷史尋跡區」設有5部...</p>
+<a href="/news/realtime/hk/1202391/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042809001070029_popup.jpg"/></a>
+<p class="text">一輛交由車房維修的值逾200萬元法拉利跑車，凌晨停泊深水埗街頭時，一輛私家車駛經後跑車突起火，消防員迅速將火撲熄，惟車頭冚燒黑慘遭「毀容」，警方相信跑車疑遭縱火，正追緝涉案私家車；代客維修跑車的車房職員無奈說：「不知如何向客人交代！」現場為福華街49號對開，一輛360 Spider F1型號的白色法拉利跑車停泊路邊，凌...</p>
 <p class="text-left">
-<a class="btn btn-default" href="/news/realtime/hk/1008512/"><i class="fa fa-angle-right"></i> 詳細</a>
+<a class="btn btn-default" href="/news/realtime/hk/1202391/"><i class="fa fa-angle-right"></i> 詳細</a>
 </p>
 </div>
 </div>
 <div class="col-xs-12 instantnews-list-1">
 <div class="topic">
-<h4><a href="/news/realtime/hk/1008494/">海關上水檢可卡因冰毒 總值100萬拘兩男</a></h4>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09 14:54</span>
+<h4><a href="/news/realtime/hk/1202769/" title="[Orange Fest荷蘭四月美食節]今個週末開鑼 市民可體驗荷蘭文化及品嘗地道美食">[Orange Fest荷蘭四月美食節]今個週末開鑼 市民可體驗荷蘭文化及品嘗地道美食</a></h4>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28 21:30</span>
 </div>
 <div class="des">
-<a href="/news/realtime/hk/1008494/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090915022881603_popup.jpg"/></a>
-<p class="text">海關昨日在上水古洞檢獲約1.5公斤懷疑可卡因及懷疑冰毒，估計市值共約100萬元。海關人員昨午在古洞進行緝毒行動，在一鐵皮屋內檢獲這批懷疑毒品。其後，海關人員在上水拘捕兩名分別32及33歲懷疑涉案男子。案件仍在調查中。</p>
+<a href="/news/realtime/hk/1202769/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042817381398148_popup.jpg"/></a>
+<p class="text">一年一度的荷蘭四月美食節，Orange Fest於星期五(27日)至星期日(29日)在科學園舉行，現場場面十分熱鬧，備有多個攤位售賣各種荷蘭美食，有大受歡迎的荷蘭鯡魚、青口、生蠔、荷蘭炸肉丸、炸肉捲及一流的鬆脆龍蝦包、安格斯牛肉漢堡和一系列串燒燒烤美食，真係數唔晒! 吃飽飽後又可以去工藝攤位展身手，現場有荷蘭木屐 Pa...</p>
 <p class="text-left">
-<a class="btn btn-default" href="/news/realtime/hk/1008494/"><i class="fa fa-angle-right"></i> 詳細</a>
+<a class="btn btn-default" href="/news/realtime/hk/1202769/"><i class="fa fa-angle-right"></i> 詳細</a>
 </p>
 </div>
 </div>
 <div class="col-xs-12 instantnews-list-1">
 <div class="topic">
-<h4><a href="/news/realtime/hk/1008422/">風暴「泰利」將形成料襲台 港下周中酷熱有煙霞</a></h4>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09 14:44</span>
+<h4><a href="/news/realtime/hk/1202880/" title="駕車失控撞路邊挖泥車 61歲司機涉醉駕被捕">駕車失控撞路邊挖泥車 61歲司機涉醉駕被捕</a></h4>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28 21:20</span>
 </div>
 <div class="des">
-<a href="/news/realtime/hk/1008422/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090911405693140_popup.jpg"/></a>
-<p class="text">天文台調高今年進入香港500公里範圍的熱帶氣旋預測數字至6到9個後，天文台台長岑智明早上表示，下周有機會形成一至兩個熱帶氣旋，但暫未能估計會否吹襲香港。天文台表示，現時位於關島附近的低壓區可能會在未來兩三天逐漸發展，並為菲律賓以東海域帶來不穩定天氣。另外，日本氣象廳於今晨發布烈風警報，預料關島以東的熱帶低氣壓，最快將會...</p>
+<a href="/news/realtime/hk/1202880/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042821221313530_popup.jpg"/></a>
+<p class="text">61歲姓溫男子，昨晚11時許駕駛私家車，沿大坑銅鑼灣道向灣仔行駛，當途經浣紗街交界時，突失控撞向一輛停在路邊煤氣掘路地盤的挖泥車，溫手部受傷，經治理後無礙，拒絕送院，惟未能通過酒精呼氣測試，涉嫌酒後駕駛被捕，帶署扣查。</p>
 <p class="text-left">
-<a class="btn btn-default" href="/news/realtime/hk/1008422/"><i class="fa fa-angle-right"></i> 詳細</a>
+<a class="btn btn-default" href="/news/realtime/hk/1202880/"><i class="fa fa-angle-right"></i> 詳細</a>
 </p>
 </div>
 </div>
 <div class="col-xs-12 instantnews-list-1">
 <div class="topic">
-<h4><a href="/news/realtime/hk/1008485/">Kelly Online：無時無刻對住屏幕 三招消除眼睛疲勞</a></h4>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09 14:09</span>
+<h4><a href="/news/realtime/hk/1202892/" title="香港仔坊會辦英雄聯盟電競比賽 女子職業戰隊到場獻技">香港仔坊會辦英雄聯盟電競比賽 女子職業戰隊到場獻技</a></h4>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28 21:01</span>
 </div>
 <div class="des">
-<a href="/news/realtime/hk/1008485/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090914211978463_popup.jpg"/></a>
-<p class="text">現代人望電腦同電話時間多過望人，望得多對眼好容易攰，久而久之對隻眼都唔係咁好。有朋友就同Kelly介紹咗幾個方法，可以舒緩眼睛疲勞，真係啱晒好似Kelly呢啲日日坐Office對住電腦嘅打工仔。望遠方： 眼睛構造望遠方時比較舒服，因為睫狀肌唔需要用力，可以得到放鬆，但至少要望六公尺遠嘅距離先有效，而且除低眼鏡效果比更好...</p>
+<a href="/news/realtime/hk/1202892/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042821332324322_popup.jpg"/></a>
+<p class="text">由香港賽馬會慈善信託基金捐助，香港仔坊會社會服務主辦的「賽馬會青創社區系列：香港仔坊會新媒體計劃」，於今日在數碼港舉辦「《英雄聯盟》青年電競比賽」決賽。大會更邀請了廣受歡迎的香港女子職業電競職業戰隊「Terrans Force」進行表演賽，精湛技巧，讓觀眾看得目不轉睛，她們更分享電競戰場上的經驗和心得。今次比賽為「賽馬...</p>
 <p class="text-left">
-<a class="btn btn-default" href="/news/realtime/hk/1008485/"><i class="fa fa-angle-right"></i> 詳細</a>
+<a class="btn btn-default" href="/news/realtime/hk/1202892/"><i class="fa fa-angle-right"></i> 詳細</a>
 </p>
 </div>
 </div>
 <div class="col-xs-12 instantnews-list-1">
 <div class="topic">
-<h4><a href="/news/realtime/hk/1008470/">香港眾志聲稱黑客入侵網頁 「黃之鋒被『撐釋法』」</a></h4>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09 13:23</span>
+<h4><a href="/news/realtime/hk/1202865/" title="電動滑板車逆線飛馳撞的士 醉漢涉犯無牌駕駛被捕">電動滑板車逆線飛馳撞的士 醉漢涉犯無牌駕駛被捕</a></h4>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28 20:58</span>
 </div>
 <div class="des">
-<a href="/news/realtime/hk/1008470/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090913274879169_popup.jpg"/></a>
-<p class="text">香港眾志聲稱，其網頁早上被黑客入侵，頁面被修改為愛國內容。根據香港眾志在社交網站facebook貼上的相片，見到網站出現以簡體字寫上的「反港獨 撐釋法」字句。而中午過後，網頁仍無法連結。香港眾志在fb發文，以「黑客入侵眾志網頁 黃之鋒被『撐釋法』」為題，表示「今日（9月9日）香港眾志網頁被黑客入侵，導致網站停運，網站頁...</p>
+<a href="/news/realtime/hk/1202865/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042821223862200_popup.jpg"/></a>
+<p class="text">一名醉酒中年漢凌晨踩著電動滑板車在荃灣的馬路飛馳，期間與一輛的士發生踫撞，受傷送院治理。警方事後將他拘捕，涉嫌違法駕駛動滑板車及酒後駕駛等。事發在凌晨1時許，一名44歲姓劉男子，踩著一部電動滑板車，疑逆線經過怡樂街的海濱花園對開，此時也有一輛的士沿街道駛至，兩車發生踫撞，劉飛彈上擋風玻璃再反彈墮地，頭及手受傷送院治理。...</p>
 <p class="text-left">
-<a class="btn btn-default" href="/news/realtime/hk/1008470/"><i class="fa fa-angle-right"></i> 詳細</a>
+<a class="btn btn-default" href="/news/realtime/hk/1202865/"><i class="fa fa-angle-right"></i> 詳細</a>
 </p>
 </div>
 </div>
 <div class="col-xs-12 instantnews-list-1">
 <div class="topic">
-<h4><a href="/news/realtime/hk/1008338/">民主牆現針對劉曉波夫婦標語 教大遺憾有需要時報警</a></h4>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09 13:02</span>
+<h4><a href="/news/realtime/hk/1202856/" title="鄭若驊訪京拜會司法部 加強兩地法律仲裁合作">鄭若驊訪京拜會司法部 加強兩地法律仲裁合作</a></h4>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28 20:42</span>
 </div>
 <div class="des">
-<a href="/news/realtime/hk/1008338/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090908550115550_popup.jpg"/></a>
-<p class="text">教育大學內的民主牆，日前被人貼上冒犯教育局副局長蔡若蓮的標語後，民主牆凌晨被貼上涉及針對已故諾貝爾和平獎得主劉曉波及遺孀劉霞的標語。教大對民主牆再次出現冒犯性言論表示極度遺憾，予以強烈譴責，並將翻看閉路電視徹查事件，有需要時會報警處理。標語以簡體字列印，寫有「恭喜劉匪曉波魂歸西天，祝賀劉霞永被我黨軟禁」，標語於早上已被...</p>
+<a href="/news/realtime/hk/1202856/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042820513685304_popup.jpg"/></a>
+<p class="text">律政司司長鄭若驊繼續訪問北京行程，今日拜訪司法部，就加強兩地法律界合作等議題交流意見，另亦與內地仲裁業界代表會面。她上午拜訪司法部，與司法部部長傅政華和副部長熊選國會面，就加強兩地法律界合作等議題交流意見，包括在「一帶一路」和粵港澳大灣區發展規劃下的合作契機。雙方並談及香港作為國際法律及爭議解決服務中心的優勢。她並趁機...</p>
 <p class="text-left">
-<a class="btn btn-default" href="/news/realtime/hk/1008338/"><i class="fa fa-angle-right"></i> 詳細</a>
+<a class="btn btn-default" href="/news/realtime/hk/1202856/"><i class="fa fa-angle-right"></i> 詳細</a>
 </p>
 </div>
 </div>
 <div class="col-xs-12 instantnews-list-1">
 <div class="topic">
-<h4><a href="/news/realtime/hk/1008461/">大廈維修升降機 免費樽裝水鼓勵行樓梯</a></h4>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09 12:56</span>
+<h4><a href="/news/realtime/hk/1202844/" title="警荃灣破非法麻雀賭檔 拘18男女">警荃灣破非法麻雀賭檔 拘18男女</a></h4>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28 20:30</span>
 </div>
 <div class="des">
-<a href="/news/realtime/hk/1008461/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090913045790209_popup.jpg"/></a>
-<p class="text">若在升降機和樓梯兩者選擇，相信大部分人都會選擇乘搭升降機，而不行樓梯。網上流傳一張圖片，見到彌敦道彌敦行大廈維修升降機，旁邊放置了數箱樽裝水，附有寫上「行樓梯上樓者，歡迎取飲品一件」的紙張。上載圖片的網民稱，「呢座大廈好識做，部lift壞左(咗)，用飲品鼓勵人行樓梯」，亦有網民表示，「見到嗰箱嘢，條氣起碼順返少少」、「...</p>
+<a href="/news/realtime/hk/1202844/" class="img-link"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042820324975084_popup.jpg"/></a>
+<p class="text">警方於荃灣搗破一個懷疑非法麻雀賭檔，拘捕8男10女，檢獲3張電動麻雀枱、6副麻雀等。荃灣警區特別職務隊及特遣隊人員根據線報及經深入調查後，今日下午約4時展開代號「犁庭掃穴」（LEVINGTON）的打擊賭博行動，突擊搜查大河道57-75號一單位，搗破一個懷疑非法麻雀賭檔。行動中，人員拘捕一名47歲姓賀本地女子涉嫌「經營賭...</p>
 <p class="text-left">
-<a class="btn btn-default" href="/news/realtime/hk/1008461/"><i class="fa fa-angle-right"></i> 詳細</a>
+<a class="btn btn-default" href="/news/realtime/hk/1202844/"><i class="fa fa-angle-right"></i> 詳細</a>
 </p>
 </div>
 </div>
@@ -398,13 +402,14 @@
 <a id="but-more-news" class="btn btn-default" href="javascript:loadOtherInstantNews();"><i class="fa fa-refresh"></i> 載入更多</a>
 <a id="but-more-news-loading" class="btn btn-default btn-active hidden"><i class="fa fa-refresh fa-spin"></i> 載入更多</a>
 </div>
-<div id="RP1_300_banner" class="ad_w300"></div>
+<div id="RP1_300_banner" class="text-center"></div>
 </div>
 </div>
 </div>
 </div>
 <div class="sidebar">
 <div id="Index_300x456_banner" class="ad_w300" style="position:static;"></div>
+<div id="RP1_300_banner" class="ad_w300"></div>
 <div class="section section-sb section-popular nocontent">
 <div class="heading">
 <h3><i class="fa fa-thumbs-o-up"></i>熱門文章</h3>
@@ -418,276 +423,276 @@
 <div class="news-list-scrollable hit-section-list section-month" style="display: none;">
 <div class="caption clearfix">
 <div class="pull-right has-video">
-<a href="/news/realtime/hk/998420/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170829/_2017082922003195491_popup.jpeg" width="130" height="82" alt="Kelly Online:神級地盤工友將軍澳彈琴 網民激讚"></a>
+<a href="/news/realtime/hk/1184844/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180408/_2018040817133688086_popup.jpg" width="130" height="82" alt="【有片】大埔數名惡漢拳打腳踢餐廳東主 警方拉1人"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/998420/">Kelly Online:神級地盤工友將軍澳彈琴 網民激讚</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/998420/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1184844/">【有片】大埔數名惡漢拳打腳踢餐廳東主 警方拉1人</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1184844/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/995636/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170827/_2017082714091175209_popup.jpg" width="130" height="82" alt="【帕卡襲港】廣東氣象台：下周末擾動影響有暴雨 或3連擊港澳"></a>
+<a href="/news/realtime/hk/1191186/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180416/_2018041610212687663_popup.jpg" width="130" height="82" alt="消委會：16款牛油驗出污染物損腎影響生殖 「總統牌」最高"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/995636/">【帕卡襲港】廣東氣象台：下周末擾動影響有暴雨 或3連擊港澳</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/995636/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1191186/">消委會：16款牛油驗出污染物損腎影響生殖 「總統牌」最高</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1191186/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+</div>
+</div>
+<div class="caption clearfix">
+<div class="pull-right has-video">
+<a href="/news/realtime/hk/1190910/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180415/_2018041521413975643_popup.jpg" width="130" height="82" alt="青年被惡夫婦冤枉非禮 獲正義大叔幫口證清白"></a>
+</div>
+<div>
+<h5><a href="/news/realtime/hk/1190910/">青年被惡夫婦冤枉非禮 獲正義大叔幫口證清白</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1190910/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+</div>
+</div>
+<div class="caption clearfix">
+<div class="pull-right has-video">
+<a href="/news/realtime/hk/1187460/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180411/_2018041116054023884_popup.jpg" width="130" height="82" alt="【有片】2南亞匪元朗劫老伯 休班警與街坊當場制服1人"></a>
+</div>
+<div>
+<h5><a href="/news/realtime/hk/1187460/">【有片】2南亞匪元朗劫老伯 休班警與街坊當場制服1人</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1187460/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/997607/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170829/_2017082915570834394_popup.jpg" width="130" height="82" alt="風暴瑪娃料周日130公里襲港 天文台：路徑或變"></a>
+<a href="/news/realtime/hk/1188021/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180412/_2018041207112367446_popup.jpg" width="130" height="82" alt="新航推廉價飛吸客800元來回港星 採用全新A380機今起一周限時"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/997607/">風暴瑪娃料周日130公里襲港 天文台：路徑或變</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/997607/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1188021/">新航推廉價飛吸客800元來回港星 採用全新A380機今起一周限時</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1188021/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1000235/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170831/_2017083112211328105_popup.jpg" width="130" height="82" alt="中央氣象台：氣旋瑪娃傍晚形成 周日直襲西貢"></a>
+<a href="/news/realtime/hk/1191240/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180416/_2018041612182361330_popup.jpg" width="130" height="82" alt="消委會：教你精明選購牛油"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1000235/">中央氣象台：氣旋瑪娃傍晚形成 周日直襲西貢</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1000235/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1191240/">消委會：教你精明選購牛油</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1191240/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+</div>
+</div>
+<div class="caption clearfix">
+<div class="pull-right has-video">
+<a href="/news/realtime/hk/1196424/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180421/_2018042114324330863_popup.jpg" width="130" height="82" alt="【片段】九巴彩虹道甩軚盤 司機心急如焚重新裝軚"></a>
+</div>
+<div>
+<h5><a href="/news/realtime/hk/1196424/">【片段】九巴彩虹道甩軚盤 司機心急如焚重新裝軚</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1196424/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/wo/996713/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170828/_2017082820260582730_popup.jpg" width="130" height="82" alt="大型風暴「珊瑚」形成 環流或達2千公里"></a>
+<a href="/news/realtime/hk/1184895/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180408/_2018040819374682018_popup.jpg" width="130" height="82" alt="海灣花園升降機急升27層夫婦浴血 留醫ICU命危"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/wo/996713/">大型風暴「珊瑚」形成 環流或達2千公里</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/wo/996713/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1184895/">海灣花園升降機急升27層夫婦浴血 留醫ICU命危</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1184895/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1004240/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170904/_2017090420510927724_popup.jpg" width="130" height="82" alt="【豪宅墮斃】兩死者讀書時期邂逅  新婚時曾說:一起走下去"></a>
+<a href="/news/realtime/hk/1185447/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180409/_2018040912291511496_popup.jpg" width="130" height="82" alt="派4000元最快7月到手 3類人士率先領差額"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1004240/">【豪宅墮斃】兩死者讀書時期邂逅 新婚時曾說:一起走下去</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1004240/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1185447/">派4000元最快7月到手 3類人士率先領差額</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1185447/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/993320/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170824/_2017082417344749242_popup.jpg" width="130" height="82" alt="天文台：熱帶氣旋形成中 中央氣象台料周日中午趨澳門"></a>
+<a href="/news/realtime/hk/1184871/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180408/_2018040817443965545_popup.jpg" width="130" height="82" alt="彩盈邨24歲女子遭非禮 13歲男童被捕"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/993320/">天文台：熱帶氣旋形成中 中央氣象台料周日中午趨澳門</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/993320/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
-</div>
-</div>
-<div class="caption clearfix">
-<div class="pull-right">
-<a href="/news/realtime/hk/999230/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170830/_2017083019231225808_popup.jpg" width="130" height="82" alt="歐洲預報:周日料有風暴登陸港島 或直插九龍新界"></a>
-</div>
-<div>
-<h5><a href="/news/realtime/hk/999230/">歐洲預報:周日料有風暴登陸港島 或直插九龍新界</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/999230/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
-</div>
-</div>
-<div class="caption clearfix">
-<div class="pull-right">
-<a href="/news/realtime/hk/999518/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170830/_2017083018323757765_popup.jpg" width="130" height="82" alt="倘潛在氣旋「瑪娃」增強成颱風南掠 或重演99年約克10號風球"></a>
-</div>
-<div>
-<h5><a href="/news/realtime/hk/999518/">倘潛在氣旋「瑪娃」增強成颱風南掠 或重演99年約克10號風球</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/999518/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
-</div>
-</div>
-<div class="caption clearfix">
-<div class="pull-right">
-<a href="/news/realtime/ent/1006094/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170906/_2017090619111344425_popup.jpg" width="130" height="82" alt="國際小姐超班過港姐 香港代表王詠珩美貌與智慧並重"></a>
-</div>
-<div>
-<h5><a href="/news/realtime/ent/1006094/">國際小姐超班過港姐 香港代表王詠珩美貌與智慧並重</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/ent/1006094/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1184871/">彩盈邨24歲女子遭非禮 13歲男童被捕</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1184871/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 </div>
 <div class="news-list-scrollable hit-section-list section-week" style="display: none;">
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1004240/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170904/_2017090420510927724_popup.jpg" width="130" height="82" alt="【豪宅墮斃】兩死者讀書時期邂逅  新婚時曾說:一起走下去"></a>
+<a href="/news/realtime/hk/1198773/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180424/_2018042414002934859_popup.jpg" width="130" height="82" alt="【當年今日】徐步高槍擊案審結 徐母庭上失聲痛哭"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1004240/">【豪宅墮斃】兩死者讀書時期邂逅 新婚時曾說:一起走下去</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1004240/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1198773/">【當年今日】徐步高槍擊案審結 徐母庭上失聲痛哭</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1198773/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/ent/1006094/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170906/_2017090619111344425_popup.jpg" width="130" height="82" alt="國際小姐超班過港姐 香港代表王詠珩美貌與智慧並重"></a>
+<a href="/news/realtime/hk/1200618/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180426/_2018042611420638273_popup.jpg" width="130" height="82" alt="【衣櫃藏屍案】被告潛逃內地結新歡誕子 哭訴後悔為一段感情破壞家庭"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/ent/1006094/">國際小姐超班過港姐 香港代表王詠珩美貌與智慧並重</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/ent/1006094/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1200618/">【衣櫃藏屍案】被告潛逃內地結新歡誕子 哭訴後悔為一段感情破壞家庭　　</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1200618/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1005329/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170906/_2017090607301165503_popup.jpg" width="130" height="82" alt="維多利亞8所幼園交周大福管理"></a>
+<a href="/news/realtime/hk/1201269/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180426/_2018042622381564870_popup.jpg" width="130" height="82" alt="【麻疹疫情】銅鑼灣「天一醫務所」外籍男病人確診麻疹 20人醫學觀察"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1005329/">維多利亞8所幼園交周大福管理</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1005329/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1201269/">【麻疹疫情】銅鑼灣「天一醫務所」外籍男病人確診麻疹 20人醫學觀察</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1201269/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1007210/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170907/_2017090812023347808_popup.jpg" width="130" height="82" alt="教大現攻擊蔡若蓮喪子標貼 校方譴責：正翻查閉路電視作跟進"></a>
+<a href="/news/realtime/hk/1198308/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180424/_2018042407373883728_popup.jpg" width="130" height="82" alt="柴灣驚現裸男周街行 露體狂將軍澳現身"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1007210/">教大現攻擊蔡若蓮喪子標貼 校方譴責：正翻查閉路電視作跟進</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1007210/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1198308/">柴灣驚現裸男周街行 露體狂將軍澳現身</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1198308/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right has-video">
-<a href="/news/realtime/hk/1006847/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170907/_2017090715313541697_popup.jpg" width="130" height="82" alt="蔡若蓮長子熱愛戶外活動 傳受傷後患抑鬱症"></a>
+<a href="/news/realtime/hk/1198680/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180424/_2018042412483067749_popup.jpg" width="130" height="82" alt="休班警地鐵捉偷拍少年 警方：無足夠證據作拘捕"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1006847/">蔡若蓮長子熱愛戶外活動 傳受傷後患抑鬱症</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1006847/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1198680/">休班警地鐵捉偷拍少年 警方：無足夠證據作拘捕</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1198680/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1006814/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170907/_2017090714480866691_popup.jpeg" width="130" height="82" alt="消息指蔡若蓮子患抑鬱 反鎖房內跳樓"></a>
+<a href="/news/realtime/hk/1201803/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180427/_2018042713120535456_popup.jpg" width="130" height="82" alt="【衣櫃藏屍案】法醫指死者本可被救回   質疑被告根本無嘗試拯救"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1006814/">消息指蔡若蓮子患抑鬱 反鎖房內跳樓</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1006814/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1201803/">【衣櫃藏屍案】法醫指死者本可被救回 質疑被告根本無嘗試拯救</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1201803/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1006685/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170907/_2017090716211383625_popup.jpeg" width="130" height="82" alt="教育局副局蔡若蓮長子 豪宅擎天半島墮樓亡"></a>
+<a href="/news/realtime/hk/1200630/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180426/_2018042612043993692_popup.jpg" width="130" height="82" alt="【健康talk】經常復發好頭疼？對抗濕疹多食兩類食物"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1006685/">教育局副局蔡若蓮長子 豪宅擎天半島墮樓亡</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1006685/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1200630/">【健康talk】經常復發好頭疼？對抗濕疹多食兩類食物</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1200630/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1004030/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170904/_2017090416292069893_popup.jpg" width="130" height="82" alt="【豪宅墮斃】疑男方涉外遇 女方恐遭割頸放血"></a>
+<a href="/news/realtime/hk/1201164/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180426/_2018042619043959385_popup.jpg" width="130" height="82" alt="【3車相撞】事發照片曝光 女司機落車理論疑背對小巴捱撞"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1004030/">【豪宅墮斃】疑男方涉外遇 女方恐遭割頸放血</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1004030/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1201164/">【3車相撞】事發照片曝光 女司機落車理論疑背對小巴捱撞</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1201164/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1004258/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170904/_2017090500241697664_popup.jpg" width="130" height="82" alt="復合無望 丈夫涉夥好友輪姦妻子"></a>
+<a href="/news/realtime/hk/1200774/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180426/_2018042613552968631_popup.jpg" width="130" height="82" alt="街市買梭羅魚誤混入雞泡魚 魚檔員工承諾會多加留意"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1004258/">復合無望 丈夫涉夥好友輪姦妻子</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1004258/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1200774/">街市買梭羅魚誤混入雞泡魚 魚檔員工承諾會多加留意</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1200774/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
-<div class="pull-right has-video">
-<a href="/news/realtime/hk/1003451/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170904/_2017090408350321647_popup.jpg" width="130" height="82" alt="【豪宅墮斃】公務員夫婦疑情變 血腳印留露台"></a>
+<div class="pull-right">
+<a href="/news/realtime/wo/1198077/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180423/_2018042318270384976_popup.jpg" width="130" height="82" alt="小狗護主咬死眼鏡蛇露出燦爛笑容 惜蛇毒發作身亡"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1003451/">【豪宅墮斃】公務員夫婦疑情變 血腳印留露台</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1003451/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/wo/1198077/">小狗護主咬死眼鏡蛇露出燦爛笑容 惜蛇毒發作身亡</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/wo/1198077/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 </div>
 <div class="news-list-scrollable hit-section-list section-day">
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1008356/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090909153766485_popup.jpg" width="130" height="82" alt="【蔡若蓮喪子】三男女夜闖城大 貼「恭喜」標語"></a>
+<a href="/news/realtime/hk/1202736/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042817052171693_popup.jpg" width="130" height="82" alt="無線主持褚簡寧提讓座予婆婆反被罵 嘆「點解社會變成咁？」"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1008356/">【蔡若蓮喪子】三男女夜闖城大 貼「恭喜」標語</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1008356/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1202736/">無線主持褚簡寧提讓座予婆婆反被罵 嘆「點解社會變成咁？」</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1202736/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1008338/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090908550115550_popup.jpg" width="130" height="82" alt="民主牆現針對劉曉波夫婦標語 教大遺憾有需要時報警"></a>
+<a href="/news/realtime/wo/1202604/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042814475712944_popup.jpg" width="130" height="82" alt="日麻疹患者破百 疫情擴散及東京大阪"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1008338/">民主牆現針對劉曉波夫婦標語 教大遺憾有需要時報警</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1008338/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/wo/1202604/">日麻疹患者破百 疫情擴散及東京大阪</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/wo/1202604/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1008278/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090908025529876_popup.jpg" width="130" height="82" alt="蔡若蓮長子墮樓亡 女友憑歌表思念"></a>
+<a href="/news/realtime/hk/1202532/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042812060660389_popup.jpg" width="130" height="82" alt="Kelly Online：「最憎同人面對面坐」 兩巴士乘客「飛象過河」惹眾怒"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1008278/">蔡若蓮長子墮樓亡 女友憑歌表思念</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1008278/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1202532/">Kelly Online：「最憎同人面對面坐」 兩巴士乘客「飛象過河」惹眾怒</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1202532/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1008191/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170908/_2017090823352986912_popup.jpg" width="130" height="82" alt="教大貼攻擊蔡若蓮喪子標語兩「疑犯」畫面曝光 嬉笑離開現場"></a>
+<a href="/news/realtime/wo/1202454/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042810004488872_popup.jpg" width="130" height="82" alt="韓男被吸入垃圾收集機 兩小時後不幸慘死"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1008191/">教大貼攻擊蔡若蓮喪子標語兩「疑犯」畫面曝光 嬉笑離開現場</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1008191/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/wo/1202454/">韓男被吸入垃圾收集機 兩小時後不幸慘死</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/wo/1202454/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1007867/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170908/_2017090816520436316_popup.jpg" width="130" height="82" alt="下周南海或雙旋共舞  廣東氣象台：可能受熱帶氣旋影響有暴雨"></a>
+<a href="/news/realtime/hk/1202445/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042809484686078_popup.jpg" width="130" height="82" alt="Kelly Online：許Sir榮休「4點鐘」檢閱PTU 當差31年難忘佔中艱難歲月"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1007867/">下周南海或雙旋共舞 廣東氣象台：可能受熱帶氣旋影響有暴雨</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1007867/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1202445/">Kelly Online：許Sir榮休「4點鐘」檢閱PTU 當差31年難忘佔中艱難歲月</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1202445/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/ent/1008158/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170908/_2017090819325023519_popup.jpg" width="130" height="82" alt="孖醫生男友溫馨拍婚照 鄧達智為明晚婚宴緊張失眠"></a>
+<a href="/news/realtime/chi/1202478/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042810384757476_popup.jpg" width="130" height="82" alt="與親生兒子斷絕關係 拾荒夫妻39年來收養9名棄嬰"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/ent/1008158/">孖醫生男友溫馨拍婚照 鄧達智為明晚婚宴緊張失眠</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/ent/1008158/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/chi/1202478/">與親生兒子斷絕關係 拾荒夫妻39年來收養9名棄嬰</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/chi/1202478/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1007957/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170908/_2017090817100514075_popup.jpg" width="130" height="82" alt="爆粗鬧內地生「支那人」 周竪峰：樂於成為以言入罪第一人"></a>
+<a href="/news/realtime/hk/1202523/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042811543571774_popup.jpg" width="130" height="82" alt="Kelly Online：奶粉放櫈變批鬥座？ 少年促老人搬走被勸「畀老人家坐啦」"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1007957/">爆粗鬧內地生「支那人」 周竪峰：樂於成為以言入罪第一人</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1007957/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1202523/">Kelly Online：奶粉放櫈變批鬥座？ 少年促老人搬走被勸「畀老人家坐啦」</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1202523/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/chi/1007855/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170908/_2017090815323374949_popup.jpeg" width="130" height="82" alt="玩Wargame玩出事！2男不服從指揮 遭13隊友殺害埋屍魚塘"></a>
+<a href="/news/realtime/hk/1202724/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042816524282779_popup.jpg" width="130" height="82" alt="台觀光局「機票三送一2018」曝光  推港澳旅客生態遊"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/chi/1007855/">玩Wargame玩出事！2男不服從指揮 遭13隊友殺害埋屍魚塘</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/chi/1007855/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1202724/">台觀光局「機票三送一2018」曝光 推港澳旅客生態遊</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1202724/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/ent/1007678/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170908/_2017090812534154617_popup.jpg" width="130" height="82" alt="江美儀之後仲有下一個？《同盟》Rainman猜猜猜"></a>
+<a href="/news/realtime/hk/1202245/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180427/_2018042719090712808_popup.jpg" width="130" height="82" alt="深水埗東京街公屋轉綠置居 涉2500單位料明年入伙"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/ent/1007678/">江美儀之後仲有下一個？《同盟》Rainman猜猜猜</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/ent/1007678/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1202245/">深水埗東京街公屋轉綠置居 涉2500單位料明年入伙</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1202245/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 <div class="caption clearfix">
 <div class="pull-right">
-<a href="/news/realtime/hk/1008410/"><img src="//static.stheadline.com/stheadline/inewsmedia/20170909/_2017090910473179195_popup.jpg" width="130" height="82" alt="新富戶政策下月實施 黃遠輝：須如實申報房署加強抽查"></a>
+<a href="/news/realtime/hk/1202769/"><img src="//static.stheadline.com/stheadline/inewsmedia/20180428/_2018042817381398148_popup.jpg" width="130" height="82" alt="[Orange Fest荷蘭四月美食節]今個週末開鑼 市民可體驗荷蘭文化及品嘗地道美食"></a>
 </div>
 <div>
-<h5><a href="/news/realtime/hk/1008410/">新富戶政策下月實施 黃遠輝：須如實申報房署加強抽查</a></h5>
-<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1008410/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
+<h5><a href="/news/realtime/hk/1202769/">[Orange Fest荷蘭四月美食節]今個週末開鑼 市民可體驗荷蘭文化及品嘗地道美食</a></h5>
+<div class="fb-like" data-href="http://hd.stheadline.com/news/realtime/hk/1202769/" data-layout="button_count" data-action="like" data-show-faces="true"></div>
 </div>
 </div>
 </div>
@@ -702,85 +707,100 @@
 <div class="content">
 <div class="news-list-scrollable">
 <div class="caption"> <span class="hang cat-dn-1"><a href="/news/daily/hk/">港聞</a></span>
-<h5><a href="/news/daily/hk/601841/">﻿各方聲討 教大誓徹查 貼冷血標語露笑容 神秘兩子曝洸</a></h5>
-<div>教育局副局長蔡若蓮長子疑受抑鬱...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
+<h5><a href="/news/daily/hk/664455/">﻿「文金會」美食締和平 兩韓第一夫人齊放閃</a></h5>
+<div>北韓去年試射導彈，引起開戰陰霾...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
 </div>
 <div class="caption"> <span class="hang cat-dn-1"><a href="/news/daily/hk/">港聞</a></span>
-<h5><a href="/news/daily/hk/601844/">﻿團體譴責落井下石 學生會促內部處理</a></h5>
-<div>教育大學民主牆出現針對教育局副...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
+<h5><a href="/news/daily/hk/664458/">﻿金與正緊隨兄長顯地位 跨過三八線文金植和平樹</a></h5>
+<div>兩韓首腦今次歷史性會談，除了簽...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
 </div>
 <div class="caption"> <span class="hang cat-dn-2"><a href="/news/daily/chi/">中國</a></span>
-<h5><a href="/news/daily/chi/602018/">﻿賴清德宣誓就任行政院長</a></h5>
-<div>台南市前市長賴清德，昨日從行政...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
+<h5><a href="/news/daily/chi/664575/">﻿華客巴黎購物 斥外籍男插隊遭毆</a></h5>
+<div>法國高端百貨「巴黎春天」和奢侈...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
 </div>
 <div class="caption"> <span class="hang cat-dn-3"><a href="/news/daily/wo/">國際</a></span>
-<h5><a href="/news/daily/wo/601988/">﻿「改變世界的女性」 希拉莉登《時代》封面</a></h5>
-<div>最新一期美國《時代》雜誌以「改...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
-</div>
-<div class="caption"> <span class="hang cat-dn-3"><a href="/news/daily/wo/">國際</a></span>
-<h5><a href="/news/daily/wo/601991/">﻿日本大熊貓 良濱17歲喇！</a></h5>
-<div>日本和歌山縣白濱町「冒險世界」...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
+<h5><a href="/news/daily/wo/664548/">﻿中日研發氣動懸浮列車</a></h5>
+<div>中日雙方共同研發一種利用空氣動...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
 </div>
 <div class="caption"> <span class="hang cat-dn-4"><a href="/news/daily/pp/">地產</a></span>
-<h5><a href="/news/daily/pp/601910/">﻿啟德OASIS開放式戶折實518萬</a></h5>
-<div>新盤開售如火如荼，最新上場的大...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
+<h5><a href="/news/daily/pp/664079/">﻿屋苑紛錄用家承接</a></h5>
+<div>據星島地產網報道，二手再錄用家...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-27</span>
 </div>
 <div class="caption"> <span class="hang cat-dn-5"><a href="/news/daily/fin/">財經</a></span>
-<h5><a href="/news/daily/fin/601913/">﻿利好消息頻傳 地產股領漲  恒指升145點 重返20天線</a></h5>
-<div>港股周五於本地地產股領漲下向好...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
-</div>
-<div class="caption"> <span class="hang cat-dn-5"><a href="/news/daily/fin/">財經</a></span>
-<h5><a href="/news/daily/fin/601916/">﻿睇好潛力 恒隆續增內地投資</a></h5>
-<div>恒隆地產（101）董事長陳啟宗...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
+<h5><a href="/news/daily/fin/664506/">﻿捷榮下周一招股 派息率不低於35%</a></h5>
+<div>咖啡及紅茶供應商捷榮國際（21...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
 </div>
 <div class="caption"> <span class="hang cat-dn-6"><a href="/news/daily/spt/">體育</a></span>
-<h5><a href="/news/daily/spt/602033/">﻿嗜血狂魔可破「城」</a></h5>
-<div>曼聯鋒將拉舒福特腳風正順，上場...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
+<h5><a href="/news/daily/spt/664578/">﻿守護前四 叫陣歐聯 馬不停蹄</a></h5>
+<div>羅馬下周三歐聯四強次回合要收復...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
+</div>
+<div class="caption"> <span class="hang cat-dn-6"><a href="/news/daily/spt/">體育</a></span>
+<h5><a href="/news/daily/spt/664581/">﻿最差戰果</a></h5>
+<div>周四歐霸四強首回合，馬德里體育...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
 </div>
 <div class="caption"> <span class="hang cat-dn-7"><a href="/news/daily/ls/">副刊</a></span>
-<h5><a href="/news/daily/ls/601922/">﻿轉季血拼激安掃童裝</a></h5>
-<div>小朋友是家中的寶貝，Zoey每...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
+<h5><a href="/news/daily/ls/664115/">﻿附伸縮軟管 無死角吸塵</a></h5>
+<div>無線手提吸塵機愈來愈多擁躉，就...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-27</span>
 </div>
-<div class="caption"> <span class="hang cat-dn-7"><a href="/news/daily/ls/">副刊</a></span>
-<h5><a href="/news/daily/ls/601925/">﻿江湖追殺令 引爆最強諜戰</a></h5>
-<div>繼電影《黑白森林》以及《黑白戰...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
+<div class="caption"> <span class="hang cat-dn-8"><a href="/life/ent/daily/">娛樂</a></span>
+<h5><a href="/life/ent/daily/664536/">﻿「年紀對女性確有壓力」 之之強調心境健康更重要</a></h5>
+<div>由關之琳（之之）設計的服裝品牌...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
 </div>
-<div class="caption"> <span class="hang cat-dn-8"><a href="/news/daily/ent/">娛樂</a></span>
-<h5><a href="/news/daily/ent/601982/">﻿捱餓7日 拍寫真32D樂瞳日灌1.5公升奶谷大兩CUP</a></h5>
-<div>31歲樂瞳（Cilla）自今年...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
-</div>
-<div class="caption"> <span class="hang cat-dn-8"><a href="/news/daily/ent/">娛樂</a></span>
-<h5><a href="/news/daily/ent/601985/">﻿造型有睇頭</a></h5>
-<div>今次樂瞳的寫真集有多個造型，由...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
+<div class="caption"> <span class="hang cat-dn-8"><a href="/life/ent/daily/">娛樂</a></span>
+<h5><a href="/life/ent/daily/664539/">﻿恭喜黎明做老竇 舒淇撐藝人都有私隱權</a></h5>
+<div>舒淇昨日佩戴逾2,100萬珠寶...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
 </div>
 <div class="caption"> <span class="hang cat-dn-9"><a href="/news/columns/">專欄</a></span>
-<h5><a href="/news/columns/417/20170909/602036/">﻿巴士的點評——沒有人道主義的民主，你一天也待不下去</a></h5>
-<div>香港鬥士太多，知識份子太少。
-...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
+<h5><a href="/news/columns/17/20180428/664587/">﻿好好過日子——香港政客的水平</a></h5>
+<div>民主黨立法會議員搶保安局女職員...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
+</div>
+<div class="caption"> <span class="hang cat-dn-9"><a href="/news/columns/">專欄</a></span>
+<h5><a href="/news/columns/417/20180428/664590/">﻿巴士的點評——開放性諮詢一大敗筆</a></h5>
+<div>政府的覓地小組開始進行公開諮詢...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
 </div>
 <div class="caption"> <span class="hang cat-dn-10"><a href="/news/daily/rac/">馬經</a></span>
-<h5><a href="/news/daily/rac/601934/">﻿一帆風順夠快合泥戰</a></h5>
-<div>潘頓剛於周三策騎「事必獲利」取...</div>
-<span class="time"><i class="fa fa-clock-o"></i>2017-09-09</span>
+<h5><a href="/news/daily/rac/664512/">﻿馬場浮世繪——貝湯美明日適宜出賽</a></h5>
+<div>騎師貝湯美本周二在沙田參加試閘...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
+</div>
+<div class="caption"> <span class="hang cat-dn-10"><a href="/news/daily/rac/">馬經</a></span>
+<h5><a href="/news/daily/rac/664515/">﻿馬場浮世繪——同歡樂研訊下周一舉行</a></h5>
+<div>二月四日星期日沙田賽事富泰讓賽...</div>
+<span class="time"><i class="fa fa-clock-o"></i>2018-04-28</span>
 </div>
 </div>
 </div>
 </div>
-<div id="jetso-wrapper"><div class="section section-sb jetso"><div class="heading"><h3><a href="/jeso/">會員著數</a></h3><h3><a href="/hdjetso/">頭條Jetso</a></h3><div class="winners"><a href="/jeso/winners/"><i class="fa fa-trophy"></i>得獎名單</a></div></div><div id="jetso-carousel-1"></div></div><div class="section section-sb jetso"id="jetso-carousel-1"style="border:none;"></div><script>var right_ads_groupList_sub=[];if(right_ads_groupList_sub.length>0){var htmlStrRightAdsSub=[];htmlStrRightAdsSub.push('<div class="content">');htmlStrRightAdsSub.push('<div id="jetso-carousel-sub" class="carousel slide" data-ride="carousel">');htmlStrRightAdsSub.push('   <ol class="carousel-indicators">');for(idx=0;idx<right_ads_groupList_sub.length;idx++){htmlStrRightAdsSub.push('       <li data-target="#jetso-carousel-sub" data-slide-to="'+idx+'" '+((idx==0)?'class="active"':'')+'></li>')}htmlStrRightAdsSub.push('   </ol>');htmlStrRightAdsSub.push('   <div class="carousel-inner" role="listbox">');for(idx=0;idx<right_ads_groupList_sub.length;idx++){htmlStrRightAdsSub.push('   <div class="item'+((idx==0)?' active':'')+'">'+right_ads_groupList_sub[idx]+'</div>')}htmlStrRightAdsSub.push('   </div>');htmlStrRightAdsSub.push('   <a class="left carousel-control" href="#jetso-carousel-sub" role="button" data-slide="prev"><span class="fa fa-angle-left" aria-hidden="true"></span><span class="sr-only">Previous</span></a><a class="right carousel-control" href="#jetso-carousel-sub" role="button" data-slide="next"><span class="fa fa-angle-right" aria-hidden="true"></span><span class="sr-only">Next</span></a>');htmlStrRightAdsSub.push('</div>');htmlStrRightAdsSub.push('</div>');document.getElementById("jetso-carousel-1").innerHTML=htmlStrRightAdsSub.join("")}</script><script>var right_ads_groupList=[];right_ads_groupList.push('<a href="http://hd.stheadline.com/jeso/book/natgeo50advanture/" target="_blank"><img src="http://static.stheadline.com/stheadline/images/banner/2017/rp_natgeo50adventure_20170906.jpg" border="0" alt="Jetso"></a>');right_ads_groupList.push('<a href="http://stedu.stheadline.com/" target="_blank"><img src="http://static.stheadline.com/stheadline/images/banner/2017/rp_bts_20170904.png" border="0" alt=""></a>');right_ads_groupList.push('<a href="http://hd.stheadline.com/special/OTO_redem/" target="_blank"><img src="http://static.stheadline.com/stheadline/images/banner/2017/rp_hd_oto_20170830.jpg" border="0" alt=""></a>');right_ads_groupList.push('<a href="http://hd.stheadline.com/special/Vcare_redem/" target="_blank"><img src="http://static.stheadline.com/stheadline/images/banner/2017/rp_hd_vcare_20170801.jpg" border="0" alt=""></a>');if(right_ads_groupList.length>0){var htmlStrRightAds=[];htmlStrRightAds.push('<div class="content" id="jetsoCotent">');htmlStrRightAds.push('<div id="jetso-carousel" class="carousel slide" data-ride="carousel">');htmlStrRightAds.push('  <div class="carousel-inner" role="listbox">');for(var idx=0;idx<right_ads_groupList.length;idx++){htmlStrRightAds.push('  <div class="item'+((idx==0)?' active':'')+'">'+right_ads_groupList[idx]+'</div>')}htmlStrRightAds.push('  </div>');htmlStrRightAds.push('  <a class="left carousel-control" href="#jetso-carousel" role="button" data-slide="prev"><span class="fa fa-angle-left" aria-hidden="true"></span><span class="sr-only">Previous</span></a><a class="right carousel-control" href="#jetso-carousel" role="button" data-slide="next"><span class="fa fa-angle-right" aria-hidden="true"></span><span class="sr-only">Next</span></a>');htmlStrRightAds.push('  <ol class="carousel-indicators">');for(idx=0;idx<right_ads_groupList.length;idx++){htmlStrRightAds.push('      <li data-target="#jetso-carousel" data-slide-to="'+idx+'" '+((idx==0)?'class="active"':'')+'></li>')}htmlStrRightAds.push('  </ol>');htmlStrRightAds.push('</div>');htmlStrRightAds.push('</div>');document.getElementById("jetso-carousel-1").innerHTML=htmlStrRightAds.join("")}</script></div></div>
+<div id="jetso-wrapper"><div class="section section-sb jetso"><div class="heading"><h3><a href="/jeso/">會員著數</a></h3><h3><a href="/hdjetso/">頭條Jetso</a></h3><div class="winners"><a href="/jeso/winners/"><i class="fa fa-trophy"></i>得獎名單</a></div></div><div id="jetso-carousel-1"></div></div><div class="section section-sb jetso"id="jetso-carousel-1"style="border:none;"></div><script>var right_ads_groupList_sub=[];if(right_ads_groupList_sub.length>0){var htmlStrRightAdsSub=[];htmlStrRightAdsSub.push('<div class="content">');htmlStrRightAdsSub.push('<div id="jetso-carousel-sub" class="carousel slide" data-ride="carousel">');htmlStrRightAdsSub.push('   <ol class="carousel-indicators">');for(idx=0;idx<right_ads_groupList_sub.length;idx++){htmlStrRightAdsSub.push('       <li data-target="#jetso-carousel-sub" data-slide-to="'+idx+'" '+((idx==0)?'class="active"':'')+'></li>')}htmlStrRightAdsSub.push('   </ol>');htmlStrRightAdsSub.push('   <div class="carousel-inner" role="listbox">');for(idx=0;idx<right_ads_groupList_sub.length;idx++){htmlStrRightAdsSub.push('   <div class="item'+((idx==0)?' active':'')+'">'+right_ads_groupList_sub[idx]+'</div>')}htmlStrRightAdsSub.push('   </div>');htmlStrRightAdsSub.push('   <a class="left carousel-control" href="#jetso-carousel-sub" role="button" data-slide="prev"><span class="fa fa-angle-left" aria-hidden="true"></span><span class="sr-only">Previous</span></a><a class="right carousel-control" href="#jetso-carousel-sub" role="button" data-slide="next"><span class="fa fa-angle-right" aria-hidden="true"></span><span class="sr-only">Next</span></a>');htmlStrRightAdsSub.push('</div>');htmlStrRightAdsSub.push('</div>');document.getElementById("jetso-carousel-1").innerHTML=htmlStrRightAdsSub.join("")}</script><script>var right_ads_groupList=[];right_ads_groupList.push('<a href="http://std.stheadline.com/special/stnc_digital_platforms/" target="_blank"><img src="http://static.stheadline.com/stheadline/images/banner/2018/rp_sthl_stnc_20180426.jpg" border="0"></a>');if(right_ads_groupList.length>0){var htmlStrRightAds=[];htmlStrRightAds.push('<div class="content" id="jetsoCotent">');htmlStrRightAds.push('<div id="jetso-carousel" class="carousel slide" data-ride="carousel">');htmlStrRightAds.push('  <div class="carousel-inner" role="listbox">');for(var idx=0;idx<right_ads_groupList.length;idx++){htmlStrRightAds.push('  <div class="item'+((idx==0)?' active':'')+'">'+right_ads_groupList[idx]+'</div>')}htmlStrRightAds.push('  </div>');htmlStrRightAds.push('  <a class="left carousel-control" href="#jetso-carousel" role="button" data-slide="prev"><span class="fa fa-angle-left" aria-hidden="true"></span><span class="sr-only">Previous</span></a><a class="right carousel-control" href="#jetso-carousel" role="button" data-slide="next"><span class="fa fa-angle-right" aria-hidden="true"></span><span class="sr-only">Next</span></a>');htmlStrRightAds.push('  <ol class="carousel-indicators">');for(idx=0;idx<right_ads_groupList.length;idx++){htmlStrRightAds.push('      <li data-target="#jetso-carousel" data-slide-to="'+idx+'" '+((idx==0)?'class="active"':'')+'></li>')}htmlStrRightAds.push('  </ol>');htmlStrRightAds.push('</div>');htmlStrRightAds.push('</div>');document.getElementById("jetso-carousel-1").innerHTML=htmlStrRightAds.join("")}</script></div>
+<div id="RP2_300_banner" class="ad_w300"></div>
+<script>
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/64888526/HL-300x250-Innity-Animation', [300, 250], 'div-gpt-ad-1523938221490-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.enableServices();
+  });
+</script>
+<div style="visibility:hidden;">
+<div id='div-gpt-ad-1523938221490-0' style='height:250px; width:300px;'>
+<script>
+googletag.cmd.push(function() { googletag.display('div-gpt-ad-1523938221490-0'); });
+</script>
+</div>
+</div>
+</div> 
 </div>
 </div>
 <div class="footer" id="footer">
@@ -813,19 +833,15 @@
 <li><a href="http://hdfin.stheadline.com/exchange_list.php">外匯行情</a></li>
 <li><a href="http://hdfin.stheadline.com/lunch_analyse_content.php">頭條解籤</a></li>
 </ul></td>
-<td><h5><a href="/ent/">娛樂</a></h5>
+<td><h5><a href="/life/ent/">娛樂</a></h5>
 <ul>
-<li><a href="/ent/index_loc.asp">最新本地</a></li>
-<li><a href="/ent/index_fori.asp">最新外娛</a></li>
-<li><a href="/ent/index_past.asp">昔日娛聞</a></li>
-<li><a href="/ent/ent_subindex.asp?catid=720">名人專訪</a></li>
-<li><a href="/ent/ent_subindex.asp?catid=65">現場報導</a></li>
-<li><a href="/ent/ent_vote.asp">投票</a></li>
-<li><a href="/ent/ent_starlist.asp">眾星相</a></li>
-<li><a href="/ent/staractlist.asp">追星消息</a></li>
-<li><a href="/ent/ent_film_index.asp">電影</a></li>
-<li><a href="/ent/ent_channel_list.asp">電視</a></li>
-</ul></td>
+<li><a href="/life/ent/realtime/">即時娛樂</a></li>
+<li><a href="/life/ent/daily/">日報娛樂</a></li>
+<li><a href="/life/ent/popnews/">POPNews娛樂</a></li>
+<li><a href="/life/ent/columnist/">娛樂專欄</a></li>
+<li><a href="/life/ent/mov/">電影</a></li>
+</ul>
+</td>
 <td><h5><a href="/life/dining/">飲食</a></h5>
 <ul>
 <li><a href="/life/dining/395/">頭條飯堂</a></li>
@@ -838,20 +854,13 @@
 <li><a href="/life/travel/392/">旅遊Hot News</a></li>
 </ul>
 </td>
-<td><h5><a href="/life/shopping/">潮流時尚</a></h5>
+<td><h5><a href="/life/fashion/">時尚</a></h5>
 <ul>
-<li><a href="/life/shopping/455/">時裝百科</a></li>
-<li><a href="/life/shopping/458/">珠寶手錶</a></li>
-<li><a href="/life/shopping/461/">最新產品(手袋、鞋)</a></li>
+<li><a href="/life/fashion/566/">潮流</a></li>
+<li><a href="/life/fashion/569/">美容</a></li>
 </ul>
 </td>
-<td><h5><a href="/life/beauty/">美容</a></h5>
-<ul>
-<li><a href="/life/beauty/446/">化妝</a></li>
-<li><a href="/life/beauty/449/">護膚</a></li>
-<li><a href="/life/beauty/452/">身體及頭髮護理</a></li>
-</ul></td>
-<td><h5><a href="/life/car/">汽車</a></h5>
+<td><h5><a href="/life/car/">駕駛</a></h5>
 <ul>
 <li><a href="/life/car/419/">新車專訊</a></li>
 <li><a href="/life/car/422/">車壇速遞</a></li>
@@ -877,21 +886,13 @@
 <li><a href="/life/home/476/">家居貼士</a></li>
 </ul>
 </td>
-<td><h5><a href="/life/digital/">數碼</a></h5>
+<td><h5><a href="/life/digital/">影音</a></h5>
 <ul>
 <li><a href="/life/digital/404/">手機通訊</a></li>
 <li><a href="/life/digital/407/">數碼影樓</a></li>
 <li><a href="/life/digital/416/">遊戲特區</a></li>
 <li><a href="/life/digital/410/">電腦科技</a></li>
 <li><a href="/life/digital/413/">影音生活</a></li>
-</ul></td>
-<td><h5><a href="/life/arts/">藝術</a></h5>
-<ul>
-<li><a href="/life/arts/479/">古今文化</a></li>
-<li><a href="/life/arts/482/">展覽演藝</a></li>
-<li><a href="/life/arts/485/">樂韻悠揚</a></li>
-<li><a href="/life/arts/488/">匠心獨運</a></li>
-<li><a href="/life/arts/491/">古董珍品</a></li>
 </ul></td>
 <td><h5><a href="/life/fortune/">星相</a></h5>
 <ul>
@@ -914,7 +915,7 @@
 <div class="copyright">
 <div class="p"><span class="tel">總機 : 2798 2323</span><span class="tel"><a href="http://paper.stheadline.com/html/callad.html" target="_blank">日報(祇適用廣告查詢)</a> : 3181 3666</span><span class="tel"><a href="http://hd.stheadline.com/adv_index.asp" target="_blank">網上(祇適用廣告查詢)</a> : 2798 2383</span><span class="tel">廣告查詢電郵 : <a href="mailto:adv@hkheadline.com" target="_blank">adv@hkheadline.com</a></span></div>
 <div class="p"><a href="/privacy.php">私隱政策聲明</a> │ <a href="/terms.php">使用條款</a> │ <a href="/qrcode_terms.php">QR Code 使用條款及細則</a> │ <a href="/copyright.php">版權告示</a></div>
-<div class="p">聯絡我們： <a href="mailto:web_info@hkheadline.com" target="_blank">web_info@hkheadline.com</a> Copyright 2017 hkheadline.com. All rights reserved. </div>
+<div class="p">聯絡我們： <a href="mailto:web_info@hkheadline.com" target="_blank">web_info@hkheadline.com</a> Copyright 2018 hkheadline.com. All rights reserved. </div>
 </div>
 <div class="img-link">
 <ul class="list-inline"><li><a target="_blank" href="http://www.singtaonewscorp.com/"><div class="footer_icon_logo_01"></div></a></li><li><a target="_blank" href="http://std.stheadline.com/"><div class="footer_icon_logo_02"></div></a></li><li><a target="_blank" href="http://www.thestandard.com.hk/"><div class="footer_icon_logo_03"></div></a></li><li><a target="_blank" href="/"><div class="footer_icon_logo_04"></div></a></li><li><a target="_blank" href="http://easttouch.my-magazine.me/"><div class="footer_icon_logo_07"></div></a></li><li><a target="_blank" href="http://eastweek.my-magazine.me/"><div class="footer_icon_logo_08"></div></a></li><li><a target="_blank" href="http://hdfin.stheadline.com/"><div class="footer_icon_logo_10"></div></a></li><li><a target="_blank" href="http://headlinejobs.hk/"><div class="footer_icon_logo_11"></div></a></li><li><a target="_blank" href="http://www.singtaoopo.com/"><div class="footer_icon_logo_12"></div></a></li></ul>
@@ -951,6 +952,20 @@ var reloadPageTimeInterval = 240000;
 var countPage = 0;
 var categoryID = "a";
 </script>
+<script type="text/javascript">
+  var w_yahoo = (top == self) ? window : window.top, d_yahoo = w_yahoo.document;
+
+  w_yahoo.adUnitCode = w_yahoo.adUnitCode || [];
+  w_yahoo.adUnitCode.push("6ead6fa0-4591-43ee-a3cc-cc59b9e4d4c6");
+  w_yahoo.apiKey = "FY5FNP4BYN9VPB53PY9J";
+
+  (function(){
+	var script = d_yahoo.createElement("script");
+	script.async = true;
+	script.src = "https://s.yimg.com/av/yap/ga/yap.js";
+	d_yahoo.body.appendChild(script);
+  })();
+</script>
 <!--[if lt IE 9]>
     <script src="//static.stheadline.com/stheadline/js/html5shiv.min.js"></script>
     <script src="//static.stheadline.com/stheadline/js/respond.min.js"></script>
@@ -975,5 +990,5 @@ console.log('metaPlatform : '+metaPlatform);
 <script defer src="/js/custom.min.js"></script>
 <script async defer src="//static.stheadline.com/stheadline/js/comscore/comScoreLower.min.js"></script>
 <script defer src="//static.stheadline.com/stheadline/js/comscore/comscore.streaming.min.js"></script>
-<img src="/wt/MTUwHL411f30HLMUJ3QlNpTzduaGdxdkNYa1lLNzBlZwNDk0NDAxMA.gif" style="visibility:hidden;display:none" alt="hd"/></body>
+<img src="/wt/MTUyHL4Ch830HLOWpVOXQ5Zlp6UV9zd3N5bXpFZ0c5QQNDkyNDIwOQ.gif" style="visibility:hidden;display:none" alt="hd"/></body>
 </html>
