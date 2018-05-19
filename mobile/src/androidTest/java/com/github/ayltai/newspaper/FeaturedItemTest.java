@@ -27,7 +27,7 @@ public final class FeaturedItemTest extends BaseTest {
 
         // Clicks Featured News
         Espresso.onView(ViewMatchers.withId(R.id.featured_image))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 

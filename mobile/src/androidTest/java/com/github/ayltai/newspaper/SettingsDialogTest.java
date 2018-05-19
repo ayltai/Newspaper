@@ -21,7 +21,7 @@ public final class SettingsDialogTest extends BaseTest {
     public void settingsDialogTest() {
         // Clicks More button
         Espresso.onView(ViewMatchers.withId(R.id.action_more))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
@@ -29,7 +29,7 @@ public final class SettingsDialogTest extends BaseTest {
 
         // Clicks Settings tab
         Espresso.onView(ViewMatchers.withId(R.id.action_settings))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
@@ -41,7 +41,7 @@ public final class SettingsDialogTest extends BaseTest {
 
         // Clicks Categories tab
         Espresso.onView(ViewMatchers.withText("Categories"))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
@@ -51,31 +51,31 @@ public final class SettingsDialogTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withText("兩岸"),
             ViewMatchers.withParent(ViewMatchers.withId(R.id.flowLayout))))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         // Clicks Apply Changes
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_ok),
             ViewMatchers.withText("Apply changes")))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_MEDIUM);
 
         // Clicks More button
         Espresso.onView(ViewMatchers.withId(R.id.action_more))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks Settings button
         Espresso.onView(ViewMatchers.withId(R.id.action_settings))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks Categories tab
         Espresso.onView(ViewMatchers.withText("Categories"))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 

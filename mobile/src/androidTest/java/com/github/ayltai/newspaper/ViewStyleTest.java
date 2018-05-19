@@ -21,19 +21,19 @@ public final class ViewStyleTest extends BaseTest {
     public void viewStyleTest() {
         // Clicks More button
         Espresso.onView(ViewMatchers.withId(R.id.action_more))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks Settings button
         Espresso.onView(ViewMatchers.withId(R.id.action_settings))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks Settings tab
         Espresso.onView(ViewMatchers.withText("Settings"))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
@@ -53,31 +53,31 @@ public final class ViewStyleTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withText("Cozy layout"),
             ViewMatchers.withParent(ViewMatchers.withId(R.id.linearLayout))))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         // Clicks Apply Changes
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_ok),
             ViewMatchers.withText("Apply changes")))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_MEDIUM);
 
         // Clicks More button
         Espresso.onView(ViewMatchers.withId(R.id.action_more))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks Settings button
         Espresso.onView(ViewMatchers.withId(R.id.action_settings))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks Settings tab
         Espresso.onView(ViewMatchers.withText("Settings"))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
@@ -97,6 +97,6 @@ public final class ViewStyleTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withText("Cozy layout"),
             ViewMatchers.withParent(ViewMatchers.withId(R.id.linearLayout))))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
     }
 }

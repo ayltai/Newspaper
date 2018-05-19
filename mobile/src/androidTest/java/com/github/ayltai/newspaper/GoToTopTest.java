@@ -49,13 +49,13 @@ public class GoToTopTest extends BaseTest {
 
         // Clicks the More button
         Espresso.onView(ViewMatchers.withId(R.id.action_more))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks the Up button
         Espresso.onView(ViewMatchers.withId(R.id.action_up))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 

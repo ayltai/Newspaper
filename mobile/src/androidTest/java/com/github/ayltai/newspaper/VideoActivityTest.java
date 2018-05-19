@@ -42,7 +42,7 @@ public final class VideoActivityTest {
     }
 
     @Test
-    public void test() {
+    public void videoActivityTest() {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withClassName(Matchers.is("com.google.android.exoplayer2.ui.PlayerView")),
             ViewMatchers.withId(R.id.video)))

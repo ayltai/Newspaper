@@ -18,7 +18,7 @@ public final class MainTest extends BaseTest {
     @Test
     public void mainTest() {
         Espresso.onView(ViewMatchers.withId(R.id.action_more))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
@@ -26,7 +26,7 @@ public final class MainTest extends BaseTest {
             .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
         Espresso.onView(ViewMatchers.withId(R.id.action_more))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
@@ -34,12 +34,12 @@ public final class MainTest extends BaseTest {
             .check(ViewAssertions.doesNotExist());
 
         Espresso.onView(ViewMatchers.withId(R.id.action_more))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         Espresso.onView(ViewMatchers.withId(R.id.action_refresh))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
 

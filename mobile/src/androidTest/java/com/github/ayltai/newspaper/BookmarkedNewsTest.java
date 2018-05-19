@@ -23,19 +23,19 @@ public final class BookmarkedNewsTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_bookmark),
             ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView)))))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks More button
         Espresso.onView(ViewMatchers.withId(R.id.action_more))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks Clear All button to make sure there is no existing news
         Espresso.onView(ViewMatchers.withId(R.id.action_clear_all))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
@@ -51,7 +51,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_news),
             ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView)))))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
 
@@ -59,7 +59,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.featured_image),
             ViewMatchers.withParent(ViewMatchers.withId(R.id.container))))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
 
@@ -78,7 +78,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_bookmark),
             ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView)))))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
@@ -94,7 +94,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_search),
             ViewMatchers.withContentDescription("Search")))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
@@ -103,7 +103,6 @@ public final class BookmarkedNewsTest extends BaseTest {
         // Types a query into the search text box
         Espresso.onView(ViewMatchers.withId(R.id.search_src_text))
             .perform(
-                ViewActions.scrollTo(),
                 ViewActions.replaceText("asdfqwerzxcv"),
                 ViewActions.closeSoftKeyboard());
 
@@ -119,7 +118,7 @@ public final class BookmarkedNewsTest extends BaseTest {
 
         // Clears the search query
         Espresso.onView(ViewMatchers.withId(R.id.search_close_btn))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
@@ -129,7 +128,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withContentDescription("Collapse"),
             ViewMatchers.withParent(ViewMatchers.withId(R.id.toolbar))))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
