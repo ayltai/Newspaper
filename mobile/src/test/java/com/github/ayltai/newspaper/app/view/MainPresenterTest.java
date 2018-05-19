@@ -47,7 +47,7 @@ public final class MainPresenterTest extends PresenterTest<MainActivity, MainPre
     @Test
     public void Give_onViewAttached_When_upActions_Then_upIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(true);
 
         // When
         this.upActions.onNext(Irrelevant.INSTANCE);
@@ -59,7 +59,7 @@ public final class MainPresenterTest extends PresenterTest<MainActivity, MainPre
     @Test
     public void Give_onViewAttached_When_refreshActions_Then_refreshIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(true);
 
         // When
         this.refreshActions.onNext(Irrelevant.INSTANCE);
@@ -71,7 +71,7 @@ public final class MainPresenterTest extends PresenterTest<MainActivity, MainPre
     @Test
     public void Give_onViewAttached_When_filterActions_Then_settingsIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(true);
 
         // When
         this.filterActions.onNext(Irrelevant.INSTANCE);
@@ -83,7 +83,7 @@ public final class MainPresenterTest extends PresenterTest<MainActivity, MainPre
     @Test
     public void Give_onViewAttached_When_clearAllActions_Then_clearAllIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(true);
 
         // When
         this.clearAllActions.onNext(Irrelevant.INSTANCE);

@@ -1,11 +1,11 @@
 package com.github.ayltai.newspaper.analytics;
 
+import com.github.ayltai.newspaper.AppUnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.github.ayltai.newspaper.UnitTest;
-
-public final class FabricEventLoggerTest extends UnitTest {
+public final class FabricEventLoggerTest extends AppUnitTest {
     @Test
     public void testLogAppOpenEvent() {
         final AppOpenEvent event = new AppOpenEvent();

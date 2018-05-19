@@ -7,58 +7,43 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.hamcrest.Matchers;
+import com.github.ayltai.newspaper.util.MoreTestUtils;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.github.ayltai.newspaper.util.MoreTestUtils;
 
 @MediumTest
 @RunWith(AndroidJUnit4.class)
 public final class MainTest extends BaseTest {
     @Test
     public void mainTest() {
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_more),
-            ViewMatchers.isDisplayed()))
-            .perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withId(R.id.action_more))
+            .perform(ViewActions.scrollTo(), ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_refresh),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        Espresso.onView(ViewMatchers.withId(R.id.action_refresh))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_more),
-            ViewMatchers.isDisplayed()))
-            .perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withId(R.id.action_more))
+            .perform(ViewActions.scrollTo(), ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_refresh),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.action_refresh))
             .check(ViewAssertions.doesNotExist());
 
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_more),
-            ViewMatchers.isDisplayed()))
-            .perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withId(R.id.action_more))
+            .perform(ViewActions.scrollTo(), ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_refresh),
-            ViewMatchers.isDisplayed()))
-            .perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withId(R.id.action_refresh))
+            .perform(ViewActions.scrollTo(), ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
 
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_refresh),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.action_refresh))
             .check(ViewAssertions.doesNotExist());
     }
 }

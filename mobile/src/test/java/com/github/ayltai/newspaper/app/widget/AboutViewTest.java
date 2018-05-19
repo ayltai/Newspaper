@@ -1,12 +1,12 @@
 package com.github.ayltai.newspaper.app.widget;
 
+import com.github.ayltai.newspaper.AppUnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 
-import com.github.ayltai.newspaper.UnitTest;
-
-public final class AboutViewTest extends UnitTest {
+public final class AboutViewTest extends AppUnitTest {
     @Test
     public void testProperties() {
         final AboutView view = new AboutView(RuntimeEnvironment.application);

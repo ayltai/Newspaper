@@ -2,14 +2,14 @@ package com.github.ayltai.newspaper.app.data.model;
 
 import android.os.Parcel;
 
+import com.github.ayltai.newspaper.AppUnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.github.ayltai.newspaper.UnitTest;
-
 import io.realm.RealmList;
 
-public final class SourceTest extends UnitTest {
+public final class SourceTest extends AppUnitTest {
     @Test
     public void testParcelable() {
         final Parcel parcel1 = Parcel.obtain();

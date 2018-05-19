@@ -1,12 +1,12 @@
 package com.github.ayltai.newspaper.analytics;
 
+import com.github.ayltai.newspaper.AppUnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 
-import com.github.ayltai.newspaper.UnitTest;
-
-public final class FirebaseEventLoggerTest extends UnitTest {
+public final class FirebaseEventLoggerTest extends AppUnitTest {
     @Test
     public void testLogAppOpenEvent() {
         final AppOpenEvent event = new AppOpenEvent();

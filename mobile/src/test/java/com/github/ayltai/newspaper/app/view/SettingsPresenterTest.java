@@ -2,14 +2,14 @@ package com.github.ayltai.newspaper.app.view;
 
 import android.support.annotation.NonNull;
 
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.robolectric.Robolectric;
-
+import com.github.ayltai.architecture.test.PresenterTest;
 import com.github.ayltai.newspaper.analytics.EventLogger;
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.config.UserConfig;
-import com.github.ayltai.newspaper.view.PresenterTest;
+
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.robolectric.Robolectric;
 
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;

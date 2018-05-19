@@ -12,12 +12,12 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.github.ayltai.newspaper.util.MoreTestUtils;
+
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.github.ayltai.newspaper.util.MoreTestUtils;
 
 @SmallTest
 @RunWith(AndroidJUnit4.class)
@@ -31,42 +31,34 @@ public final class DetailsTest extends BaseTest {
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
 
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.avatar),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        Espresso.onView(ViewMatchers.withId(R.id.avatar))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.source),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        Espresso.onView(ViewMatchers.withId(R.id.source))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_bookmark),
-            ViewMatchers.withContentDescription("Bookmark"),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+            ViewMatchers.withContentDescription("Bookmark")))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_share),
-            ViewMatchers.withContentDescription("Share"),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+            ViewMatchers.withContentDescription("Share")))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.title),
             ViewMatchers.withParent(Matchers.allOf(
                 ViewMatchers.withClassName(Matchers.is("android.widget.LinearLayout")),
                 ViewMatchers.withParent(ViewMatchers.withId(R.id.container))
-            )),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+            ))))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.description),
-            ViewMatchers.withParent(ViewMatchers.withClassName(Matchers.is("android.widget.LinearLayout"))),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+            ViewMatchers.withParent(ViewMatchers.withClassName(Matchers.is("android.widget.LinearLayout")))))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
         final Matcher<Intent> shareIntent = Matchers.allOf(
             IntentMatchers.hasAction(Intent.ACTION_CHOOSER),
@@ -78,9 +70,8 @@ public final class DetailsTest extends BaseTest {
         // Clicks Share button
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_share),
-            ViewMatchers.withContentDescription("Share"),
-            ViewMatchers.isDisplayed()))
-            .perform(ViewActions.click());
+            ViewMatchers.withContentDescription("Share")))
+            .perform(ViewActions.scrollTo(), ViewActions.click());
 
         // Checks that the fired Intent is correct
         Intents.intended(shareIntent);
@@ -89,8 +80,7 @@ public final class DetailsTest extends BaseTest {
         // Clicks Text-to-Speech button
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_text_to_speech),
-            ViewMatchers.withContentDescription("Text to speech"),
-            ViewMatchers.isDisplayed()))
-            .perform(ViewActions.click());
+            ViewMatchers.withContentDescription("Text to speech")))
+            .perform(ViewActions.scrollTo(), ViewActions.click());
     }
 }

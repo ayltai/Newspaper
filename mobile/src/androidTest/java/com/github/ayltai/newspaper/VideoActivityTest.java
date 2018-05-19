@@ -45,8 +45,7 @@ public final class VideoActivityTest {
     public void test() {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withClassName(Matchers.is("com.google.android.exoplayer2.ui.PlayerView")),
-            ViewMatchers.withId(R.id.video),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+            ViewMatchers.withId(R.id.video)))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }

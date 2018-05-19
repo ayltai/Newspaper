@@ -1,15 +1,15 @@
 package com.github.ayltai.newspaper.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import com.github.ayltai.newspaper.AppUnitTest;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.github.ayltai.newspaper.UnitTest;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
-public final class IOUtilsTest extends UnitTest {
+public final class IOUtilsTest extends AppUnitTest {
     @Test
     public void testReadString() {
         ByteArrayInputStream inputStream = null;

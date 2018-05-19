@@ -1,20 +1,21 @@
 package com.github.ayltai.newspaper.app.view;
 
-import java.util.Set;
-
 import android.support.annotation.NonNull;
+
+import com.github.ayltai.architecture.test.PresenterTest;
+import com.github.ayltai.newspaper.app.ComponentFactory;
+import com.github.ayltai.newspaper.app.MainActivity;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 
-import com.github.ayltai.newspaper.app.ComponentFactory;
-import com.github.ayltai.newspaper.app.MainActivity;
-import com.github.ayltai.newspaper.view.PresenterTest;
+import java.util.Set;
 
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
-import junit.framework.Assert;
 
 public final class SourcesPresenterTest extends PresenterTest<MainActivity, SourcesPresenter, SourcesPresenter.View> {
     private final FlowableProcessor<Integer> optionsChanges = PublishProcessor.create();

@@ -2,13 +2,13 @@ package com.github.ayltai.newspaper.app;
 
 import android.content.Intent;
 
+import com.github.ayltai.newspaper.AppUnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 
-import com.github.ayltai.newspaper.UnitTest;
-
-public final class VideoActivityTest extends UnitTest {
+public final class VideoActivityTest extends AppUnitTest {
     @Test
     public void testCreateIntent() {
         final Intent intent = VideoActivity.createIntent(RuntimeEnvironment.application, "url", false, 0);

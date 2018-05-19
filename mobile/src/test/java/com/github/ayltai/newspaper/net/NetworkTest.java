@@ -2,14 +2,14 @@ package com.github.ayltai.newspaper.net;
 
 import android.support.annotation.CallSuper;
 
+import com.github.ayltai.newspaper.AppUnitTest;
+
 import org.junit.Before;
 import org.mockito.Mockito;
 
-import com.github.ayltai.newspaper.UnitTest;
-
 import okhttp3.OkHttpClient;
 
-public abstract class NetworkTest extends UnitTest {
+public abstract class NetworkTest extends AppUnitTest {
     protected OkHttpClient httpClient;
     protected ApiService   apiService;
 

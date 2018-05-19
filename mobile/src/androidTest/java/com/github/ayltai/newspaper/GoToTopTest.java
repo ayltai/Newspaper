@@ -7,13 +7,12 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.github.ayltai.newspaper.util.MoreTestUtils;
+import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
+
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
-
-import com.github.ayltai.newspaper.util.MoreTestUtils;
 
 @MediumTest
 @RunWith(AndroidJUnit4.class)
@@ -21,10 +20,8 @@ public class GoToTopTest extends BaseTest {
     @Test
     public void goToTopTest() {
         // Checks that Featured News is displayed
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.featured_image),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
         // Scrolls down 20 view part items so that Featured News is not displayed
         Espresso.onView(MoreTestUtils.first(Matchers.allOf(
@@ -47,33 +44,25 @@ public class GoToTopTest extends BaseTest {
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".goToTop.scrollUp", this.testRule.getActivity());
 
         // Checks that Featured News is not displayed
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.featured_image),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
             .check(ViewAssertions.doesNotExist());
 
         // Clicks the More button
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_more),
-            ViewMatchers.isDisplayed()))
-            .perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withId(R.id.action_more))
+            .perform(ViewActions.scrollTo(), ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks the Up button
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_up),
-            ViewMatchers.isDisplayed()))
-            .perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withId(R.id.action_up))
+            .perform(ViewActions.scrollTo(), ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".goToTop", this.testRule.getActivity());
 
         // Checks that Featured News is displayed
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.featured_image),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }

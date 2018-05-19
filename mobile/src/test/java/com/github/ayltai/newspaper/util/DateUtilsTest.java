@@ -1,12 +1,12 @@
 package com.github.ayltai.newspaper.util;
 
+import com.github.ayltai.newspaper.AppUnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 
-import com.github.ayltai.newspaper.UnitTest;
-
-public final class DateUtilsTest extends UnitTest {
+public final class DateUtilsTest extends AppUnitTest {
     @Test
     public void testToApproximateTime() {
         Assert.assertNull(DateUtils.toApproximateTime(RuntimeEnvironment.application, 0));

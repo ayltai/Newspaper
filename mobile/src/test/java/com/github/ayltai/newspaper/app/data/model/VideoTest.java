@@ -2,12 +2,12 @@ package com.github.ayltai.newspaper.app.data.model;
 
 import android.os.Parcel;
 
+import com.github.ayltai.newspaper.AppUnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.github.ayltai.newspaper.UnitTest;
-
-public final class VideoTest extends UnitTest {
+public final class VideoTest extends AppUnitTest {
     @Test
     public void testParcelable() {
         final Parcel parcel1 = Parcel.obtain();
