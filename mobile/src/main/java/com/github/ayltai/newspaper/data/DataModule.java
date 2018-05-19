@@ -24,12 +24,6 @@ public final class DataModule {
 
     @NonNull
     @Provides
-    Context provideContext() {
-        return this.context;
-    }
-
-    @NonNull
-    @Provides
     Realm provideRealm() {
         if (!DataModule.isInitialized) {
             if (!DevUtils.isRunningUnitTest()) {
