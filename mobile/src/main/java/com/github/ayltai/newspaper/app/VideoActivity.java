@@ -95,6 +95,13 @@ public final class VideoActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        this.videoPlayer.setPlayWhenReady(false);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 

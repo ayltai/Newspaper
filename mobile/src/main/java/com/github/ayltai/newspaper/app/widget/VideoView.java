@@ -1,6 +1,10 @@
 package com.github.ayltai.newspaper.app.widget;
 
 import android.app.Activity;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -43,7 +47,7 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public class VideoView extends ItemView implements ItemPresenter.View {
+public class VideoView extends ItemView implements ItemPresenter.View, LifecycleObserver {
     private final FlowableProcessor<Irrelevant> videoClicks = PublishProcessor.create();
 
     //region Components
@@ -169,12 +173,21 @@ public class VideoView extends ItemView implements ItemPresenter.View {
         }
     }
 
-    public void releasePlayer() {
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    private void releasePlayer() {
         if (this.player != null) this.player.release();
         if (this.playerView != null) this.removeView(this.playerView);
 
         this.player     = null;
         this.playerView = null;
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    private void dispose() {
+        final LifecycleOwner owner = this.getLifecycleOwner();
+        if (owner != null) {
+            owner.getLifecycle().removeObserver(this);
+        }
     }
 
     //endregion
@@ -207,6 +220,11 @@ public class VideoView extends ItemView implements ItemPresenter.View {
 
             this.getContext().startActivity(VideoActivity.createIntent(this.getContext(), this.video.getVideoUrl(), isPlaying, seekPosition));
         });
+
+        final LifecycleOwner owner = this.getLifecycleOwner();
+        if (owner != null) {
+            owner.getLifecycle().addObserver(this);
+        }
 
         super.onAttachedToWindow();
     }
