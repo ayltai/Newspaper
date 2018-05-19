@@ -10,7 +10,7 @@ jacoco {
 }
 
 checkstyle {
-    toolVersion '8.9'
+    toolVersion '8.10'
 }
 
 findbugs {
@@ -111,17 +111,17 @@ ext {
     multidexVersion       = '1.0.3'
     supportLibraryVersion = '27.1.1'
     architectureVersion   = '1.1.1'
-    firebaseSdkVersion    = '15.0.0'
-    daggerVersion         = '2.15'
+    firebaseSdkVersion    = '15.0.2'
+    daggerVersion         = '2.16'
     retrofitVersion       = '2.4.0'
     frescoVersion         = '1.9.0'
     bigImageViewerVersion = '1.4.6'
-    exoPlayerVersion      = '2.7.3'
+    exoPlayerVersion      = '2.8.0'
     autoValueVersion      = '1.6'
     leakCanaryVersion     = '1.5.4'
     robolectricVersion    = '3.8'
     powerMockVersion      = '2.0.0-beta.5'
-    espressoVersion       = '3.0.1'
+    espressoVersion       = '3.0.2'
 }
 
 repositories {
@@ -208,10 +208,10 @@ dependencies {
     compileOnly         "com.google.auto.value:auto-value-annotations:$autoValueVersion"
     annotationProcessor "com.google.auto.value:auto-value:$autoValueVersion"
     annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
-    implementation      'com.google.code.gson:gson:2.8.2'
+    implementation      'com.google.code.gson:gson:2.8.4'
 
     // Fabric
-    implementation ('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+    implementation ('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
         transitive = true
     }
 
@@ -222,7 +222,7 @@ dependencies {
     testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testImplementation 'org.mockito:mockito-core:2.18.5'
+    testImplementation 'org.mockito:mockito-core:2.18.6'
     testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
@@ -242,7 +242,7 @@ dependencies {
     androidTestImplementation ("com.android.support.test.espresso:espresso-intents:$espressoVersion") {
         exclude group : 'com.android.support'
     }
-    androidTestUtil 'com.android.support.test:orchestrator:1.0.1'
+    androidTestUtil 'com.android.support.test:orchestrator:1.0.2'
 
     // Code coverage by Codacy
     codacy 'com.github.codacy:codacy-coverage-reporter:4.0.0'
