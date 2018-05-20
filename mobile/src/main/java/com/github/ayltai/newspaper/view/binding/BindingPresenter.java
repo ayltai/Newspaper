@@ -26,6 +26,7 @@ public abstract class BindingPresenter<M, V extends Presenter.View> extends Mode
     public void bindView(@NonNull final V view) {
         this.onViewDetached();
         this.onViewAttached(view, false);
-        this.bindModel(this.getModel());
+
+        this.bindModel();
     }
 }

@@ -130,8 +130,8 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
             final AboutView      view      = new AboutView(this.getContext());
             final AboutPresenter presenter = new AboutPresenter();
 
-            view.attachments().subscribe(isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment));
-            view.detachments().subscribe(irrelevant -> presenter.onViewDetached());
+            view.attaches().subscribe(isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment));
+            view.detaches().subscribe(irrelevant -> presenter.onViewDetached());
 
             this.content.addView(view);
         } else {

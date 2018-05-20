@@ -106,20 +106,18 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
 
     @UiThread
     @Override
-    public void bindModel(final Item model) {
-        super.bindModel(model);
-
-        if (this.getView() != null && model != null) {
-            this.getView().setIsRead(model.isFullDescription());
-            this.getView().setAvatar(SourceFactory.getInstance(this.getView().getContext()).getSource(model.getSource()).getAvatar());
-            this.getView().setSource(Source.toDisplayName(model.getSource()));
-            this.getView().setPublishDate(model.getPublishDate());
-            this.getView().setTitle(model.getTitle());
-            this.getView().setDescription(model.getDescription());
-            this.getView().setLink(model.getLink());
-            this.getView().setIsBookmarked(model.isBookmarked());
-            this.getView().setImages(model.getImages());
-            this.getView().setVideo(model.getVideo());
+    public void bindModel() {
+        if (this.getView() != null && this.getModel() != null) {
+            this.getView().setIsRead(this.getModel().isFullDescription());
+            this.getView().setAvatar(SourceFactory.getInstance(this.getView().getContext()).getSource(this.getModel().getSource()).getAvatar());
+            this.getView().setSource(Source.toDisplayName(this.getModel().getSource()));
+            this.getView().setPublishDate(this.getModel().getPublishDate());
+            this.getView().setTitle(this.getModel().getTitle());
+            this.getView().setDescription(this.getModel().getDescription());
+            this.getView().setLink(this.getModel().getLink());
+            this.getView().setIsBookmarked(this.getModel().isBookmarked());
+            this.getView().setImages(this.getModel().getImages());
+            this.getView().setVideo(this.getModel().getVideo());
         }
     }
 
@@ -266,8 +264,6 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
 
         final Flowable<String> entityClicks = view.entityClicks();
         if (entityClicks != null) this.manageDisposable(entityClicks.subscribe(this::onEntityClick));
-
-        this.bindModel(this.getModel());
     }
 
     private void initAppConfig() {

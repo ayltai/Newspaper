@@ -168,14 +168,14 @@ public abstract class RxFlow {
 
     private void subscribe(@Nullable final Presenter presenter, @Nullable final Presenter.View view) {
         if (presenter != null && view != null) {
-            if (view.attachments() != null) this.manageDisposable(view.attachments(), view.attachments().subscribe(
+            if (view.attaches() != null) this.manageDisposable(view.attaches(), view.attaches().subscribe(
                 isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
                 error -> {
                     if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                 }
             ));
 
-            if (view.detachments() != null) this.manageDisposable(view.detachments(), view.detachments().subscribe(
+            if (view.detaches() != null) this.manageDisposable(view.detaches(), view.detaches().subscribe(
                 irrelevant -> presenter.onViewDetached(),
                 error -> {
                     if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));

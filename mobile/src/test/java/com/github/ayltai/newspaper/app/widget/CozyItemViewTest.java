@@ -2,7 +2,7 @@ package com.github.ayltai.newspaper.app.widget;
 
 import android.view.View;
 
-import com.github.ayltai.newspaper.AppUnitTest;
+import com.github.ayltai.newspaper.UnitTest;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.util.DateUtils;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public final class CozyItemViewTest extends AppUnitTest {
+public final class CozyItemViewTest extends UnitTest {
     @Test
     public void testProperties() {
         final CozyItemView view   = new CozyItemView(RuntimeEnvironment.application);

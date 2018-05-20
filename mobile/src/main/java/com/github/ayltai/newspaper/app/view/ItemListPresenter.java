@@ -1,9 +1,5 @@
 package com.github.ayltai.newspaper.app.view;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +12,10 @@ import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.Lists;
 import com.github.ayltai.newspaper.view.VerticalListPresenter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;

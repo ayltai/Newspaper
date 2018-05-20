@@ -63,13 +63,13 @@ public class BaseView extends FrameLayout implements Presenter.View {
 
     @NonNull
     @Override
-    public Flowable<Boolean> attachments() {
+    public Flowable<Boolean> attaches() {
         return this.attachments;
     }
 
     @NonNull
     @Override
-    public Flowable<Irrelevant> detachments() {
+    public Flowable<Irrelevant> detaches() {
         return this.detachments;
     }
 

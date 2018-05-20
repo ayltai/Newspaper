@@ -92,7 +92,11 @@ final class MainFlow extends RxFlow {
         if (presenter != null && view != null) {
             presenter.onViewDetached();
 
-            if (key instanceof DetailsView.Key && presenter instanceof ModelPresenter) ((ModelPresenter)presenter).bindModel(((DetailsView.Key)key).getItem());
+            if (key instanceof DetailsView.Key && presenter instanceof ModelPresenter) {
+                final ModelPresenter modelPresenter = (ModelPresenter)presenter;
+                modelPresenter.setModel(((DetailsView.Key)key).getItem());
+                modelPresenter.bindModel();
+            }
         }
 
         return Pair.create(presenter, view);

@@ -2,10 +2,10 @@ package com.github.ayltai.newspaper.app.view;
 
 import android.support.annotation.NonNull;
 
-import com.github.ayltai.architecture.test.PresenterTest;
 import com.github.ayltai.newspaper.analytics.EventLogger;
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.config.UserConfig;
+import com.github.ayltai.newspaper.view.PresenterTest;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -42,7 +42,7 @@ public final class SettingsPresenterTest extends PresenterTest<MainActivity, Set
     @Test
     public void When_onViewAttached_Then_addOptionIsCalled() {
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // Then
         Mockito.verify(this.getView(), Mockito.times(3)).addOption(Mockito.anyString(), Mockito.anyBoolean());
@@ -51,7 +51,7 @@ public final class SettingsPresenterTest extends PresenterTest<MainActivity, Set
     @Test
     public void When_optionsChanges_Then_settingsAreUpdated() {
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
         this.optionsChanges.onNext(0);
 
         // Then

@@ -2,12 +2,13 @@
 <FindBugsFilter>
     <Match>
         <Or>
-            <Class name="~.*Test.*" />
-            <Class name="~.*R\$.*" />
-            <Class name="~.*Manifest\$.*" />
-            <Class name="~.*Dagger*.*" />
-            <Class name="~.*Factory*.*" />
+            <Class name="~.*Test\.*" />
+            <Class name="~.*R\$\.*" />
+            <Class name="~.*Manifest\$\.*" />
+            <Class name="~.*Dagger*\.*" />
+            <Class name="~.*Factory*\.*" />
             <Package name="~io\.realm\.*" />
+            <Package name="~android\$.*" />
             <Bug pattern="BL_BURYING_LOGIC" />
             <Bug pattern="CLI_CONSTANT_LIST_INDEX" />
             <Bug pattern="CSI_CHAR_SET_ISSUES_USE_STANDARD_CHARSET" />

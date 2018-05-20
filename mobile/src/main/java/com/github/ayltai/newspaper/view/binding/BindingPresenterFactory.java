@@ -14,7 +14,8 @@ public abstract class BindingPresenterFactory<M, V extends Presenter.View, P ext
     public Binder<V> create(@Nullable final M model) {
         if (this.isNeeded(model)) {
             final P presenter = this.createPresenter();
-            presenter.bindModel(model);
+            presenter.setModel(model);
+            presenter.bindModel();
 
             return presenter;
         }

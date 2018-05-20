@@ -1,12 +1,12 @@
 package com.github.ayltai.newspaper.client;
 
-import com.github.ayltai.newspaper.AppUnitTest;
+import com.github.ayltai.newspaper.UnitTest;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 
-public final class ClientFactoryTest extends AppUnitTest {
+public final class ClientFactoryTest extends UnitTest {
     @Test
     public void test() {
         final ClientFactory factory = ClientFactory.getInstance(RuntimeEnvironment.application);

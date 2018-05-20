@@ -2,13 +2,13 @@ package com.github.ayltai.newspaper.app.view;
 
 import android.support.annotation.NonNull;
 
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.robolectric.Robolectric;
-
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.PresenterTest;
+
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.robolectric.Robolectric;
 
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
@@ -47,7 +47,7 @@ public final class MainPresenterTest extends PresenterTest<MainActivity, MainPre
     @Test
     public void Give_onViewAttached_When_upActions_Then_upIsCalled() {
         // Given
-        this.attaches.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.upActions.onNext(Irrelevant.INSTANCE);
@@ -59,7 +59,7 @@ public final class MainPresenterTest extends PresenterTest<MainActivity, MainPre
     @Test
     public void Give_onViewAttached_When_refreshActions_Then_refreshIsCalled() {
         // Given
-        this.attaches.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.refreshActions.onNext(Irrelevant.INSTANCE);
@@ -71,7 +71,7 @@ public final class MainPresenterTest extends PresenterTest<MainActivity, MainPre
     @Test
     public void Give_onViewAttached_When_filterActions_Then_settingsIsCalled() {
         // Given
-        this.attaches.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.filterActions.onNext(Irrelevant.INSTANCE);
@@ -83,7 +83,7 @@ public final class MainPresenterTest extends PresenterTest<MainActivity, MainPre
     @Test
     public void Give_onViewAttached_When_clearAllActions_Then_clearAllIsCalled() {
         // Given
-        this.attaches.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.clearAllActions.onNext(Irrelevant.INSTANCE);

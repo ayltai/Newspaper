@@ -94,8 +94,8 @@ public final class OptionsAdapter extends PagerAdapter {
                 throw new IndexOutOfBoundsException("Position not found: " + position);
         }
 
-        this.manageDisposable(view.attachments().subscribe(isFirstAttachment -> presenter.onViewAttached(view, isFirstAttachment)));
-        this.manageDisposable(view.detachments().subscribe(irrelevant -> presenter.onViewDetached()));
+        this.manageDisposable(view.attaches().subscribe(isFirstAttachment -> presenter.onViewAttached(view, isFirstAttachment)));
+        this.manageDisposable(view.detaches().subscribe(irrelevant -> presenter.onViewDetached()));
 
         parent.addView((View)view);
 

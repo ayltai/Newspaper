@@ -1,21 +1,21 @@
 package com.github.ayltai.newspaper.app.view;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import android.support.annotation.NonNull;
-
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.robolectric.Robolectric;
 
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.view.VerticalListPresenter;
 import com.github.ayltai.newspaper.view.PresenterTest;
+import com.github.ayltai.newspaper.view.VerticalListPresenter;
+
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.robolectric.Robolectric;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
@@ -62,7 +62,7 @@ public final class ItemListPresenterTest extends PresenterTest<MainActivity, Ite
         this.getPresenter().setModel(models);
 
         // When
-        this.attaches.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // Then
         Mockito.verify(this.getView(), Mockito.times(1)).clear();
@@ -83,7 +83,7 @@ public final class ItemListPresenterTest extends PresenterTest<MainActivity, Ite
         this.getPresenter().setModel(models);
 
         // When
-        this.attaches.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // Then
         Mockito.verify(this.getView(), Mockito.times(1)).clear();

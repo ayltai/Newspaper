@@ -82,38 +82,38 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
 
     @UiThread
     @Override
-    public void bindModel(final Item model) {
+    public void bindModel() {
         if (this.getView() == null) {
-            super.bindModel(model);
+            super.bindModel();
 
-            this.analyze(model);
+            if (this.getModel() != null) this.analyze(this.getModel());
         } else {
-            if (model instanceof NewsItem) {
-                super.bindModel(model);
+            if (this.getModel() instanceof NewsItem) {
+                super.bindModel();
 
-                final NewsItem newsItem = (NewsItem)model;
+                final NewsItem newsItem = (NewsItem)this.getModel();
                 this.updateItem(newsItem);
 
                 if (newsItem.isFullDescription()) {
-                    this.analyze(model);
+                    this.analyze(this.getModel());
                 } else {
                     this.getView().showProgress(true);
 
-                    super.bindModel(model);
+                    super.bindModel();
 
                     this.updateItem(newsItem);
 
                     if (NetworkUtils.isOnline(this.getView().getContext())) {
                         this.manageDisposable(Single.<NewsItem>create(
                             emitter -> {
-                                final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(model.getSource());
+                                final Client client = ClientFactory.getInstance(this.getView().getContext()).getClient(this.getModel().getSource());
 
                                 if (emitter == null || emitter.isDisposed()) return;
 
                                 if (client == null) {
-                                    emitter.onError(new IllegalArgumentException("Unrecognized source " + model.getSource()));
+                                    emitter.onError(new IllegalArgumentException("Unrecognized source " + this.getModel().getSource()));
                                 } else {
-                                    client.updateItem((NewsItem)model)
+                                    client.updateItem((NewsItem)this.getModel())
                                         .subscribe(
                                             emitter::onSuccess,
                                             emitter::onError
@@ -124,9 +124,10 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                             .flatMap(item -> DetailsPresenter.updateItem(this.getView().getContext(), item)).compose(RxUtils.applySingleBackgroundToMainSchedulers())
                             .subscribe(
                                 items -> {
-                                    super.bindModel(items.get(0));
+                                    this.setModel(items.get(0));
+                                    super.bindModel();
 
-                                    this.analyze(model);
+                                    this.analyze(items.get(0));
 
                                     this.getView().showProgress(false);
                                 },
@@ -136,7 +137,7 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
                     }
                 }
             } else {
-                super.bindModel(model);
+                super.bindModel();
             }
         }
     }

@@ -1,6 +1,6 @@
 package com.github.ayltai.newspaper.app.view.binding;
 
-import com.github.ayltai.newspaper.AppUnitTest;
+import com.github.ayltai.newspaper.UnitTest;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
-public final class FeaturedBinderFactoryTest extends AppUnitTest {
+public final class FeaturedBinderFactoryTest extends UnitTest {
     @Test
     public void test() {
         final FeaturedBinderFactory factory = new FeaturedBinderFactory();

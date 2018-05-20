@@ -11,7 +11,6 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -56,15 +55,14 @@ public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.V
         this.scrollPosition = 0;
     }
 
+    @CallSuper
     @Override
-    public void bindModel(final List<M> models) {
-        super.bindModel(models);
-
-        if (this.getView() != null) {
-            if (models.isEmpty()) this.getView().showEmptyView();
+    public void bindModel() {
+        if (this.getView() != null && this.getModel() != null) {
+            if (this.getModel().isEmpty()) this.getView().showEmptyView();
 
             this.getView().clear();
-            this.getView().bind(models);
+            this.getView().bind(this.getModel());
         }
     }
 
@@ -79,7 +77,10 @@ public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.V
             this.manageDisposable(this.load()
                 .compose(RxUtils.applyFlowableSchedulers(AndroidSchedulers.mainThread()))
                 .subscribe(
-                    this::bindModel,
+                    models -> {
+                        this.setModel(models);
+                        this.bindModel();
+                    },
                     error -> {
                         if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                     }));
@@ -105,7 +106,10 @@ public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.V
                     .map(dummy -> Collections.<M>emptyList())
                     .compose(RxUtils.applySingleBackgroundToMainSchedulers())
                     .subscribe(
-                        this::bindModel,
+                        models -> {
+                            this.setModel(models);
+                            this.bindModel();
+                        },
                         error -> {
                             if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                         }
@@ -136,7 +140,8 @@ public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.V
                                 view.clear();
                             }
 
-                            this.bindModel(models);
+                            this.setModel(models);
+                            this.bindModel();
                         },
                         error -> {
                             if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));

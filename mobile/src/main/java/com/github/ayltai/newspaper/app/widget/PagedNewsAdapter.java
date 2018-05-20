@@ -154,14 +154,14 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
 
         if (this.disposables == null) this.disposables = new CompositeDisposable();
 
-        this.disposables.add(view.attachments().subscribe(
+        this.disposables.add(view.attaches().subscribe(
             isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
             error -> {
                 if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
             }
         ));
 
-        this.disposables.add(view.detachments().subscribe(
+        this.disposables.add(view.detaches().subscribe(
             irrelevant -> presenter.onViewDetached(),
             error -> {
                 if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));

@@ -1,6 +1,6 @@
 package com.github.ayltai.newspaper.util;
 
-import com.github.ayltai.newspaper.AppUnitTest;
+import com.github.ayltai.newspaper.UnitTest;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,7 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public final class IOUtilsTest extends AppUnitTest {
+public final class IOUtilsTest extends UnitTest {
     @Test
     public void testReadString() {
         ByteArrayInputStream inputStream = null;

@@ -20,9 +20,9 @@ import io.reactivex.disposables.Disposable;
 
 public class Presenter<V extends Presenter.View> {
     public interface View {
-        Flowable<Boolean> attachments();
+        Flowable<Boolean> attaches();
 
-        Flowable<Irrelevant> detachments();
+        Flowable<Irrelevant> detaches();
 
         @NonNull
         Context getContext();

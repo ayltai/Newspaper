@@ -3,7 +3,7 @@ package com.github.ayltai.newspaper.data;
 import android.content.Context;
 import android.support.annotation.CallSuper;
 
-import com.github.ayltai.newspaper.AppUnitTest;
+import com.github.ayltai.newspaper.UnitTest;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 
 import org.mockito.Mockito;
@@ -27,7 +27,7 @@ import io.realm.internal.RealmCore;
     RealmQuery.class,
     RealmResults.class
 })
-public abstract class DataTest extends AppUnitTest {
+public abstract class DataTest extends UnitTest {
     @CallSuper
     @Override
     public void setUp() throws Exception {

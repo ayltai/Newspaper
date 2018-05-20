@@ -1,20 +1,28 @@
 package com.github.ayltai.newspaper.view;
 
+import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 
-public class ModelPresenter<M, V extends Presenter.View> extends Presenter<V> {
+public abstract class ModelPresenter<M, V extends Presenter.View> extends Presenter<V> {
     private M model;
 
-    protected M getModel() {
+    public M getModel() {
         return this.model;
     }
 
-    protected void setModel(final M model) {
+    public void setModel(final M model) {
         this.model = model;
     }
 
     @UiThread
-    public void bindModel(final M model) {
-        this.setModel(model);
+    public abstract void bindModel();
+
+    @CallSuper
+    @Override
+    public void onViewAttached(@NonNull final V view, final boolean isFirstTimeAttachment) {
+        super.onViewAttached(view, isFirstTimeAttachment);
+
+        this.bindModel();
     }
 }

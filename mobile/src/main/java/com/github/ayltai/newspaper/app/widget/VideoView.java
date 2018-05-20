@@ -174,7 +174,7 @@ public class VideoView extends ItemView implements ItemPresenter.View, Lifecycle
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    private void releasePlayer() {
+    void releasePlayer() {
         if (this.player != null) this.player.release();
         if (this.playerView != null) this.removeView(this.playerView);
 
@@ -183,7 +183,7 @@ public class VideoView extends ItemView implements ItemPresenter.View, Lifecycle
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    private void dispose() {
+    void dispose() {
         final LifecycleOwner owner = this.getLifecycleOwner();
         if (owner != null) {
             owner.getLifecycle().removeObserver(this);

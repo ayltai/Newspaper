@@ -77,7 +77,7 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
         this.getPresenter().setModel(model);
 
         // When
-        this.attaches.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).setDescription(Mockito.anyString());
     }
@@ -88,7 +88,7 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
         this.getPresenter().setModel(this.getModel());
 
         // When
-        this.attaches.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
         this.textToSpeechClicks.onNext(Irrelevant.INSTANCE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).textToSpeech();
@@ -100,7 +100,7 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
         this.getPresenter().setModel(this.getModel());
 
         // When
-        this.attaches.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
         this.viewOnWebClicks.onNext(Irrelevant.INSTANCE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).viewOnWeb("link");
@@ -112,7 +112,7 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
         this.getPresenter().setModel(this.getModel());
 
         // When
-        this.attaches.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
         this.shareClicks.onNext(Irrelevant.INSTANCE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).share("link");
@@ -124,7 +124,7 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
         this.getPresenter().setModel(this.getModel());
 
         // When
-        this.attaches.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
         this.imageClicks.onNext(new Image(""));
 
         Mockito.verify(this.getView(), Mockito.times(1)).showImage(Mockito.anyString());

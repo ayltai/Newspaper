@@ -83,14 +83,14 @@ public final class BookmarkedNewsView extends NewsView {
                 }
             };
 
-        view.attachments().subscribe(
+        view.attaches().subscribe(
             isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
             error -> {
                 if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
             }
         );
 
-        view.detachments().subscribe(
+        view.detaches().subscribe(
             irrelevant -> presenter.onViewDetached(),
             error -> {
                 if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
