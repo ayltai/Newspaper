@@ -68,7 +68,7 @@ public final class BookmarkedNewsTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_bookmark),
             ViewMatchers.withContentDescription("Bookmark")))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 

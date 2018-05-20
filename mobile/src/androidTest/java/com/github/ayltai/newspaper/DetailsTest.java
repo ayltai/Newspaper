@@ -72,7 +72,7 @@ public final class DetailsTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_share),
             ViewMatchers.withContentDescription("Share")))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         // Checks that the fired Intent is correct
         Intents.intended(shareIntent);
@@ -82,6 +82,6 @@ public final class DetailsTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_text_to_speech),
             ViewMatchers.withContentDescription("Text to speech")))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
     }
 }
