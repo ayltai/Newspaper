@@ -22,8 +22,10 @@ public final class SearchTest extends BaseTest {
     @Test
     public void searchWithResultsTest() {
         // Checks that Featured News is displayed
-        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
-            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.featured_image),
+            ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         // Clicks Search button
         Espresso.onView(Matchers.allOf(
@@ -54,7 +56,9 @@ public final class SearchTest extends BaseTest {
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".search.textBox.filled", this.testRule.getActivity());
 
         // Checks that Featured News is not displayed in the search results
-        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.featured_image),
+            ViewMatchers.isDisplayed()))
             .check(ViewAssertions.doesNotExist());
 
         // Clears the search query
@@ -76,15 +80,19 @@ public final class SearchTest extends BaseTest {
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".search.collapsed", this.testRule.getActivity());
 
         // Checks that Featured News is displayed
-        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
-            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.featured_image),
+            ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
     }
 
     @Test
     public void searchWithoutResultsTest() {
         // Checks that Featured News is displayed
-        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
-            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.featured_image),
+            ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         // Clicks Search button
         Espresso.onView(Matchers.allOf(
@@ -145,7 +153,9 @@ public final class SearchTest extends BaseTest {
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".search.collapsed", this.testRule.getActivity());
 
         // Checks that Featured News is displayed
-        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
-            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.featured_image),
+            ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
     }
 }

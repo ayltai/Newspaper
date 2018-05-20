@@ -58,7 +58,8 @@ public final class HistoricalNewsTest extends BaseTest {
         // Clicks Featured News
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.featured_image),
-            ViewMatchers.withParent(ViewMatchers.withId(R.id.container))))
+            ViewMatchers.withParent(ViewMatchers.withId(R.id.container)),
+            ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);

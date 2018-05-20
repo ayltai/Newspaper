@@ -54,8 +54,6 @@ public final class AboutView extends BaseView implements AboutPresenter.View {
 
     public AboutView(@NonNull final Context context) {
         super(context);
-
-        this.init();
     }
 
     //region Properties
@@ -153,13 +151,13 @@ public final class AboutView extends BaseView implements AboutPresenter.View {
 
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_about, this, true);
 
-        this.container     = view.findViewById(R.id.container);
-        this.appName       = view.findViewById(R.id.app_name);
-        this.appIcon       = view.findViewById(R.id.app_icon);
-        this.appVersion    = view.findViewById(R.id.app_version);
-        this.visitAction   = view.findViewById(R.id.visit_container);
-        this.rateAction    = view.findViewById(R.id.rate_container);
-        this.reportAction  = view.findViewById(R.id.report_container);
+        this.container    = view.findViewById(R.id.container);
+        this.appName      = view.findViewById(R.id.app_name);
+        this.appIcon      = view.findViewById(R.id.app_icon);
+        this.appVersion   = view.findViewById(R.id.app_version);
+        this.visitAction  = view.findViewById(R.id.visit_container);
+        this.rateAction   = view.findViewById(R.id.rate_container);
+        this.reportAction = view.findViewById(R.id.report_container);
     }
 
     private void openUrl(@NonNull final String url) {

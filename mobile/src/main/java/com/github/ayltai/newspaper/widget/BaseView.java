@@ -1,9 +1,5 @@
 package com.github.ayltai.newspaper.widget;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.app.Activity;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
@@ -16,6 +12,10 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.util.Views;
 import com.github.ayltai.newspaper.view.Presenter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
@@ -36,6 +36,8 @@ public class BaseView extends FrameLayout implements Presenter.View {
 
     public BaseView(@NonNull final Context context) {
         super(context);
+
+        this.init();
     }
 
     //region Properties
@@ -103,7 +105,7 @@ public class BaseView extends FrameLayout implements Presenter.View {
 
     //endregion
 
+    @CallSuper
     protected void init() {
-        this.setLayoutParams(Views.createWrapContentLayoutParams());
     }
 }

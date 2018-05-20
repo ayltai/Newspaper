@@ -22,11 +22,15 @@ public final class FeaturedItemTest extends BaseTest {
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".featuredItem", this.testRule.getActivity());
 
         // Checks that Featured News is displayed
-        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
-            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.featured_image),
+            ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         // Clicks Featured News
-        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.featured_image),
+            ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);

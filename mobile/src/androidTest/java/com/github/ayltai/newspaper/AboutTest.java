@@ -26,7 +26,7 @@ public final class AboutTest extends BaseTest {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_about),
             ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView)))))
-            .perform(ViewActions.scrollTo(), ViewActions.click());
+            .perform(ViewActions.click());
 
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".visitWebsite", this.testRule.getActivity());
 

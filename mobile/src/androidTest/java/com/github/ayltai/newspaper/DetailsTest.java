@@ -57,8 +57,9 @@ public final class DetailsTest extends BaseTest {
 
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.description),
-            ViewMatchers.withParent(ViewMatchers.withClassName(Matchers.is("android.widget.LinearLayout")))))
-            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            ViewMatchers.withParent(ViewMatchers.withClassName(Matchers.is("android.widget.LinearLayout"))),
+            ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         final Matcher<Intent> shareIntent = Matchers.allOf(
             IntentMatchers.hasAction(Intent.ACTION_CHOOSER),

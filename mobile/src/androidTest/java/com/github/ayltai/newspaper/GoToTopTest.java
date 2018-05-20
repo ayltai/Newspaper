@@ -20,8 +20,10 @@ public class GoToTopTest extends BaseTest {
     @Test
     public void goToTopTest() {
         // Checks that Featured News is displayed
-        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
-            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.featured_image),
+            ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         // Scrolls down 20 view part items so that Featured News is not displayed
         Espresso.onView(MoreTestUtils.first(Matchers.allOf(
@@ -44,7 +46,9 @@ public class GoToTopTest extends BaseTest {
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".goToTop.scrollUp", this.testRule.getActivity());
 
         // Checks that Featured News is not displayed
-        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.featured_image),
+            ViewMatchers.isDisplayed()))
             .check(ViewAssertions.doesNotExist());
 
         // Clicks the More button
@@ -62,7 +66,9 @@ public class GoToTopTest extends BaseTest {
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".goToTop", this.testRule.getActivity());
 
         // Checks that Featured News is displayed
-        Espresso.onView(ViewMatchers.withId(R.id.featured_image))
-            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.featured_image),
+            ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
     }
 }

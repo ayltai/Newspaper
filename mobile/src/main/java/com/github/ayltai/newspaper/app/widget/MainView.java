@@ -61,7 +61,7 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
 
     //endregion
 
-    private final Map<Integer, SoftReference<View>> cachedViews = new ArrayMap<>();
+    private Map<Integer, SoftReference<View>> cachedViews;
 
     //region Components
 
@@ -82,8 +82,6 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
 
     public MainView(@NonNull final Context context) {
         super(context);
-
-        this.init();
     }
 
     //region Events
@@ -302,6 +300,8 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
     @Override
     protected void init() {
         super.init();
+
+        this.cachedViews = new ArrayMap<>();
 
         final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_main, this, true);
 

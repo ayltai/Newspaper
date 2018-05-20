@@ -21,8 +21,6 @@ public final class TextOptionsView extends BaseView implements OptionsPresenter.
 
     public TextOptionsView(@NonNull final Context context) {
         super(context);
-
-        this.init();
     }
 
     @Override

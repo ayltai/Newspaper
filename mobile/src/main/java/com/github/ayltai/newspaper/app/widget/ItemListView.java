@@ -55,8 +55,6 @@ public abstract class ItemListView extends VerticalListView<Item> implements Dis
 
     protected ItemListView(@NonNull final Context context) {
         super(context);
-
-        this.init();
     }
 
     //region Search properties

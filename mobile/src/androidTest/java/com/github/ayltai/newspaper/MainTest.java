@@ -9,6 +9,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.github.ayltai.newspaper.util.MoreTestUtils;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -17,33 +18,47 @@ import org.junit.runner.RunWith;
 public final class MainTest extends BaseTest {
     @Test
     public void mainTest() {
-        Espresso.onView(ViewMatchers.withId(R.id.action_more))
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_more),
+            ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
-        Espresso.onView(ViewMatchers.withId(R.id.action_refresh))
-            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_refresh),
+            ViewMatchers.isDisplayed()))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
-        Espresso.onView(ViewMatchers.withId(R.id.action_more))
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_more),
+            ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
-        Espresso.onView(ViewMatchers.withId(R.id.action_refresh))
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_refresh),
+            ViewMatchers.isDisplayed()))
             .check(ViewAssertions.doesNotExist());
 
-        Espresso.onView(ViewMatchers.withId(R.id.action_more))
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_more),
+            ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
-        Espresso.onView(ViewMatchers.withId(R.id.action_refresh))
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_refresh),
+            ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
 
-        Espresso.onView(ViewMatchers.withId(R.id.action_refresh))
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withId(R.id.action_refresh),
+            ViewMatchers.isDisplayed()))
             .check(ViewAssertions.doesNotExist());
     }
 }
