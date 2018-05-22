@@ -2,10 +2,10 @@ package com.github.ayltai.newspaper.app.data.model;
 
 import android.os.Parcel;
 
+import com.github.ayltai.newspaper.UnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.github.ayltai.newspaper.UnitTest;
 
 public final class CategoryTest extends UnitTest {
     @Test

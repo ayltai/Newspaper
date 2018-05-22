@@ -1,8 +1,5 @@
 package com.github.ayltai.newspaper.app.widget;
 
-import java.util.List;
-import java.util.Set;
-
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -15,6 +12,9 @@ import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.app.view.BaseNewsView;
 import com.github.ayltai.newspaper.widget.BaseView;
 
+import java.util.List;
+import java.util.Set;
+
 public abstract class NewsView extends BaseView implements BaseNewsView {
     protected ItemListView listView;
 
@@ -23,8 +23,6 @@ public abstract class NewsView extends BaseView implements BaseNewsView {
 
     protected NewsView(@NonNull final Context context) {
         super(context);
-
-        this.init();
     }
 
     //region Methods

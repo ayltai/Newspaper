@@ -7,13 +7,12 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.github.ayltai.newspaper.util.MoreTestUtils;
+import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
+
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
-
-import com.github.ayltai.newspaper.util.MoreTestUtils;
 
 @SmallTest
 @RunWith(AndroidJUnit4.class)
@@ -41,8 +40,7 @@ public final class FeaturedItemTest extends BaseTest {
         // Checks that the news image is displayed within the toolbar
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.image_container), 0), 0),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.image_container), 0), 0)))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }

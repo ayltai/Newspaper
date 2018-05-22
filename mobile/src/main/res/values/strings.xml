@@ -5,6 +5,7 @@
     <string name="view_via">View via…</string>
     <string name="share_to">Share to…</string>
     <string name="update_indicator">New news available</string>
+    <string name="learn_more">Learn more:</string>
 
     <!-- About -->
     <string name="about_visit">Visit website</string>
@@ -51,7 +52,6 @@
     <string name="pref_cozy_layout">Cozy layout</string>
     <string name="pref_dark_theme">Dark theme</string>
     <string name="pref_auto_play">Play video news automatically</string>
-    <string name="pref_panorama">Panoramic images</string>
     <string name="pref_settings">Settings</string>
     <string name="pref_sources">Sources</string>
     <string name="pref_categories">Categories</string>
@@ -97,16 +97,4 @@
     <string name="exo_pause">Pause</string>
     <string name="exo_fullscreen">Enter fullscreen</string>
     <string name="exo_fullscreen_exit">Exit fullscreen</string>
-
-    <!-- Instabug -->
-    <string name="instabug_report_header">What is it about?</string>
-    <string name="instabug_bug_report_header">Report a problem</string>
-    <string name="instabug_feedback_report_header">Tell us something</string>
-    <string name="instabug_report_bug">Report a problem</string>
-    <string name="instabug_report_feedback">Tell us something</string>
-    <string name="instabug_bug_report_hint">Steps to reproduce the problem</string>
-    <string name="instabug_feedback_report_hint">Your feedback is important to us</string>
-    <string name="instabug_email_hint">Your email</string>
-    <string name="instabug_screenshot">Attach a screenshot</string>
-    <string name="instabug_gallery">Attach an image from gallery</string>
 </resources>

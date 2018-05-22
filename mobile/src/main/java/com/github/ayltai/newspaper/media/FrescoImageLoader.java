@@ -1,14 +1,5 @@
 package com.github.ayltai.newspaper.media;
 
-import java.io.Closeable;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Singleton;
-
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
@@ -52,9 +43,20 @@ import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 
+import java.io.Closeable;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Singleton;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
+@SuppressFBWarnings("MS_PKGPROTECT")
 @Singleton
 public final class FrescoImageLoader implements ImageLoader, Closeable, LifecycleObserver {
     private static final Handler                  HANDLER             = new Handler(Looper.getMainLooper());
@@ -81,12 +83,11 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
         this.context = context.getApplicationContext();
     }
 
-    @SuppressWarnings("IllegalCatch")
     @NonNull
     public static Maybe<Bitmap> loadImage(@NonNull final String uri) {
         return Single.<CloseableReference<CloseableImage>>create(
             emitter -> {
-                final DataSource<CloseableReference<CloseableImage>> source = Fresco.getImagePipeline().fetchDecodedImage(ImageRequest.fromUri(uri), false);
+                final DataSource<CloseableReference<CloseableImage>> source = Fresco.getImagePipeline().fetchDecodedImage(ImageRequest.fromUri(uri), Boolean.FALSE);
 
                 try {
                     if (!emitter.isDisposed()) emitter.onSuccess(DataSources.waitForFinalResult(source));
@@ -121,7 +122,7 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
         final ImageRequest request = ImageRequest.fromUri(uri);
         final File         file    = FrescoImageLoader.getFileCache(request);
 
-        if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Load image = " + uri.toString());
+        if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "Load image = " + uri);
         if (DevUtils.isLoggable()) Log.d(this.getClass().getSimpleName(), "File cache = " + file.getAbsolutePath());
 
         if (file.exists()) {
@@ -136,7 +137,7 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
             }
 
             final ImagePipeline                                    pipeline = Fresco.getImagePipeline();
-            final DataSource<CloseableReference<PooledByteBuffer>> source   = pipeline.fetchEncodedImage(request, true);
+            final DataSource<CloseableReference<PooledByteBuffer>> source   = pipeline.fetchEncodedImage(request, Boolean.TRUE);
 
             source.subscribe(new FileDataSubscriber(this.context) {
                 @WorkerThread
@@ -197,7 +198,7 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
 
     @Override
     public void prefetch(@NonNull final Uri uri) {
-        FrescoImageLoader.SOURCES.add(Fresco.getImagePipeline().prefetchToDiskCache(ImageRequest.fromUri(uri), false));
+        FrescoImageLoader.SOURCES.add(Fresco.getImagePipeline().prefetchToDiskCache(ImageRequest.fromUri(uri), Boolean.FALSE));
     }
 
     @Override
@@ -219,7 +220,7 @@ public final class FrescoImageLoader implements ImageLoader, Closeable, Lifecycl
     @NonNull
     private static File getFileCache(@NonNull final ImageRequest request) {
         final FileCache      mainFileCache = ImagePipelineFactory.getInstance().getMainFileCache();
-        final CacheKey       cacheKey      = DefaultCacheKeyFactory.getInstance().getEncodedCacheKey(request, false);
+        final CacheKey       cacheKey      = DefaultCacheKeyFactory.getInstance().getEncodedCacheKey(request, Boolean.FALSE);
         final BinaryResource resource      = mainFileCache.hasKey(cacheKey) ? mainFileCache.getResource(cacheKey) : null;
 
         if (resource == null) return request.getSourceFile();

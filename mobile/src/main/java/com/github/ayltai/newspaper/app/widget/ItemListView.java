@@ -55,8 +55,6 @@ public abstract class ItemListView extends VerticalListView<Item> implements Dis
 
     protected ItemListView(@NonNull final Context context) {
         super(context);
-
-        this.init();
     }
 
     //region Search properties
@@ -215,15 +213,15 @@ public abstract class ItemListView extends VerticalListView<Item> implements Dis
         this.swipeRefreshLayout.setColorSchemeResources(R.color.refreshColor1, R.color.refreshColor2, R.color.refreshColor3, R.color.refreshColor4);
         this.swipeRefreshLayout.setOnRefreshListener(() -> this.pullToRefreshes.onNext(Irrelevant.INSTANCE));
 
-        if (this.getLoadingViewId() > 0) this.loadingView = view.findViewById(this.getLoadingViewId());
-        if (this.getEmptyViewId() > 0) this.emptyView = view.findViewById(this.getEmptyViewId());
+        if (this.getLoadingViewId() != 0) this.loadingView = view.findViewById(this.getLoadingViewId());
+        if (this.getEmptyViewId() != 0) this.emptyView = view.findViewById(this.getEmptyViewId());
 
         this.emptyView.setVisibility(View.GONE);
 
         this.addView(view);
 
-        if (this.getEmptyTitle() > 0) ((TextView)this.emptyView.findViewById(R.id.empty_title)).setText(this.getEmptyTitle());
-        if (this.getEmptyDescription() > 0) ((TextView)this.emptyView.findViewById(R.id.empty_description)).setText(this.getEmptyDescription());
+        if (this.getEmptyTitle() != 0) ((TextView)this.emptyView.findViewById(R.id.empty_title)).setText(this.getEmptyTitle());
+        if (this.getEmptyDescription() != 0) ((TextView)this.emptyView.findViewById(R.id.empty_description)).setText(this.getEmptyDescription());
 
         final LifecycleOwner owner = this.getLifecycleOwner();
         if (owner != null) owner.getLifecycle().addObserver(this);

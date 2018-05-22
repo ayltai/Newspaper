@@ -1,9 +1,9 @@
 package com.github.ayltai.newspaper.data;
 
+import com.github.ayltai.newspaper.UnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.github.ayltai.newspaper.UnitTest;
 
 public final class RealmStringTest extends UnitTest {
     @Test

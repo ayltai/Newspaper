@@ -1,13 +1,13 @@
 package com.github.ayltai.newspaper.app.data.model;
 
-import java.util.Date;
-
 import android.os.Parcel;
+
+import com.github.ayltai.newspaper.UnitTest;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.github.ayltai.newspaper.UnitTest;
+import java.util.Date;
 
 public final class NewsItemTest extends UnitTest {
     @Test

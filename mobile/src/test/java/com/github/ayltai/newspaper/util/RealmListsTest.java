@@ -1,10 +1,10 @@
 package com.github.ayltai.newspaper.util;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.github.ayltai.newspaper.UnitTest;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import io.realm.RealmList;
 

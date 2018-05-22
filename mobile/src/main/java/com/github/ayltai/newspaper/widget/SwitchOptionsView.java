@@ -21,8 +21,6 @@ public final class SwitchOptionsView extends BaseView implements OptionsPresente
 
     public SwitchOptionsView(@NonNull final Context context) {
         super(context);
-
-        this.init();
     }
 
     @Override

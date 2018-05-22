@@ -7,13 +7,12 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.github.ayltai.newspaper.util.MoreTestUtils;
+import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
+
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
-
-import com.github.ayltai.newspaper.util.MoreTestUtils;
 
 @MediumTest
 @RunWith(AndroidJUnit4.class)
@@ -53,17 +52,13 @@ public class GoToTopTest extends BaseTest {
             .check(ViewAssertions.doesNotExist());
 
         // Clicks the More button
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_more),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.action_more))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks the Up button
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_up),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.action_up))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);

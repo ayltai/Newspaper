@@ -1,6 +1,10 @@
 -keepattributes *Annotation*,EnclosingMethod,Signature
 -keepclasseswithmembers class * {
-   public <init>(android.content.Context, android.util.AttributeSet, int);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+-keepclassmembernames enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
 }
 -keepnames class * implements android.os.Parcelable {
     public static final ** CREATOR;
@@ -37,9 +41,6 @@
 ## Retrofit
 -dontwarn retrofit2.**
 
-## SearchView
--keep class android.support.v7.widget.SearchView { *; }
-
 ## SimpleXML
 -dontwarn org.simpleframework.xml.stream.**
 -keep class org.simpleframework.xml.** { *; }
@@ -48,10 +49,20 @@
     public <init>();
 }
 
+## TextRazor
+-keep class com.textrazor.** { *; }
+-keepnames class com.fasterxml.jackson.** { *; }
+-keepnames interface com.fasterxml.jackson.** { *; }
+-dontwarn com.fasterxml.jackson.databind.**
+-keep class org.codehaus.** { *; }
+-keepclassmembernames public final enum org.codehaus.jackson.annotate.JsonAutoDetect$Visibility {
+    public static final org.codehaus.jackson.annotate.JsonAutoDetect$Visibility *;
+}
+
+## SearchView
+-keep class android.support.v7.widget.SearchView { *; }
+
 ## BottomNavigationView
 -keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
     boolean mShiftingMode;
 }
-
-## Instabug
--dontwarn com.instabug.**

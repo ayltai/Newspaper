@@ -2,13 +2,13 @@ package com.github.ayltai.newspaper.app.view;
 
 import android.support.annotation.NonNull;
 
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.robolectric.Robolectric;
-
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.PresenterTest;
+
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.robolectric.Robolectric;
 
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
@@ -45,7 +45,7 @@ public final class AboutPresenterTest extends PresenterTest<MainActivity, AboutP
     @Test
     public void When_onViewAttached_Then_propertiesAreSet() {
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // Then
         Mockito.verify(this.getView(), Mockito.times(1)).setAppName(Mockito.anyString());
@@ -56,7 +56,7 @@ public final class AboutPresenterTest extends PresenterTest<MainActivity, AboutP
     @Test
     public void Given_onViewAttached_When_visitActions_Then_visitIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.visitActions.onNext(Irrelevant.INSTANCE);
@@ -68,7 +68,7 @@ public final class AboutPresenterTest extends PresenterTest<MainActivity, AboutP
     @Test
     public void Given_onViewAttached_When_rateActions_Then_rateIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.rateActions.onNext(Irrelevant.INSTANCE);
@@ -80,7 +80,7 @@ public final class AboutPresenterTest extends PresenterTest<MainActivity, AboutP
     @Test
     public void Given_onViewAttached_When_reportActions_Then_reportIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.reportActions.onNext(Irrelevant.INSTANCE);

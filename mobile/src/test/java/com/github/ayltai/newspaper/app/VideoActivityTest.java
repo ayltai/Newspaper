@@ -2,11 +2,11 @@ package com.github.ayltai.newspaper.app;
 
 import android.content.Intent;
 
+import com.github.ayltai.newspaper.UnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
-
-import com.github.ayltai.newspaper.UnitTest;
 
 public final class VideoActivityTest extends UnitTest {
     @Test

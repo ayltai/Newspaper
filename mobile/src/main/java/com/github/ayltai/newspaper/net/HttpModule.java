@@ -1,12 +1,12 @@
 package com.github.ayltai.newspaper.net;
 
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Singleton;
-
 import android.support.annotation.NonNull;
 
 import com.github.ayltai.newspaper.BuildConfig;
+
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -17,6 +17,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
+@SuppressWarnings("deprecated")
 @Module
 final class HttpModule {
     private static final int TIMEOUT_CONNECT = 10;

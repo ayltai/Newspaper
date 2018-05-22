@@ -1,10 +1,5 @@
 package com.github.ayltai.newspaper.app.widget;
 
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
@@ -32,6 +27,11 @@ import com.github.ayltai.newspaper.app.view.ItemListPresenter;
 import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Views;
 import com.github.ayltai.newspaper.widget.VerticalListView;
+
+import java.lang.ref.SoftReference;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -131,7 +131,6 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
         return this.categories.get(position);
     }
 
-    @SuppressWarnings("unchecked")
     @Nullable
     public VerticalListView<Item> getItem(final int position) {
         final SoftReference<View> view = this.views.get(position);
@@ -155,14 +154,14 @@ class PagedNewsAdapter extends PagerAdapter implements Filterable, LifecycleObse
 
         if (this.disposables == null) this.disposables = new CompositeDisposable();
 
-        this.disposables.add(view.attachments().subscribe(
+        this.disposables.add(view.attaches().subscribe(
             isFirstTimeAttachment -> presenter.onViewAttached(view, isFirstTimeAttachment),
             error -> {
                 if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
             }
         ));
 
-        this.disposables.add(view.detachments().subscribe(
+        this.disposables.add(view.detaches().subscribe(
             irrelevant -> presenter.onViewDetached(),
             error -> {
                 if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));

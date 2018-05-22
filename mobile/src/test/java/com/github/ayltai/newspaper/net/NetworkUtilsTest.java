@@ -1,9 +1,9 @@
 package com.github.ayltai.newspaper.net;
 
+import com.github.ayltai.newspaper.UnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.github.ayltai.newspaper.UnitTest;
 
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;

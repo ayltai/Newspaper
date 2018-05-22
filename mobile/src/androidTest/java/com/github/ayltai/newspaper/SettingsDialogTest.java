@@ -7,13 +7,12 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.github.ayltai.newspaper.util.MoreTestUtils;
+import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
+
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
-
-import com.github.ayltai.newspaper.util.MoreTestUtils;
 
 @SmallTest
 @RunWith(AndroidJUnit4.class)
@@ -21,9 +20,7 @@ public final class SettingsDialogTest extends BaseTest {
     @Test
     public void settingsDialogTest() {
         // Clicks More button
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_more),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.action_more))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
@@ -39,15 +36,11 @@ public final class SettingsDialogTest extends BaseTest {
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".settingsDialog", this.testRule.getActivity());
 
         // Checks that Apply button is displayed
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_ok),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        Espresso.onView(ViewMatchers.withId(R.id.action_ok))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
         // Clicks Categories tab
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withText("Categories"),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withText("Categories"))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
@@ -57,39 +50,31 @@ public final class SettingsDialogTest extends BaseTest {
         // De-selects a category
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withText("兩岸"),
-            ViewMatchers.withParent(ViewMatchers.withId(R.id.flowLayout)),
-            ViewMatchers.isDisplayed()))
+            ViewMatchers.withParent(ViewMatchers.withId(R.id.flowLayout))))
             .perform(ViewActions.click());
 
         // Clicks Apply Changes
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_ok),
-            ViewMatchers.withText("Apply changes"),
-            ViewMatchers.isDisplayed()))
+            ViewMatchers.withText("Apply changes")))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_MEDIUM);
 
         // Clicks More button
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_more),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.action_more))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks Settings button
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_settings),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.action_settings))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks Categories tab
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withText("Categories"),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withText("Categories"))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
@@ -99,8 +84,7 @@ public final class SettingsDialogTest extends BaseTest {
         // Checks if the specific category is de-selected
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withText("兩岸"),
-            ViewMatchers.withParent(ViewMatchers.withId(R.id.flowLayout)),
-            ViewMatchers.isDisplayed()))
+            ViewMatchers.withParent(ViewMatchers.withId(R.id.flowLayout))))
             .check(ViewAssertions.matches(MoreTestUtils.isNotSelected()));
     }
 }

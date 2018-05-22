@@ -1,8 +1,5 @@
 package com.github.ayltai.newspaper.view;
 
-import java.util.List;
-import java.util.Map;
-
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import android.view.View;
@@ -10,6 +7,9 @@ import android.view.View;
 import com.github.ayltai.newspaper.view.binding.Binder;
 import com.github.ayltai.newspaper.view.binding.FullBinderFactory;
 import com.github.ayltai.newspaper.widget.SimpleViewHolder;
+
+import java.util.List;
+import java.util.Map;
 
 import io.reactivex.disposables.Disposable;
 
@@ -37,7 +37,6 @@ public abstract class SimpleUniversalAdapter<M, V extends View, T extends Simple
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void onBindViewHolder(final T holder, final int position) {
         this.dispose(this.bindings.get(holder));

@@ -1,13 +1,7 @@
 package com.github.ayltai.newspaper.app.view;
 
-import java.util.Date;
-
 import android.graphics.Point;
 import android.support.annotation.NonNull;
-
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.robolectric.Robolectric;
 
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.data.model.Image;
@@ -16,6 +10,12 @@ import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.Optional;
 import com.github.ayltai.newspaper.view.PresenterTest;
+
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.robolectric.Robolectric;
+
+import java.util.Date;
 
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
@@ -67,10 +67,10 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
     @Test
     public void Given_model_When_onViewAttached_Then_modelIsBound() {
         // Given
-        this.getPresenter().bindModel(this.getModel());
+        this.getPresenter().setModel(this.getModel());
 
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).setAvatar(Mockito.anyInt());
         Mockito.verify(this.getView(), Mockito.times(1)).setSource(Mockito.anyString());
@@ -86,7 +86,7 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
     @Test
     public void Given_onViewAttached_When_clicks_Then_onClickIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.clicks.onNext(Optional.of(new Point(0, 0)));
@@ -98,7 +98,7 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
     @Test
     public void Given_onViewAttached_When_avatarClicks_Then_onAvatarClickIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.avatarClicks.onNext(Irrelevant.INSTANCE);
@@ -110,7 +110,7 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
     @Test
     public void Given_onViewAttached_When_sourceClicks_Then_onSourceClickIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.sourceClicks.onNext(Irrelevant.INSTANCE);
@@ -122,7 +122,7 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
     @Test
     public void Given_onViewAttached_When_publishDateClicks_Then_onPublishDateClickIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.publishDateClicks.onNext(Irrelevant.INSTANCE);
@@ -134,7 +134,7 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
     @Test
     public void Given_onViewAttached_When_titleClicks_Then_onTitleClickIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.titleClicks.onNext(Irrelevant.INSTANCE);
@@ -146,7 +146,7 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
     @Test
     public void Given_onViewAttached_When_descriptionClicks_Then_onDescriptionClickIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.descriptionClicks.onNext(Irrelevant.INSTANCE);
@@ -158,7 +158,7 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
     @Test
     public void Given_onViewAttached_When_linkClicks_Then_onLinkClickIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.linkClicks.onNext(Irrelevant.INSTANCE);
@@ -170,7 +170,7 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
     @Test
     public void Given_onViewAttached_When_bookmarkClicks_Then_onBookmarkClickIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.bookmarkClicks.onNext(Irrelevant.INSTANCE);
@@ -182,7 +182,7 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
     @Test
     public void Given_onViewAttached_When_imageClicks_Then_onImageClickIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.imageClicks.onNext(new Image());
@@ -194,7 +194,7 @@ public final class ItemPresenterTest extends PresenterTest<MainActivity, ItemPre
     @Test
     public void Given_onViewAttached_When_videoClicks_Then_onVideoClickIsCalled() {
         // Given
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // When
         this.videoClicks.onNext(Irrelevant.INSTANCE);

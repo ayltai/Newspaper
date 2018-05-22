@@ -1,11 +1,11 @@
 package com.github.ayltai.newspaper.util;
 
-import org.junit.Test;
-
 import com.github.ayltai.newspaper.UnitTest;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 
 import junit.framework.Assert;
+
+import org.junit.Test;
 
 public final class SetsTest extends UnitTest {
     @Test

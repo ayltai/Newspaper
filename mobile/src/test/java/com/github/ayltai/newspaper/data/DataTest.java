@@ -3,13 +3,13 @@ package com.github.ayltai.newspaper.data;
 import android.content.Context;
 import android.support.annotation.CallSuper;
 
+import com.github.ayltai.newspaper.UnitTest;
+import com.github.ayltai.newspaper.app.data.model.NewsItem;
+
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.RuntimeEnvironment;
-
-import com.github.ayltai.newspaper.UnitTest;
-import com.github.ayltai.newspaper.app.data.model.NewsItem;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import io.realm.Case;
@@ -28,7 +28,6 @@ import io.realm.internal.RealmCore;
     RealmResults.class
 })
 public abstract class DataTest extends UnitTest {
-    @SuppressWarnings("unchecked")
     @CallSuper
     @Override
     public void setUp() throws Exception {
@@ -60,7 +59,9 @@ public abstract class DataTest extends UnitTest {
         PowerMockito.when(query.or()).thenReturn(query);
         PowerMockito.when(query.contains(Mockito.anyString(), Mockito.anyString(), Mockito.any(Case.class))).thenReturn(query);
         PowerMockito.when(query.greaterThan(Mockito.anyString(), Mockito.anyInt())).thenReturn(query);
+        PowerMockito.when(query.greaterThan(Mockito.anyString(), Mockito.anyLong())).thenReturn(query);
         PowerMockito.when(query.lessThan(Mockito.anyString(), Mockito.anyLong())).thenReturn(query);
+        PowerMockito.when(query.lessThanOrEqualTo(Mockito.anyString(), Mockito.anyLong())).thenReturn(query);
         PowerMockito.when(query.equalTo(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(query);
         PowerMockito.when(query.equalTo(Mockito.anyString(), Mockito.anyString())).thenReturn(query);
         PowerMockito.when(query.equalTo(Mockito.anyString(), Mockito.anyInt())).thenReturn(query);

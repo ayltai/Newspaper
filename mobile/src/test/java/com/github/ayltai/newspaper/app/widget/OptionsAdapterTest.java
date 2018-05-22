@@ -2,13 +2,13 @@ package com.github.ayltai.newspaper.app.widget;
 
 import android.widget.FrameLayout;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.robolectric.RuntimeEnvironment;
-
 import com.github.ayltai.newspaper.UnitTest;
 import com.github.ayltai.newspaper.widget.SwitchOptionsView;
 import com.github.ayltai.newspaper.widget.TextOptionsView;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.robolectric.RuntimeEnvironment;
 
 public final class OptionsAdapterTest extends UnitTest {
     @Test

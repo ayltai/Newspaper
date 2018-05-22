@@ -1,13 +1,13 @@
 package com.github.ayltai.newspaper.app.view.binding;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.github.ayltai.newspaper.UnitTest;
 import com.github.ayltai.newspaper.app.data.model.FeaturedItem;
 import com.github.ayltai.newspaper.app.data.model.Image;
 import com.github.ayltai.newspaper.app.data.model.NewsItem;
 import com.github.ayltai.newspaper.app.widget.FeaturedView;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 

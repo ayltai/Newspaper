@@ -1,16 +1,16 @@
 package com.github.ayltai.newspaper;
 
-import java.io.File;
-
 import android.support.annotation.CallSuper;
 import android.support.test.rule.ActivityTestRule;
+
+import com.github.ayltai.newspaper.app.MainActivity;
+import com.github.ayltai.newspaper.util.MoreTestUtils;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 
-import com.github.ayltai.newspaper.app.MainActivity;
-import com.github.ayltai.newspaper.util.MoreTestUtils;
+import java.io.File;
 
 public abstract class BaseTest {
     @Rule

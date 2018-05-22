@@ -1,7 +1,9 @@
 package com.github.ayltai.newspaper.app.view;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.github.ayltai.newspaper.app.widget.MainView;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.Presenter;
 
@@ -30,8 +32,27 @@ public class MainPresenter extends Presenter<MainPresenter.View> {
         Flowable<Irrelevant> clearAllActions();
     }
 
+    public static final class Factory implements Presenter.Factory<MainPresenter, MainPresenter.View> {
+        @Override
+        public boolean isSupported(@NonNull final Object key) {
+            return key instanceof MainView.Key;
+        }
+
+        @NonNull
+        @Override
+        public MainPresenter createPresenter() {
+            return new MainPresenter();
+        }
+
+        @NonNull
+        @Override
+        public MainPresenter.View createView(@NonNull final Context context) {
+            return new MainView(context);
+        }
+    }
+
     @Override
-    public void onViewAttached(@NonNull final View view, final boolean isFirstTimeAttachment) {
+    public void onViewAttached(@NonNull final MainPresenter.View view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
         this.manageDisposable(view.upActions().subscribe(irrelevant -> view.up()));

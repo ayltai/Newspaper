@@ -1,6 +1,10 @@
 package com.github.ayltai.newspaper.app.widget;
 
 import android.app.Activity;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -13,18 +17,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 import com.github.ayltai.newspaper.BuildConfig;
 import com.github.ayltai.newspaper.Constants;
@@ -40,12 +32,22 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.DeviceUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.piasy.biv.view.BigImageView;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public class VideoView extends ItemView implements ItemPresenter.View {
+public class VideoView extends ItemView implements ItemPresenter.View, LifecycleObserver {
     private final FlowableProcessor<Irrelevant> videoClicks = PublishProcessor.create();
 
     //region Components
@@ -57,9 +59,9 @@ public class VideoView extends ItemView implements ItemPresenter.View {
 
     private final View         thumbnailContainer;
 
-    private View                fullScreenAction;
-    private SimpleExoPlayerView playerView;
-    private SimpleExoPlayer     player;
+    private View            fullScreenAction;
+    private PlayerView      playerView;
+    private SimpleExoPlayer player;
 
     //endregion
 
@@ -118,7 +120,7 @@ public class VideoView extends ItemView implements ItemPresenter.View {
 
     public void setUpPlayer() {
         if (!VideoView.isYouTubeUrl(this.video.getVideoUrl())) {
-            this.playerView = (SimpleExoPlayerView)LayoutInflater.from(this.getContext()).inflate(R.layout.widget_video_player, this, false);
+            this.playerView = (PlayerView)LayoutInflater.from(this.getContext()).inflate(R.layout.widget_video_player, this, false);
             this.player     = ExoPlayerFactory.newSimpleInstance(this.getContext(), new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(null)));
 
             this.playerView.setPlayer(this.player);
@@ -129,7 +131,7 @@ public class VideoView extends ItemView implements ItemPresenter.View {
             final View fullScreenExitAction = this.playerView.findViewById(R.id.exo_fullscreen_exit);
             fullScreenExitAction.setVisibility(View.GONE);
 
-            this.player.prepare(new ExtractorMediaSource(Uri.parse(this.video.getVideoUrl()), new DefaultDataSourceFactory(this.getContext(), null, new OkHttpDataSourceFactory(ComponentFactory.getInstance().getHttpComponent().httpClient(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null)), new DefaultExtractorsFactory(), null, null));
+            this.player.prepare(new ExtractorMediaSource.Factory(new DefaultDataSourceFactory(this.getContext(), null, new OkHttpDataSourceFactory(ComponentFactory.getInstance().getHttpComponent().httpClient(), Util.getUserAgent(this.getContext(), BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME), null))).createMediaSource(Uri.parse(this.video.getVideoUrl())));
 
             final Point                  size   = DeviceUtils.getScreenSize(this.getContext());
             final ViewGroup.LayoutParams params = this.playerView.getLayoutParams();
@@ -171,12 +173,21 @@ public class VideoView extends ItemView implements ItemPresenter.View {
         }
     }
 
-    public void releasePlayer() {
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    void releasePlayer() {
         if (this.player != null) this.player.release();
         if (this.playerView != null) this.removeView(this.playerView);
 
         this.player     = null;
         this.playerView = null;
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    void dispose() {
+        final LifecycleOwner owner = this.getLifecycleOwner();
+        if (owner != null) {
+            owner.getLifecycle().removeObserver(this);
+        }
     }
 
     //endregion
@@ -209,6 +220,11 @@ public class VideoView extends ItemView implements ItemPresenter.View {
 
             this.getContext().startActivity(VideoActivity.createIntent(this.getContext(), this.video.getVideoUrl(), isPlaying, seekPosition));
         });
+
+        final LifecycleOwner owner = this.getLifecycleOwner();
+        if (owner != null) {
+            owner.getLifecycle().addObserver(this);
+        }
 
         super.onAttachedToWindow();
     }

@@ -34,8 +34,6 @@ public class PagedNewsView extends BaseView implements BaseNewsView, ViewPager.O
 
     public PagedNewsView(@NonNull final Context context) {
         super(context);
-
-        this.init();
     }
 
     @CallSuper

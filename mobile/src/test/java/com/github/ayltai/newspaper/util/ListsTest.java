@@ -1,12 +1,12 @@
 package com.github.ayltai.newspaper.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.github.ayltai.newspaper.UnitTest;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.github.ayltai.newspaper.UnitTest;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class ListsTest extends UnitTest {
     @Test

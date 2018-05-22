@@ -30,6 +30,7 @@ references:
     persist_to_workspace:
       root: *workspace
       paths:
+        - mobile/build/intermediates
         - mobile/build/outputs/androidTest-results
         - mobile/build/outputs/apk
         - mobile/build/outputs/code-coverage
@@ -162,6 +163,30 @@ jobs:
           path: mobile/build/outputs/mapping/
           destination: /mapping/
 
+  ## Check code quality
+
+  check_quality:
+    <<: *android_config
+    steps:
+      - checkout
+      - *restore_cache
+      - run:
+          name: Download dependencies
+          command: ./gradlew androidDependencies
+      - *save_cache
+      - *export_gservices_key
+      - *decode_gservices_key
+      - run:
+          name: Run Checkstyle
+          command: ./gradlew -PciBuild=true :mobile:customCheckstyle
+      - run:
+          name: Run FindBugs
+          command: ./gradlew -PciBuild=true :mobile:customFindBugs
+      - *persist_debug_workspace
+      - store_artifacts:
+          path: mobile/build/reports/
+          destination: /reports/
+
   ## Run unit tests
 
   test_unit:
@@ -267,7 +292,12 @@ workflows:
     jobs:
       - build_debug
       - build_release
-      - test_unit
+      - check_quality:
+          requires:
+            - build_debug
+      - test_unit:
+          requires:
+            - build_debug
       - test_instrumented:
           requires:
             - build_debug
@@ -282,5 +312,6 @@ workflows:
                 - master
           requires:
             - build_release
+            - check_quality
             - test_unit
             - test_instrumented

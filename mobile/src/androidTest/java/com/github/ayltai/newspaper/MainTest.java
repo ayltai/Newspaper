@@ -7,11 +7,11 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.github.ayltai.newspaper.util.MoreTestUtils;
+
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.github.ayltai.newspaper.util.MoreTestUtils;
 
 @MediumTest
 @RunWith(AndroidJUnit4.class)

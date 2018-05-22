@@ -1,9 +1,9 @@
 package com.github.ayltai.newspaper.analytics;
 
+import com.github.ayltai.newspaper.UnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.github.ayltai.newspaper.UnitTest;
 
 public final class FabricEventLoggerTest extends UnitTest {
     @Test

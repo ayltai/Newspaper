@@ -1,9 +1,5 @@
 package com.github.ayltai.newspaper.view;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -14,8 +10,13 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 
+import java.util.Collections;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.View<M>> extends ListPresenter<M, V> {
     public interface View<M> extends ListPresenter.View<M> {
@@ -45,22 +46,23 @@ public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.V
     @NonNull
     public abstract Single<Irrelevant> clearAll();
 
+    @SuppressFBWarnings("ACEM_ABSTRACT_CLASS_EMPTY_METHODS")
     protected void onPullToRefresh() {
+        // Ignored
     }
 
     protected void resetState() {
         this.scrollPosition = 0;
     }
 
+    @CallSuper
     @Override
-    public void bindModel(final List<M> models) {
-        super.bindModel(models);
-
-        if (this.getView() != null) {
-            if (models.isEmpty()) this.getView().showEmptyView();
+    public void bindModel() {
+        if (this.getView() != null && this.getModel() != null) {
+            if (this.getModel().isEmpty()) this.getView().showEmptyView();
 
             this.getView().clear();
-            this.getView().bind(models);
+            this.getView().bind(this.getModel());
         }
     }
 
@@ -73,9 +75,12 @@ public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.V
             view.showLoadingView();
 
             this.manageDisposable(this.load()
-                .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
+                .compose(RxUtils.applyFlowableSchedulers(AndroidSchedulers.mainThread()))
                 .subscribe(
-                    this::bindModel,
+                    models -> {
+                        this.setModel(models);
+                        this.bindModel();
+                    },
                     error -> {
                         if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                     }));
@@ -101,7 +106,10 @@ public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.V
                     .map(dummy -> Collections.<M>emptyList())
                     .compose(RxUtils.applySingleBackgroundToMainSchedulers())
                     .subscribe(
-                        this::bindModel,
+                        models -> {
+                            this.setModel(models);
+                            this.bindModel();
+                        },
                         error -> {
                             if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));
                         }
@@ -124,7 +132,7 @@ public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.V
                 final AtomicBoolean hasCleared = new AtomicBoolean(false);
 
                 this.manageDisposable(this.load()
-                    .compose(RxUtils.applyFlowableBackgroundToMainSchedulers())
+                    .compose(RxUtils.applyFlowableSchedulers(AndroidSchedulers.mainThread()))
                     .subscribe(
                         models -> {
                             if (!hasCleared.get()) {
@@ -132,7 +140,8 @@ public abstract class VerticalListPresenter<M, V extends VerticalListPresenter.V
                                 view.clear();
                             }
 
-                            this.bindModel(models);
+                            this.setModel(models);
+                            this.bindModel();
                         },
                         error -> {
                             if (DevUtils.isLoggable()) Log.e(this.getClass().getSimpleName(), error.getMessage(), RxJava2Debug.getEnhancedStackTrace(error));

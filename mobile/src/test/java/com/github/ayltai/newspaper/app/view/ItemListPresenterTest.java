@@ -1,21 +1,21 @@
 package com.github.ayltai.newspaper.app.view;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import android.support.annotation.NonNull;
-
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.robolectric.Robolectric;
 
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.view.VerticalListPresenter;
 import com.github.ayltai.newspaper.view.PresenterTest;
+import com.github.ayltai.newspaper.view.VerticalListPresenter;
+
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.robolectric.Robolectric;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
@@ -59,28 +59,37 @@ public final class ItemListPresenterTest extends PresenterTest<MainActivity, Ite
     public void Given_model_When_onViewAttached_Then_modelIsBound() {
         // Given
         final List<Item> models = this.getModels();
-        this.getPresenter().bindModel(models);
+        this.getPresenter().setModel(models);
 
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // Then
-        Mockito.verify(this.getView(), Mockito.times(1)).showLoadingView();
-
-        this.load.onNext(models);
-
         Mockito.verify(this.getView(), Mockito.times(1)).clear();
         Mockito.verify(this.getView(), Mockito.times(1)).bind(models);
+        Mockito.verify(this.getView(), Mockito.times(1)).showLoadingView();
+
+        // When
+        this.load.onNext(models);
+
+        Mockito.verify(this.getView(), Mockito.times(2)).clear();
+        Mockito.verify(this.getView(), Mockito.times(2)).bind(models);
     }
 
     @Test
     public void Given_model_When_pullToRefresh_Then_viewIsRefreshed() {
         // Given
         final List<Item> models = this.getModels();
-        this.getPresenter().bindModel(models);
+        this.getPresenter().setModel(models);
 
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
+
+        // Then
+        Mockito.verify(this.getView(), Mockito.times(1)).clear();
+        Mockito.verify(this.getView(), Mockito.times(1)).bind(models);
+
+        // When
         this.pullToRefreshes.onNext(Irrelevant.INSTANCE);
 
         // Then
@@ -89,8 +98,8 @@ public final class ItemListPresenterTest extends PresenterTest<MainActivity, Ite
 
         this.load.onNext(models);
 
-        Mockito.verify(this.getView(), Mockito.times(3)).clear();
-        Mockito.verify(this.getView(), Mockito.times(2)).bind(models);
+        Mockito.verify(this.getView(), Mockito.times(4)).clear();
+        Mockito.verify(this.getView(), Mockito.times(3)).bind(models);
     }
 
     @NonNull

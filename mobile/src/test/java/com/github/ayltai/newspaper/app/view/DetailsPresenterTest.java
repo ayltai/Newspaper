@@ -1,12 +1,6 @@
 package com.github.ayltai.newspaper.app.view;
 
-import java.util.Date;
-
 import android.support.annotation.NonNull;
-
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.robolectric.Robolectric;
 
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.data.model.Image;
@@ -14,6 +8,12 @@ import com.github.ayltai.newspaper.app.data.model.Item;
 import com.github.ayltai.newspaper.app.data.model.Video;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.PresenterTest;
+
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.robolectric.Robolectric;
+
+import java.util.Date;
 
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
@@ -74,10 +74,10 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
         Mockito.doReturn(true).when(model).isFullDescription();
 
         // Given
-        this.getPresenter().bindModel(model);
+        this.getPresenter().setModel(model);
 
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).setDescription(Mockito.anyString());
     }
@@ -85,10 +85,10 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
     @Test
     public void Given_onViewAttached_When_textToSpeechClicks_Then_textToSpeechIsCalled() {
         // Given
-        this.getPresenter().bindModel(this.getModel());
+        this.getPresenter().setModel(this.getModel());
 
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
         this.textToSpeechClicks.onNext(Irrelevant.INSTANCE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).textToSpeech();
@@ -97,10 +97,10 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
     @Test
     public void Given_onViewAttached_When_viewOnWebClicks_Then_viewOnWebIsCalled() {
         // Given
-        this.getPresenter().bindModel(this.getModel());
+        this.getPresenter().setModel(this.getModel());
 
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
         this.viewOnWebClicks.onNext(Irrelevant.INSTANCE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).viewOnWeb("link");
@@ -109,10 +109,10 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
     @Test
     public void Given_onViewAttached_When_shareClicks_Then_shareIsCalled() {
         // Given
-        this.getPresenter().bindModel(this.getModel());
+        this.getPresenter().setModel(this.getModel());
 
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
         this.shareClicks.onNext(Irrelevant.INSTANCE);
 
         Mockito.verify(this.getView(), Mockito.times(1)).share("link");
@@ -121,10 +121,10 @@ public final class DetailsPresenterTest extends PresenterTest<MainActivity, Deta
     @Test
     public void Given_onViewAttached_When_imageClicks_Then_showImage() {
         // Given
-        this.getPresenter().bindModel(this.getModel());
+        this.getPresenter().setModel(this.getModel());
 
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
         this.imageClicks.onNext(new Image(""));
 
         Mockito.verify(this.getView(), Mockito.times(1)).showImage(Mockito.anyString());

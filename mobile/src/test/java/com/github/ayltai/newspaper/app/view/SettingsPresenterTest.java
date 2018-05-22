@@ -2,14 +2,14 @@ package com.github.ayltai.newspaper.app.view;
 
 import android.support.annotation.NonNull;
 
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.robolectric.Robolectric;
-
 import com.github.ayltai.newspaper.analytics.EventLogger;
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.app.config.UserConfig;
 import com.github.ayltai.newspaper.view.PresenterTest;
+
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.robolectric.Robolectric;
 
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
@@ -20,9 +20,7 @@ public final class SettingsPresenterTest extends PresenterTest<MainActivity, Set
     @NonNull
     @Override
     protected SettingsPresenter createPresenter() {
-        final SettingsPresenter presenter = Mockito.spy(new SettingsPresenter());
-
-        return presenter;
+        return Mockito.spy(new SettingsPresenter());
     }
 
     @NonNull
@@ -44,16 +42,16 @@ public final class SettingsPresenterTest extends PresenterTest<MainActivity, Set
     @Test
     public void When_onViewAttached_Then_addOptionIsCalled() {
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // Then
-        Mockito.verify(this.getView(), Mockito.times(4)).addOption(Mockito.anyString(), Mockito.anyBoolean());
+        Mockito.verify(this.getView(), Mockito.times(3)).addOption(Mockito.anyString(), Mockito.anyBoolean());
     }
 
     @Test
     public void When_optionsChanges_Then_settingsAreUpdated() {
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
         this.optionsChanges.onNext(0);
 
         // Then
@@ -64,8 +62,5 @@ public final class SettingsPresenterTest extends PresenterTest<MainActivity, Set
 
         this.optionsChanges.onNext(2);
         Mockito.verify(this.getPresenter(), Mockito.times(1)).updateAutoPlay(Mockito.anyList(), Mockito.any(UserConfig.class), Mockito.any(EventLogger.class));
-
-        this.optionsChanges.onNext(3);
-        Mockito.verify(this.getPresenter(), Mockito.times(1)).updatePanorama(Mockito.anyList(), Mockito.any(UserConfig.class), Mockito.any(EventLogger.class));
     }
 }

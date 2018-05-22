@@ -1,18 +1,18 @@
 package com.github.ayltai.newspaper.app.widget;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import android.view.View;
+
+import com.github.ayltai.newspaper.UnitTest;
+import com.github.ayltai.newspaper.app.data.model.Image;
+import com.github.ayltai.newspaper.util.DateUtils;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 
-import com.github.ayltai.newspaper.UnitTest;
-import com.github.ayltai.newspaper.app.data.model.Image;
-import com.github.ayltai.newspaper.util.DateUtils;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public final class CompactItemViewTest extends UnitTest {
     @Test

@@ -1,8 +1,5 @@
 package com.github.ayltai.newspaper.app.view;
 
-import java.util.Date;
-import java.util.List;
-
 import android.app.Activity;
 import android.graphics.Point;
 import android.support.annotation.CallSuper;
@@ -11,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
+import com.github.ayltai.newspaper.analytics.Attribute;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.config.AppConfig;
@@ -28,6 +26,9 @@ import com.github.ayltai.newspaper.util.Optional;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.github.ayltai.newspaper.view.binding.Binder;
 import com.github.ayltai.newspaper.view.binding.BindingPresenter;
+
+import java.util.Date;
+import java.util.List;
 
 import flow.Flow;
 import io.reactivex.Flowable;
@@ -62,6 +63,9 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
         void setVideo(@Nullable Video video);
 
         @UiThread
+        void addEntity(@NonNull String name, @NonNull String wikiLink);
+
+        @UiThread
         void setIsRead(boolean isRead);
 
         @Nullable
@@ -93,26 +97,27 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
 
         @Nullable
         Flowable<Irrelevant> videoClicks();
+
+        @Nullable
+        Flowable<String> entityClicks();
     }
 
     private AppConfig appConfig;
 
     @UiThread
     @Override
-    public void bindModel(final Item model) {
-        super.bindModel(model);
-
-        if (this.getView() != null && model != null) {
-            this.getView().setIsRead(model.isFullDescription());
-            this.getView().setAvatar(SourceFactory.getInstance(this.getView().getContext()).getSource(model.getSource()).getAvatar());
-            this.getView().setSource(Source.toDisplayName(model.getSource()));
-            this.getView().setPublishDate(model.getPublishDate());
-            this.getView().setTitle(model.getTitle());
-            this.getView().setDescription(model.getDescription());
-            this.getView().setLink(model.getLink());
-            this.getView().setIsBookmarked(model.isBookmarked());
-            this.getView().setImages(model.getImages());
-            this.getView().setVideo(model.getVideo());
+    public void bindModel() {
+        if (this.getView() != null && this.getModel() != null) {
+            this.getView().setIsRead(this.getModel().isFullDescription());
+            this.getView().setAvatar(SourceFactory.getInstance(this.getView().getContext()).getSource(this.getModel().getSource()).getAvatar());
+            this.getView().setSource(Source.toDisplayName(this.getModel().getSource()));
+            this.getView().setPublishDate(this.getModel().getPublishDate());
+            this.getView().setTitle(this.getModel().getTitle());
+            this.getView().setDescription(this.getModel().getDescription());
+            this.getView().setLink(this.getModel().getLink());
+            this.getView().setIsBookmarked(this.getModel().isBookmarked());
+            this.getView().setImages(this.getModel().getImages());
+            this.getView().setVideo(this.getModel().getVideo());
         }
     }
 
@@ -212,14 +217,23 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
                 .setElementName("Video"));
     }
 
-    @SuppressWarnings("CyclomaticComplexity")
+    @CallSuper
+    protected void onEntityClick(@NonNull final String wikiLink) {
+        if (this.getView() != null) ComponentFactory.getInstance()
+            .getAnalyticsComponent(this.getView().getContext())
+            .eventLogger()
+            .logEvent(new ClickEvent()
+                .setElementName("Entity")
+                .addAttribute(new Attribute("URL", wikiLink)));
+    }
+
     @CallSuper
     @Override
     public void onViewAttached(@NonNull final V view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
         final Flowable<Optional<Point>> clicks = view.clicks();
-        if (clicks != null) this.manageDisposable(clicks.subscribe(location -> this.onClick(location)));
+        if (clicks != null) this.manageDisposable(clicks.subscribe(this::onClick));
 
         final Flowable<Irrelevant> avatarClicks = view.avatarClicks();
         if (avatarClicks != null) this.manageDisposable(avatarClicks.subscribe(irrelevant -> this.onAvatarClick()));
@@ -245,10 +259,11 @@ public class ItemPresenter<V extends ItemPresenter.View> extends BindingPresente
         final Flowable<Image> imageClicks = view.imageClicks();
         if (imageClicks != null) this.manageDisposable(imageClicks.subscribe(this::onImageClick));
 
-        final Flowable<Irrelevant> videoClick = view.videoClicks();
-        if (videoClick != null) this.manageDisposable(videoClick.subscribe(irrelevant -> this.onVideoClick()));
+        final Flowable<Irrelevant> videoClicks = view.videoClicks();
+        if (videoClicks != null) this.manageDisposable(videoClicks.subscribe(irrelevant -> this.onVideoClick()));
 
-        this.bindModel(this.getModel());
+        final Flowable<String> entityClicks = view.entityClicks();
+        if (entityClicks != null) this.manageDisposable(entityClicks.subscribe(this::onEntityClick));
     }
 
     private void initAppConfig() {

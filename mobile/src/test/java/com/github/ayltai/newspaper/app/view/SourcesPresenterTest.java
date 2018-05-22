@@ -1,20 +1,21 @@
 package com.github.ayltai.newspaper.app.view;
 
-import java.util.Set;
-
 import android.support.annotation.NonNull;
-
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.robolectric.Robolectric;
 
 import com.github.ayltai.newspaper.app.ComponentFactory;
 import com.github.ayltai.newspaper.app.MainActivity;
 import com.github.ayltai.newspaper.view.PresenterTest;
 
+import junit.framework.Assert;
+
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.robolectric.Robolectric;
+
+import java.util.Set;
+
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
-import junit.framework.Assert;
 
 public final class SourcesPresenterTest extends PresenterTest<MainActivity, SourcesPresenter, SourcesPresenter.View> {
     private final FlowableProcessor<Integer> optionsChanges = PublishProcessor.create();
@@ -44,7 +45,7 @@ public final class SourcesPresenterTest extends PresenterTest<MainActivity, Sour
     @Test
     public void When_onViewAttached_Then_addOptionIsCalled() {
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
 
         // Then
         Mockito.verify(this.getView(), Mockito.times(13)).addOption(Mockito.anyString(), Mockito.anyBoolean());
@@ -53,7 +54,7 @@ public final class SourcesPresenterTest extends PresenterTest<MainActivity, Sour
     @Test
     public void When_optionsChanges_Then_setSourcesIsCalled() {
         // When
-        this.attachments.onNext(true);
+        this.attaches.onNext(Boolean.TRUE);
         this.optionsChanges.onNext(0);
 
         // Then

@@ -7,13 +7,12 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.github.ayltai.newspaper.util.MoreTestUtils;
+import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
+
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
-
-import com.github.ayltai.newspaper.util.MoreTestUtils;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -23,16 +22,13 @@ public final class HistoricalNewsTest extends BaseTest {
         // Clicks Histories bottom tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_history),
-            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView))),
-            ViewMatchers.isDisplayed()))
+            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView)))))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
 
         // Clicks More button
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.action_more),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.action_more))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
@@ -48,15 +44,13 @@ public final class HistoricalNewsTest extends BaseTest {
         // Checks that the empty placeholder is displayed
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.empty_title),
-            ViewMatchers.withText("You haven't read any news yet"),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+            ViewMatchers.withText("You haven't read any news yet")))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
         // Clicks News bottom tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_news),
-            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView))),
-            ViewMatchers.isDisplayed()))
+            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView)))))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
@@ -68,7 +62,7 @@ public final class HistoricalNewsTest extends BaseTest {
             ViewMatchers.isDisplayed()))
             .perform(ViewActions.click());
 
-        MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
+        MoreTestUtils.sleep(MoreTestUtils.DURATION_LONG);
 
         // Goes back the News list
         Espresso.pressBack();
@@ -76,8 +70,7 @@ public final class HistoricalNewsTest extends BaseTest {
         // Clicks Histories bottom tab
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_history),
-            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView))),
-            ViewMatchers.isDisplayed()))
+            ViewMatchers.withParent(ViewMatchers.withParent(ViewMatchers.withId(R.id.bottomNavigationView)))))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
@@ -87,15 +80,13 @@ public final class HistoricalNewsTest extends BaseTest {
         // Checks that there is a historical news item
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3)))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
         // Clicks Search button
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.action_search),
-            ViewMatchers.withContentDescription("Search"),
-            ViewMatchers.isDisplayed()))
+            ViewMatchers.withContentDescription("Search")))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
@@ -103,9 +94,7 @@ public final class HistoricalNewsTest extends BaseTest {
         ScreenShotter.takeScreenshot(this.getClass().getSimpleName() + ".search", this.testRule.getActivity());
 
         // Types a query into the search text box
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.search_src_text),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.search_src_text))
             .perform(
                 ViewActions.replaceText("asdfqwerzxcv"),
                 ViewActions.closeSoftKeyboard());
@@ -117,14 +106,11 @@ public final class HistoricalNewsTest extends BaseTest {
         // Checks that no search results returned
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3),
-            ViewMatchers.isDisplayed()))
+            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3)))
             .check(ViewAssertions.doesNotExist());
 
         // Clears the search query
-        Espresso.onView(Matchers.allOf(
-            ViewMatchers.withId(R.id.search_close_btn),
-            ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.search_close_btn))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
@@ -134,8 +120,7 @@ public final class HistoricalNewsTest extends BaseTest {
         // Collapses the search text box
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withContentDescription("Collapse"),
-            ViewMatchers.withParent(ViewMatchers.withId(R.id.toolbar)),
-            ViewMatchers.isDisplayed()))
+            ViewMatchers.withParent(ViewMatchers.withId(R.id.toolbar))))
             .perform(ViewActions.click());
 
         MoreTestUtils.sleep(MoreTestUtils.DURATION_SHORT);
@@ -145,8 +130,7 @@ public final class HistoricalNewsTest extends BaseTest {
         // Checks that there is a bookmarked news item
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withId(R.id.image),
-            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3),
-            ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+            MoreTestUtils.childAtPosition(MoreTestUtils.childAtPosition(ViewMatchers.withId(R.id.container), 0), 3)))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }
