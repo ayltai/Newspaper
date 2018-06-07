@@ -29,8 +29,8 @@ android {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
         targetSdkVersion 27
-        versionCode      31
-        versionName      '4.2.' + VERSION_REVISION + '-' + VERSION_HASH
+        versionCode      32
+        versionName      '4.3.' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments disableAnalytics : 'true'
@@ -190,7 +190,7 @@ dependencies {
     implementation "com.google.android.exoplayer:extension-okhttp:$exoPlayerVersion"
 
     // Natural language processing
-    implementation 'com.textrazor:textrazor:1.0.11'
+    implementation 'com.textrazor:textrazor:1.0.12'
 
     // UI components
     implementation 'com.squareup.flow:flow:1.0.0-alpha3'
