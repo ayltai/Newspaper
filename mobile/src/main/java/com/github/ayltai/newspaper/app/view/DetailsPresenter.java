@@ -9,7 +9,6 @@ import android.support.v4.util.ArraySet;
 import android.util.Log;
 
 import com.akaita.java.rxjava2debug.RxJava2Debug;
-import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.analytics.ClickEvent;
 import com.github.ayltai.newspaper.analytics.ShareEvent;
 import com.github.ayltai.newspaper.app.ComponentFactory;
@@ -28,7 +27,6 @@ import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.util.RxUtils;
 import com.github.ayltai.newspaper.view.Presenter;
 import com.textrazor.annotations.Entity;
-import com.textrazor.annotations.Topic;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -262,19 +260,9 @@ public class DetailsPresenter extends ItemPresenter<DetailsPresenter.View> {
             .subscribe(
                 response -> {
                     if (this.getView() != null) {
-                        final List<Topic> topics = new ArrayList<>(response.getTopics());
-                        Collections.sort(topics, LanguageService.TOPIC_COMPARATOR);
-
-                        int count = 0;
-
-                        for (final Topic topic : topics) {
-                            if ((int)(topic.getScore() * Constants.PERCENT) == Constants.PERCENT || LanguageService.MAX_TOPICS > count++) {
-                                Log.d(this.getClass().getSimpleName(), "Topic { label = " + topic.getLabel() + ", score = " + topic.getScore() + ", wikiLink = " + topic.getWikiLink() + " }");
-                            }
-                        }
-
-                        final Set<String>  uniqueEntities = new ArraySet<>();
-                        final List<Entity> entities       = new ArrayList<>(response.getEntities());
+                        final Set<String>  uniqueEntities   = new ArraySet<>();
+                        final List<Entity> originalEntities = response.getEntities();
+                        final List<Entity> entities         = originalEntities == null ? new ArrayList<>() : new ArrayList<>(originalEntities);
 
                         Collections.sort(entities, LanguageService.ENTITY_COMPARATOR);
 
