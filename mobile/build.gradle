@@ -23,14 +23,14 @@ String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
 String VERSION_HASH     = 'git rev-parse --short HEAD'.execute().text.trim()
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.0'
     defaultConfig {
         applicationId    'com.github.ayltai.newspaper'
         minSdkVersion    project.hasProperty('ciBuild') ? 16 : 21
-        targetSdkVersion 27
-        versionCode      32
-        versionName      '4.3.' + VERSION_REVISION + '-' + VERSION_HASH
+        targetSdkVersion 28
+        versionCode      33
+        versionName      '4.4.' + VERSION_REVISION + '-' + VERSION_HASH
 
         testInstrumentationRunner          'android.support.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments disableAnalytics : 'true'
@@ -109,15 +109,14 @@ configurations {
 
 ext {
     multidexVersion       = '1.0.3'
-    supportLibraryVersion = '27.1.1'
+    supportLibraryVersion = '28.0.0-alpha3'
     architectureVersion   = '1.1.1'
-    firebaseSdkVersion    = '16.0.0'
     daggerVersion         = '2.16'
     retrofitVersion       = '2.4.0'
     frescoVersion         = '1.9.0'
     bigImageViewerVersion = '1.4.6'
-    exoPlayerVersion      = '2.8.1'
-    autoValueVersion      = '1.6'
+    exoPlayerVersion      = '2.8.2'
+    autoValueVersion      = '1.6.2'
     leakCanaryVersion     = '1.5.4'
     robolectricVersion    = '3.8'
     powerMockVersion      = '2.0.0-beta.5'
@@ -152,11 +151,13 @@ dependencies {
     implementation "com.android.support:design:$supportLibraryVersion"
 
     // Firebase
-    implementation "com.google.firebase:firebase-core:$firebaseSdkVersion"
-    implementation "com.google.firebase:firebase-config:$firebaseSdkVersion"
+    implementation ('com.google.firebase:firebase-core:16.0.1') {
+        exclude group : 'com.android.support'
+    }
+    implementation 'com.google.firebase:firebase-config:16.0.0'
 
     // Reactive programming
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 
     // Dependency injection
@@ -185,9 +186,15 @@ dependencies {
     implementation "com.google.android.gms:play-services-vision:15.0.2"
 
     // Video processing
-    implementation "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
-    implementation "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
-    implementation "com.google.android.exoplayer:extension-okhttp:$exoPlayerVersion"
+    implementation ("com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion") {
+        exclude group : 'com.android.support'
+    }
+    implementation ("com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion") {
+        exclude group : 'com.android.support'
+    }
+    implementation ("com.google.android.exoplayer:extension-okhttp:$exoPlayerVersion") {
+        exclude group : 'com.android.support'
+    }
 
     // Natural language processing
     implementation 'com.textrazor:textrazor:1.0.12'
@@ -211,7 +218,7 @@ dependencies {
     implementation      'com.google.code.gson:gson:2.8.5'
 
     // Fabric
-    implementation ('com.crashlytics.sdk.android:crashlytics:2.9.3@aar') {
+    implementation ('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true
     }
 
@@ -222,7 +229,7 @@ dependencies {
     testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Unit testing
-    testImplementation 'org.mockito:mockito-core:2.18.6'
+    testImplementation 'org.mockito:mockito-core:2.19.0'
     testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
@@ -245,11 +252,13 @@ dependencies {
     androidTestUtil 'com.android.support.test:orchestrator:1.0.2'
 
     // Code coverage by Codacy
-    codacy 'com.github.codacy:codacy-coverage-reporter:4.0.0'
+    codacy 'com.github.codacy:codacy-coverage-reporter:4.0.1'
 }
 
 configurations.all {
     resolutionStrategy {
+        force "com.android.support:support-v4:$supportLibraryVersion"
+        force "com.android.support:support-media-compat:$supportLibraryVersion"
         force 'com.google.code.findbugs:jsr305:3.0.2'
     }
 }
