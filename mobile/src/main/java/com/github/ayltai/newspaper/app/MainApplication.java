@@ -1,11 +1,7 @@
 package com.github.ayltai.newspaper.app;
 
-import java.util.Collections;
-
 import android.os.StrictMode;
 import android.util.Log;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.crashlytics.android.Crashlytics;
@@ -29,7 +25,10 @@ import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.ThreadPolicyFactory;
 import com.github.ayltai.newspaper.util.VmPolicyFactory;
 import com.github.piasy.biv.BigImageViewer;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.leakcanary.LeakCanary;
+
+import java.util.Collections;
 
 import io.fabric.sdk.android.Fabric;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
@@ -54,7 +53,7 @@ public final class MainApplication extends BaseApplication {
     }
 
     private void applyDevMode() {
-        if (!DevUtils.isRunningTests()) {
+        if (!BuildConfig.DEBUG && !DevUtils.isRunningTests()) {
             StrictMode.setThreadPolicy(ThreadPolicyFactory.newThreadPolicy());
             StrictMode.setVmPolicy(VmPolicyFactory.newVmPolicy());
 

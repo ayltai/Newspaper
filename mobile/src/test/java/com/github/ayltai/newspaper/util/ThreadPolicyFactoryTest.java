@@ -1,10 +1,9 @@
-package com.github.ayltai.newspaper.debug;
+package com.github.ayltai.newspaper.util;
+
+import com.github.ayltai.newspaper.UnitTest;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.github.ayltai.newspaper.UnitTest;
-import com.github.ayltai.newspaper.util.ThreadPolicyFactory;
 
 public final class ThreadPolicyFactoryTest extends UnitTest {
     @Test

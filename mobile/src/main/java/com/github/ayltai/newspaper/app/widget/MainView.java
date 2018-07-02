@@ -13,7 +13,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,13 +26,11 @@ import com.github.ayltai.newspaper.app.view.AboutPresenter;
 import com.github.ayltai.newspaper.app.view.BaseNewsView;
 import com.github.ayltai.newspaper.app.view.MainPresenter;
 import com.github.ayltai.newspaper.util.Animations;
-import com.github.ayltai.newspaper.util.DevUtils;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.widget.BaseView;
 import com.google.auto.value.AutoValue;
 
 import java.lang.ref.SoftReference;
-import java.lang.reflect.Field;
 import java.util.Map;
 
 import flow.ClassKey;
@@ -323,7 +320,7 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
         this.bottomNavigationView.setOnNavigationItemSelectedListener(this);
         this.bottomNavigationView.setSelectedItemId(R.id.action_news);
 
-        MainView.setShiftMode(this.bottomNavigationView, false, false);
+        MainView.disableShifting(this.bottomNavigationView);
     }
 
     private void showMoreActions() {
@@ -372,29 +369,20 @@ public final class MainView extends BaseView implements MainPresenter.View, Bott
         if (this.bottomNavigationView.getSelectedItemId() == R.id.action_history || this.bottomNavigationView.getSelectedItemId() == R.id.action_bookmark || this.bottomNavigationView.getSelectedItemId() == R.id.action_about) this.clearAllAction.setClickable(false);
     }
 
-    private static void setShiftMode(@NonNull final BottomNavigationView bottomNavigationView, final boolean shiftModeEnabled, final boolean itemShiftModeEnabled) {
-        try {
-            final BottomNavigationMenuView menuView = (BottomNavigationMenuView)bottomNavigationView.getChildAt(0);
+    private static void disableShifting(@NonNull final BottomNavigationView bottomNavigationView) {
+        final BottomNavigationMenuView menuView = (BottomNavigationMenuView)bottomNavigationView.getChildAt(0);
 
-            if (menuView != null) {
-                final Field field = menuView.getClass().getDeclaredField("mShiftingMode");
-                field.setAccessible(true);
-                field.setBoolean(menuView, shiftModeEnabled);
-                field.setAccessible(false);
+        if (menuView != null) {
+            for (int i = 0; i < menuView.getChildCount(); i++) {
+                final BottomNavigationItemView itemView = (BottomNavigationItemView)menuView.getChildAt(i);
 
-                for (int i = 0; i < menuView.getChildCount(); i++) {
-                    final BottomNavigationItemView itemView = (BottomNavigationItemView)menuView.getChildAt(i);
-
-                    if (itemView != null) {
-                        itemView.setShiftingMode(itemShiftModeEnabled);
-                        itemView.setChecked(itemView.getItemData().isChecked());
-                    }
+                if (itemView != null) {
+                    itemView.setShifting(false);
+                    itemView.setChecked(itemView.getItemData().isChecked());
                 }
-
-                menuView.updateMenuView();
             }
-        } catch (final IllegalAccessException | NoSuchFieldException e) {
-            if (DevUtils.isLoggable()) Log.e(MainView.class.getSimpleName(), e.getMessage(), e);
+
+            menuView.updateMenuView();
         }
     }
 
