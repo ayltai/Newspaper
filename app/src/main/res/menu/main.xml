@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_news"
+        android:title="@string/title_news"
+        android:icon="@drawable/ic_news_black_24dp" />
+    <item
+        android:id="@+id/action_histories"
+        android:title="@string/title_histories"
+        android:icon="@drawable/ic_history_black_24dp" />
+    <item
+        android:id="@+id/action_bookmarks"
+        android:title="@string/title_bookmarks"
+        android:icon="@drawable/ic_bookmark_black_24dp" />
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/title_about"
+        android:icon="@drawable/ic_about_black_24dp" />
+</menu>

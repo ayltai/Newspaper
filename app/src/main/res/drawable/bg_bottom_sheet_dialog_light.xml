@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners
+        android:topLeftRadius="@dimen/bottomSheetDialogRadius"
+        android:topRightRadius="@dimen/bottomSheetDialogRadius" />
+    <padding
+        android:left="@dimen/space8"
+        android:right="@dimen/space8"
+        android:top="@dimen/space8"
+        android:bottom="@dimen/space8" />
+    <solid android:color="@color/windowBackgroundLight" />
+</shape>

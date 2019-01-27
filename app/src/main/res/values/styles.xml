@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style
+        name="Source"
+        parent="@style/TextAppearance.AppCompat.Title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/textColor</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">0dp</item>
+    </style>
+    <style name="Source.Normal">
+        <item name="android:textSize">@dimen/textNormal</item>
+    </style>
+    <style name="Source.Small">
+        <item name="android:textSize">@dimen/textSmall</item>
+    </style>
+    <style name="Source.Full">
+        <item name="android:maxLines">2147483647</item>
+        <item name="android:ellipsize">none</item>
+        <item name="android:textSize">@dimen/textNormal</item>
+    </style>
+    <style
+        name="Subhead"
+        parent="@style/TextAppearance.AppCompat.Subhead">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/textColorHint</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">0dp</item>
+    </style>
+    <style name="Subhead.Normal">
+        <item name="android:textSize">@dimen/textSmall</item>
+    </style>
+    <style name="Subhead.Small">
+        <item name="android:textSize">@dimen/textSmall</item>
+    </style>
+    <style name="Subhead.Full">
+        <item name="android:maxLines">2147483647</item>
+        <item name="android:ellipsize">none</item>
+        <item name="android:textSize">@dimen/textSmall</item>
+    </style>
+    <style
+        name="Title"
+        parent="@style/TextAppearance.AppCompat.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/textColor</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">0dp</item>
+    </style>
+    <style name="Title.Cozy">
+        <item name="android:maxLines">2</item>
+        <item name="android:textSize">@dimen/textHeading</item>
+    </style>
+    <style name="Title.Compact">
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/textNormal</item>
+        <item name="fontPath">fonts/Lato-Bold.ttf</item>
+    </style>
+    <style name="Title.Full">
+        <item name="android:layout_marginLeft">@dimen/space16</item>
+        <item name="android:layout_marginStart">@dimen/space16</item>
+        <item name="android:layout_marginRight">@dimen/space16</item>
+        <item name="android:layout_marginEnd">@dimen/space16</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:maxLines">2147483647</item>
+        <item name="android:ellipsize">none</item>
+        <item name="android:textSize">@dimen/textHeading</item>
+    </style>
+    <style
+        name="Description"
+        parent="@style/TextAppearance.AppCompat.Body1">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/textColorHint</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">0dp</item>
+    </style>
+    <style name="Description.Cozy">
+        <item name="android:maxLines">5</item>
+        <item name="android:textSize">@dimen/textNormal</item>
+    </style>
+    <style name="Description.Compact">
+        <item name="android:maxLines">2</item>
+        <item name="android:textSize">@dimen/textNormal</item>
+    </style>
+    <style name="Description.Full">
+        <item name="android:layout_marginLeft">@dimen/space16</item>
+        <item name="android:layout_marginStart">@dimen/space16</item>
+        <item name="android:layout_marginRight">@dimen/space16</item>
+        <item name="android:layout_marginEnd">@dimen/space16</item>
+        <item name="android:maxLines">2147483647</item>
+        <item name="android:ellipsize">none</item>
+        <item name="android:textSize">@dimen/textNormal</item>
+        <item name="android:textColor">?attr/textColor</item>
+    </style>
+    <style
+        name="BottomSheetLight"
+        parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet_dialog_light</item>
+    </style>
+    <style
+        name="BottomSheetDark"
+        parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet_dialog_light</item>
+    </style>
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="space4">4dp</dimen>
+    <dimen name="space8">8dp</dimen>
+    <dimen name="space12">12dp</dimen>
+    <dimen name="space16">16dp</dimen>
+    <dimen name="space24">24dp</dimen>
+    <dimen name="textHeading">24sp</dimen>
+    <dimen name="textNormal">16sp</dimen>
+    <dimen name="textSmall">14sp</dimen>
+    <dimen name="elevation">2dp</dimen>
+    <dimen name="elevation_on_press">4dp</dimen>
+    <dimen name="bottomSheetDialogRadius">24dp</dimen>
+    <dimen name="bottomAppBarButtonHeight">48dp</dimen>
+    <dimen name="cozy_card_radius">16dp</dimen>
+    <dimen name="cozy_item_image_height">200dp</dimen>
+    <dimen name="cozy_avatar_size">40dp</dimen>
+    <dimen name="compact_card_radius">0dp</dimen>
+    <dimen name="compact_avatar_size">32dp</dimen>
+    <dimen name="compact_item_content_image_size">80dp</dimen>
+</resources>

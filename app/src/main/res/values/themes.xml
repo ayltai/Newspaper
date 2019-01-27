@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style
+        name="AppTheme"
+        parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">?attr/primaryColor</item>
+        <item name="colorPrimaryDark">?attr/primaryColorDark</item>
+        <item name="colorAccent">?attr/accentColor</item>
+        <item name="colorControlActivated">?attr/primaryColor</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:textColor">?attr/textColor</item>
+        <item name="android:textColorHint">?attr/textColorHint</item>
+        <item name="android:textColorPrimaryInverse">?attr/textColorInverse</item>
+        <item name="android:windowBackground">?attr/windowBackground</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="LOLLIPOP">false</item>
+    </style>
+    <style name="AppTheme.Light">
+        <item name="primaryColor">@color/primaryColorLight</item>
+        <item name="primaryColorDark">@color/primaryColorDarkLight</item>
+        <item name="accentColor">@color/accentColorLight</item>
+        <item name="textColor">@color/textColorLight</item>
+        <item name="textColorHint">@color/textColorHintLight</item>
+        <item name="textColorInverse">@color/textColorInverseLight</item>
+        <item name="windowBackground">@color/windowBackgroundLight</item>
+        <item name="windowBackgroundShade">@color/windowBackgroundShadeLight</item>
+        <item name="placeholderTextColor">@color/placeholderTextColorLight</item>
+        <item name="cardBackground">@color/cardBackgroundLight</item>
+        <item name="placeholderImage">@drawable/thumbnail_placeholder</item>
+        <item name="emptyBackground">@drawable/empty_light</item>
+        <item name="emptyBackgroundTop">@color/emptyBackgroundTopLight</item>
+        <item name="emptyBackgroundBottom">@color/emptyBackgroundBottomLight</item>
+    </style>
+    <style name="AppTheme.Dark">
+        <item name="primaryColor">@color/primaryColorDark</item>
+        <item name="primaryColorDark">@color/primaryColorDarkDark</item>
+        <item name="accentColor">@color/accentColorDark</item>
+        <item name="textColor">@color/textColorDark</item>
+        <item name="textColorHint">@color/textColorHintDark</item>
+        <item name="textColorInverse">@color/textColorInverseDark</item>
+        <item name="windowBackground">@color/windowBackgroundDark</item>
+        <item name="windowBackgroundShade">@color/windowBackgroundShadeDark</item>
+        <item name="placeholderTextColor">@color/placeholderTextColorDark</item>
+        <item name="cardBackground">@color/cardBackgroundDark</item>
+        <item name="placeholderImage">@drawable/thumbnail_placeholder</item>
+        <item name="emptyBackground">@drawable/empty_dark</item>
+        <item name="emptyBackgroundTop">@color/emptyBackgroundTopDark</item>
+        <item name="emptyBackgroundBottom">@color/emptyBackgroundBottomDark</item>
+    </style>
+    <style
+        name="SplashTheme"
+        parent="@style/Theme.AppCompat.NoActionBar" />
+    <style name="SplashTheme.Light">
+        <item name="android:windowBackground">@drawable/splash_light</item>
+    </style>
+    <style name="SplashTheme.Dark">
+        <item name="android:windowBackground">@drawable/splash_dark</item>
+    </style>
+    <style
+        name="BottomSheetDialogThemeLight"
+        parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:navigationBarColor" tools:targetApi="LOLLIPOP">@color/windowBackgroundLight</item>
+        <item name="android:statusBarColor" tools:targetApi="LOLLIPOP">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/BottomSheetLight</item>
+    </style>
+    <style
+        name="BottomSheetDialogThemeDark"
+        parent="@style/Theme.Design.BottomSheetDialog">
+        <item name="android:navigationBarColor" tools:targetApi="LOLLIPOP">@color/windowBackgroundDark</item>
+        <item name="android:statusBarColor" tools:targetApi="LOLLIPOP">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/BottomSheetDark</item>
+    </style>
+</resources>

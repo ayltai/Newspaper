@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryColorLight">#ff5722</color>
+    <color name="primaryColorDark">#37474f</color>
+    <color name="primaryColorDarkLight">#e64a19</color>
+    <color name="primaryColorDarkDark">#263238</color>
+    <color name="accentColorLight">#448aff</color>
+    <color name="accentColorDark">#0d47a1</color>
+    <color name="textColorLight">#212121</color>
+    <color name="textColorDark">#eeeeee</color>
+    <color name="textColorHintLight">#757575</color>
+    <color name="textColorHintDark">#9e9e9e</color>
+    <color name="textColorInverseLight">@color/textColorDark</color>
+    <color name="textColorInverseDark">@color/textColorDark</color>
+    <color name="windowBackgroundLight">#ffffff</color>
+    <color name="windowBackgroundDark">#212121</color>
+    <color name="windowBackgroundShadeLight">#eeeeee</color>
+    <color name="windowBackgroundShadeDark">#424242</color>
+    <color name="cardBackgroundLight">#fafafa</color>
+    <color name="cardBackgroundDark">#3f4b5c</color>
+    <color name="placeholderTextColorLight">#aab2bd</color>
+    <color name="placeholderTextColorDark">#656d78</color>
+    <color name="emptyBackgroundTopLight">#cacaca</color>
+    <color name="emptyBackgroundTopDark">#bababa</color>
+    <color name="emptyBackgroundBottomLight">#8c8c8c</color>
+    <color name="emptyBackgroundBottomDark">#686868</color>
+    <color name="splashStartLight">#ff7043</color>
+    <color name="splashStartDark">#d84315</color>
+    <color name="splashEndLight">#f4511e</color>
+    <color name="splashEndDark">#bf360c</color>
+</resources>

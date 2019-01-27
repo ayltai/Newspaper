@@ -7,7 +7,7 @@ With [Flow](https://github.com/square/flow), the app achieves the maximum possib
 The library dependencies used in the app are chosen carefully to avoid going beyond the DEX 65K limit. App cold-start time is thus reduced by as much as 50%.
 
 ## Be empathetic with fellow developers
-Use [FindBugs](http://findbugs.sourceforge.net/) and [Checkstyle](http://checkstyle.sourceforge.net/) to help writing clean code and concise methods. Write as many tests as we can.
+Use [Lombok](https://projectlombok.org/), [AutoValue](https://github.com/google/auto/tree/master/value), [SpotBugs](https://spotbugs.github.io/) and [Checkstyle](http://checkstyle.sourceforge.net/) to help writing clean code and concise methods. Write as many tests as we can.
 
 ## Be open and/or free
 Use open sourced technologies whenever possible. If not, use free services.

@@ -3,7 +3,7 @@ Newspaper
 
 [![Release](https://img.shields.io/github/release/ayltai/Newspaper.svg?label=release&maxAge=1800)](https://1544-77390316-gh.circle-artifacts.com/0/apk/release/mobile-release.apk) [![Build Status](https://circleci.com/gh/ayltai/Newspaper.svg?style=shield)](https://circleci.com/gh/ayltai/Newspaper) [![Code Quality](https://api.codacy.com/project/badge/Grade/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Grade) [![Code Coverage](https://api.codacy.com/project/badge/Coverage/89d745ac9331474e9cf9f3203782a72f)](https://www.codacy.com/app/ayltai/Newspaper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ayltai/Newspaper&amp;utm_campaign=Badge_Coverage) [![Code Coverage](https://codecov.io/gh/ayltai/Newspaper/branch/master/graph/badge.svg)](https://codecov.io/gh/ayltai/Newspaper) [![Android API](https://img.shields.io/badge/API-16%2B-blue.svg?style=flat&label=API&maxAge=300)](https://www.android.com/history/) [![License](https://img.shields.io/badge/License-apache%202.0-blue.svg?label=license&maxAge=1800)](https://github.com/ayltai/Newspaper/blob/master/LICENSE)
 
-An aggregated news app containing news from 10+ local news publishers in Hong Kong. Made with ❤
+An aggregated news app containing news from 13 local news publishers in Hong Kong. Made with ❤
 
 ![Screenshot (Compact)](design/screenshot_cozy_framed.png "Screenshot (Cozy)") ![Screenshot (Dark)](design/screenshot_dark_framed.png "Screenshot (Dark)") ![Screenshot (Details)](design/screenshot_details_framed.png "Screenshot (Details)")
 
@@ -24,12 +24,15 @@ An aggregated news app containing news from 10+ local news publishers in Hong Ko
 * [Sing Pao (成報)](https://www.singpao.com.hk)
 * [Ming Pao (明報)](http://www.mingpao.com)
 * [Headline (頭條日報)](http://hd.stheadline.com)
-* [Sky Post (晴報)](skypost.ulifestyle.com.hk)
+* [Sky Post (晴報)](https://skypost.ulifestyle.com.hk/)
 * [Hong Kong Economic Journal (信報)](http://www.hkej.com)
 * [RTHK (香港電台)](http://news.rthk.hk)
 * [South China Morning Post (南華早報)](http://www.scmp.com/frontpage/hk)
 * [The Standard (英文虎報)](http://www.thestandard.com.hk)
 * [Wen Wei Po (文匯報)](http://news.wenweipo.com)
+
+## Server implementation
+[newspaper-serverless](https://github.com/ayltai/newspaper-serverless)
 
 ## Blog posts
 * [All you need to know about CircleCI 2.0 with Firebase Test Lab](https://medium.com/@ayltai/all-you-need-to-know-about-circleci-2-0-with-firebase-test-lab-2a66785ff3c2)
@@ -51,6 +54,7 @@ This app is made with the support of open source projects:
 * [FrescoImageViewer](https://github.com/stfalcon-studio/FrescoImageViewer)
 * [Subsampling Scale Image View](https://github.com/davemorrissey/subsampling-scale-image-view)
 * [BigImageViewer](https://github.com/Piasy/BigImageViewer)
+* [Material SearchBar](https://github.com/mancj/MaterialSearchBar)
 * [RecyclerView Animators](https://github.com/wasabeef/recyclerview-animators)
 * [KenBurnsView](https://github.com/flavioarfaria/KenBurnsView)
 * [ExoPlayer](https://github.com/google/ExoPlayer)

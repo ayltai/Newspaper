@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr
+        name="primaryColor"
+        format="color" />
+    <attr
+        name="primaryColorDark"
+        format="color" />
+    <attr
+        name="accentColor"
+        format="color" />
+    <attr
+        name="textColor"
+        format="color" />
+    <attr
+        name="textColorHint"
+        format="color" />
+    <attr
+        name="textColorInverse"
+        format="color" />
+    <attr
+        name="windowBackground"
+        format="color" />
+    <attr
+        name="windowBackgroundShade"
+        format="color" />
+    <attr
+        name="cardBackground"
+        format="color" />
+    <attr
+        name="placeholderTextColor"
+        format="color" />
+    <attr
+        name="emptyBackground"
+        format="reference" />
+    <attr
+        name="emptyBackgroundTop"
+        format="color" />
+    <attr
+        name="emptyBackgroundBottom"
+        format="color" />
+</resources>

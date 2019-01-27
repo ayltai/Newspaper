@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Newspaper</string>
+    <string name="app_description">An aggregated news app containing news from 10+ local news publishers in Hong Kong. Made with ❤</string>
+    <string name="app_version">Version %s</string>
+    <string name="app_website">Visit project website</string>
+    <string name="app_website_uri" translatable="false">https://github.com/ayltai/Newspaper</string>
+    <string name="app_issue">Report an issue</string>
+    <string name="app_issue_uri" translatable="false">https://github.com/ayltai/Newspaper/issues</string>
+
+    <!-- Screen titles -->
+    <string name="title_news">News</string>
+    <string name="title_histories">Histories</string>
+    <string name="title_bookmarks">Bookmarks</string>
+    <string name="title_about">About</string>
+
+    <!-- Menu items -->
+    <string name="action_go_to_top">Go to top</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="empty_news_title">Nothing here</string>
+    <string name="empty_news_description">You can read more news in other categories, or refresh to try again.</string>
+    <string name="empty_history_title">You haven\'t read any news yet</string>
+    <string name="empty_history_description">Any news you\'ve read will be collected here</string>
+    <string name="empty_bookmark_title">You don\'t have any favorite news yet</string>
+    <string name="empty_bookmark_description">Tap on the bookmark icon to collect news here</string>
+
+    <!-- Time namings -->
+    <string name="time_ago_now">Just now</string>
+    <string name="time_ago_minute">A minute ago</string>
+    <string name="time_ago_minutes">%s minutes ago</string>
+    <string name="time_ago_hour">An hour ago</string>
+    <string name="time_ago_hours">%s hours ago</string>
+    <string name="time_ago_day">Yesterday</string>
+    <string name="time_ago_days">%s days ago</string>
+</resources>

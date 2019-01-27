@@ -1,0 +1,419 @@
+plugins {
+    id 'com.android.application'
+    id 'io.fabric'
+    id 'realm-android'
+    id 'checkstyle'
+    id 'com.github.spotbugs' version '1.6.9'
+    id 'jacoco'
+    id 'com.akaita.android.easylauncher'
+}
+
+String VERSION_REVISION = 'git rev-list --count HEAD'.execute().text.trim()
+String VERSION_HASH     = 'git rev-parse --short HEAD'.execute().text.trim()
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+    defaultConfig {
+        applicationId    'com.github.ayltai.newspaper'
+        minSdkVersion    16
+        targetSdkVersion 28
+        versionCode      34
+        versionName      '5.0.' + VERSION_REVISION + '-' + VERSION_HASH
+
+        testInstrumentationRunner          'androidx.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunnerArguments disableAnalytics : 'true'
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile     project.file('../key-store.jks')
+            keyAlias      System.getenv('ANDROID_KEY_ALIAS')
+            storePassword System.getenv('ANDROID_STORE_PASSWORD')
+            keyPassword   System.getenv('ANDROID_KEY_PASSWORD')
+        }
+    }
+
+    buildTypes {
+        debug {
+            multiDexEnabled     true
+            testCoverageEnabled true
+
+            ext.enableCrashlytics = false
+        }
+
+        release {
+            minifyEnabled   true
+            shrinkResources true
+            signingConfig   signingConfigs.release
+            proguardFiles   getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildTypes.each {
+        it.buildConfigField 'String', 'API_KEY', "\"$System.env.api_key\""
+    }
+
+    testOptions {
+        execution          'ANDROIDX_TEST_ORCHESTRATOR'
+        animationsDisabled true
+
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues     = true
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+        disable     'MissingTranslation', 'RestrictedApi'
+    }
+
+    aaptOptions {
+        cruncherEnabled project.hasProperty('ciBuild')
+    }
+
+    dexOptions {
+        preDexLibraries !project.hasProperty('ciBuild')
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+configurations {
+    codacy
+}
+
+ext {
+    supportLibraryVersion = '28.0.0'
+    architectureVersion   = '2.0.0'
+    androidXVersion       = '1.0.0'
+    daggerVersion         = '2.21'
+    okHttpVersion         = '3.12.1'
+    retrofitVersion       = '2.5.0'
+    frescoVersion         = '1.11.0'
+    bigImageViewerVersion = '1.5.6'
+    exoPlayerVersion      = '2.9.4'
+    autoValueVersion      = '1.6.3'
+    lombokVersion         = '1.18.4'
+    leakCanaryVersion     = '1.6.3'
+    robolectricVersion    = '4.1'
+    powerMockVersion      = '2.0.0'
+    espressoVersion       = '3.1.1'
+}
+
+repositories {
+    flatDir {
+        dirs './aars'
+    }
+}
+
+dependencies {
+    androidTestImplementation fileTree(dir : 'libs', include : [ '*.jar' ])
+
+    // Multi-dex support
+    debugImplementation 'androidx.multidex:multidex:2.0.1'
+    androidTestImplementation 'androidx.multidex:multidex-instrumentation:2.0.0'
+
+    // Android Architecture libraries
+    implementation ("androidx.lifecycle:lifecycle-extensions:$architectureVersion") {
+        exclude group : 'com.android.support'
+    }
+    annotationProcessor ("androidx.lifecycle:lifecycle-compiler:$architectureVersion") {
+        exclude group : 'com.android.support'
+    }
+    implementation "androidx.lifecycle:lifecycle-common-java8:$architectureVersion"
+
+    // Android Support libraries
+    implementation "androidx.browser:browser:$androidXVersion"
+    implementation "androidx.cardview:cardview:$androidXVersion"
+    implementation "com.google.android.material:material:$androidXVersion"
+
+    // Firebase
+    implementation ('com.google.firebase:firebase-core:16.0.6') {
+        exclude group : 'com.android.support'
+    }
+    implementation 'com.google.firebase:firebase-config:16.1.3'
+
+    // Reactive programming
+    implementation     'io.reactivex.rxjava2:rxjava:2.2.5'
+    implementation     'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation     'com.jakewharton.rxbinding2:rxbinding:2.2.0'
+
+    // Dependency injection
+    implementation      "com.google.dagger:dagger:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    // Networking
+    implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+
+    // Database
+    implementation 'io.realm:android-adapters:3.1.0'
+
+    // Image processing
+    implementation "com.facebook.fresco:fresco:$frescoVersion"
+    implementation "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
+    implementation "com.github.piasy:BigImageViewer:$bigImageViewerVersion"
+    implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
+    implementation 'androidx.exifinterface:exifinterface:1.0.0'
+    implementation 'com.google.android.gms:play-services-vision:17.0.2'
+
+    // Video processing
+    implementation ("com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion") {
+        exclude group : 'com.android.support'
+    }
+    implementation ("com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion") {
+        exclude group : 'com.android.support'
+    }
+    implementation ("com.google.android.exoplayer:extension-okhttp:$exoPlayerVersion") {
+        exclude group : 'com.android.support'
+    }
+
+    // UI components
+    implementation 'com.squareup.flow:flow:1.0.0-alpha3'
+    implementation 'com.github.mancj:MaterialSearchBar:0.8.1'
+    implementation 'com.github.medyo:android-about-page:1.2.5'
+    implementation 'com.nex3z:flow-layout:1.2.4'
+
+    // Eye candies
+    implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
+    implementation 'io.supercharge:shimmerlayout:2.1.0'
+    implementation 'com.github.castorflex.smoothprogressbar:library:1.3.0'
+    implementation 'pub.hanks:smallbang:1.2.2'
+    implementation 'com.flaviofaria:kenburnsview:1.0.7'
+    implementation 'io.github.inflationx:calligraphy3:3.0.0'
+
+    // Code generation tools
+    compileOnly             "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor     "org.projectlombok:lombok:$lombokVersion"
+    testCompileOnly         "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    compileOnly             "com.google.auto.value:auto-value-annotations:$autoValueVersion"
+    annotationProcessor     "com.google.auto.value:auto-value:$autoValueVersion"
+    annotationProcessor     'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
+
+    // Fabric
+    implementation ('com.crashlytics.sdk.android:crashlytics:2.9.8@aar') {
+        transitive = true
+    }
+
+    // Debugging
+    implementation        'com.akaita.java:rxjava2-debug:1.4.0'
+    debugImplementation   "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    testImplementation    "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+
+    // Unit testing
+    testImplementation 'org.mockito:mockito-core:2.23.16'
+    testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
+    testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
+    testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
+    testImplementation "org.powermock:powermock-classloading-xstream:$powerMockVersion"
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
+    testImplementation "org.robolectric:shadows-multidex:$robolectricVersion"
+    testImplementation 'org.json:json:20180813'
+
+    // Instrumented testing
+    androidTestImplementation (name : 'cloudtestingscreenshotter_lib', ext : 'aar')
+    androidTestImplementation ("androidx.test.espresso:espresso-core:$espressoVersion") {
+        exclude group : 'com.android.support'
+    }
+    androidTestImplementation ("androidx.test.espresso:espresso-contrib:$espressoVersion") {
+        exclude group : 'com.android.support'
+    }
+    androidTestImplementation ("androidx.test.espresso:espresso-intents:$espressoVersion") {
+        exclude group : 'com.android.support'
+    }
+    androidTestUtil 'androidx.test:orchestrator:1.1.1'
+
+    // Code coverage by Codacy
+    codacy 'com.github.codacy:codacy-coverage-reporter:5.0.310'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force "com.android.support:support-v4:$supportLibraryVersion"
+        force "com.android.support:support-media-compat:$supportLibraryVersion"
+    }
+}
+
+//region Checkstyle configurations
+
+checkstyle {
+    toolVersion    '8.16'
+    configFile     rootProject.file('../checkstyle.xml')
+    ignoreFailures true
+    showViolations true
+}
+
+tasks.withType(Checkstyle) {
+    description = 'Running Checkstyle'
+    group       = 'verification'
+
+    source  'src/main/java', 'src/debug/java'
+    include '**/*.java'
+    exclude '**/*Test.java'
+    exclude '**/gen/**'
+    exclude '**/R.java'
+    exclude '**/BuildConfig.java'
+
+    reports {
+        xml.enabled      = project.hasProperty('ciBuild')
+        html.enabled     = !project.hasProperty('ciBuild')
+        xml.destination  file("$project.buildDir/reports/checkstyle/checkstyle-output.xml")
+        html.destination file("$project.buildDir/reports/checkstyle/checkstyle-output.html")
+    }
+
+    classpath = files()
+}
+
+//endregion
+
+//region SpotBugs configurations
+
+spotbugs {
+    toolVersion '3.1.10'
+    effort      'max'
+    reportLevel 'medium'
+}
+
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+    description    = 'Runing SpotBugs'
+    group          = 'verification'
+    source         = fileTree('src/main/java')
+    classes        = fileTree('build/intermediates/classes/debug')
+    classpath      = files()
+    ignoreFailures = true
+    excludeFilter  = rootProject.file('../spotbugs-exclude.xml')
+
+    reports {
+        xml.enabled      = project.hasProperty('ciBuild')
+        html.enabled     = !project.hasProperty('ciBuild')
+        xml.destination  file("$project.buildDir/reports/spotbugs/spotbugs-output.xml")
+        html.destination file("$project.buildDir/reports/spotbugs/spotbugs-output.html")
+    }
+}
+
+//endregion
+
+//region JaCoCo configurations
+
+def coverageSourceDirs = [
+    'src/main/java',
+    'src/debug/java'
+]
+
+jacoco {
+    toolVersion '0.8.2'
+}
+
+task jacocoTestReport(type : JacocoReport, dependsOn : 'testDebugUnitTest') {
+    description = 'Generate JaCoCo coverage reports'
+    group       = 'Reporting'
+
+    classDirectories = fileTree(
+        dir      : 'build/intermediates/classes/debug',
+        excludes : [
+            '**/R.class',
+            '**/R$*.class',
+            '**/*$ViewInjector*.*',
+            '**/*$ViewBinder*.*',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*RealmProxy.*',
+            '**/*ColumnInfo.*',
+            '**/*RealmModule*.*',
+            '**/Dagger*.*',
+            '**/*Module_Provide*Factory.*',
+            '**/*_Factory.*',
+            '**/*_MembersInjector.*',
+            '**/*_LifecycleAdapter.*'
+        ]
+    )
+
+    sourceDirectories = files(coverageSourceDirs)
+    executionData     = fileTree(
+        dir     : "$buildDir",
+        include : [ 'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec' ]
+    )
+
+    doFirst {
+        files('build/intermediates/classes/debug').getFiles().each { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
+    }
+
+    reports {
+        xml.enabled  = true
+        html.enabled = true
+    }
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+//endregion
+
+//region Codacy configurations
+
+task uploadCoverageToCodacy(type : JavaExec, dependsOn : jacocoTestReport) {
+    main      = "com.codacy.CodacyCoverageReporter"
+    classpath = configurations.codacy
+
+    args = [
+        "report",
+        "-l",
+        "Java",
+        "-r",
+        "${buildDir}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+    ]
+}
+
+task (codacyDepsize) {
+    doLast {
+        def size = 0
+
+        configurations.codacy.collect {
+            it.length() / (1024 * 1024)
+        }.each {
+            size += it
+        }
+
+        println "Total dependencies size: ${Math.round(size * 100) / 100} MB"
+
+        configurations.codacy.sort {
+            -it.length()
+        }.each {
+            println "${it.name}: ${Math.round(it.length() / (1024) * 100) / 100} KB"
+        }
+    }
+}
+
+task (codacyLocs) {
+    doLast {
+        configurations.codacy.each {
+            String jarName = it
+
+            println jarName
+        }
+    }
+}
+
+//endregion
+
+apply plugin: 'com.google.gms.google-services'
