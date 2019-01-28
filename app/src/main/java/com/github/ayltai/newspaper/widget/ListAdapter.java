@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import android.graphics.Point;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.data.model.Item;
+
+import flow.Flow;
 
 public final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     //region Variables
@@ -61,5 +64,8 @@ public final class ListAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         holder.view.setSource(item.getSource().getName());
         holder.view.setIcon(item.getSource().getImageUrl());
         holder.view.setPublishDate(item.getPublishDate());
+        holder.view.setImages(item.getImages());
+
+        holder.view.setOnClickListener(view -> Flow.get(view).set(DetailedItemView.Key.create(item, new Point())));
     }
 }

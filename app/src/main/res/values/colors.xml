@@ -18,6 +18,8 @@
     <color name="windowBackgroundShadeDark">#424242</color>
     <color name="cardBackgroundLight">#fafafa</color>
     <color name="cardBackgroundDark">#3f4b5c</color>
+    <color name="shadowStart">#001f242c</color>
+    <color name="shadowEnd">#ff1f242c</color>
     <color name="placeholderTextColorLight">#aab2bd</color>
     <color name="placeholderTextColorDark">#656d78</color>
     <color name="emptyBackgroundTopLight">#cacaca</color>

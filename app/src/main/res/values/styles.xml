@@ -54,6 +54,17 @@
         <item name="android:includeFontPadding">false</item>
         <item name="android:lineSpacingExtra">0dp</item>
     </style>
+    <style name="Title.Featured">
+        <item name="android:padding">@dimen/space16</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textSize">@dimen/textHeading</item>
+        <item name="android:textColor">@color/textColorInverseLight</item>
+        <item name="android:shadowDx">2.5</item>
+        <item name="android:shadowDy">2.5</item>
+        <item name="android:shadowRadius">2.5</item>
+        <item name="android:shadowColor">@color/shadowEnd</item>
+    </style>
     <style name="Title.Cozy">
         <item name="android:maxLines">2</item>
         <item name="android:textSize">@dimen/textHeading</item>
@@ -111,4 +122,18 @@
         parent="@style/Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_bottom_sheet_dialog_light</item>
     </style>
+    <style
+        name="Icon"
+        parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+    <style name="Icon.Small">
+        <item name="android:layout_width">@dimen/iconSmall</item>
+        <item name="android:layout_height">@dimen/iconSmall</item>
+    </style>
+    <style
+        name="TransparentText"
+        parent="@android:style/TextAppearance">
+        <item name="android:textColor">#00ffffff</item>
+</style>
 </resources>

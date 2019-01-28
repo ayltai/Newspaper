@@ -28,7 +28,7 @@ import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
 public abstract class ItemView extends BaseView implements ItemPresenter.View {
-    //region Variables
+    //region Subscriptions
 
     protected final FlowableProcessor<Optional<Point>> clicks            = PublishProcessor.create();
     protected final FlowableProcessor<Irrelevant>      iconClicks        = PublishProcessor.create();
@@ -41,11 +41,11 @@ public abstract class ItemView extends BaseView implements ItemPresenter.View {
     protected final FlowableProcessor<Integer>         videoClicks       = PublishProcessor.create();
     protected final FlowableProcessor<Irrelevant>      bookmarkClicks    = PublishProcessor.create();
 
+    //endregion
+
     private final GestureDetectorCompat detector;
 
     protected View container;
-
-    //endregion
 
     protected ItemView(@Nonnull @NonNull @lombok.NonNull final Context context) {
         super(context);

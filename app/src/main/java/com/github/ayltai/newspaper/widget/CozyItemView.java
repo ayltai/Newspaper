@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -15,7 +16,9 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.data.model.Image;
 import com.github.ayltai.newspaper.util.DateUtils;
@@ -54,17 +57,27 @@ public final class CozyItemView extends ItemView {
 
     @Override
     public void setIcon(@Nonnull @NonNull @lombok.NonNull final String iconUrl) {
-        this.icon.setImageURI(iconUrl);
+        this.icon.setImageURI(Constants.BASE_URL + iconUrl.substring(1));
     }
 
     @Override
     public void setTitle(@Nullable final CharSequence title) {
-        this.title.setText(title);
+        if (TextUtils.isEmpty(title)) {
+            this.title.setVisibility(View.GONE);
+        } else {
+            this.title.setVisibility(View.VISIBLE);
+            this.title.setText(title);
+        }
     }
 
     @Override
     public void setDescription(@Nullable final CharSequence description) {
-        this.description.setText(description);
+        if (TextUtils.isEmpty(description)) {
+            this.description.setVisibility(View.GONE);
+        } else {
+            this.description.setVisibility(View.VISIBLE);
+            this.description.setText(description);
+        }
     }
 
     @Override
@@ -79,7 +92,18 @@ public final class CozyItemView extends ItemView {
 
     @Override
     public void setImages(@Nonnull @NonNull @lombok.NonNull final List<Image> images) {
-        if (!images.isEmpty()) this.image.showImage(Uri.parse(images.get(0).getImageUrl()));
+        if (images.isEmpty()) {
+            this.image.setVisibility(View.GONE);
+        } else {
+            this.image.setVisibility(View.VISIBLE);
+            this.image.showImage(Uri.parse(images.get(0).getImageUrl()));
+
+            if (this.image.getSSIV() != null) {
+                this.image.getSSIV().setImage(ImageSource.resource(R.drawable.thumbnail_placeholder));
+                this.image.getSSIV().setZoomEnabled(false);
+                this.image.getSSIV().setPanEnabled(false);
+            }
+        }
     }
 
     @Override

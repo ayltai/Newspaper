@@ -18,7 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Irrelevant;
 import com.github.ayltai.newspaper.view.MainPresenter;
-import com.github.ayltai.newspaper.view.ItemPagerPresenter;
+import com.github.ayltai.newspaper.view.PagerPresenter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -44,18 +44,18 @@ public final class MainView extends BaseView implements MainPresenter.View, AppB
 
     public static final MainView.Key KEY = MainView.Key.create();
 
-    private final FlowableProcessor<Irrelevant> refreshActions       = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> clearActions         = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> showSettingsActions  = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> showNewsActions      = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> showHistoriesActions = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> showBookmarksActions = PublishProcessor.create();
-    private final FlowableProcessor<Irrelevant> showAboutActions     = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> refreshClicks   = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> clearClicks     = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> settingsClicks  = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> newsClicks      = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> historiesClicks = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> bookmarksClicks = PublishProcessor.create();
+    private final FlowableProcessor<Irrelevant> aboutClicks     = PublishProcessor.create();
 
-    private final AppBarLayout       appBarLayout;
-    private final MaterialSearchBar  searchBar;
-    private final ItemPagerPresenter itemPagerPresenter;
-    private final ItemPagerView itemPagerView;
+    private final AppBarLayout      appBarLayout;
+    private final MaterialSearchBar searchBar;
+    private final PagerPresenter    pagerPresenter;
+    private final PagerView         pagerView;
 
     private Dialog dialog;
 
@@ -72,10 +72,10 @@ public final class MainView extends BaseView implements MainPresenter.View, AppB
         bottomAppBar.setNavigationOnClickListener(this);
         bottomAppBar.setOnMenuItemClickListener(this);
 
-        this.itemPagerPresenter = new ItemPagerPresenter();
-        this.itemPagerView = new ItemPagerView(context);
+        this.pagerPresenter = new PagerPresenter();
+        this.pagerView      = new PagerView(context);
 
-        ((ViewGroup)view.findViewById(R.id.content)).addView(itemPagerView);
+        ((ViewGroup)view.findViewById(R.id.content)).addView(pagerView);
 
         this.addView(view);
         this.updateLayout(BaseView.LAYOUT_SCREEN);
@@ -84,50 +84,50 @@ public final class MainView extends BaseView implements MainPresenter.View, AppB
     @Nonnull
     @NonNull
     @Override
-    public Flowable<Irrelevant> refreshActions() {
-        return this.refreshActions;
+    public Flowable<Irrelevant> refreshClicks() {
+        return this.refreshClicks;
     }
 
     @Nonnull
     @NonNull
     @Override
-    public Flowable<Irrelevant> clearActions() {
-        return this.clearActions;
+    public Flowable<Irrelevant> clearClicks() {
+        return this.clearClicks;
     }
 
     @Nonnull
     @NonNull
     @Override
-    public Flowable<Irrelevant> showSettingsActions() {
-        return this.showSettingsActions;
+    public Flowable<Irrelevant> settingsClicks() {
+        return this.settingsClicks;
     }
 
     @Nonnull
     @NonNull
     @Override
-    public Flowable<Irrelevant> showNewsActions() {
-        return this.showNewsActions;
+    public Flowable<Irrelevant> newsClicks() {
+        return this.newsClicks;
     }
 
     @Nonnull
     @NonNull
     @Override
-    public Flowable<Irrelevant> showHistoriesActions() {
-        return this.showHistoriesActions;
+    public Flowable<Irrelevant> historiesClicks() {
+        return this.historiesClicks;
     }
 
     @Nonnull
     @NonNull
     @Override
-    public Flowable<Irrelevant> showBookmarksActions() {
-        return this.showBookmarksActions;
+    public Flowable<Irrelevant> bookmarksClicks() {
+        return this.bookmarksClicks;
     }
 
     @Nonnull
     @NonNull
     @Override
-    public Flowable<Irrelevant> showAboutActions() {
-        return this.showAboutActions;
+    public Flowable<Irrelevant> aboutClicks() {
+        return this.aboutClicks;
     }
 
     @Override
@@ -170,7 +170,7 @@ public final class MainView extends BaseView implements MainPresenter.View, AppB
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        this.itemPagerPresenter.onViewAttached(this.itemPagerView, this.isFirstAttachment);
+        this.pagerPresenter.onViewAttached(this.pagerView, this.isFirstAttachment);
 
         this.appBarLayout.addOnOffsetChangedListener(this);
     }
@@ -178,7 +178,7 @@ public final class MainView extends BaseView implements MainPresenter.View, AppB
     @CallSuper
     @Override
     public void onDetachedFromWindow() {
-        this.itemPagerPresenter.onViewDetached();
+        this.pagerPresenter.onViewDetached();
 
         super.onDetachedFromWindow();
 
@@ -212,22 +212,22 @@ public final class MainView extends BaseView implements MainPresenter.View, AppB
         switch (item.getItemId()) {
             case R.id.action_news:
                 this.dialog.dismiss();
-                this.showNewsActions.onNext(Irrelevant.INSTANCE);
+                this.newsClicks.onNext(Irrelevant.INSTANCE);
                 return true;
 
             case R.id.action_histories:
                 this.dialog.dismiss();
-                this.showHistoriesActions.onNext(Irrelevant.INSTANCE);
+                this.historiesClicks.onNext(Irrelevant.INSTANCE);
                 return true;
 
             case R.id.action_bookmarks:
                 this.dialog.dismiss();
-                this.showBookmarksActions.onNext(Irrelevant.INSTANCE);
+                this.bookmarksClicks.onNext(Irrelevant.INSTANCE);
                 return true;
 
             case R.id.action_about:
                 this.dialog.dismiss();
-                this.showAboutActions.onNext(Irrelevant.INSTANCE);
+                this.aboutClicks.onNext(Irrelevant.INSTANCE);
                 return true;
 
             default:
@@ -239,15 +239,15 @@ public final class MainView extends BaseView implements MainPresenter.View, AppB
     public boolean onMenuItemClick(@Nonnull @NonNull @lombok.NonNull final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                this.refreshActions.onNext(Irrelevant.INSTANCE);
+                this.refreshClicks.onNext(Irrelevant.INSTANCE);
                 return true;
 
             case R.id.action_clear:
-                this.clearActions.onNext(Irrelevant.INSTANCE);
+                this.clearClicks.onNext(Irrelevant.INSTANCE);
                 return true;
 
             case R.id.action_settings:
-                this.showSettingsActions.onNext(Irrelevant.INSTANCE);
+                this.settingsClicks.onNext(Irrelevant.INSTANCE);
                 return true;
 
             default:

@@ -20,6 +20,12 @@
     <string name="action_clear">Clear</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Buttons -->
+    <string name="action_text_to_speech">Text to speech</string>
+    <string name="action_bookmark">Bookmark</string>
+    <string name="action_view_on_web">View on web</string>
+    <string name="action_share">Share</string>
+
     <string name="empty_news_title">Nothing here</string>
     <string name="empty_news_description">You can read more news in other categories, or refresh to try again.</string>
     <string name="empty_history_title">You haven\'t read any news yet</string>
@@ -35,4 +41,6 @@
     <string name="time_ago_hours">%s hours ago</string>
     <string name="time_ago_day">Yesterday</string>
     <string name="time_ago_days">%s days ago</string>
+
+    <string name="learn_more">Learn more:</string>
 </resources>

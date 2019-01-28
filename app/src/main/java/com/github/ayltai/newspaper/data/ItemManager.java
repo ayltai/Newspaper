@@ -40,6 +40,12 @@ public final class ItemManager extends DataManager {
 
     @Nonnull
     @NonNull
+    public Single<Item> get(@Nonnull @NonNull @lombok.NonNull final String itemUrl) {
+        return Single.defer(() -> Single.just(this.getRealm().copyFromRealm(this.getRealm().where(Item.class).equalTo(Item.FIELD_URL, itemUrl).findFirst())));
+    }
+
+    @Nonnull
+    @NonNull
     public Single<List<Item>> get(@Nonnull @NonNull @lombok.NonNull final List<String> sourceNames, @Nonnull @NonNull @lombok.NonNull final List<String> categoryNames, @Nullable final String keywords) {
         return Single.defer(() -> Single.just(this.get(this.getRealm().where(Item.class), sourceNames, categoryNames, keywords)));
     }

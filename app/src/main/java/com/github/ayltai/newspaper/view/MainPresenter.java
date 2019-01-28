@@ -16,31 +16,31 @@ public final class MainPresenter extends BasePresenter<MainPresenter.View> {
     public interface View extends Presenter.View {
         @Nonnull
         @NonNull
-        Flowable<Irrelevant> refreshActions();
+        Flowable<Irrelevant> refreshClicks();
 
         @Nonnull
         @NonNull
-        Flowable<Irrelevant> clearActions();
+        Flowable<Irrelevant> clearClicks();
 
         @Nonnull
         @NonNull
-        Flowable<Irrelevant> showSettingsActions();
+        Flowable<Irrelevant> settingsClicks();
 
         @Nonnull
         @NonNull
-        Flowable<Irrelevant> showNewsActions();
+        Flowable<Irrelevant> newsClicks();
 
         @Nonnull
         @NonNull
-        Flowable<Irrelevant> showHistoriesActions();
+        Flowable<Irrelevant> historiesClicks();
 
         @Nonnull
         @NonNull
-        Flowable<Irrelevant> showBookmarksActions();
+        Flowable<Irrelevant> bookmarksClicks();
 
         @Nonnull
         @NonNull
-        Flowable<Irrelevant> showAboutActions();
+        Flowable<Irrelevant> aboutClicks();
 
         void refresh();
 
@@ -83,12 +83,12 @@ public final class MainPresenter extends BasePresenter<MainPresenter.View> {
     public void onViewAttached(@Nonnull @NonNull @lombok.NonNull final MainPresenter.View view, final boolean isFirstAttachment) {
         super.onViewAttached(view, isFirstAttachment);
 
-        this.manageDisposable(view.refreshActions().subscribe(irrelevant -> view.refresh()));
-        this.manageDisposable(view.clearActions().subscribe(irrelevant -> view.clear()));
-        this.manageDisposable(view.showSettingsActions().subscribe(irrelevant -> view.showSettings()));
-        this.manageDisposable(view.showNewsActions().subscribe(irrelevant -> view.showNews()));
-        this.manageDisposable(view.showHistoriesActions().subscribe(irrelevant -> view.showHistories()));
-        this.manageDisposable(view.showBookmarksActions().subscribe(irrelevant -> view.showBookmarks()));
-        this.manageDisposable(view.showAboutActions().subscribe(irrelevant -> view.showAbout()));
+        this.manageDisposable(view.refreshClicks().subscribe(irrelevant -> view.refresh()));
+        this.manageDisposable(view.clearClicks().subscribe(irrelevant -> view.clear()));
+        this.manageDisposable(view.settingsClicks().subscribe(irrelevant -> view.showSettings()));
+        this.manageDisposable(view.newsClicks().subscribe(irrelevant -> view.showNews()));
+        this.manageDisposable(view.historiesClicks().subscribe(irrelevant -> view.showHistories()));
+        this.manageDisposable(view.bookmarksClicks().subscribe(irrelevant -> view.showBookmarks()));
+        this.manageDisposable(view.aboutClicks().subscribe(irrelevant -> view.showAbout()));
     }
 }

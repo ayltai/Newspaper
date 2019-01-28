@@ -84,6 +84,7 @@ public class ItemPresenter<V extends ItemPresenter.View> extends ModelPresenter<
     }
 
     @UiThread
+    @CallSuper
     @Override
     public void bindModel() {
         if (this.getView() != null && this.getModel() != null) {
@@ -105,35 +106,16 @@ public class ItemPresenter<V extends ItemPresenter.View> extends ModelPresenter<
     public void onViewAttached(@NonNull final V view, final boolean isFirstTimeAttachment) {
         super.onViewAttached(view, isFirstTimeAttachment);
 
-        final Flowable<Optional<Point>> clicks = view.clicks();
-        if (clicks != null) this.manageDisposable(clicks.subscribe(this::onClick));
-
-        final Flowable<Irrelevant> avatarClicks = view.iconClicks();
-        if (avatarClicks != null) this.manageDisposable(avatarClicks.subscribe(irrelevant -> this.onIconClick()));
-
-        final Flowable<Irrelevant> sourceClicks = view.sourceClicks();
-        if (sourceClicks != null) this.manageDisposable(sourceClicks.subscribe(irrelevant -> this.onSourceClick()));
-
-        final Flowable<Irrelevant> publishDateClicks = view.publishDateClicks();
-        if (publishDateClicks != null) this.manageDisposable(publishDateClicks.subscribe(irrelevant -> this.onPublishDateClick()));
-
-        final Flowable<Irrelevant> titleClicks = view.titleClicks();
-        if (titleClicks != null) this.manageDisposable(titleClicks.subscribe(irrelevant -> this.onTitleClick()));
-
-        final Flowable<Irrelevant> descriptionClicks = view.descriptionClicks();
-        if (descriptionClicks != null) this.manageDisposable(descriptionClicks.subscribe(irrelevant -> this.onDescriptionClick()));
-
-        final Flowable<Irrelevant> linkClicks = view.linkClicks();
-        if (linkClicks != null) this.manageDisposable(linkClicks.subscribe(irrelevant -> this.onLinkClick()));
-
-        final Flowable<Irrelevant> bookmarkClicks = view.bookmarkClicks();
-
-        if (bookmarkClicks != null) this.manageDisposable(bookmarkClicks.subscribe(irrelevant -> this.onBookmarkClick()));
-
-        final Flowable<Integer> imageClicks = view.imageClicks();
-        if (imageClicks != null) this.manageDisposable(imageClicks.subscribe(index -> this.onImageClick(this.getModel().getImages().get(index))));
-        final Flowable<Integer> videoClicks = view.videoClicks();
-        if (videoClicks != null) this.manageDisposable(videoClicks.subscribe(index -> this.onVideoClick(this.getModel().getVideos().get(index))));
+        if (view.clicks() != null) this.manageDisposable(view.clicks().subscribe(this::onClick));
+        if (view.iconClicks() != null) this.manageDisposable(view.iconClicks().subscribe(irrelevant -> this.onIconClick()));
+        if (view.sourceClicks() != null) this.manageDisposable(view.sourceClicks().subscribe(irrelevant -> this.onSourceClick()));
+        if (view.publishDateClicks() != null) this.manageDisposable(view.publishDateClicks().subscribe(irrelevant -> this.onPublishDateClick()));
+        if (view.titleClicks() != null) this.manageDisposable(view.titleClicks().subscribe(irrelevant -> this.onTitleClick()));
+        if (view.descriptionClicks() != null) this.manageDisposable(view.descriptionClicks().subscribe(irrelevant -> this.onDescriptionClick()));
+        if (view.linkClicks() != null) this.manageDisposable(view.linkClicks().subscribe(irrelevant -> this.onLinkClick()));
+        if (view.bookmarkClicks() != null) this.manageDisposable(view.bookmarkClicks().subscribe(irrelevant -> this.onBookmarkClick()));
+        if (view.imageClicks() != null) this.manageDisposable(view.imageClicks().subscribe(index -> this.onImageClick(this.getModel().getImages().get(index))));
+        if (view.videoClicks() != null) this.manageDisposable(view.videoClicks().subscribe(index -> this.onVideoClick(this.getModel().getVideos().get(index))));
     }
 
     @CallSuper

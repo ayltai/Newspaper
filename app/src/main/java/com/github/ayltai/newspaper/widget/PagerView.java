@@ -16,14 +16,14 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.github.ayltai.newspaper.R;
 import com.github.ayltai.newspaper.util.Irrelevant;
-import com.github.ayltai.newspaper.view.ItemPagerPresenter;
+import com.github.ayltai.newspaper.view.PagerPresenter;
 import com.google.android.material.tabs.TabLayout;
 
 import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public final class ItemPagerView extends BaseView implements ItemPagerPresenter.View, TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
+public final class PagerView extends BaseView implements PagerPresenter.View, TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
     private final FlowableProcessor<Irrelevant> refreshActions  = PublishProcessor.create();
     private final FlowableProcessor<String>     categoryChanges = PublishProcessor.create();
 
@@ -32,10 +32,10 @@ public final class ItemPagerView extends BaseView implements ItemPagerPresenter.
     private TabLayout   tabLayout;
     private ViewPager   viewPager;
 
-    public ItemPagerView(@Nonnull @NonNull final @lombok.NonNull Context context) {
+    public PagerView(@Nonnull @NonNull final @lombok.NonNull Context context) {
         super(context);
 
-        final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_item_pager, this, false);
+        final View view = LayoutInflater.from(this.getContext()).inflate(R.layout.view_pager, this, false);
 
         this.progressBar = view.findViewById(R.id.progressBar);
         this.container   = view.findViewById(R.id.container);

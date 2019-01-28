@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import io.realm.RealmList;
@@ -16,7 +19,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 @ToString
-public class Source extends RealmObject implements Comparable<Source> {
+public class Source extends RealmObject implements Comparable<Source>, Parcelable {
     public static final String FIELD_NAME = "name";
 
     public static final List<String> DEFAULT_SOURCES = Arrays.asList("蘋果日報", "東方日報", "星島日報", "星島即時", "經濟日報", "成報", "明報", "頭條日報", "頭條即時", "晴報", "信報", "香港電台", "南華早報", "英文虎報", "文匯報");
@@ -96,4 +99,45 @@ public class Source extends RealmObject implements Comparable<Source> {
     public int hashCode() {
         return this.name.substring(0, 2).hashCode();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@Nonnull @NonNull @lombok.NonNull final Parcel dest, final int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.contextUrl);
+        dest.writeString(this.imageUrl);
+        dest.writeTypedList(this.categories);
+    }
+
+    public Source() {
+    }
+
+    protected Source(Parcel in) {
+        this.name       = in.readString();
+        this.contextUrl = in.readString();
+        this.imageUrl   = in.readString();
+        this.categories = new RealmList<>();
+
+        this.categories.addAll(in.createTypedArrayList(Category.CREATOR));
+    }
+
+    public static final Creator<Source> CREATOR = new Creator<Source>() {
+        @Nonnull
+        @NonNull
+        @Override
+        public Source createFromParcel(@Nonnull @NonNull @lombok.NonNull final Parcel source) {
+            return new Source(source);
+        }
+
+        @Nonnull
+        @NonNull
+        @Override
+        public Source[] newArray(final int size) {
+            return new Source[size];
+        }
+    };
 }

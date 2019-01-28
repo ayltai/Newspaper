@@ -6,6 +6,8 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class Constants {
+    public static final String BASE_URL = "http://107.173.29.149/newspaper/";
+
     public static final int THEME_LIGHT       = 0;
     public static final int THEME_DARK        = 1;
     public static final int STYLE_COMFORTABLE = 0;

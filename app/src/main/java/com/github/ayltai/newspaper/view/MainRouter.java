@@ -46,6 +46,7 @@ public final class MainRouter extends Router {
     protected List<Presenter.Factory> getFactories() {
         return Arrays.asList(
             new MainPresenter.Factory(),
+            new DetailedItemPresenter.Factory(),
             new AboutPresenter.Factory()
         );
     }

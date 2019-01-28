@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 import androidx.annotation.NonNull;
 
 import com.github.ayltai.newspaper.BuildConfig;
+import com.github.ayltai.newspaper.Constants;
 import com.github.ayltai.newspaper.config.DaggerConfigsComponent;
 
 import dagger.Module;
@@ -19,8 +20,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 final class NetworkModule {
-    private static final String BASE_URL = "http://107.173.29.149/newspaper/";
-
     @Singleton
     @Nonnull
     @NonNull
@@ -47,7 +46,7 @@ final class NetworkModule {
         return new Retrofit.Builder()
             .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(NetworkModule.BASE_URL)
+            .baseUrl(Constants.BASE_URL)
             .client(okHttpClient)
             .build();
     }
